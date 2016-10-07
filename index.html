@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="Github Status">
+        <meta name="theme-color" content="green">
+        <meta name="description" content="Github Status">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Github Status">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="green">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+        <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+        <link rel="apple-touch-icon" sizes="144x144" href="images/144x144.png">
+        <link rel="stylesheet" type="text/css" href="github.min.css">
+        <script src="app.min.js"></script>
+        <title>Github Status</title>
+    </head>
+    <body>
+        <div align='right'>
+            <table>
+                    <tr id="t02">
+                        <td width="1%">
+                            <div id='image'></div>
+                        </td>
+                        <td>
+                            <div id="color"><font size="4">Github Status</font></div>
+                        </td>
+                        <td width="1%">
+                            <button onclick="location.reload()">
+                                <font size="2"><div id="refresh">Refresh</div></font>
+                            </button>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+        
+        <script src="https://status.github.com/api/status.json?callback=Status"></script>
+        
+        <font class="all">
+            Previous Messages:
+            <hr size='1' noshade>
+            
+            <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+        </font>
+    </body>
+</html>

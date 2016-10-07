@@ -1,0 +1,137 @@
+body {
+    padding: 0px;
+    margin: 5px;
+}
+
+hr {
+    height: 10px;
+    color: grey;
+    background-color: grey;
+    margin: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    box-sizing:content-box;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+}
+
+svg {
+    height: 27px;
+    margin-top: 0px;
+    margin-bottom: -5px;
+}
+
+button{
+    padding: 0px;
+    margin: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+table {
+    border: 0px solid black;
+    border-collapse: collapse;
+    left: 0px;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 0px;
+}
+
+tr, td {
+    border: 0px solid black;
+    padding: 2px;
+    margin: 0px;
+}
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
+
+table#t01 {
+    border: 0px solid black;
+    border-collapse: collapse;
+}
+
+tr#t02 {
+    border: 0px solid black;
+}
+
+td#stock {
+    border: 0px solid black;
+    border-collapse: collapse;
+}
+
+td#green {
+    border: 1px solid black;
+    background-color: green;
+    width: 10px;
+}
+
+td#orange {
+    border: 1px solid black;
+    background-color: orange;
+    width: 10px;
+}
+
+td#red {
+    border: 1px solid black;
+    background-color: red;
+    width: 10px;
+}
+
+td#dot {
+    border: 1px solid black;
+    width: 15px;
+}
+
+font{
+    color: #404040;
+    font-size: 10;
+    font-family: verdana;
+}
+
+font.all{
+    size: 3;
+    /*font-size: 10;*/
+    font-family: verdana;
+}
+
+font#green {
+    color: green;
+    font-family: verdana;
+}
+
+font#orange {
+    color: orange;
+    font-family: verdana;
+}
+
+font#red {
+    color: red;
+    font-family: verdana;
+}
+
+font#blue {
+    color: blue;
+    font-family: verdana;
+}
+
+font#black {
+    color: black;
+    font-family: verdana;
+}
+
+font#date {
+    font-size: 10;
+    color: black;
+    font-family: verdana;
+}
+
+.icon {
+    height: 27px;
+    fill: #2D8A54;
+}
