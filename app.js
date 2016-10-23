@@ -3,22 +3,20 @@ function svg(color){
 }
 
 function Status(arr) {
-    var title = "";
-    var out = "";
     if(arr.status == 'good'){
-        image = svg('#2D8A54');
-        out += '<center><b><font size="7" id="green">GOOD</font></b></center>';
-        title += '<font size="4">Github </font><font style="font-family: verdana !important;" size="4" id="green">Status</font>';
+        var image = svg('#2D8A54');
+        var out = '<center><b><font size="7" id="green">GOOD</font></b></center>';
+        var title = '<font size="4">Github </font><font style="font-family: verdana !important;" size="4" id="green">Status</font>';
     } else if (arr.status == 'minor'){
-        image = svg('#FFA500');
-        out += '<center><b><font size="7" id="orange">MINOR</font></b></center>';
-        title += '<font size="4">Github </font><font size="4" id="orange">Status</font>';
+        var image = svg('#FFA500');
+        var out = '<center><b><font size="7" id="orange">MINOR</font></b></center>';
+        var title = '<font size="4">Github </font><font size="4" id="orange">Status</font>';
     } else if (arr.status == 'major'){
-        image = svg('#FF0000');
-        out += '<center><b><font size="7" id="red">MAJOR</font></b></center>';
-        title += '<font size="4">Github </font><font size="4" id="red">Status</font>';
+        var image = svg('#FF0000');
+        var out = '<center><b><font size="7" id="red">MAJOR</font></b></center>';
+        var title = '<font size="4">Github </font><font size="4" id="red">Status</font>';
     }else{
-        image = 'https://assets-cdn.github.com/pinned-octocat.svg';
+        var image = 'https://assets-cdn.github.com/pinned-octocat.svg';
     }
     document.write(out);
     document.getElementById("color").innerHTML = title;
