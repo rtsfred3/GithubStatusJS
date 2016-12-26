@@ -4,15 +4,13 @@ body {
 }
 
 hr {
-    height: 10px;
+    height: 7.5px;
     color: grey;
     background-color: grey;
     margin: 0px;
     margin-top: 0px;
-    margin-bottom: 5px;
-    -webkit-box-sizing:content-box;
-    -moz-box-sizing:content-box;
-    box-sizing:content-box;
+    margin-bottom: 2.5px;
+    box-sizing: content-box;
     border: 0;
     border-top: 1px solid #eeeeee;
 }
@@ -96,7 +94,6 @@ font{
 
 font.all{
     size: 3;
-    /*font-size: 10;*/
     font-family: verdana;
 }
 
@@ -112,16 +109,6 @@ font#orange {
 
 font#red {
     color: red;
-    font-family: verdana;
-}
-
-font#blue {
-    color: blue;
-    font-family: verdana;
-}
-
-font#black {
-    color: black;
     font-family: verdana;
 }
 
