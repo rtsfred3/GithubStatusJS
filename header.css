@@ -16,7 +16,7 @@ li div {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 15px 15px;
     text-decoration: none;
 }
 
@@ -24,10 +24,9 @@ li button {
     display: block;
     color: black;
     text-align: center;
-    margin-top: 30%;
     text-decoration: none;
 }
 
 button {
-    margin-right: 15%;
+    margin-top: 30%;
 }
