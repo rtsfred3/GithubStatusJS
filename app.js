@@ -6,7 +6,7 @@ function Status(arr){
     if(arr.status == 'good'){
         var image = svg('#2D8A54');
         var out = '<center><b><font size="7" id="green">GOOD</font></b></center>';
-        var title = '<font size="4">Github </font><font style="font-family: verdana !important;" size="4" id="green">Status</font>';
+        var title = '<font size="4">Github </font><font size="4" id="green">Status</font>';
     } else if (arr.status == 'minor'){
         var image = svg('#FFA500');
         var out = '<center><b><font size="7" id="orange">MINOR</font></b></center>';
@@ -28,7 +28,7 @@ function Messages(mess){
         var out = '<i>No new messages</i>';
     }else{
         var i;
-        var out = '<table width="100%">';
+        var out = '<div class="outlineContainer"><div class="inline"><table width="100%">';
         for(i = 0; i<mess.length; i++){
             var date = new Date(mess[i].created_on).toString();
             if(mess[i].status == 'good'){
@@ -40,7 +40,7 @@ function Messages(mess){
             }
             out += '<td><font size="3">' + mess[i].body + '</font><br /><font size="1" id="date">' + date.substring(4,15) +  ' at ' + date.substring(16,24) + '</font></tr>';
         }
-        out += '</table>';
+        out += '</table></div></div>';
     }
     document.write(out);
 }
