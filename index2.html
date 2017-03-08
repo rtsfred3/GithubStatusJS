@@ -14,18 +14,23 @@
         <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
         <link rel="apple-touch-icon" sizes="144x144" href="images/144x144.png">
         <link rel="stylesheet" type="text/css" href="github.min.css">
-        <link rel="stylesheet" type="text/css" href="header.css">
         <script src="app.min.js"></script>
         <title>Github Status</title>
     </head>
     <body>
-        <ul>
-            <li><div id='image'></div></li>
-            <li><div id="color"><font size="4">Github Status</font></div></li>
-            <li style="float:right">
-                <button onclick="location.reload()">Refresh</button>
-            </li>
-        </ul>
+        <!--<table>
+            <tr id="t02">
+                <td width="1%"><div id='image'></div></td>
+                <td>
+                    <div id="color"><font size="4">Github Status</font></div>
+                </td>
+                <td width="1%">
+                    <button onclick="location.reload()">
+                        <font size="2"><div id="refresh">Refresh</div></font>
+                    </button>
+                </td>
+            </tr>
+        </table>-->
         
         <script src="https://status.github.com/api/status.json?callback=Status"></script>
         
