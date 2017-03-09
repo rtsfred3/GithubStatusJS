@@ -28,7 +28,7 @@ function Messages(mess){
         var out = '<i>No new messages</i>';
     }else{
         var i;
-        var out = '<div class="outlineContainer"><div class="inline"><table width="100%">';
+        var out = '<table width="100%">';
         for(i = 0; i<mess.length; i++){
             var date = new Date(mess[i].created_on).toString();
             if(mess[i].status == 'good'){
@@ -40,7 +40,7 @@ function Messages(mess){
             }
             out += '<td><font size="3">' + mess[i].body + '</font><br /><font size="1" id="date">' + date.substring(4,15) +  ' at ' + date.substring(16,24) + '</font></tr>';
         }
-        out += '</table></div></div>';
+        out += '</table>';
     }
     document.write(out);
 }
