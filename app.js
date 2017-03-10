@@ -18,9 +18,9 @@ function Status(arr){
     }else{
         var image = 'https://assets-cdn.github.com/pinned-octocat.svg';
     }
-    document.write(out);
     document.getElementById("color").innerHTML = title;
     document.getElementById("image").innerHTML = image;
+    document.write(out);
 }
 
 function Messages(mess){
