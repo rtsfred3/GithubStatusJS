@@ -17,12 +17,12 @@ function Status(arr){
         var title = '<font size="4">Github </font><font size="4" id="red">Status</font>';
     }else{
         var image = 'https://assets-cdn.github.com/pinned-octocat.svg';
-        var title = "";
-        var out = "";
+        var title = '';
+        var out = '';
     }
+    document.write(out);
     document.getElementById("color").innerHTML = title;
     document.getElementById("image").innerHTML = image;
-    document.write(out);
 }
 
 function Messages(mess){
