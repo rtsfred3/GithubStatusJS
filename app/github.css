@@ -16,9 +16,12 @@ hr {
 }
 
 svg {
-    width: 15px;
-    margin: 0px;
-    padding: 0px;
+    width: 100%;
+    margin: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    display: block;
 }
 
 table {
@@ -27,36 +30,31 @@ table {
     left: 0px;
     padding: 0px;
     margin: 0px;
-    margin-bottom: 0px;
 }
 
 tr, td {
     border: 0px solid black;
-    padding: 2px;
-    margin: 0px;
+    padding: 2;
+    margin: 0;
 }
 
-.footer{
-    position: fixed;
-    bottom: 0;
-    text-align: center;
-}
-
-td#stock {
-    border: 0px solid black;
+td#status {
     border-collapse: collapse;
 }
 
 td#border {
-    border: 1px solid black;
-    width: 10px;
-    margin: 0px;
+    border: 0px solid black;
+    width: 30px;
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
 }
 
 font{
     color: #404040;
     font-size: 10;
     font-family: verdana;
+    padding-bottom: 0;
 }
 
 font.all{
@@ -64,33 +62,33 @@ font.all{
     font-family: verdana;
 }
 
-font#green {
+.green {
+    font-size: 90px;
     color: green;
     font-family: verdana;
 }
 
-font#orange {
+.orange {
+    font-size: 90px;
     color: orange;
     font-family: verdana;
 }
 
-font#red {
+.red {
+    font-size: 90px;
     color: red;
     font-family: verdana;
 }
 
-font#black {
+.black {
+    font-size: 90px;
     color: black;
     font-family: verdana;
 }
 
-font#date {
-    font-size: 10;
-    color: black;
+.date {
+    font-size: 10px;
+    color: gray;
     font-family: verdana;
-}
-
-.icon {
-    height: 27px;
-    fill: #2D8A54;
+    padding-top: 5px;
 }
