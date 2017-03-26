@@ -7,7 +7,7 @@ function svg(color, i, len){
     }else{
         main += '<line x1="50" y1="0" x2="50" y2="200" stroke-width="10" stroke="black"/>';
     }
-    return main + '<circle cx="50" cy="100" r="35" fill="' + color + '"/></svg>';
+    return main + '<circle cx="50" cy="100" r="25" fill="' + color + '"/></svg>';
 }
 
 function Status(arr){
