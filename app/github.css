@@ -17,10 +17,10 @@ hr {
 
 svg {
     width: 100%;
-    margin: 0;
-    left: 0;
-    right: 0;
-    padding: 0;
+    margin: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 0px;
     display: block;
 }
 
@@ -34,19 +34,22 @@ table {
 
 tr, td {
     border: 0px solid black;
-    padding: 2;
-    margin: 0;
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
 }
 
 td#status {
     border-collapse: collapse;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 td#border {
     border: 0px solid black;
     width: 30px;
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
     border-collapse: collapse;
 }
 

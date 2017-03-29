@@ -1,13 +1,13 @@
 function svg(color, i, len){
-    var main = '<?xml version="1.0" encoding="utf-8"?><svg viewBox="0 0 100 200" display="block" xmlns="http://www.w3.org/2000/svg">';
+    var main = '<?xml version="1.0" encoding="utf-8"?><svg viewBox="0 0 100 300" display="block" xmlns="http://www.w3.org/2000/svg">';
     if(i == 0){
-        main += '<line x1="50" y1="100" x2="50" y2="200" stroke-width="10" stroke="black"/>';
+        main += '<line x1="50" y1="150" x2="50" y2="300" stroke-width="10" stroke="black"/>';
     }else if(i == len-1){
-        main += '<line x1="50" y1="0" x2="50" y2="100" stroke-width="10" stroke="black"/>';
+        main += '<line x1="50" y1="0" x2="50" y2="150" stroke-width="10" stroke="black"/>';
     }else{
-        main += '<line x1="50" y1="0" x2="50" y2="200" stroke-width="10" stroke="black"/>';
+        main += '<line x1="50" y1="0" x2="50" y2="300" stroke-width="10" stroke="black"/>';
     }
-    return main + '<circle cx="50" cy="100" r="30" fill="' + color + '"/></svg>';
+    return main + '<circle cx="50" cy="150" r="30" fill="' + color + '"/></svg>';
 }
 
 function Status(arr){
