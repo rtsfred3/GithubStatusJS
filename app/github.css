@@ -1,97 +1,40 @@
 body {
-    padding: 0px;
-    margin: 5px;
-}
-
-hr {
-    height: 7.5px;
-    color: grey;
-    background-color: grey;
-    margin: 0px;
-    margin-top: 0px;
-    margin-bottom: 2.5px;
-    box-sizing: content-box;
-    border: 0;
-    border-top: 1px solid #eeeeee;
-}
-
-svg {
-    width: 100%;
-    margin: 0px;
-    left: 0px;
-    right: 0px;
-    padding: 0px;
-    display: block;
-}
-
-table {
-    border: 0px solid black;
-    border-collapse: collapse;
-    left: 0px;
-    padding: 0px;
-    margin: 0px;
-}
-
-tr, td {
-    border: 0px solid black;
-    height: 0px;
-    padding: 0px;
-    margin: 0px;
-}
-
-td#status {
-    border-collapse: collapse;
-    padding-left: 2px;
-    padding-right: 2px;
-}
-
-td#border {
-    border: 0px solid black;
-    width: 30px;
-    padding: 0px;
-    margin: 0px;
-    border-collapse: collapse;
+    padding: 0px !important;
+    margin: 5px !important;
 }
 
 font{
-    color: #404040;
-    font-size: 10;
-    font-family: verdana;
-    padding-bottom: 0;
+    color: #404040 !important;
+    font-size: 10 !important;
+    font-family: verdana !important;
+    padding-bottom: 0 !important;
 }
 
 font.all{
-    size: 3;
-    font-family: verdana;
+    size: 3 !important;
+    font-family: verdana !important;
 }
 
-.green {
-    font-size: 90px;
-    color: green;
-    font-family: verdana;
+.good {
+    font-size: 90px !important;
+    color: green !important;
+    font-family: verdana !important;
 }
 
-.orange {
-    font-size: 90px;
-    color: orange;
-    font-family: verdana;
+.minor {
+    font-size: 90px !important;
+    color: orange !important;
+    font-family: verdana !important;
 }
 
-.red {
-    font-size: 90px;
-    color: red;
-    font-family: verdana;
+.major {
+    font-size: 90px !important;
+    color: red !important;
+    font-family: verdana !important;
 }
 
 .black {
-    font-size: 90px;
-    color: black;
-    font-family: verdana;
-}
-
-.date {
-    font-size: 10px;
-    color: gray;
-    font-family: verdana;
-    padding-top: 5px;
+    font-size: 90px !important;
+    color: black !important;
+    font-family: verdana !important;
 }

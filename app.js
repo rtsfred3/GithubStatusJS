@@ -31,7 +31,7 @@ function Messages(mess){
     }else{
         var i;
         var out = '<table width="100%">';
-        for(i = 0; i<mess.length; i++){
+        for(i = 0; i < mess.length; i++){
             var date = new Date(mess[i].created_on).toString();
             if(mess[i].status == 'good'){
                 out += '<tr><td id="green"></td>';
