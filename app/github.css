@@ -3,16 +3,27 @@ body {
     margin: 5px !important;
 }
 
+hr {
+    height: 7.5px;
+    color: grey;
+    background-color: grey;
+    margin: 0px;
+    margin-top: 0px;
+    margin-bottom: 2.5px;
+    box-sizing: content-box;
+    border: 0;
+    border-top: 1px solid #eeeeee;
+}
+
 font{
     color: #404040 !important;
     font-size: 10 !important;
     font-family: verdana !important;
-    padding-bottom: 0 !important;
 }
 
 font.all{
-    size: 3 !important;
-    font-family: verdana !important;
+    size: 0;
+    font-family: verdana;
 }
 
 .good {
