@@ -26,25 +26,25 @@ font.all{
     font-family: verdana;
 }
 
-.good {
+good {
     font-size: 90px !important;
     color: green !important;
     font-family: verdana !important;
 }
 
-.minor {
+minor {
     font-size: 90px !important;
     color: orange !important;
     font-family: verdana !important;
 }
 
-.major {
+major {
     font-size: 90px !important;
     color: red !important;
     font-family: verdana !important;
 }
 
-.black {
+black {
     font-size: 90px !important;
     color: black !important;
     font-family: verdana !important;
