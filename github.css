@@ -38,6 +38,7 @@ button {
     background-image: url("img/refresh.svg");
     background-repeat: no-repeat;
     background-position: center;
+    background-color: white;
 }
 
 .footer{
