@@ -33,10 +33,11 @@ svg {
 }
 
 button {
-    padding: 0px;
+    padding: 12px 25px;
     margin: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    background-image: url("img/refresh.svg");
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .footer{
