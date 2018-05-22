@@ -21,7 +21,6 @@ hr {
 
 .align-center{
   text-align: center;
-  /* vertical-align: middle; */
 }
 
 .outlineContainer{
@@ -41,15 +40,30 @@ svg {
   margin-bottom: -5px;
 }
 
-.reload{
-  margin-top: 10px;
-  background-image: url("../img/refresh.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: inherit;
-  vertical-align: middle;
-  background-size: 27px;
+@media only screen and (max-width: 767px) {
+    .link {
+      margin-right: 5px;
+      margin-top: 5px;
+      margin-bottom: 0px;
+    }
+
+    .reload{
+      width: 40px;
+      padding: 0px;
+    }
 }
+
+@media only screen and (min-width: 768px) {
+    .link {
+      margin-right: -10px;
+    }
+
+    .reload{
+      width: 40px;
+    }
+}
+
+
 
 .footer{
   position: fixed;
@@ -58,9 +72,9 @@ svg {
 }
 
 font{
-  color: #404040;
-  font-size: 10;
-  font-family: verdana;
+  color: #404040 !important;
+  font-size: 10 !important;
+  font-family: verdana !important;
 }
 
 .all{
