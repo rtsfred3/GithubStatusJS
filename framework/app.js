@@ -7,7 +7,7 @@ function getTitle(s){
 }
 
 function getStatus(s){
-    return '<b><font size="7" class="'+s+'">'+s.toUpperCase()+'</font></b>';
+    return '<b><span class="'+s+'">'+s.toUpperCase()+'</span></b>';
 }
 
 function Status(arr){

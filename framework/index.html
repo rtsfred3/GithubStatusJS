@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <meta name="author" content="rtsfred3">
         <meta name="application-name" content="Github Status">
         <meta name="theme-color" content="green">
@@ -9,12 +10,14 @@
         <meta name="apple-mobile-web-app-title" content="Github Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="green">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
         <meta name="HandheldFriendly" content="true" />
         <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
         <link rel="apple-touch-icon" sizes="144x144" href="img/144x144.png">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -32,11 +35,6 @@
         <div class="container-fluid">
           <div class="navbar-header">
             <a href="" class="navbar-toggle btn link align-center"><span class="glyphicon glyphicon-repeat reload"></span></a>
-            <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button> -->
             <a class="navbar-brand" href="">
               <span id='image'></span>
               <span id="color"><font size="4">Github Status</font></span>
@@ -51,14 +49,19 @@
       </nav>
 
       <script> document.getElementById("image").innerHTML = svg('#000'); </script>
-      <div class="row">
-        <div id="mainStatus" class="col-sm-6 align-center align-middle">
-          <b><font size="7" class="black">UNAVAILABLE</font></b>
-        </div>
-        <div class="col-sm-6">
-          <span class="all">Previous Messages:</span>
-          <hr size='1' noshade>
-          <div class="all" id="messages"><i>No new messages</i></div>
+
+      <div class="container-fluid wrapper">
+        <div class="row rowm">
+          <div class="col-sm-6 align-center">
+            <!-- <div class="what"></div> -->
+            <div id="mainStatus"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
+            <!-- <div class="what"></div> -->
+          </div>
+          <div class="col-sm-6">
+            <div class="all">Previous Messages:</div>
+            <hr>
+            <div class="all" id="messages"><i>No new messages</i></div>
+          </div>
         </div>
       </div>
 
