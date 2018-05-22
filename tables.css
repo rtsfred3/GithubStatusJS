@@ -27,7 +27,7 @@ td#stock {
     border-collapse: collapse;
 }
 
-td#green, td#goodt {
+td.green, td.goodt {
     border: 1px solid black;
     background-color: green;
     width: 10px;
