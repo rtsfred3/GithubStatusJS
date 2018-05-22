@@ -1,95 +1,100 @@
 body {
-    padding: 0px;
-    margin: 5px;
+  padding: 0px;
+  margin: 5px;
 }
 
 hr {
-    height: 7.5px;
-    color: grey;
-    background-color: grey;
-    margin: 0px;
-    margin-top: 0px;
-    margin-bottom: 2.5px;
-    box-sizing: content-box;
-    border: 0;
-    border-top: 1px solid #eeeeee;
+  height: 7.5px;
+  color: grey;
+  background-color: grey;
+  margin: 0px;
+  margin-top: 0px;
+  margin-bottom: 2.5px;
+  box-sizing: content-box;
+  border: 0;
+  border-top: 1px solid #eeeeee;
+}
+
+#mainStatus{
+  margin-top: -15px;
 }
 
 .align-center{
   text-align: center;
+  /* vertical-align: middle; */
 }
 
 .outlineContainer{
-    width: 100%;
-    overflow: auto;
+  width: 100%;
+  overflow: auto;
 }
 
 .inline{
-    display: inline-block;
-    overflow: -moz-scrollbars-vertical;
-    overflow-y: scroll;
+  display: inline-block;
+  overflow: -moz-scrollbars-vertical;
+  overflow-y: scroll;
 }
 
 svg {
-    height: 27px;
-    margin-top: -5px;
-    margin-bottom: -5px;
+  height: 27px;
+  margin-top: -5px;
+  margin-bottom: -5px;
 }
 
-.reload {
-    margin-top: 10px;
-    background-image: url("../img/refresh.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: white;
-    vertical-align: middle;
-    background-size: 27px;
+.reload{
+  margin-top: 10px;
+  background-image: url("../img/refresh.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: inherit;
+  vertical-align: middle;
+  background-size: 27px;
 }
 
 .footer{
-    position: fixed;
-    bottom: 0;
-    text-align: center;
+  position: fixed;
+  bottom: 0;
+  text-align: center;
 }
 
 font{
-    color: #404040;
-    font-size: 10;
-    font-family: verdana;
+  color: #404040;
+  font-size: 10;
+  font-family: verdana;
 }
 
 .all{
-    size: 3;
-    font-family: verdana;
+  size: 3;
+  font-family: verdana;
 }
 
 font.green, font.good {
-    color: green !important;
-    font-family: verdana;
+  color: green !important;
+  font-family: verdana;
 }
 
 font.orange, font.minor {
-    color: orange !important;
-    font-family: verdana;
+  color: orange !important;
+  font-family: verdana;
 }
 
 font.red, font.major {
-    color: red !important;
-    font-family: verdana;
+  color: red !important;
+  font-family: verdana;
 }
 
 font.black {
-    color: black;
-    font-family: verdana;
+  color: black;
+  font-family: verdana;
 }
 
 font.date {
-    font-size: 10;
-    color: black;
-    font-family: verdana;
+  font-size: 10;
+  color: black;
+  font-family: verdana;
 }
 
 .icon {
-    height: 27px;
-    fill: #2D8A54;
+  height: 27px;
+  fill: #2D8A54;
 }
