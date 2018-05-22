@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="Github Status">
+        <meta name="theme-color" content="green">
+        <meta name="description" content="Github Status">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Github Status">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="green">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+        <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+        <link rel="apple-touch-icon" sizes="144x144" href="img/144x144.png">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="github.css">
+        <link rel="stylesheet" type="text/css" href="../tables.min.css">
+        <script src="app.js"></script>
+        <title>Github Status</title>
+    </head>
+    <body>
+      <!-- <span id='image'></span> -->
+      <!-- <span id="color"><font size="4">Github Status</font></span> -->
+      <!-- <button class="reload btn" onclick="location.reload()"></button> -->
+
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+              <span id='image'></span>
+              <span id="color"><font size="4">Github Status</font></span>
+            </a>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a class="reload btn" href="#" onclick="location.reload()"><!--<button class="reload btn btn-nav" onclick="location.reload()"></button>--></a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <script> document.getElementById("image").innerHTML = svg('#000'); </script>
+      <div class="row">
+        <div id="mainStatus" class="col-sm-6 align-center align-middle">
+          <b><font size="7" class="black">UNAVAILABLE</font></b>
+        </div>
+        <div class="col-sm-6">
+          <span class="all">Previous Messages:</span>
+          <hr size='1' noshade>
+          <div class="all" id="messages"><i>No new messages</i></div>
+        </div>
+      </div>
+
+      <script src="https://status.github.com/api/status.json?callback=Status"></script>
+      <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+    </body>
+</html>
