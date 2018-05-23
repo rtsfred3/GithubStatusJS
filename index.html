@@ -28,25 +28,24 @@
                     <div id="color"><font size="4">Github Status</font></div>
                 </td>
                 <td width="1%">
-                    <button onclick="location.reload()">
-                        <!--<font size="2"><div id="refresh">Refresh</div></font>-->
-                    </button>
+                    <button onclick="location.reload()"></button>
                 </td>
             </tr>
         </table>
 
-        <script>
-            document.getElementById("image").innerHTML = svg('#000');
-        </script>
+        <script>document.getElementById("image").innerHTML = svg('#000');</script>
 
-        <div id="mainStatus"><center><b><font size="7" id="black">UNAVAILABLE</font></b></center></div>
-        <script src="https://status.github.com/api/status.json?callback=Status"></script>
+        <div id="mainStatus" class="main-font"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
 
-        <font class="all">
+        <div class="all">
             Previous Messages:
-            <hr size='1' noshade>
-            <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
-        </font>
+            <hr>
+            <div class="all" id="messages"><i>No new messages</i></div>
+
+        </div>
+
+        <script src="https://status.github.com/api/status.json?callback=Status"></script>
+        <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
 
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-47252700-2"></script>
