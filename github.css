@@ -15,6 +15,29 @@ hr {
     border-top: 1px solid #eeeeee;
 }
 
+
+#mainStatus{
+  text-align: center;
+  /* font-size: 48pt; */
+  /* font-size: 15vw; */
+}
+
+@media only screen and (max-width: 768px) {
+    .main-font {
+        font-size: 15vw;
+    }
+}
+
+@media only screen and (min-width: 769px) {
+    .main-font {
+        font-size: 56pt;
+    }
+}
+
+.unavailable-font{
+  font-size: 10vw;
+}
+
 .outlineContainer{
     width: 100%;
     overflow: auto;
@@ -53,35 +76,35 @@ font{
     font-family: verdana;
 }
 
-font.all{
+.all{
     size: 3;
     font-family: verdana;
 }
 
-font#green {
-    color: green;
-    font-family: verdana;
+.greens, .good {
+  color: green !important;
+  font-family: verdana;
 }
 
-font#orange {
-    color: orange;
-    font-family: verdana;
+.oranges, .minor {
+  color: orange !important;
+  font-family: verdana;
 }
 
-font#red {
-    color: red;
-    font-family: verdana;
+.reds, .major {
+  color: red !important;
+  font-family: verdana;
 }
 
-font#black {
-    color: black;
-    font-family: verdana;
+.black {
+  color: black !important;
+  font-family: verdana;
 }
 
-font#date {
-    font-size: 10;
-    color: black;
-    font-family: verdana;
+.date {
+  font-size: 10;
+  color: black !important;
+  font-family: verdana;
 }
 
 .icon {
