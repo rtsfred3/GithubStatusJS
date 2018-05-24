@@ -102,7 +102,7 @@ font{
 }
 
 .date {
-  font-size: 10;
+  font-size: 9pt !important;
   color: black !important;
   font-family: verdana;
 }
