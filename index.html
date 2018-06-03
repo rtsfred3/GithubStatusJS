@@ -11,11 +11,11 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="green">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
-        <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="img/144x144.png">
         <link rel="apple-touch-icon" sizes="144x144" href="img/144x144.png">
-        <link rel="stylesheet" type="text/css" href="github.min.css">
-        <link rel="stylesheet" type="text/css" href="tables.min.css">
-        <script src="app.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="styling/github.min.css">
+        <link rel="stylesheet" type="text/css" href="styling/tables.min.css">
+        <script src="scripts/app.min.js"></script>
         <title>Github Status</title>
     </head>
     <body>
@@ -44,7 +44,7 @@
 
         </div>
 
-        <script src="https://status.github.com/api/status.json?callback=Status"></script>
-        <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+        <script src="https://status.github.com/api/status.json?callback=Status" async></script>
+        <script src="https://status.github.com/api/messages.json?callback=Messages" async></script>
     </body>
 </html>

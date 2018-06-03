@@ -13,24 +13,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
         <meta name="HandheldFriendly" content="true" />
-        <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
-        <link rel="apple-touch-icon" sizes="144x144" href="img/144x144.png">
+        <link rel="icon" type="image/x-icon" href="../img/144x144.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="../img/144x144.png">
 
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href="github.css">
-        <link rel="stylesheet" type="text/css" href="../tables.min.css">
+        <link rel="stylesheet" type="text/css" href="tables.css">
         <script src="app.js"></script>
         <title>Github Status</title>
     </head>
     <body>
-      <!-- <span id='image'></span> -->
-      <!-- <span id="color"><font size="4">Github Status</font></span> -->
-      <!-- <button class="reload btn" onclick="location.reload()"></button> -->
-
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
@@ -50,11 +43,11 @@
 
       <script> document.getElementById("image").innerHTML = svg('#000'); </script>
 
-      <div class="container-fluid wrapper">
-        <div class="row rowm">
-          <div class="col-sm-6 align-center">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-6 align-self-center">
             <!-- <div class="what"></div> -->
-            <div id="mainStatus"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
+            <div class="align-middle align-center" id="mainStatus"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
             <!-- <div class="what"></div> -->
           </div>
           <div class="col-sm-6">
@@ -67,5 +60,8 @@
 
       <script src="https://status.github.com/api/status.json?callback=Status"></script>
       <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </body>
 </html>

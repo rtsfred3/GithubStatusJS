@@ -11,21 +11,23 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="green">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
-        <link rel="icon" type="image/x-icon" href="https://assets-cdn.github.com/favicon.ico">
-        <link rel="apple-touch-icon" sizes="144x144" href="images/144x144.png">
-        <link rel="stylesheet" type="text/css" href="../tables.min.css">
-        <link rel="stylesheet" type="text/css" href="github.min.css">
+        <link rel="icon" type="image/x-icon" href="../img/144x144.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="../img/144x144.png">
+        <link rel="stylesheet" type="text/css" href="../styling/tables.min.css">
+        <link rel="stylesheet" type="text/css" href="../styling/github.min.css">
         <script src="app.min.js"></script>
         <title>Github Status</title>
     </head>
     <body>
-        <script src="https://status.github.com/api/status.json?callback=Status"></script>
+      <div id="mainStatus" class="main-font"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
 
-        <font class="all">
-            Previous Messages:
-            <hr size='8' noshade>
+      <div class="all">
+          Previous Messages:
+          <hr>
+          <div class="all" id="messages"><i>No new messages</i></div>
+      </div>
 
-            <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
-        </font>
+      <script src="https://status.github.com/api/status.json?callback=Status"></script>
+      <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
     </body>
 </html>

@@ -1,0 +1,50 @@
+table {
+    border: 0px solid black;
+    border-collapse: collapse;
+    left: 0px;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 0px;
+}
+
+tr, td {
+    border: 0px solid black;
+    padding: 2px;
+    margin: 0px;
+}
+
+table#t01 {
+    border: 0px solid black;
+    border-collapse: collapse;
+}
+
+tr#t02 {
+    border: 0px solid black;
+}
+
+td#stock {
+    border: 0px solid black;
+    border-collapse: collapse;
+}
+
+td.size{
+    border: 1px solid black !important;
+    width: 12.5px !important;
+}
+
+td.greent, td.goodt {
+    background-color: green !important;
+}
+
+td.oranget, td.minort {
+    background-color: orange !important;
+}
+
+td.redt, td.majort {
+    background-color: red !important;
+}
+
+td#dot {
+    border: 1px solid black;
+    width: 15px;
+}

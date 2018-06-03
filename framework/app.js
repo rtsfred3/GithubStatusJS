@@ -3,7 +3,7 @@ function svg(c){
 }
 
 function getTitle(s){
-    return '<font size="4">Github </font><font size="4" class="'+s+'">Status</font>';
+    return '<span>Github </span><span class="'+s+'">Status</span>';
 }
 
 function getStatus(s){
@@ -32,7 +32,7 @@ function Messages(mess){
         for(var i = 0; i < mess.length; i++){
             var date = new Date(mess[i].created_on).toString();
             date = '<font size="1" class="date">' + date.substring(4,15) +  ' at ' + date.substring(16,24) + '</font>';
-            out += '<tr><td class="' + mess[i].status + 't"></td><td><font size="3">' + mess[i].body + '</font><br />'+date+'</tr>';
+            out += '<tr><td class="' + mess[i].status + 't size"></td><td><font size="3">' + mess[i].body + '</font><br />'+date+'</tr>';
         }
         out += '</table>';
     }
