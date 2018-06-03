@@ -21,13 +21,12 @@ hr {
 }
 
 #mainStatus{
-  margin-top: -20px;
-  /* padding: 25vh 0%; */
   font-size: 48pt !important;
+  /* border: 1px solid black; */
 }
 
 .align-center{
-  text-align: center;
+  text-align: center !important;
 }
 
 .outlineContainer{
@@ -73,13 +72,15 @@ svg {
       width: 40px;
     }
 
-    .col-sm-6{
+    /* .col-sm-6{
       height: 100% !important;
-      /* vertical-align: middle !important; */
-    }
+      vertical-align: middle !important;
+    } */
 
     .vert-align{
-      margin-top: 15% !important;
+      /* margin-top: 15% !important; */
+      margin-top: 0 auto;
+      margin-bottom: 0 auto;
     }
 
     .wrapper{
@@ -87,20 +88,16 @@ svg {
     }
 
     .rowm{
-      height: 100% !important;
+      height: 100vh !important;
     }
 
     .what{
       min-height: 0% !important;
-      height: 25% !important;
+      height: 30vh !important;
       width: 100% !important;
+      margin-top: -15px;
+      /* margin: 0 auto; */
     }
-}
-
-.footer{
-  position: fixed;
-  bottom: 0;
-  text-align: center;
 }
 
 font{
@@ -138,9 +135,4 @@ font{
   font-size: 10;
   color: black !important;
   font-family: verdana;
-}
-
-.icon {
-  height: 27px;
-  fill: #2D8A54;
 }
