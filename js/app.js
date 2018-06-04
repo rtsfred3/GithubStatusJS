@@ -10,6 +10,10 @@ function getStatus(s){
     return '<b><span class="'+s+'">'+s.toUpperCase()+'</span></b>';
 }
 
+function miniStatus(arr){
+    document.getElementById("mainStatus").innerHTML =  getStatus(arr.status);
+}
+
 function Status(arr){
     var image;
     if(arr.status == 'good'){
@@ -19,7 +23,7 @@ function Status(arr){
     }else if (arr.status == 'major'){
         image = svg('#FF0000');
     }
-    document.getElementById("mainStatus").innerHTML =  getStatus(arr.status);
+    miniStatus(arr);
     document.getElementById("color").innerHTML =  getTitle(arr.status);
     document.getElementById("image").innerHTML = image;
 }
