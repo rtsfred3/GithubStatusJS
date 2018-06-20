@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="Github Status">
+        <meta name="theme-color" content="#339966">
+        <meta name="description" content="Github Status">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Github Status">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+        <link rel="icon" type="image/x-icon" href="../img/144x144.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="../img/144x144.png">
+        <link rel="stylesheet" type="text/css" href="styling/github.css">
+        <link rel="stylesheet" type="text/css" href="../styling/tables.min.css">
+        <script src="js/app.js"></script>
+        <title>Github Status</title>
+    </head>
+    <body>
+        <div id="mainStatus" class="status-height bold" style="background-color:#4F93BD"><span class="bold unavailable-font center-status">UNAVAILABLE</span></div>
+
+        <div class="margin">
+          <!-- Previous Messages:
+          <hr>
+          <div id="messages"><i>No new messages</i></div> -->
+
+          <div id="messages">
+            <div id="empty" class="padding-none">
+              <div class="font-36" style="margin-bottom:2.5vh;">All good.</div>
+              <div class="font-12">
+                Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://status.github.com/api/status.json?callback=Status" async></script>
+        <script src="https://status.github.com/api/messages.json?callback=Messages" async></script>
+    </body>
+</html>

@@ -29,19 +29,23 @@ td#stock {
 
 td.size{
     border: 1px solid black !important;
-    width: 12.5px !important;
+    width: 10px !important;
 }
 
-td.greent, td.goodt {
+td.green, td.goodt {
     background-color: green !important;
 }
 
-td.oranget, td.minort {
+td.orange, td.minort {
+    /* border: 1px solid black !important; */
     background-color: orange !important;
+    /* width: 10px !important; */
 }
 
-td.redt, td.majort {
+td.red, td.majort {
+    /* border: 1px solid black !important; */
     background-color: red !important;
+    /* width: 10px !important; */
 }
 
 td#dot {
