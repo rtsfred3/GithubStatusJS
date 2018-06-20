@@ -1,0 +1,44 @@
+.messages{
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+.status-box{
+  height: 40px;
+
+  margin-top: 1vh;
+  margin-bottom: 1.25vh;
+
+  color: white;
+  display: table !important;
+}
+
+.text-margin{
+  margin-left: 1.5vw !important;
+}
+
+.text-margin-bottom{
+  margin-bottom: 3vh !important;
+}
+
+.good{
+  width: 90px;
+  background-color: #339966 !important;
+}
+
+.minor{
+  width: 130px;
+  background-color: #FF9900 !important;
+}
+
+.major{
+  width: 170px;
+  background-color: #990000 !important;
+}
+
+.message-status{
+  width: 100%;
+  padding-right: 10px;
+  vertical-align: middle;
+  display: table-cell !important;
+}
