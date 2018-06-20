@@ -21,6 +21,12 @@ hr {
   }
 }
 
+@media only screen and (max-width: 450px){
+  .unavailable-font{
+    font-size: 28pt !important;
+  }
+}
+
 @media only screen and (min-width: 401px) {
   .status-height {
     height: 240px !important;
@@ -44,7 +50,7 @@ hr {
 }
 
 .padding-none{
-  padding: 8vh 7.5vw 0vh;
+  padding: 4vh 7.5vw 0vh;
 }
 
 .center{
@@ -57,12 +63,8 @@ hr {
   display: table-cell;
 }
 
-.unavailable-font{
-  font-size: 11.5vw;
-}
-
-#empty{
-  color: #646464;
+.empty{
+  color: #646464 !important;
 }
 
 .font-36{
@@ -91,5 +93,4 @@ svg {
 
 .date {
   font-size: 9pt !important;
-  color: black !important;
 }
