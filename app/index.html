@@ -11,29 +11,51 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="green">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
-        <link rel="icon" type="image/x-icon" href="../img/144x144.png">
-        <link rel="apple-touch-icon" sizes="144x144" href="../img/144x144.png">
-        <link rel="stylesheet" type="text/css" href="../styling/tables.min.css">
-        <link rel="stylesheet" type="text/css" href="../styling/github.min.css">
-        <script src="../js/app.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="count.css">
+        <script>
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function(reg) {
+              console.log('Yey!', reg);
+            }).catch(function(err) {
+              console.log('Boo!', err);
+            });
+          }
+        </script>
+
+        <link rel="icon" type="image/x-icon" href="../img/128x128.png">
+        <link rel="apple-touch-icon" sizes="128x128" href="../img/128x128.png">
+        <link rel="stylesheet" type="text/css" href="github.css">
+        <link rel="stylesheet" type="text/css" href="tables.css">
+        <script src="app.js"></script>
+        <link rel="manifest" href="manifest.json">
         <title>Github Status</title>
     </head>
     <body>
-      <div id="mainStatus" class="main-font"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
+        <table>
+            <tr id="t02">
+                <td width="1%">
+                    <div id='image'></div>
+                </td>
+                <td>
+                    <div id="color"><font size="4">Github Status</font></div>
+                </td>
+                <td width="1%">
+                    <button class="button" onclick="location.reload()"></button>
+                </td>
+            </tr>
+        </table>
 
-      <div class="all">
-          Previous Messages:
-          <hr>
-          <div class="all" id="messages"><i>No new messages</i></div>
-      </div>
+        <script>document.getElementById("image").innerHTML = svg('#000');</script>
 
-      <div class="all" id="seconds">Relead in 30 seconds</div>
+        <div id="mainStatus" class="main-font"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
 
-      <script src="https://status.github.com/api/status.json?callback=miniStatus"></script>
-      <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+        <div class="all">
+            Previous Messages:
+            <hr>
+            <div class="all" id="messages"><i>No new messages</i></div>
+        </div>
 
-      <script src="countdown.js" async></script>
+        <script src="https://status.github.com/api/status.json?callback=Status"></script>
+        <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
     </body>
 </html>

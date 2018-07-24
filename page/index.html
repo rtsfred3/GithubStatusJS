@@ -19,22 +19,23 @@
         <title>Github Status</title>
     </head>
     <body>
-        <div id="mainStatus" class="status-height bold" style="background-color:#4F93BD"><span class="bold unavailable-font center-status">UNAVAILABLE</span></div>
+      <div id="mainStatus" class="status-height bold" style="background-color:#4F93BD"><span class="bold unavailable-font center-status">UNAVAILABLE</span></div>
 
-        <div id="messages" class="messages">
-          <div class="empty padding-none">
-            <div class="font-36" style="margin-bottom:2.5vh;">All good.</div>
-            <div class="font-12">
-              Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!
-            </div>
+      <div id="messages" class="messages">
+        <div class="empty padding-none">
+          <div class="font-36" style="margin-bottom:2.5vh;">All good.</div>
+          <div class="font-12">
+            Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!
           </div>
         </div>
+      </div>
 
-        <script src="https://status.github.com/api/status.json?callback=Status" async></script>
-        <script src="https://status.github.com/api/messages.json?callback=Messages" async></script>
+      <script src="https://status.github.com/api/status.json?callback=Status" async></script>
+      <script src="https://status.github.com/api/messages.json?callback=Messages" async></script>
 
-        <!-- <script>
-          Messages([{"status":"good","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}, {"status":"minor","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}, {"status":"major","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}]);
-        </script> -->
+      <!-- <script>
+        Status({"status":"good","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"});
+        Messages([{"status":"good","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}, {"status":"minor","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}, {"status":"major","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}]);
+      </script> -->
     </body>
 </html>
