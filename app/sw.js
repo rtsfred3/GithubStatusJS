@@ -8,6 +8,14 @@ var urlsToCache = [
   '../img/128x128.png',
 ];
 
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  btnAdd.style.display = 'block';
+});
+
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
