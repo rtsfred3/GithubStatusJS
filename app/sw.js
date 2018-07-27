@@ -4,12 +4,15 @@ var urlsToCache = [
   './github.css',
   './tables.css',
   './app.js',
+  './manifest.json',
 
   '../img/128x128.png',
   '../img/refresh.svg',
 ];
 
 let deferredPrompt;
+
+let btnAdd = document.querySelector('.btn');
 
 self.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -33,4 +36,18 @@ self.addEventListener('fetch', function(event) {
       return cachedResponse || fetch(event.request);
     })
   );
+});
+
+btnAdd.addEventListener('click', (e) => {
+  btnAdd.style.display = 'none';
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice
+    .then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the A2HS prompt');
+      } else {
+        console.log('User dismissed the A2HS prompt');
+      }
+      deferredPrompt = null;
+    });
 });
