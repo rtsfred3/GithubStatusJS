@@ -9,13 +9,26 @@
         <meta name="apple-mobile-web-app-title" content="Github Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
+
+        <script>
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function(reg) {
+              console.log('Yey!', reg);
+            }).catch(function(err) {
+              console.log('Boo!', err);
+            });
+          }
+        </script>
+
         <link rel="icon" type="image/x-icon" href="../img/144x144.png">
         <link rel="apple-touch-icon" sizes="144x144" href="../img/144x144.png">
         <link rel="stylesheet" type="text/css" href="styling/github.css">
         <link rel="stylesheet" type="text/css" href="styling/messages.css">
         <script src="js/app.js"></script>
+        <link rel="manifest" href="manifest.json">
+        
         <title>Github Status</title>
     </head>
     <body>
