@@ -7,6 +7,7 @@ var urlsToCache = [
   './manifest.json',
 
   '../img/128x128.png',
+  '../img/144x144.png',
   '../img/refresh.svg',
 ];
 
