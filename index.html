@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta name="author" content="rtsfred3">
         <meta name="application-name" content="Github Status">
-        <meta name="theme-color" content="green">
+        <meta name="theme-color" content="#339966">
         <meta name="description" content="Github Status">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="Github Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="green">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
@@ -24,39 +24,31 @@
 
         <link rel="icon" type="image/x-icon" href="img/144x144.png">
         <link rel="apple-touch-icon" sizes="144x144" href="img/144x144.png">
-        <link rel="stylesheet" type="text/css" href="styling/github.min.css">
-        <link rel="stylesheet" type="text/css" href="styling/tables.min.css">
-        <script src="js/app.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="styling/github.css">
+        <link rel="stylesheet" type="text/css" href="styling/messages.css">
+        <script src="js/app.js"></script>
         <link rel="manifest" href="manifest.json">
 
         <title>Github Status</title>
     </head>
     <body>
-        <table>
-            <tr id="t02">
-                <td width="1%">
-                    <div id='image'></div>
-                </td>
-                <td>
-                    <div id="color"><font size="4">Github Status</font></div>
-                </td>
-                <td width="1%">
-                    <button id="refresh" class="button" onclick="location.reload()"></button>
-                </td>
-            </tr>
-        </table>
+      <div id="mainStatus" class="status-height bold" style="background-color:#4F93BD"><span class="bold unavailable-font center-status">UNAVAILABLE</span></div>
 
-        <script>document.getElementById("image").innerHTML = svg('#000');</script>
-
-        <div id="mainStatus" class="main-font"><b><span class="black unavailable-font">UNAVAILABLE</span></b></div>
-
-        <div class="all">
-            Previous Messages:
-            <hr>
-            <div class="all" id="messages"><i>No new messages</i></div>
+      <div id="messages" class="messages">
+        <div class="empty padding-none">
+          <div class="font-36" style="margin-bottom:2.5vh;">All good.</div>
+          <div class="font-12">
+            Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!
+          </div>
         </div>
+      </div>
 
-        <script src="https://status.github.com/api/status.json?callback=Status" async></script>
-        <script src="https://status.github.com/api/messages.json?callback=Messages" async></script>
+      <script src="https://status.github.com/api/status.json?callback=Status" async></script>
+      <script src="https://status.github.com/api/messages.json?callback=Messages" async></script>
+
+      <!-- <script>
+        Status({"status":"good","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"});
+        Messages([{"status":"good","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}, {"status":"minor","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}, {"status":"major","body":"Everything operating normally.","created_on":"2018-06-11T16:50:02Z"}]);
+      </script> -->
     </body>
 </html>
