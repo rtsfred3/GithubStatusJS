@@ -12,8 +12,6 @@ var urlsToCache = [
 
 let deferredPrompt;
 
-let btnAdd = document.querySelector('.btn');
-
 self.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
