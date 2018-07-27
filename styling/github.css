@@ -1,111 +1,96 @@
-body {
-    padding: 0px;
-    margin: 5px;
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+body{
+  font-family: verdana;
 }
 
 hr {
-    height: 7.5px;
-    color: grey;
-    background-color: grey;
-    margin: 0px;
-    margin-top: 0px;
-    margin-bottom: 2.5px;
-    box-sizing: content-box;
-    border: 0;
-    border-top: 1px solid #eeeeee;
+  height: 7.5px;
+  color: grey;
+  background-color: grey;
+  margin: 1px 0px 2px 0px;
+  border: 0;
 }
 
+@media only screen and (max-width: 400px) {
+  .status-height {
+    height: 200px !important;
+  }
+}
+
+@media only screen and (max-width: 450px){
+  .unavailable-font{
+    font-size: 28pt !important;
+  }
+}
+
+@media only screen and (min-width: 401px) {
+  .status-height {
+    height: 240px !important;
+  }
+}
 
 #mainStatus{
+  width: 100%;
   text-align: center;
+  display: table;
+
+  font-size: 48pt;
+
+  -moz-box-shadow: 0 1px 5px 1px gray;
+  -webkit-box-shadow: 0 1px 5px 1px gray;
+  box-shadow: 0 1px 5px 1px gray;
 }
 
-@media only screen and (max-width: 768px) {
-    .main-font {
-        font-size: 15vw;
-    }
+.bold{
+  font-weight: bold;
 }
 
-@media only screen and (min-width: 769px) {
-    .main-font {
-        font-size: 56pt;
-    }
+.padding-none{
+  padding: 4vh 7.5vw 0vh;
 }
 
-.unavailable-font{
-  font-size: 10vw;
+.center{
+  width: auto;
+  text-align: center !important;
 }
 
-.outlineContainer{
-    width: 100%;
-    overflow: auto;
+.center-status{
+  vertical-align: middle;
+  display: table-cell;
 }
 
-.inline{
-    display: inline-block;
-    overflow: -moz-scrollbars-vertical;
-    overflow-y: scroll;
+.empty{
+  color: #646464 !important;
 }
 
-svg{
-    height: 27px;
-    margin-top: 0px;
-    margin-bottom: -5px;
+.font-36{
+  font-size: 36pt;
+  font-weight: 600;
 }
 
-.button{
-    padding: 12px 30px;
-    margin: 0px;
-    background-image: url("../img/refresh.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: white;
+.font-12{
+  font-size: 9pt;
+  font-weight: 500;
 }
 
-.footer{
-    position: fixed;
-    bottom: 0;
-    text-align: center;
+svg {
+  height: 27px;
+  margin-top: 0px;
+  margin-bottom: -5px;
 }
 
-font{
-    color: #404040;
-    font-size: 10;
-    font-family: verdana;
-}
-
-.all{
-    size: 3;
-    font-family: verdana;
-}
-
-.greens, .good {
-  color: green !important;
-  font-family: verdana;
-}
-
-.oranges, .minor {
-  color: orange !important;
-  font-family: verdana;
-}
-
-.reds, .major {
-  color: red !important;
-  font-family: verdana;
+.margin{
+  margin: 5px;
 }
 
 .black {
   color: black !important;
-  font-family: verdana;
 }
 
 .date {
   font-size: 9pt !important;
-  color: black !important;
-  font-family: verdana;
-}
-
-.icon {
-    height: 27px;
-    fill: #2D8A54;
 }
