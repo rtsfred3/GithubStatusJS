@@ -13,8 +13,6 @@
         <meta name="HandheldFriendly" content="true" />
 
         <script>
-          let btnAdd = document.querySelector('.btn');
-
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(function(reg) {
               console.log('Yey!', reg);
