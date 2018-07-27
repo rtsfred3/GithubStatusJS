@@ -1,6 +1,6 @@
 {
   "name": "Github Status",
-  "short_name": "GithubStatus",
+  "short_name": "Github Status",
   "description": "Wrapper for Github Status",
   "icons": [
     {
