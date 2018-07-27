@@ -6,11 +6,12 @@ var urlsToCache = [
   './app.js',
 
   '../img/128x128.png',
+  '../img/refresh.svg',
 ];
 
 let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
+self.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
   btnAdd.style.display = 'block';
@@ -25,7 +26,6 @@ self.addEventListener('install', function(event) {
       })
   );
 });
-
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(
