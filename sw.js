@@ -3,7 +3,7 @@ var urlsToCache = [
   './',
   './styling/github.min.css',
   './styling/tables.min.css',
-  './js/app.min.js',,
+  './js/app.min.js',
   './manifest.json',
 
   './img/128x128.png',
