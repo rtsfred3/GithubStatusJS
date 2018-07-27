@@ -15,7 +15,16 @@ let deferredPrompt;
 self.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-  btnAdd.style.display = 'block';
+
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if(choiceResult.outcome === 'accepted'){
+      console.log('User accepted the A2HS prompt');
+    }else{
+      console.log('User dismissed the A2HS prompt');
+    }
+    deferredPrompt = null;
+  });
 });
 
 self.addEventListener('install', function(event) {
@@ -34,18 +43,4 @@ self.addEventListener('fetch', function(event) {
       return cachedResponse || fetch(event.request);
     })
   );
-});
-
-btnAdd.addEventListener('click', (e) => {
-  btnAdd.style.display = 'none';
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice
-    .then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the A2HS prompt');
-      } else {
-        console.log('User dismissed the A2HS prompt');
-      }
-      deferredPrompt = null;
-    });
 });
