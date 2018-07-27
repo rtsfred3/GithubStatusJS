@@ -1,4 +1,4 @@
-var CACHE_NAME = 'GithubStatusPage';
+var CACHE_NAME = 'GithubStatus';
 var urlsToCache = [
   './',
   './styling/github.css',
