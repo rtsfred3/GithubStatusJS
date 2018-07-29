@@ -15,6 +15,7 @@ function Status(arr){
 
 function Messages(mess){
   if (mess.length == 0){
+    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36" style="margin-bottom:2.5vh;">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'
     return;
   }else{
     var out = '';
