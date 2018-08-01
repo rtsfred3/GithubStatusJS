@@ -32,5 +32,5 @@ function Messages(mess){
     out += '</table>';
   }
   document.getElementById('messages').innerHTML = out;
-  document.getElementById("messages").setAttribute("style", "padding-top: 2.5vw;");
+  document.getElementById('messages').setAttribute("style", "margin-top: 2.5vh !important;");
 }
