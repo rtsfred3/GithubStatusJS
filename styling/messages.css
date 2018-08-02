@@ -37,6 +37,14 @@
   background-color: #990000 !important;
 }
 
+@media only screen and (max-width: 350px) {
+  .good{ width: 35vw; }
+
+  .minor{ width: 65vw; }
+
+  .major{ width: 100vw; }
+}
+
 .message-status{
   width: 100%;
   padding-right: 10px;
