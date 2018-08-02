@@ -225,7 +225,7 @@ var HttpService = /** @class */ (function () {
         this.http = http;
     }
     HttpService.prototype.getIMDb = function (imdb) {
-        return this.http.get('http://imdb.ryanfredrickson.com/json/' + imdb + '.json');
+        return this.http.get('https://imdb.ryanfredrickson.pw/json/' + imdb + '.json');
     };
     HttpService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
