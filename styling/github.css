@@ -15,6 +15,10 @@ hr {
   border: 0;
 }
 
+.status-height {
+  height: 240px !important;
+}
+
 @media only screen and (max-width: 400px) {
   .status-height {
     height: 200px !important;
@@ -24,12 +28,6 @@ hr {
 @media only screen and (max-width: 450px){
   .unavailable-font{
     font-size: 28pt !important;
-  }
-}
-
-@media only screen and (min-width: 401px) {
-  .status-height {
-    height: 240px !important;
   }
 }
 

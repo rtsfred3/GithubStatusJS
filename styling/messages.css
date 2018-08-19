@@ -15,11 +15,7 @@
 }
 
 .text-margin{
-  margin-left: 1.5vw !important;
-}
-
-.text-margin-bottom{
-  margin-bottom: 3vh !important;
+  margin: 3vh 2.5vw;
 }
 
 .good{
@@ -37,12 +33,18 @@
   background-color: #990000 !important;
 }
 
-@media only screen and (max-width: 350px) {
-  .good{ width: 35vw; }
+@media only screen and (max-width: 800px) {
+  .good{ width: 33vw; }
 
-  .minor{ width: 65vw; }
+  .minor{ width: 50vw; }
 
   .major{ width: 100vw; }
+
+  .text-margin{ margin: 3vh 5vw; }
+}
+
+@media only screen and (max-width: 400px) {
+  .text-margin{ margin: 3vh 7.5vw; }
 }
 
 .message-status{
