@@ -1,20 +1,18 @@
 .messages{
-  margin: 0px !important;
-  padding: 0px !important;
+  margin: 15px 0px 0px 0px;
+  padding: 0px;
 }
 
 .status-box{
   height: 45px;
-  font-size: 16pt;
-
-  margin-top: 1vh;
-  margin-bottom: 1.25vh;
+  font-size: 14pt;
 
   color: white;
   display: table !important;
 }
 
 .text-margin{
+  font-size: 11pt;
   margin: 3vh 2.5vw;
 }
 
@@ -34,17 +32,17 @@
 }
 
 @media only screen and (max-width: 800px) {
-  .good{ width: 33vw; }
+  .good{ width: 25vw; }
 
   .minor{ width: 50vw; }
 
   .major{ width: 100vw; }
 
-  .text-margin{ margin: 3vh 5vw; }
+  .text-margin{ margin: 3vh 4vw; }
 }
 
 @media only screen and (max-width: 400px) {
-  .text-margin{ margin: 3vh 7.5vw; }
+  .text-margin{ margin: 3vh 7vw; }
 }
 
 .message-status{
