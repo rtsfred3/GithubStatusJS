@@ -47,7 +47,9 @@
       <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
       <script>
         if(!navigator.onLine){
+          document.getElementById("mainStatus").setAttribute("style", "color: white; background-color: #4F93BD;");
           document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36" style="margin-bottom:2.5vh;">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
+          Status({status:'error'});
         }
       </script>
     </body>

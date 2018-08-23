@@ -2,12 +2,16 @@ var CACHE_NAME = 'GithubStatus';
 var urlsToCache = [
   './',
   './styling/github.css',
+  './styling/github.min.css',
   './styling/messages.css',
+  './styling/messages.min.css',
   './js/app.js',
+  './js/app.min.js',
   './manifest.json',
 
   './img/128x128.png',
   './img/144x144.png',
+  './img/192x192.png',
   './img/refresh.svg',
 ];
 

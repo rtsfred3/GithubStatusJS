@@ -1,4 +1,4 @@
-var dict = {'good':'#339966', 'minor':'#FF9900', 'major':'#990000', 'unavailable':'#4F93BD'}
+var dict = {'good':'#339966', 'minor':'#FF9900', 'major':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
 
 function setTheme(status){
   var meta = document.getElementsByTagName('meta');
