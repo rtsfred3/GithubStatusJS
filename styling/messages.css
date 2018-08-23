@@ -51,3 +51,7 @@
   vertical-align: middle;
   display: table-cell !important;
 }
+
+.message-error{
+  padding: 1.5vh 7.5vw 0vh;
+}
