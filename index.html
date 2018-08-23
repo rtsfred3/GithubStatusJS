@@ -32,23 +32,15 @@
         <title>Github Status</title>
     </head>
     <body>
-      <div id="mainStatus" class="status-height bold" style="background-color:#4F93BD"><span class="bold unavailable-font center-status">UNAVAILABLE</span></div>
+      <div id="mainStatus" class="status-height bold" style="background-color:#4F93BD"></div>
 
-      <div id="messages" class="messages">
-        <!-- <div class="empty padding-none">
-          <div class="font-36" style="margin-bottom:2.5vh;">Error</div>
-          <div class="font-12">
-            Unable to connect to Github.
-          </div>
-        </div> -->
-      </div>
+      <div id="messages" class="messages"></div>
 
       <script src="https://status.github.com/api/status.json?callback=Status"></script>
       <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
       <script>
         if(!navigator.onLine){
-          document.getElementById("mainStatus").setAttribute("style", "color: white; background-color: #4F93BD;");
-          document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36" style="margin-bottom:2.5vh;">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
+          document.getElementById('messages').innerHTML = '<div class="empty message-error"><div class="font-36" style="margin-bottom:2.5vh;">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
           Status({status:'error'});
         }
       </script>
