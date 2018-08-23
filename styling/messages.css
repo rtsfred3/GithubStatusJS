@@ -53,6 +53,6 @@
 }
 
 .message-error{
-  padding: 3vh 7.5vw 0vh 7.5vw;
+  padding: 3vh 7.5vw 0vh 7.5vw !important;
   color: #646464;
 }
