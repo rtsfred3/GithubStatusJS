@@ -40,7 +40,10 @@
       <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
       <script>
         if(!navigator.onLine){
-          document.getElementById('messages').innerHTML = '<div class="message-error"><div class="font-36" style="margin-bottom:2.5vh;">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
+          document.getElementById('messages').innerHTML = '<div class="message-error">';
+          document.getElementById('messages').innerHTML += '<div class="font-36" style="margin-bottom:2.5vh;">Error</div>';
+          document.getElementById('messages').innerHTML += '<div class="font-12">Could not connect to GitHub.</div>';
+          document.getElementById('messages').innerHTML += '</div>';
           Status({status:'error'});
         }
       </script>
