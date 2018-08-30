@@ -48,7 +48,7 @@ hr {
 }
 
 .padding-none{
-  padding: 4vh 7.5vw 0vh;
+  padding: 3vh 7.5vw 0vh;
 }
 
 .center{
@@ -81,14 +81,46 @@ svg{
   margin-bottom: -5px;
 }
 
+.right{
+  float: right;
+}
+
 .margin{
   margin: 5px;
 }
 
-.black {
+.margin-bottom{
+  margin-bottom: 2.5vh;
+}
+
+.good-color{
+  background-color: #339966;
+}
+
+.minor-color{
+  background-color: #FF9900;
+}
+
+.major-color{
+  background-color: #990000;
+}
+
+.unavailable-color{
+  background-color: #4F93BD;
+}
+
+.error-color{
+  background-color: #646464;
+}
+
+.status-color{
+  color: white;
+}
+
+.black{
   color: black !important;
 }
 
-.date {
+.date{
   font-size: 9pt !important;
 }
