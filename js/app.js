@@ -7,20 +7,22 @@ function setTheme(status){
 }
 
 function Status(arr){
+  document.getElementById("mainStatus").classList.remove("unavailable-color");
   document.getElementById("mainStatus").innerHTML =  '<span class="center-status">'+arr.status.toUpperCase()+'</span>';
-  document.getElementById("mainStatus").setAttribute("style", "color: white; background-color: "+dict[arr.status]+";");
+  document.getElementById("mainStatus").classList.add("status-color");
+  document.getElementById("mainStatus").classList.add(arr.status.toLowerCase()+"-color");
 
   setTheme(arr.status);
 }
 
 function Messages(mess){
   if (mess.length == 0){
-    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36" style="margin-bottom:2.5vh;">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'
+    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'
     return;
   }else{
     var out = '';
     for(var i = 0; i < mess.length; i++){
-      out += '<div class="status-box ' + mess[i].status.toLowerCase() + '"><span class="message-status"><div style="float:right;">' + mess[i].status.toLowerCase() + '</div></span></div>';
+      out += '<div class="status-box ' + mess[i].status.toLowerCase() + '"><span class="message-status"><div class="right">' + mess[i].status.toLowerCase() + '</div></span></div>';
 
       var date = new Date(mess[i].created_on).toString();
       date = '<span class="date empty">' + date.substring(4,15) +  ' at ' + date.substring(16,24) + '</span>';
