@@ -31,12 +31,12 @@
   background-color: #990000 !important;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 850px) {
   .good{ width: 25vw; }
 
   .minor{ width: 50vw; }
 
-  .major{ width: 100vw; }
+  .major{ width: 75vw; }
 
   .text-margin{ margin: 3vh 4vw; }
 }
