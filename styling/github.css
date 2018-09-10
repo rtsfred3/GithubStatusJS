@@ -7,7 +7,7 @@ body{
   font-family: arial;
 }
 
-hr {
+hr{
   height: 7.5px;
   color: grey;
   background-color: grey;
@@ -15,13 +15,35 @@ hr {
   border: 0;
 }
 
-.status-height {
+.status{
+  overflow: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+	transition: height 0.1s;
+}
+
+.messages-scroll{
+  padding-top: 240px;
+  scroll-behavior: auto;
+  overflow-y: scroll;
+}
+
+.status-height{
   height: 240px !important;
 }
 
-@media only screen and (max-width: 400px) {
-  .status-height {
+.status-height-small{
+  height: 10%;
+}
+
+@media only screen and (max-width: 400px){
+  .status-height{
     height: 200px !important;
+  }
+
+  .messages-scroll{
+    padding-top: 200px;
   }
 }
 
