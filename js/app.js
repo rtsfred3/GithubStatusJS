@@ -28,7 +28,6 @@ function Messages(mess){
       date = '<span class="date empty">' + date.substring(4,15) +  ' at ' + date.substring(16,24) + '</span>';
       out += '<div class="text-margin">' + mess[i].body + '<br />'+date+'</div>';
     }
-    out += '</table>';
+    document.getElementById('messages').innerHTML = out;
   }
-  document.getElementById('messages').innerHTML = out;
 }
