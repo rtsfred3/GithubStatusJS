@@ -11,8 +11,7 @@ var urlsToCache = [
 
   './img/128x128.png',
   './img/144x144.png',
-  './img/192x192.png',
-  './img/refresh.svg',
+  './img/192x192.png'
 ];
 
 let deferredPrompt;

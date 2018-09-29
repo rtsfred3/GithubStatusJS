@@ -24,8 +24,10 @@ function Messages(mess){
     for(var i = 0; i < mess.length; i++){
       out += '<div class="status-box ' + mess[i].status.toLowerCase() + '"><span class="message-status"><div class="right">' + mess[i].status.toLowerCase() + '</div></span></div>';
 
-      var date = new Date(mess[i].created_on).toString();
-      date = '<span class="date empty">' + date.substring(4,15) +  ' at ' + date.substring(16,24) + '</span>';
+      var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      var date2 = new Date(mess[i].created_on).toLocaleDateString("en-US", options);
+
+      date = '<span class="date empty">' + date2 + '</span>';
       out += '<div class="text-margin">' + mess[i].body + '<br />'+date+'</div>';
     }
     document.getElementById('messages').innerHTML = out;
