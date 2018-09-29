@@ -15,18 +15,18 @@
         <script>
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(function(reg) {
-              console.log('Yey!', reg);
+              console.log(reg);
             }).catch(function(err) {
-              console.log('Boo!', err);
+              console.log(err);
             });
           }
         </script>
 
         <link rel="icon" type="image/x-icon" href="img/144x144.png">
         <link rel="apple-touch-icon" sizes="144x144" href="img/144x144.png">
-        <link rel="stylesheet" type="text/css" href="styling/github.css">
-        <link rel="stylesheet" type="text/css" href="styling/messages.css">
-        <script src="js/app.js"></script>
+        <link rel="stylesheet" type="text/css" href="styling/github.min.css">
+        <link rel="stylesheet" type="text/css" href="styling/messages.min.css">
+        <script src="js/app.min.js"></script>
         <link rel="manifest" href="manifest.json">
 
         <title>Github Status</title>
@@ -40,8 +40,9 @@
       <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
       <script>
         if(!navigator.onLine){
-          document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
+          // document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
           Status({status:'error'});
+          Messages([{"status":"error","body":"Could not connect to GitHub.","created_on":new Date().toISOString()}]);
         }
       </script>
     </body>

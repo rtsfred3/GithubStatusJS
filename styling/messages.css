@@ -18,17 +18,22 @@
 
 .good{
   width: 120px;
-  background-color: #339966 !important;
+  background-color: #339966;
 }
 
 .minor{
   width: 200px;
-  background-color: #FF9900 !important;
+  background-color: #FF9900;
 }
 
 .major{
   width: 280px;
-  background-color: #990000 !important;
+  background-color: #990000;
+}
+
+.error{
+  width: 120px;
+  background-color: #646464;
 }
 
 @media only screen and (max-width: 850px) {
@@ -37,6 +42,8 @@
   .minor{ width: 50vw; }
 
   .major{ width: 75vw; }
+
+  .error{ width: 25vw; }
 
   .text-margin{ margin: 3vh 4vw; }
 }
