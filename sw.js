@@ -9,42 +9,50 @@ var urlsToCache = [
   './js/app.min.js',
   './manifest.json',
 
+  './img/48x48.png',
+  './img/72x72.png',
+  './img/76x76.png',
+  './img/96x96.png',
+  './img/120x120.png',
   './img/128x128.png',
   './img/144x144.png',
-  './img/192x192.png'
+  './img/152x152.png',
+  './img/180x180.png',
+  './img/192x192.png',
+  './img/512x512.png',
+  './img/1024x1024.png'
 ];
 
 let deferredPrompt;
 
 self.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
+    e.preventDefault();
+    deferredPrompt = e;
 
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if(choiceResult.outcome === 'accepted'){
-      console.log('User accepted the A2HS prompt');
-    }else{
-      console.log('User dismissed the A2HS prompt');
-    }
-    deferredPrompt = null;
-  });
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if(choiceResult.outcome === 'accepted'){
+            console.log('User accepted the A2HS prompt');
+        }else{
+            console.log('User dismissed the A2HS prompt');
+        }
+        deferredPrompt = null;
+    });
 });
 
 self.addEventListener('install', function(event){
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache){
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(function(cache){
+            console.log('Opened cache');
+            return cache.addAll(urlsToCache);
+        })
+    );
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request).then(function(cachedResponse){
-      return cachedResponse || fetch(event.request);
-    })
-  );
+    event.respondWith(
+        caches.match(event.request).then(function(cachedResponse){
+            return cachedResponse || fetch(event.request);
+        })
+    );
 });
