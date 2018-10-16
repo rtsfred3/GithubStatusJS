@@ -1,26 +1,71 @@
 {
-  "name": "Github Status",
-  "short_name": "Github Status",
-  "description": "Wrapper for Github Status",
-  "icons": [
-    {
-      "src": "./img/128x128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "./img/144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "./img/192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ],
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#53C68C",
-  "theme_color": "#53C68C"
+    "name": "Github Status",
+    "short_name": "GithubStatus",
+    "description": "Displays Status of Github",
+    "icons": [
+        {
+            "src": "./img/48x48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/76x76.png",
+            "sizes": "76x76",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/120x120.png",
+            "sizes": "120x120",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/128x128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/180x180.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "./img/1024x1024.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#53C68C",
+    "theme_color": "#53C68C"
 }

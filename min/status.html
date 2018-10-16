@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="Github Status">
+        <meta name="theme-color" content="#53C68C">
+        <meta name="description" content="Displays Status of Github">
+        <meta property="og:site_name" content="Github Status">
+        <meta property="og:title" content="Github Status">
+        <meta property="og:description" content="Displays Status of Github">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Github Status">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+
+
+        <link rel="icon" type="image/x-icon" href="../img/128x128.png">
+        <!-- <link rel="apple-touch-icon" sizes="128x128" href="../img/128x128.png"> -->
+
+        <link rel="icon" type="image/x-icon" href="../img/144x144.png">
+        <!-- <link rel="apple-touch-icon" sizes="144x144" href="../img/144x144.png"> -->
+
+        <link rel="icon" type="image/x-icon" href="../img/192x192.png">
+        <!-- <link rel="apple-touch-icon" sizes="192x192" href="../img/192x192.png"> -->
+
+        <style>
+          *{margin:0;padding:0}body{font-family:arial}hr{height:7.5px;color:grey;background-color:grey;margin:1px 0 2px;border:0}.status{overflow:hidden;position:fixed;top:0;left:0;transition:height .1s}.messages-scroll{padding-top:240px;scroll-behavior:auto;overflow-y:scroll}.status-height{height:240px!important}.status-height-small{height:10%}@media only screen and (max-width:400px){.status-height{height:200px!important}.messages-scroll{padding-top:200px}}@media only screen and (max-width:450px){.unavailable-font{font-size:28pt!important}}#mainStatus{width:100%;text-align:center;display:table;font-size:48pt;-moz-box-shadow:0 1px 5px 1px gray;-webkit-box-shadow:0 1px 5px 1px gray;box-shadow:0 1px 5px 1px gray}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.empty{color:#646464!important}.font-36{font-size:36pt;font-weight:600}.font-12{font-size:9pt;font-weight:500}svg{height:27px;margin-top:0;margin-bottom:-5px}.right{float:right}.margin{margin:5px}.margin-bottom{margin-bottom:2.5vh}.good-color{background-color:#396}.minor-color{background-color:#F90}.major-color{background-color:#900}.unavailable-color{background-color:#4F93BD}.error-color{background-color:#646464}.status-color{color:#fff}.black{color:#000!important}.date{font-size:9pt!important}
+
+          .messages{margin:15px 0 0;padding:0}.status-box{height:45px;font-size:14pt;color:#fff;display:table!important}.text-margin{font-size:11pt;margin:3vh 2.5vw}.good{width:120px;background-color:#396}.minor{width:200px;background-color:#F90}.major{width:280px;background-color:#900}.error{width:120px;background-color:#646464}@media only screen and (max-width:850px){.good{width:25vw}.minor{width:50vw}.major{width:75vw}.error{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}.message-status{width:100%;padding-right:10px;vertical-align:middle;display:table-cell!important}.message-error{padding:3vh 7.5vw 0!important;color:#646464}
+        </style>
+
+        <script>
+          var dict={good:"#339966",minor:"#FF9900",major:"#990000",unavailable:"#4F93BD",error:"#646464"};function setTheme(t){var e=document.getElementsByTagName("meta");e[2].setAttribute("content",dict[t]),e[7].setAttribute("content",dict[t])}function Status(t){document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+t.status.toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.toLowerCase()+"-color"),setTheme(t.status)}function Messages(t){if(0!=t.length){for(var e="",s=0;s<t.length;s++){e+='<div class="status-box '+t[s].status.toLowerCase()+'"><span class="message-status"><div class="right">'+t[s].status.toLowerCase()+"</div></span></div>";var a=new Date(t[s].created_on).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"numeric"});date='<span class="date empty">'+a+"</span>",e+='<div class="text-margin">'+t[s].body+"<br />"+date+"</div>"}document.getElementById("messages").innerHTML=e}else document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'}
+        </script>
+
+        <link rel="manifest" href="manifest.min.json">
+
+        <title>Github Status</title>
+    </head>
+    <body>
+      <div id="mainStatus" class="status-height bold unavailable-color"></div>
+
+      <div id="messages" class="messages"></div>
+
+      <script src="https://status.github.com/api/status.json?callback=Status"></script>
+      <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+      <script>
+        if(!navigator.onLine){
+          // document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
+          Status({status:'error'});
+          Messages([{"status":"error","body":"Could not connect to GitHub.","created_on":new Date().toISOString()}]);
+        }
+      </script>
+    </body>
+</html>
