@@ -18,6 +18,8 @@ function Status(arr){
 }
 
 function Messages(mess){
+    var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i
+
     if (mess.length == 0){
         document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         return;
@@ -28,6 +30,11 @@ function Messages(mess){
 
             var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
             var date = new Date(mess[i].created_on).toLocaleDateString("en-US", options);
+
+            if(patt.exec(mess[i].body)){
+                var link = patt.exec(mess[i].body)[0];
+                mess[i].body = mess[i].body.replace(link, '<a href="'+link+'" target="_blank">'+link+'</a>');
+            }
 
             date = '<span class="date empty">'+date+'</span>';
             out += '<div class="text-margin">' + mess[i].body + '<br />'+date+'</div>';

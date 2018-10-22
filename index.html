@@ -43,7 +43,6 @@
       <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
       <script>
         if(!navigator.onLine){
-          // document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Error</div><div class="font-12">Could not connect to GitHub.</div></div>';
           Status({status:'error'});
           Messages([{"status":"error","body":"Could not connect to GitHub.","created_on":new Date().toISOString()}]);
         }
