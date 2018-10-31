@@ -8,6 +8,11 @@
         <meta property="og:site_name" content="Github Status">
         <meta property="og:title" content="Github Status">
         <meta property="og:description" content="Displays Status of Github">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://githubstat.us/">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Github Status">
+        <meta name="twitter:description" content="Displays Status of Github">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="Github Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,24 +27,7 @@
         </style>
 
         <script>
-            var dict = {'good':'#339966', 'minor':'#FF9900', 'major':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
-
-            function setTheme(status){
-                var metaTags = [2, 10];
-                var meta = document.getElementsByTagName('meta');
-                for(var i = 0; i<metaTags.length; i++){
-                    meta[metaTags[i]].setAttribute('content', dict[status]);
-                }
-            }
-
-            function Status(arr){
-                setTheme('unavailable');
-                document.getElementById("mainStatus").classList.remove("unavailable-color");
-                document.getElementById("mainStatus").innerHTML =  '<span class="center-status">'+arr.status.toUpperCase()+'</span>';
-                document.getElementById("mainStatus").classList.add("status-color");
-                document.getElementById("mainStatus").classList.add(arr.status.toLowerCase()+"-color");
-                setTheme(arr.status);
-            }
+            var dict={good:"#339966",minor:"#FF9900",major:"#990000",unavailable:"#4F93BD",error:"#646464"};function setTheme(t){for(var e=[2,15],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",dict[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+t.status.toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.toLowerCase()+"-color"),setTheme(t.status)}
         </script>
 
         <title>Github Status</title>
