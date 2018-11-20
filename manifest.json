@@ -64,7 +64,7 @@
             "type": "image/png"
         }
     ],
-    "start_url": "./",
+    "start_url": "https://githubstat.us/",
     "display": "standalone",
     "background_color": "#53C68C",
     "theme_color": "#53C68C"
