@@ -1,9 +1,7 @@
 var CACHE_NAME = 'GithubStatus';
-var OFFLINE_CACHE = 'offline';
 
 var urlsToCache = [
   './',
-  './error.html',
 
   './styling/github.css',
   './styling/github.min.css',
@@ -28,11 +26,6 @@ var urlsToCache = [
   './img/512x512.png',
   './img/1024x1024.png'
 ];
-
-var offlineCache = [
-    './error.html',
-    './img/128x128.png'
-]
 
 let deferredPrompt;
 

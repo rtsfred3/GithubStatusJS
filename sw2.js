@@ -23,12 +23,15 @@ self.addEventListener('beforeinstallprompt', (e) => {
 });
 
 self.addEventListener('install', function(event){
+    self.skipWaiting();
+
+    var offlinePage = new Request('error.html');
     event.waitUntil(
-        caches.open(OFFLINE_CACHE).then(function(cache){
-            console.log('Opened cache');
-            return cache.addAll(offlineCache);
-        })
-    );
+        fetch(offlinePage).then(function(response) {
+            return caches.open(OFFLINE_CACHE).then(function(cache) {
+                return cache.put(offlinePage, response);
+            });
+        }));
 });
 
 self.addEventListener('fetch', function(event) {
