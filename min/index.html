@@ -2,19 +2,21 @@
 <html lang="en">
     <head>
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="Github Status">
+        <meta name="application-name" content="GitHub Status">
         <meta name="theme-color" content="#53C68C">
-        <meta name="description" content="Displays Status of Github">
-        <meta property="og:site_name" content="Github Status">
-        <meta property="og:title" content="Github Status">
-        <meta property="og:description" content="Displays Status of Github">
+        <meta name="description" content="A website to monitor GitHub status updates">
+        <meta property="og:site_name" content="GitHub Status">
+        <meta property="og:title" content="GitHub Status">
+        <meta property="og:description" content="A website to monitor GitHub status updates">
+        <meta property="og:image" content="https://g.hstat.us/status-facebook.png">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://githubstat.us/">
-        <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="Github Status">
-        <meta name="twitter:description" content="Displays Status of Github">
+        <meta property="og:url" content="https://g.hstat.us/">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="GitHub Status">
+        <meta name="twitter:description" content="A website to monitor GitHub status updates">
+        <meta name="twitter:image:src" content="https://g.hstat.us/status-twitter.png">
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="Github Status">
+        <meta name="apple-mobile-web-app-title" content="GitHub Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -30,12 +32,12 @@
         </style>
 
         <script>
-            var dict={good:"#339966",minor:"#FF9900",major:"#990000",unavailable:"#4F93BD",error:"#646464"};function setTheme(e){for(var t=[2,15],a=document.getElementsByTagName("meta"),s=0;s<t.length;s++)a[t[s]].setAttribute("content",dict[e])}function Status(e){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+e.status.toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(e.status.toLowerCase()+"-color"),setTheme(e.status)}function Messages(e){var t=/(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;if(0!=e.length){for(var a="",s=0;s<e.length;s++){a+='<div class="status-box '+e[s].status.toLowerCase()+'"><span class="message-status"><div class="right">'+e[s].status.toLowerCase()+"</div></span></div>";var n=new Date(e[s].created_on).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"numeric"});if(t.exec(e[s].body)){var o=t.exec(e[s].body)[0];e[s].body=e[s].body.replace(o,'<a href="'+o+'" target="_blank">'+o+"</a>")}n='<span class="date empty">'+n+"</span>",a+='<div class="text-margin">'+e[s].body+"<br />"+n+"</div>"}document.getElementById("messages").innerHTML=a}else document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'}
+            var dict={good:"#339966",minor:"#FF9900",major:"#990000",unavailable:"#4F93BD",error:"#646464"};function setTheme(e){for(var t=[2,17],a=document.getElementsByTagName("meta"),s=0;s<t.length;s++)a[t[s]].setAttribute("content",dict[e])}function Status(e){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+e.status.toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(e.status.toLowerCase()+"-color"),setTheme(e.status)}function Messages(e){var t=/(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;if(0!=e.length){for(var a="",s=0;s<e.length;s++){a+='<div class="status-box '+e[s].status.toLowerCase()+'"><span class="message-status"><div class="right">'+e[s].status.toLowerCase()+"</div></span></div>";var n=new Date(e[s].created_on).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"numeric"});if(t.exec(e[s].body)){var o=t.exec(e[s].body)[0];e[s].body=e[s].body.replace(o,'<a href="'+o+'" target="_blank">'+o+"</a>")}n='<span class="date empty">'+n+"</span>",a+='<div class="text-margin">'+e[s].body+"<br />"+n+"</div>"}document.getElementById("messages").innerHTML=a}else document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'}
         </script>
 
         <link rel="manifest" href="manifest.min.json">
 
-        <title>Github Status</title>
+        <title>GitHub Status</title>
     </head>
     <body>
         <div id="mainStatus" class="status-height bold unavailable-color"></div>

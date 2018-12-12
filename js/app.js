@@ -1,7 +1,7 @@
 var dict = {'good':'#339966', 'minor':'#FF9900', 'major':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
 
 function setTheme(status){
-    var metaTags = [2, 15];
+    var metaTags = [2, 17];
     var meta = document.getElementsByTagName('meta');
     for(var i = 0; i<metaTags.length; i++){
         meta[metaTags[i]].setAttribute('content', dict[status]);
