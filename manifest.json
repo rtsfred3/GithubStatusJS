@@ -1,7 +1,7 @@
 {
-    "name": "Github Status",
-    "short_name": "GithubStatus",
-    "description": "Displays Status of Github",
+    "name": "GitHub Status",
+    "short_name": "GitHubStatus",
+    "description": "A website to monitor GitHub status updates",
     "icons": [
         {
             "src": "./img/48x48.png",
