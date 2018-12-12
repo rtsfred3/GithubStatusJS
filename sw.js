@@ -11,8 +11,6 @@ var urlsToCache = [
   './js/app.js',
   './js/app.min.js',
 
-  './manifest.json',
-
   './img/48x48.png',
   './img/72x72.png',
   './img/76x76.png',
