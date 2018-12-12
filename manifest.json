@@ -1,7 +1,12 @@
 {
     "name": "GitHub Status",
     "short_name": "GitHubStatus",
-    "description": "A website to monitor GitHub status updates",
+    "description": "A website to monitor GitHub status updates.",
+    "start_url": "https://githubstat.us/",
+    "display": "standalone",
+    "background_color": "#53C68C",
+    "theme_color": "#53C68C",
+
     "icons": [
         {
             "src": "./img/48x48.png",
@@ -63,9 +68,5 @@
             "sizes": "1024x1024",
             "type": "image/png"
         }
-    ],
-    "start_url": "https://githubstat.us/",
-    "display": "standalone",
-    "background_color": "#53C68C",
-    "theme_color": "#53C68C"
+    ]
 }

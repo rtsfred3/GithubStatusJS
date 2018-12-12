@@ -2,7 +2,7 @@ var OFFLINE_CACHE = 'offline';
 
 var offlineCache = [
     './error.html',
-    './img/128x128.png'
+    './favicon.ico'
 ]
 
 let deferredPrompt;
