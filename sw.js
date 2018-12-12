@@ -11,18 +11,18 @@ var urlsToCache = [
   './js/app.js',
   './js/app.min.js',
 
-  './img/48x48.png',
-  './img/72x72.png',
-  './img/76x76.png',
-  './img/96x96.png',
-  './img/120x120.png',
-  './img/128x128.png',
-  './img/144x144.png',
-  './img/152x152.png',
-  './img/180x180.png',
-  './img/192x192.png',
-  './img/512x512.png',
-  './img/1024x1024.png'
+  './img/48px.png',
+  './img/72px.png',
+  './img/76px.png',
+  './img/96px.png',
+  './img/120px.png',
+  './img/128px.png',
+  './img/144px.png',
+  './img/152px.png',
+  './img/180px.png',
+  './img/192px.png',
+  './img/512px.png',
+  './img/1024px.png'
 ];
 
 let deferredPrompt;
