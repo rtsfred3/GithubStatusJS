@@ -29,13 +29,16 @@
         </style>
 
         <script>
-            var dict={good:"#339966",minor:"#FF9900",major:"#990000",unavailable:"#4F93BD",error:"#646464"};function setTheme(e){for(var t=[2,15],a=document.getElementsByTagName("meta"),n=0;n<t.length;n++)a[t[n]].setAttribute("content",dict[e])};function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+t.status.toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.toLowerCase()+"-color"),setTheme(t.status)}
+            var dict={good:"#339966",minor:"#FF9900",major:"#990000",unavailable:"#4F93BD",error:"#646464"};function setTheme(e){for(var t=[2,17],a=document.getElementsByTagName("meta"),n=0;n<t.length;n++)a[t[n]].setAttribute("content",dict[e])};function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+t.status.toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.toLowerCase()+"-color"),setTheme(t.status)}
         </script>
 
         <title>GitHub Status</title>
     </head>
     <body>
         <div id="mainStatus" class="status-height bold good-color"></div>
-        <script src="https://status.github.com/api/status.json?callback=Status"></script>
+        <!-- <script src="https://status.github.com/api/status.json?callback=Status"></script> -->
+        <script>
+            Status({"status":"GH","last_updated":"2018-12-06T17:09:57Z"})
+        </script>
     </body>
 </html>
