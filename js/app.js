@@ -26,7 +26,7 @@ function Status(arr){
     document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
     document.getElementById("mainStatus").classList.add("status-color");
     document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase()+"-color");
-    setTheme(arr.status);
+    setTheme(arr.status.indicator);
 }
 
 function Messages(mess){
