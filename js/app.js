@@ -1,4 +1,4 @@
-var metaColors = {'good':'#339966', 'minor':'#FF9900', 'major':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
+var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
 var indicatorVals = {'none':'good', 'minor':'minor', 'major':'major', 'critical':'critical'}
 
 function setInfo(url, funct){
