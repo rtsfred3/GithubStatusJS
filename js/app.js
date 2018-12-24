@@ -1,5 +1,5 @@
 var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
-var indicatorVals = {'none':'good', 'minor':'minor', 'major':'major', 'critical':'critical'}
+var indicatorVals = {'none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error'}
 
 function setInfo(url, funct){
     var xhttp = new XMLHttpRequest();
@@ -54,5 +54,3 @@ function Messages(mess){
         document.getElementById('messages').innerHTML = out;
     }
 }
-
-setInfo('https://kctbh9vrtdwd.statuspage.io/api/v2/status.json', Status);
