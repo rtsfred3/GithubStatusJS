@@ -115,15 +115,19 @@ svg{
   margin-bottom: 2.5vh;
 }
 
-.good-color{
+.none-color{
   background-color: #339966;
 }
 
 .minor-color{
-  background-color: #FF9900;
+  background-color: #F1C40F;
 }
 
 .major-color{
+  background-color: #FF9900;
+}
+
+.critical-color{
   background-color: #990000;
 }
 
