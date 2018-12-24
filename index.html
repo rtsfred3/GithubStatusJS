@@ -46,12 +46,14 @@
 
       <div id="messages" class="messages"></div>
 
-      <script src="https://status.github.com/api/status.json?callback=Status"></script>
-      <script src="https://status.github.com/api/messages.json?callback=Messages"></script>
+      <!-- <script src="https://status.github.com/api/status.json?callback=Status"></script> -->
+      <!-- <script src="https://status.github.com/api/messages.json?callback=Messages"></script> -->
       <script>
         if(!navigator.onLine){
-          Status({status:'error'});
+          Status({status:{indicator:'error'}});
           Messages([{"status":"error","body":"Could not connect to GitHub.","created_on":new Date().toISOString()}]);
+        }else{
+            Messages([{"status":"error","body":"Messages under construction due to a change in GitHub Status API.  However, the current status (seen above) is up to date with the API.","created_on":new Date().toISOString()}]);
         }
       </script>
     </body>
