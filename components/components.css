@@ -1,0 +1,59 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-family: arial;
+}
+
+.status-height{
+    height: 20vh;
+    width: 100vw;
+    text-align: center;
+    display: table;
+    font-size: 32pt;
+}
+
+@media only screen and (max-width: 400px){
+  .status-height{
+      font-size: 24pt;
+  }
+}
+
+.bold{
+    font-weight: 700;
+}
+
+.center-status{
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.good-color, .none-color{
+    background-color: #396;
+}
+
+.minor-color{
+    background-color: #F1C40F;
+}
+
+.major-color{
+    background-color: #F90;
+}
+
+.critical-color{
+    background-color: #900;
+}
+
+.unavailable-color{
+    background-color: #4F93BD;
+}
+
+.error-color{
+    background-color: #646464;
+}
+
+.status-color{
+    color: #fff;
+}
