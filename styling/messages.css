@@ -1,47 +1,54 @@
 .messages{
-  margin: 15px 0px 0px 0px;
-  padding: 0px;
+    margin: 15px 0px 0px 0px;
+    padding: 0px;
 }
 
 .status-box{
-  height: 45px;
-  font-size: 14pt;
+    height: 45px;
+    font-size: 14pt;
 
-  color: white;
-  display: table !important;
+    color: white;
+    display: table !important;
 }
 
 .text-margin{
-  font-size: 11pt;
-  margin: 3vh 2.5vw;
+    font-size: 11pt;
+    margin: 3vh 2.5vw;
 }
 
 .good{
-  width: 120px;
-  background-color: #339966;
+    width: 120px;
+    background-color: #339966;
 }
 
 .minor{
-  width: 200px;
-  background-color: #FF9900;
+    width: 200px;
+    background-color: #F1C40F;
 }
 
 .major{
-  width: 280px;
-  background-color: #990000;
+    width: 280px;
+    background-color: #FF9900;
+}
+
+.critical{
+    width: 360px;
+    background-color: #990000;
 }
 
 .error{
-  width: 120px;
-  background-color: #646464;
+    width: 120px;
+    background-color: #646464;
 }
 
 @media only screen and (max-width: 850px) {
-  .good{ width: 25vw; }
+  .good{ width: 20vw; }
 
-  .minor{ width: 50vw; }
+  .minor{ width: 40vw; }
 
-  .major{ width: 75vw; }
+  .major{ width: 60vw; }
+
+  .critical{ width: 80vw; }
 
   .error{ width: 50vw; }
 
