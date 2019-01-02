@@ -36,7 +36,8 @@
         <link rel="apple-touch-icon" sizes="144x144" href="img/144px.png">
         <link rel="stylesheet" type="text/css" href="styling/github.min.css">
         <link rel="stylesheet" type="text/css" href="styling/messages.min.css">
-        <script src="js/app.min.js"></script>
+        <!-- <script src="js/app.min.js"></script> -->
+        <script src="js/app.js"></script>
         <link rel="manifest" href="manifest.json">
 
         <title>GitHub Status</title>
@@ -46,15 +47,13 @@
 
       <div id="messages" class="messages"></div>
 
-      <!-- <script src="https://status.github.com/api/status.json?callback=Status"></script> -->
-      <!-- <script src="https://status.github.com/api/messages.json?callback=Messages"></script> -->
       <script>
         if(!navigator.onLine){
           Status({"status":{"indicator":'error'}});
-          Messages([{"status":"error","body":"Could not connect to GitHub.","created_on":new Date().toISOString()}]);
+          Messages({"incidents":[{"impact":"error", "name":"Could not connect to GitHub.", "incident_updates":[], "created_at":new Date().toISOString()}]});
         }else{
-            setInfo('https://kctbh9vrtdwd.statuspage.io/api/v2/status.json', Status);
-            Messages([{"status":"error","body":"Messages under construction due to a change in GitHub Status API.  However, the current status (seen above) is up to date with the API.","created_on":new Date().toISOString()}]);
+            setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
+            setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages);
         }
       </script>
     </body>

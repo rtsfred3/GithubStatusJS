@@ -1,12 +1,17 @@
 var CACHE_NAME = 'GithubStatus';
 
 var urlsToCache = [
-  './styling/github.css',
-  './styling/messages.css',
+    './',
 
-  './js/app.js',
+    './styling/github.css',
+    './styling/github.min.css',
+    './styling/messages.css',
+    './styling/messages.min.css',
 
-  './img/144px.png'
+    './js/app.js',
+    './js/app.min.js',
+
+    './img/144px.png'
 ];
 
 let deferredPrompt;
