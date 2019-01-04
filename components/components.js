@@ -13,13 +13,13 @@ function setInfo(url, funct){
 }
 
 function Status(arr){
+    var out = "";
     for(var i = 0; i < arr["components"].length; i++){
         var curr = arr["components"][i];
         if(curr["id"] == "0l2p9nhqnxpd"){ continue; }
 
-        document.getElementById("mainStatus"+i).classList.remove("unavailable-color");
-        document.getElementById("mainStatus"+i).innerHTML = '<span class="center-status">'+curr["name"]+'</span>';
-        document.getElementById("mainStatus"+i).classList.add("status-color");
-        document.getElementById("mainStatus"+i).classList.add(indicatorVals[curr["status"]].toLowerCase()+"-color");
+        out += '<div class="status-height bold status-color '+indicatorVals[curr["status"]]+'-color"><span class="center-status">'+curr["name"]+'</span></div>';
     }
+
+    document.getElementsByTagName("body")[0].innerHTML = out + document.getElementsByTagName("body")[0].innerHTML;
 }

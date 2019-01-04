@@ -17,6 +17,12 @@ body{
 
 @media only screen and (max-width: 400px){
   .status-height{
+      font-size: 16pt;
+  }
+}
+
+@media only screen and (max-width: 800px){
+  .status-height{
       font-size: 24pt;
   }
 }
