@@ -50,7 +50,7 @@ function Messages(mess){
                     out += '<div class="text-margin">' + mess["incidents"][i]["incident_updates"][j].body + '<br />'+date+'</div>';
                 }
             }
-            
+
             out += '<div class="status-box ' + indicatorVals[mess["incidents"][i]["impact"]] + '"><span class="message-status"><div class="right">' + indicatorVals[mess["incidents"][i]["impact"]] + '</div></span></div>';
 
             var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
