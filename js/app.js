@@ -50,14 +50,6 @@ function Messages(mess){
                     out += '<div class="text-margin">' + mess["incidents"][i]["incident_updates"][j].body + '<br />'+date+'</div>';
                 }
             }
-
-            out += '<div class="status-box ' + indicatorVals[mess["incidents"][i]["impact"]] + '"><span class="message-status"><div class="right">' + indicatorVals[mess["incidents"][i]["impact"]] + '</div></span></div>';
-
-            var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-            var date = new Date(mess["incidents"][i].created_at).toLocaleDateString("en-US", options);
-
-            date = '<span class="date empty">'+date+'</span>';
-            out += '<div class="text-margin">' + mess["incidents"][i].name + '<br />'+date+'</div>';
         }
         document.getElementById('messages').innerHTML = out;
     }
