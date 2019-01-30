@@ -49,8 +49,8 @@
 
       <script>
         if(!navigator.onLine){
-          Status({"status":{"indicator":'error'}});
-          Messages({"incidents":[{"impact":"error", "name":"Could not connect to GitHub.", "incident_updates":[], "created_at":new Date().toISOString()}]});
+            Status({"status":{"indicator":'error'}});
+            Messages({"incidents":[{"impact":"error", "name":"Could not connect to GitHub.", "incident_updates":[{"status":"investigating", "body":"Could not connect to GitHub.", "updated_at":new Date().toISOString()}], "created_at":new Date().toISOString()}]});
         }else{
             setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
             setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages);
