@@ -22,8 +22,10 @@ function setTheme(status){
 
 function Status(arr){
     setTheme('unavailable');
+    document.getElementById("mainStatus").classList.remove("zero-height");
     document.getElementById("mainStatus").classList.remove("unavailable-color");
     document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    document.getElementById("mainStatus").classList.add("status-height");
     document.getElementById("mainStatus").classList.add("status-color");
     document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase()+"-color");
     setTheme(arr.status.indicator);
