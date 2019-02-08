@@ -22,6 +22,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
+        <link rel="canonical" href="https://g.hstat.us/" />
+
         <script type="application/ld+json">
             {
                 "@context": "http://schema.org/",
@@ -33,17 +35,23 @@
         </script>
 
         <style>
-            *{margin:0;padding:0}body{font-family:arial}.status-height{height:100vh}#mainStatus{width:100%;text-align:center;display:table;font-size:48pt}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.none-color{background-color:#396}.minor-color{background-color:#F1C40F}.major-color{background-color:#F90}.critical-color{background-color:#900}.unavailable-color{background-color:#4F93BD}.error-color{background-color:#646464}.status-color{color:#fff}
+            *{margin:0;padding:0}body{font-family:arial}.status-height{height:100vh;width:100%;text-align:center;display:table;font-size:48pt}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.none-color{background-color:#396}.minor-color{background-color:#F1C40F}.major-color{background-color:#F90}.critical-color{background-color:#900}.unavailable-color{background-color:#4F93BD}.error-color{background-color:#646464}.status-color{color:#fff}
+
+            .zero-height{
+                height: 0;
+                width: 0;
+            }
         </style>
 
         <script>
-            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,17],a=document.getElementsByTagName("meta"),n=0;n<e.length;n++)a[e[n]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
+            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,17],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
         </script>
 
         <title>GitHub Status</title>
     </head>
     <body>
-        <div id="mainStatus" class="status-height bold good-color"></div>
+        <div id="mainStatus" class="zero-height bold unavailable-color"></div>
         <script>setInfo('https://www.githubstatus.com/api/v2/status.json', Status);</script>
+        <noscript><div id="mainStatus" class="status-height bold error-color status-color"><span class="center-status">ERROR</span></div></noscript>
     </body>
 </html>
