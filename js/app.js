@@ -40,7 +40,7 @@ function Messages(mess){
         for(var i = 0; i < mess["incidents"].length; i++){
             if(mess["incidents"][i]["incident_updates"].length > 0){
                 for(var j = 0; j < mess["incidents"][i]["incident_updates"].length; j++){
-                    var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "good" : mess["incidents"][i]["impact"]);
+                    var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "good" : (mess["incidents"][i]["impact"] == 'none' ? 'good' : mess["incidents"][i]["impact"]));
                     out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
                     var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
