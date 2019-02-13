@@ -24,7 +24,7 @@
 
         <script>
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw2.js').then(function(reg) {
+            navigator.serviceWorker.register('sw.js').then(function(reg) {
               console.log(reg);
             }).catch(function(err) {
               console.log(err);
@@ -53,6 +53,7 @@
 
         <script>
             if(!navigator.onLine){
+                setTheme('error');
                 document.write('<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>');
             }else{
                 document.getElementsByClassName("size-zero")[0].classList.remove("size-zero");
