@@ -1,14 +1,8 @@
-var CACHE_NAME = 'GithubStatus';
+var OFFLINE_CACHE = 'offline';
 
-var urlsToCache = [
-    './',
-
-    './styling/github.min.css',
-    './styling/messages.min.css',
-    './js/app.min.js',
-
-    './img/144px.png'
-];
+var offlineCache = [
+    './error.html'
+]
 
 let deferredPrompt;
 
@@ -28,16 +22,23 @@ self.addEventListener('beforeinstallprompt', (e) => {
 });
 
 self.addEventListener('install', function(event){
+    self.skipWaiting();
+
+    var offlinePage = new Request('error.html');
     event.waitUntil(
-        caches.open(CACHE_NAME).then(function(cache){
-            console.log('Opened cache');
-            return cache.addAll(urlsToCache);
-        })
-    );
+        fetch(offlinePage).then(function(response) {
+            return caches.open(OFFLINE_CACHE).then(function(cache) {
+                return cache.put(offlinePage, response);
+            });
+        }));
 });
 
 self.addEventListener('fetch', function(event) {
     event.respondWith(
-        fetch(event.request) || caches.match(event.request)
+        fetch(event.request).catch(function(error) {
+            return caches.open(OFFLINE_CACHE).then(function(cache) {
+                return cache.match('error.html');
+            });
+        })
     );
 });
