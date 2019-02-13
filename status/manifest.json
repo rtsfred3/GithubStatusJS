@@ -1,6 +1,6 @@
 {
     "name": "GitHub Status",
-    "short_name": "GitHubStatus",
+    "short_name": "GHStatus",
     "description": "A website to monitor GitHub status updates.",
     "start_url": "https://g.hstat.us/",
     "display": "standalone",
@@ -22,14 +22,6 @@
             "src": "../img/192px.png",
             "sizes": "192x192",
             "type": "image/png"
-        }
-    ],
-
-    "prefer_related_applications": true,
-    "related_applications": [
-        {
-            "platform": "play",
-            "id": "com.deange.githubstatus"
         }
     ]
 }
