@@ -52,11 +52,10 @@
         </div>
 
         <script>
-            document.getElementsByClassName("size-zero")[0].classList.remove("size-zero");
             if(!navigator.onLine){
-                Status({"status":{"indicator":'error'}});
-                Messages({"incidents":[{"impact":"error", "name":"Could not connect to GitHub.", "incident_updates":[{"status":"investigating", "body":"Could not connect to GitHub.", "created_at":new Date().toISOString()}], "created_at":new Date().toISOString()}]});
+                document.write('<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>');
             }else{
+                document.getElementsByClassName("size-zero")[0].classList.remove("size-zero");
                 setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
                 setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages);
             }
