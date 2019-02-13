@@ -5,18 +5,18 @@
         <meta name="application-name" content="GitHub Status">
         <meta name="theme-color" content="#53C68C">
         <meta name="description" content="A minified website to monitor GitHub status updates.">
-        <meta property="og:site_name" content="(Unofficial)GitHub Status">
-        <meta property="og:title" content="(Unofficial)GitHub Status">
+        <meta property="og:site_name" content="(Minified) GitHub Status">
+        <meta property="og:title" content="(Minified) GitHub Status">
         <meta property="og:description" content="A minified website to monitor GitHub status updates.">
         <meta property="og:image" content="https://githubstat.us/img/status-facebook.png">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://githubstat.us/min/">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="GitHub Status">
+        <meta name="twitter:title" content="(Minified) GitHub Status">
         <meta name="twitter:description" content="A minified website to monitor GitHub status updates.">
         <meta name="twitter:image:src" content="https://githubstat.us/img/status-twitter.png">
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="GitHub Status">
+        <meta name="apple-mobile-web-app-title" content="(Minified) GitHub Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -36,7 +36,7 @@
             var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error"};function setInfo(t,e){var n=new XMLHttpRequest;n.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},n.open("GET",t,!0),n.send()}function setTheme(t){for(var e=[2,17],n=document.getElementsByTagName("meta"),s=0;s<e.length;s++)n[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}function Messages(t){if(0!=t.incidents.length){for(var e="",n=0;n<t.incidents.length;n++)if(0<t.incidents[n].incident_updates.length)for(var s=0;s<t.incidents[n].incident_updates.length;s++){var a="resolved"==t.incidents[n].incident_updates[s].status?"good":"none"==t.incidents[n].impact?"good":t.incidents[n].impact;e+='<div class="status-box '+a+'"><span class="message-status"><div class="right">'+a+"</div></span></div>";var i=new Date(t.incidents[n].incident_updates[s].created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"numeric"});i='<span class="date empty">'+i+"</span>",e+='<div class="text-margin">'+t.incidents[n].incident_updates[s].body+"<br />"+i+"</div>"}document.getElementById("messages").innerHTML=e}else document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'}
         </script>
 
-        <title>GitHub Status</title>
+        <title>(Minified) GitHub Status</title>
     </head>
     <body>
         <div class="size-zero">
