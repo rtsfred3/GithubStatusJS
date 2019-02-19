@@ -5,6 +5,7 @@
         <meta name="application-name" content="GitHub Statut">
         <meta name="theme-color" content="#53C68C">
         <meta name="description" content="Un site pour surveiller les mises à jour de statut GitHub.">
+        <meta name="keywords" content="GitHubStatut, GitHub Statut, GitHub, Statut">
         <meta property="og:site_name" content="GitHub Statut">
         <meta property="og:title" content="GitHub Statut">
         <meta property="og:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
@@ -22,6 +23,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
+        <link rel="canonical" href="https://g.hstat.us/" />
+
         <script type="application/ld+json">
             {
                 "@context": "http://schema.org/",
@@ -37,7 +40,7 @@
         </style>
 
         <script>
-            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"bien",minor:"mineur",major:"majeur",critical:"critique",error:"erreur"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,17],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
+            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"bon",minor:"mineur",major:"majeur",critical:"critique",error:"erreur"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,18],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
         </script>
 
         <title>GitHub Statut</title>

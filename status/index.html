@@ -23,6 +23,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
+        <link rel="canonical" href="https://g.hstat.us/" />
         <link rel="manifest" href="manifest.json">
 
         <script type="application/ld+json">
@@ -40,7 +41,7 @@
         </style>
 
         <script>
-            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,17],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
+            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,18],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
         </script>
 
         <title>GitHub Status</title>
