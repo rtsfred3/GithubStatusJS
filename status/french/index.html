@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="GitHub Statut">
+        <meta name="theme-color" content="#53C68C">
+        <meta name="description" content="Un site pour surveiller les mises à jour de statut GitHub.">
+        <meta property="og:site_name" content="GitHub Statut">
+        <meta property="og:title" content="GitHub Statut">
+        <meta property="og:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
+        <meta property="og:image" content="https://g.hstat.us/img/status-facebook.png">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://g.hstat.us/">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="GitHub Statut">
+        <meta name="twitter:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
+        <meta name="twitter:image:src" content="https://g.hstat.us/img/status-twitter-min.png">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="GitHub Statut">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+
+        <script type="application/ld+json">
+            {
+                "@context": "http://schema.org/",
+                "@type": "WebSite",
+                "name": "GitHub Statut",
+                "alternateName": "GitHubStatut",
+                "url": "https://g.hstat.us/"
+            }
+        </script>
+
+        <style>
+            *{margin:0;padding:0}body{font-family:arial}.status-height{height:100vh;width:100%;text-align:center;display:table;font-size:48pt}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.none-color{background-color:#396}.minor-color{background-color:#F1C40F}.major-color{background-color:#F90}.critical-color{background-color:#900}.unavailable-color{background-color:#4F93BD}.error-color{background-color:#646464}.status-color{color:#fff}.zero-height{height:0;width:0}
+        </style>
+
+        <script>
+            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"bien",minor:"mineur",major:"majeur",critical:"critique",error:"erreur"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,17],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
+        </script>
+
+        <title>GitHub Statut</title>
+    </head>
+    <body>
+        <div id="mainStatus" class="zero-height bold unavailable-color"></div>
+        <script>setInfo('https://www.githubstatus.com/api/v2/status.json', Status);</script>
+        <noscript><div id="mainStatus" class="status-height bold error-color status-color"><span class="center-status">ERREUR</span></div></noscript>
+    </body>
+</html>
