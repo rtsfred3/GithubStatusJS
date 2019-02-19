@@ -13,7 +13,7 @@ function setInfo(url, funct){
 }
 
 function setTheme(status){
-    var metaTags = [2, 17];
+    var metaTags = [2, 18];
     var meta = document.getElementsByTagName('meta');
     for(var i = 0; i<metaTags.length; i++){
         meta[metaTags[i]].setAttribute('content', metaColors[status]);
