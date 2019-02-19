@@ -1,49 +1,30 @@
-var CACHE_NAME = 'GithubStatus';
+var OFFLINE_CACHE = 'offline';
 
-var urlsToCache = [
-    './',
+var offlineFile = 'error.html';
 
-    './styling/github.css',
-    './styling/github.min.css',
-    './styling/messages.css',
-    './styling/messages.min.css',
+self.addEventListener('install', function(event) {
+    self.skipWaiting();
 
-    './js/app.js',
-    './js/app.min.js',
-
-    './img/144px.png'
-];
-
-let deferredPrompt;
-
-self.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if(choiceResult.outcome === 'accepted'){
-            console.log('User accepted the A2HS prompt');
-        }else{
-            console.log('User dismissed the A2HS prompt');
-        }
-        deferredPrompt = null;
-    });
-});
-
-self.addEventListener('install', function(event){
+    var offlinePage = new Request(offlineFile);
     event.waitUntil(
-        caches.open(CACHE_NAME).then(function(cache){
-            console.log('Opened cache');
-            return cache.addAll(urlsToCache);
-        })
-    );
+        fetch(offlinePage).then(function(response) {
+            return caches.open(OFFLINE_CACHE).then(function(cache) {
+                return cache.put(offlinePage, response);
+            });
+        }));
 });
 
 self.addEventListener('fetch', function(event) {
     event.respondWith(
-        caches.match(event.request).then(function(cachedResponse){
-            return cachedResponse || fetch(event.request);
-        })
-    );
+        fetch(event.request).catch(function(error) {
+            return caches.open(OFFLINE_CACHE).then(function(cache) {
+                return cache.match(offlineFile);
+            });
+        }));
+});
+
+self.addEventListener('refreshOffline', function(response) {
+    return caches.open(OFFLINE_CACHE).then(function(cache) {
+        return cache.put(offlinePage, response);
+    });
 });
