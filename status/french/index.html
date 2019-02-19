@@ -9,13 +9,13 @@
         <meta property="og:site_name" content="GitHub Statut">
         <meta property="og:title" content="GitHub Statut">
         <meta property="og:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
-        <meta property="og:image" content="https://g.hstat.us/img/status-facebook.png">
+        <meta property="og:image" content="https://img.githubstat.us/img/status-facebook-fr.png">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://g.hstat.us/">
+        <meta property="og:url" content="https://fr.githubstat.us/">
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="GitHub Statut">
         <meta name="twitter:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
-        <meta name="twitter:image:src" content="https://g.hstat.us/img/status-twitter-min.png">
+        <meta name="twitter:image:src" content="https://img.githubstat.us/img/status-twitter-min.png">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="GitHub Statut">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,7 +23,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://g.hstat.us/" />
+        <link rel="canonical" href="https://fr.githubstat.us/" />
 
         <script type="application/ld+json">
             {
@@ -31,7 +31,7 @@
                 "@type": "WebSite",
                 "name": "GitHub Statut",
                 "alternateName": "GitHubStatut",
-                "url": "https://g.hstat.us/"
+                "url": "https://fr.githubstat.us/"
             }
         </script>
 
@@ -40,7 +40,7 @@
         </style>
 
         <script>
-            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"bon",minor:"mineur",major:"majeur",critical:"critique",error:"erreur"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,18],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
+            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"bon",minor:"mineur",major:"majeur",critical:"crucial",error:"erreur"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,18],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
         </script>
 
         <title>GitHub Statut</title>
