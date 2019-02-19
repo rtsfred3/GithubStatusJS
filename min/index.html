@@ -5,29 +5,28 @@
         <meta name="application-name" content="GitHub Status">
         <meta name="theme-color" content="#53C68C">
         <meta name="description" content="A minified website to monitor GitHub status updates.">
-        <meta property="og:site_name" content="(Minified) GitHub Status">
-        <meta property="og:title" content="(Minified) GitHub Status">
+        <meta property="og:site_name" content="GitHub Status">
+        <meta property="og:title" content="GitHub Status">
         <meta property="og:description" content="A minified website to monitor GitHub status updates.">
         <meta property="og:image" content="https://githubstat.us/img/status-facebook.png">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://githubstat.us/min/">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="(Minified) GitHub Status">
+        <meta name="twitter:title" content="GitHub Status">
         <meta name="twitter:description" content="A minified website to monitor GitHub status updates.">
         <meta name="twitter:image:src" content="https://githubstat.us/img/status-twitter.png">
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="(Minified) GitHub Status">
+        <meta name="apple-mobile-web-app-title" content="GitHub Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="icon" type="image/x-icon" href="../img/128px.png">
-        <link rel="apple-touch-icon" sizes="128x128" href="../img/128px.png">
+        <link rel="icon" type="image/x-icon" href="../img/144px.png">
+        <link rel="apple-touch-icon" sizes="128x128" href="../img/144px.png">
 
         <style>
             *{margin:0;padding:0}body{font-family:arial}hr{height:7.5px;color:grey;background-color:grey;margin:1px 0 2px;border:0}.status{overflow:hidden;position:fixed;top:0;left:0;transition:height .1s}.messages-scroll{padding-top:240px;scroll-behavior:auto;overflow-y:scroll}.status-height{height:240px!important}@media only screen and (max-width:400px){.status-height{height:200px!important}.messages-scroll{padding-top:200px}}@media only screen and (max-width:450px){.unavailable-font{font-size:28pt!important}}.size-zero{height:0;width:0;margin:0!important;padding:0!important}.size-max{height:100vh;width:100vw}.status-width{width:100vw;text-align:center;display:table;font-size:48pt;-moz-box-shadow:0 1px 5px 1px gray;-webkit-box-shadow:0 1px 5px 1px gray;box-shadow:0 1px 5px 1px gray}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.empty{color:#646464!important}.font-36{font-size:36pt;font-weight:600}.font-12{font-size:9pt;font-weight:500}svg{height:27px;margin-top:0;margin-bottom:-5px}.right{float:right}.margin{margin:5px}.margin-bottom{margin-bottom:2.5vh}.none-color{background-color:#396}.minor-color{background-color:#F1C40F}.major-color{background-color:#F90}.critical-color{background-color:#900}.unavailable-color{background-color:#4F93BD}.error-color{background-color:#646464}.status-color{color:#fff}.black{color:#000!important}.date{font-size:9pt!important}
-
 
             .messages{margin:15px 0 0;padding:0}.status-box{height:45px;font-size:14pt;color:#fff;display:table!important}.text-margin{font-size:11pt;margin:3vh 2.5vw}.good{width:120px;background-color:#396}.minor{width:200px;background-color:#F1C40F}.major{width:280px;background-color:#F90}.critical{width:360px;background-color:#900}.error{width:120px;background-color:#646464}@media only screen and (max-width:850px){.good{width:20vw}.minor{width:40vw}.major{width:60vw}.critical{width:80vw}.error{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}.message-status{width:100%;padding-right:10px;vertical-align:middle;display:table-cell!important}.message-error{padding:3vh 7.5vw 0!important;color:#646464}
         </style>
@@ -36,7 +35,7 @@
             var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error"};function setInfo(t,e){var n=new XMLHttpRequest;n.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},n.open("GET",t,!0),n.send()}function setTheme(t){for(var e=[2,17],n=document.getElementsByTagName("meta"),s=0;s<e.length;s++)n[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}function Messages(t){if(0!=t.incidents.length){for(var e="",n=0;n<t.incidents.length;n++)if(0<t.incidents[n].incident_updates.length)for(var s=0;s<t.incidents[n].incident_updates.length;s++){var a="resolved"==t.incidents[n].incident_updates[s].status?"good":"none"==t.incidents[n].impact?"good":t.incidents[n].impact;e+='<div class="status-box '+a+'"><span class="message-status"><div class="right">'+a+"</div></span></div>";var i=new Date(t.incidents[n].incident_updates[s].created_at).toLocaleDateString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"numeric"});i='<span class="date empty">'+i+"</span>",e+='<div class="text-margin">'+t.incidents[n].incident_updates[s].body+"<br />"+i+"</div>"}document.getElementById("messages").innerHTML=e}else document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>'}
         </script>
 
-        <title>(Minified) GitHub Status</title>
+        <title>GitHub Status</title>
     </head>
     <body>
         <div class="size-zero">
