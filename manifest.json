@@ -2,7 +2,7 @@
     "name": "GitHub Status",
     "short_name": "GitHubStatus",
     "description": "A website to monitor GitHub status updates.",
-    "start_url": "http://localhost:8888/GithubHTML/",
+    "start_url": "https://githubstat.us/",
     "display": "standalone",
     "background_color": "#53C68C",
     "theme_color": "#53C68C",
