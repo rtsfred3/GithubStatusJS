@@ -50,10 +50,8 @@
                 var errorLang = {"en":"error", "en-US":"error", "fr":"erreur"};
                 document.write('<div class="size-max status-width bold error-color status-color"><span class="center-status">'+errorLang[language].toUpperCase()+'</span></div>');
             }else{
-                setLang('languages.json');
                 document.getElementsByClassName("size-zero")[0].classList.remove("size-zero");
-                setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
-                setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages);
+                setUp();
             }
         </script>
 

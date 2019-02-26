@@ -1,23 +1,26 @@
 var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'};
 var language = window.navigator.userLanguage || window.navigator.language;
-var languages = {};
+// language = "fr";
 
-function setLang(url){
+function setUp(){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            languages = JSON.parse(this.responseText);
+            var languages = JSON.parse(this.responseText);
+            setHead(languages[language].title, languages[language].description);
+            setInfo('https://www.githubstatus.com/api/v2/status.json', Status, languages);
+            setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages, languages);
         }
     };
-    xhttp.open("GET", url, true);
+    xhttp.open("GET", 'languages.json', true);
     xhttp.send();
 }
 
-function setInfo(url, funct){
+function setInfo(url, funct, langs){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            funct(JSON.parse(this.responseText));
+            funct(JSON.parse(this.responseText), langs);
         }
     };
     xhttp.open("GET", url, true);
@@ -32,7 +35,22 @@ function setTheme(status){
     }
 }
 
-function Status(arr){
+function setHead(title, description){
+    var metaTags = [3, 7, 13]; //Descriptions
+    var meta = document.getElementsByTagName('meta');
+    for(var i = 0; i<metaTags.length; i++){
+        meta[metaTags[i]].setAttribute('content', description);
+    }
+
+    var metaTags = [1, 5, 6, 12, 16]; //Titles
+    var meta = document.getElementsByTagName('meta');
+    for(var i = 0; i<metaTags.length; i++){
+        meta[metaTags[i]].setAttribute('content', title);
+    }
+    document.getElementsByTagName('title')[0].innerHTML = title;
+}
+
+function Status(arr, languages){
     setTheme('unavailable');
     document.getElementById("mainStatus").classList.remove("unavailable-color");
     document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+languages[language].status[arr.status.indicator].toUpperCase()+'</span>';
@@ -41,7 +59,7 @@ function Status(arr){
     setTheme(arr.status.indicator);
 }
 
-function Messages(mess){
+function Messages(mess, languages){
     if(mess["incidents"].length == 0){
         document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">'+languages[language].messages.none[0]+'</div><div class="font-12">'+languages[language].messages.none[1]+'<br /><br />'+languages[language].messages.none[2]+'</div></div>';
         return;
