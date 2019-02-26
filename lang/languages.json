@@ -2,25 +2,37 @@
     "en":{
         "title":"GitHub Status",
         "description":"A website to monitor GitHub status updates.",
-        "status":{"none":"good", "minor":"minor", "major":"major", "critical":"critical", "error":"error"},
-        "messages":{
-            "none":["All good.", "Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.", "Now get back to work!"]
-        }
-    },
-    "en-US":{
-        "title":"GitHub Status",
-        "description":"A website to monitor GitHub status updates.",
+        "images":{
+            "facebook":"https://img.githubstat.us/img/status-facebook.png",
+            "twitter":"https://img.githubstat.us/img/status-twitter-min.png"
+        },
         "status":{"none":"good", "minor":"minor", "major":"major", "critical":"critical", "error":"error"},
         "messages":{
             "none":["All good.", "Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.", "Now get back to work!"]
         }
     },
     "fr":{
-        "title":"GitHub Statut",
+        "title":"Statut GitHub",
         "description":"Un site pour surveiller les mises &agrave; jour de statut GitHub.",
+        "images":{
+            "facebook":"https://img.githubstat.us/img/status-facebook-fr.png",
+            "twitter":"https://img.githubstat.us/img/status-twitter-min.png"
+        },
         "status":{"none":"bon", "minor":"mineur", "major":"majeur", "critical":"crucial", "error":"erreur"},
         "messages":{
-            "none":["Tout bon.", "Rien &agrave; voir ici. On dirait que GitHub est opérationnel et a &egrave;t&egrave; stable pour quelque temps.", "Maintenant remets-toi au travail!"]
+            "none":["Tout bon.", "Rien &agrave; voir ici. On dirait que GitHub est op&eacute;rationnel et a &egrave;t&egrave; stable pour quelque temps.", "Maintenant remets-toi au travail!"]
+        }
+    },
+    "es":{
+        "title":"Estado de Github",
+        "description":"Un sitio para monitorear las actualizaciones de estado de GitHub.",
+        "images":{
+            "facebook":"https://img.githubstat.us/img/status-facebook-es.png",
+            "twitter":"https://img.githubstat.us/img/status-twitter-min.png"
+        },
+        "status":{"none":"bueno", "minor":"menor", "major":"grave", "critical":"crucial", "error":"error"},
+        "messages":{
+            "none":["Todo bien.", "Nada que ver aqui. Parece que GitHub est&aacute; operativo y se ha mantenido estable por un tiempo.", "¡Ahora vuelve al trabajo!"]
         }
     }
 }
