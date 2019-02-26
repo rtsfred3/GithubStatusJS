@@ -16,7 +16,7 @@
     margin: 3vh 2.5vw;
 }
 
-.good{
+.none, .good{
     width: 120px;
     background-color: #339966;
 }

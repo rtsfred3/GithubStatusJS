@@ -1,70 +1,70 @@
 {
     "name": "GitHub Status",
-    "short_name": "GHStatus",
-    "description": "A simple website to monitor GitHub status updates.",
-    "start_url": "https://g.hstat.us/",
+    "short_name": "GitHubStatus",
+    "description": "A website to monitor GitHub status updates.",
+    "start_url": "https://githubstat.us/lang/",
     "display": "standalone",
     "background_color": "#53C68C",
     "theme_color": "#53C68C",
 
     "icons": [
         {
-            "src": "https://g.hstat.us/img/48px.png",
+            "src": "https://img.githubstat.us/img/48px.png",
             "sizes": "48x48",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/72px.png",
+            "src": "https://img.githubstat.us/img/72px.png",
             "sizes": "72x72",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/76px.png",
+            "src": "https://img.githubstat.us/img/76px.png",
             "sizes": "76x76",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/96px.png",
+            "src": "https://img.githubstat.us/img/96px.png",
             "sizes": "96x96",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/120px.png",
+            "src": "https://img.githubstat.us/img/120px.png",
             "sizes": "120x120",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/128px.png",
+            "src": "https://img.githubstat.us/img/128px.png",
             "sizes": "128x128",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/144px.png",
+            "src": "https://img.githubstat.us/img/144px.png",
             "sizes": "144x144",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/152px.png",
+            "src": "https://img.githubstat.us/img/152px.png",
             "sizes": "152x152",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/180px.png",
+            "src": "https://img.githubstat.us/img/180px.png",
             "sizes": "180x180",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/192px.png",
+            "src": "https://img.githubstat.us/img/192px.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/512px.png",
+            "src": "https://img.githubstat.us/img/512px.png",
             "sizes": "512x512",
             "type": "image/png"
         },
         {
-            "src": "https://g.hstat.us/img/1024px.png",
+            "src": "https://img.githubstat.us/img/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png"
         }
