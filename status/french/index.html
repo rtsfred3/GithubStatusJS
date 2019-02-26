@@ -2,22 +2,22 @@
 <html lang="fr">
     <head>
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="GitHub Statut">
+        <meta name="application-name" content="Statut GitHub">
         <meta name="theme-color" content="#53C68C">
         <meta name="description" content="Un site pour surveiller les mises à jour de statut GitHub.">
-        <meta name="keywords" content="GitHubStatut, GitHub Statut, GitHub, Statut">
-        <meta property="og:site_name" content="GitHub Statut">
-        <meta property="og:title" content="GitHub Statut">
+        <meta name="keywords" content="StatutGitHub, Statut GitHub, GitHub, Statut">
+        <meta property="og:site_name" content="Statut GitHub">
+        <meta property="og:title" content="Statut GitHub">
         <meta property="og:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
         <meta property="og:image" content="https://img.githubstat.us/img/status-facebook-fr.png">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://fr.githubstat.us/">
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="GitHub Statut">
+        <meta name="twitter:title" content="Statut GitHub">
         <meta name="twitter:description" content="Un site pour surveiller les mises à jour de statut GitHub.">
         <meta name="twitter:image:src" content="https://img.githubstat.us/img/status-twitter-min.png">
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="GitHub Statut">
+        <meta name="apple-mobile-web-app-title" content="Statut GitHub">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -30,8 +30,8 @@
             {
                 "@context": "http://schema.org/",
                 "@type": "WebSite",
-                "name": "GitHub Statut",
-                "alternateName": "GitHubStatut",
+                "name": "Statut GitHub",
+                "alternateName": "StatutGitHub",
                 "url": "https://fr.githubstat.us/"
             }
         </script>
@@ -44,7 +44,7 @@
             var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"bon",minor:"mineur",major:"majeur",critical:"crucial",error:"erreur"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status&&e(JSON.parse(this.responseText))},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,18],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
         </script>
 
-        <title>GitHub Statut</title>
+        <title>Statut GitHub</title>
     </head>
     <body>
         <div id="mainStatus" class="zero-height bold unavailable-color"></div>

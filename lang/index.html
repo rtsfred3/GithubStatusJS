@@ -9,7 +9,7 @@
         <meta property="og:site_name" content="GitHub Status">
         <meta property="og:title" content="GitHub Status">
         <meta property="og:description" content="A website to monitor GitHub status updates.">
-        <meta property="og:image" content="https://img.githubstat.us/img/status-twitter-min.png">
+        <meta property="og:image" content="https://img.githubstat.us/img/status-facebook.png">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://githubstat.us/lang/">
         <meta name="twitter:card" content="summary">
@@ -45,6 +45,7 @@
         </div>
 
         <script>
+            console.log(language);
             if(!navigator.onLine){
                 setTheme('error');
                 var errorLang = {"en":"error", "en-US":"error", "fr":"erreur"};

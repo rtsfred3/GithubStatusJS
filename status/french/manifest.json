@@ -1,5 +1,5 @@
 {
-    "name": "GitHub Statut",
+    "name": "StatutGitHub",
     "short_name": "GHStatut",
     "description": "Un site pour surveiller les mises à jour de statut GitHub.",
     "start_url": "https://fr.githubstat.us/",

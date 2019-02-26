@@ -1,5 +1,5 @@
 var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'};
-var language = window.navigator.userLanguage || window.navigator.language;
+var language = (window.navigator.userLanguage || window.navigator.language).substring(0, 2);
 // language = "fr";
 
 function setUp(){
@@ -7,7 +7,7 @@ function setUp(){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var languages = JSON.parse(this.responseText);
-            setHead(languages[language].title, languages[language].description);
+            setHead(languages[language]);
             setInfo('https://www.githubstatus.com/api/v2/status.json', Status, languages);
             setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages, languages);
         }
@@ -35,19 +35,22 @@ function setTheme(status){
     }
 }
 
-function setHead(title, description){
+function setHead(lang){
     var metaTags = [3, 7, 13]; //Descriptions
     var meta = document.getElementsByTagName('meta');
     for(var i = 0; i<metaTags.length; i++){
-        meta[metaTags[i]].setAttribute('content', description);
+        meta[metaTags[i]].setAttribute('content', lang.description);
     }
+
+    meta[8].setAttribute('content', lang.images.facebook); //Pictures
+    meta[14].setAttribute('content', lang.images.twitter); //Pictures
 
     var metaTags = [1, 5, 6, 12, 16]; //Titles
     var meta = document.getElementsByTagName('meta');
     for(var i = 0; i<metaTags.length; i++){
-        meta[metaTags[i]].setAttribute('content', title);
+        meta[metaTags[i]].setAttribute('content', lang.title);
     }
-    document.getElementsByTagName('title')[0].innerHTML = title;
+    document.getElementsByTagName('title')[0].innerHTML = lang.title;
 }
 
 function Status(arr, languages){
