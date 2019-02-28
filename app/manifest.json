@@ -1,15 +1,15 @@
 {
   "name": "Github Status",
   "short_name": "Github Status",
-  "description": "Wrapper for Github Status",
+  "description": "[Deprecated] Wrapper for Github Status",
   "icons": [
     {
-      "src": "..    /img/128px.png",
+      "src": "https://img.githubstat.us/img/128px.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "../img/144px.png",
+      "src": "https://img.githubstat.us/img/144px.png",
       "sizes": "144x144",
       "type": "image/png"
     }

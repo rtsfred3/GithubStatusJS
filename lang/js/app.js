@@ -7,6 +7,7 @@ function setUp(){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var languages = JSON.parse(this.responseText);
+            if(languages[language] == undefined){ language = 'en'; }
             setHead(languages[language]);
             setInfo('https://www.githubstatus.com/api/v2/status.json', Status, languages);
             setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages, languages);
@@ -36,8 +37,11 @@ function setTheme(status){
 }
 
 function setHead(lang){
-    var metaTags = [3, 7, 13]; //Descriptions
+    document.getElementsByTagName('html')[0].setAttribute('lang', language);
+
     var meta = document.getElementsByTagName('meta');
+
+    var metaTags = [3, 7, 13]; //Descriptions
     for(var i = 0; i<metaTags.length; i++){
         meta[metaTags[i]].setAttribute('content', lang.description);
     }
@@ -46,7 +50,6 @@ function setHead(lang){
     meta[14].setAttribute('content', lang.images.twitter); //Pictures
 
     var metaTags = [1, 5, 6, 12, 16]; //Titles
-    var meta = document.getElementsByTagName('meta');
     for(var i = 0; i<metaTags.length; i++){
         meta[metaTags[i]].setAttribute('content', lang.title);
     }
