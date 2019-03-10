@@ -40,26 +40,26 @@
         <link rel="apple-touch-icon" sizes="144x144" href="https://img.githubstat.us/img/144px.png">
         <link rel="stylesheet" type="text/css" href="styling/github.min.css">
         <link rel="stylesheet" type="text/css" href="styling/messages.min.css">
-        <script src="js/app.min.js"></script>
+        <!-- <script src="js/app.min.js"></script> -->
 
         <!-- <link rel="stylesheet" type="text/css" href="styling/github.css"> -->
         <!-- <link rel="stylesheet" type="text/css" href="styling/messages.css"> -->
-        <!-- <script src="js/app.js"></script> -->
+        <script src="js/app.js"></script>
 
         <title>GitHub Status</title>
     </head>
     <body>
-        <div class="size-zero">
+        <div id="main" class="size-zero">
             <div id="mainStatus" class="status-height status-width bold unavailable-color"></div>
             <div id="messages" class="messages"></div>
         </div>
 
         <script>
-            if(!navigator.onLine){
+            if(!navigator.onLine || navigator.connection.effectiveType == "2g"){
                 setTheme('error');
                 document.write('<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>');
             }else{
-                document.getElementsByClassName("size-zero")[0].classList.remove("size-zero");
+                document.getElementById("main").classList.remove("size-zero");
                 setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
                 setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages);
             }

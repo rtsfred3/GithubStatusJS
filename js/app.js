@@ -6,6 +6,10 @@ function setInfo(url, funct){
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             funct(JSON.parse(this.responseText));
+        }else if(this.readyState == 4){
+            document.getElementById("main").classList.add("size-zero");
+            setTheme('error');
+            document.write('<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>');
         }
     };
     xhttp.open("GET", url, true);

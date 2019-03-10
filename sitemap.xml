@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://githubstat.us/</loc>
-        <lastmod>2019-02-26</lastmod>
+        <lastmod>2019-03-10</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/components/</loc>
@@ -10,18 +10,18 @@
     </url>
     <url>
         <loc>https://githubstat.us/min/</loc>
-        <lastmod>2019-02-26</lastmod>
+        <lastmod>2019-03-10</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/lang/</loc>
-        <lastmod>2019-02-26</lastmod>
+        <lastmod>2019-03-10</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/status/</loc>
-        <lastmod>2019-02-26</lastmod>
+        <lastmod>2019-03-10</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/status/french/</loc>
-        <lastmod>2019-02-26</lastmod>
+        <lastmod>2019-03-10</lastmod>
     </url>
 </urlset>
