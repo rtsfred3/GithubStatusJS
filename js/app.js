@@ -1,15 +1,32 @@
 var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
 var indicatorVals = {'none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error'}
+var indicatorMessages = {'resolved':'good', 'investigating':'minor'}
+
+function setUp(){
+    try{
+        document.getElementById("main").classList.remove("size-zero");
+        setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
+        setInfo('https://www.githubstatus.com/api/v2/incidents.json', Messages);
+    }catch(error){
+        setError();
+    }
+}
+
+function setError(){
+    setTheme('error');
+    // document.getElementById("main").classList.add("size-zero");
+    // document.getElementById("main").innerHTML = '';
+    document.getElementsByTagName("body")[0].innerHTML = errorMessage;
+}
 
 function setInfo(url, funct){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
+        if(this.readyState == 4 && this.status == 200) {
             funct(JSON.parse(this.responseText));
-        }else if(this.readyState == 4){
-            document.getElementById("main").classList.add("size-zero");
-            setTheme('error');
-            document.write('<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>');
+        }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
+            console.log(this.readyState, this.status);
+            setError();
         }
     };
     xhttp.open("GET", url, true);
@@ -41,10 +58,14 @@ function Messages(mess){
         return;
     }else{
         var out = '';
+        var weekOld = new Date();
+        weekOld.setDate(weekOld.getDate() - 7);
         for(var i = 0; i < mess["incidents"].length; i++){
+            if(new Date(mess["incidents"][i]["created_at"]) < weekOld){ break; }
             if(mess["incidents"][i]["incident_updates"].length > 0){
                 for(var j = 0; j < mess["incidents"][i]["incident_updates"].length; j++){
                     var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "good" : (mess["incidents"][i]["impact"] == 'none' ? 'good' : mess["incidents"][i]["impact"]));
+                    w = indicatorMessages[mess["incidents"][i]["incident_updates"][j]["status"]];
                     out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
                     var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
