@@ -1,2 +1,3 @@
+Sitemap: https://githubstat.us/sitemap.xml
 User-agent: *
 Disallow: /app/
