@@ -8,7 +8,8 @@
         },
         "status":{"none":"good", "minor":"minor", "major":"major", "critical":"critical", "error":"error"},
         "messages":{
-            "none":["All good.", "Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.", "Now get back to work!"]
+            "none":["All good.", "Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.", "Now get back to work!"],
+            "messages":{}
         }
     },
     "fr":{
@@ -20,7 +21,8 @@
         },
         "status":{"none":"bon", "minor":"mineur", "major":"majeur", "critical":"crucial", "error":"erreur"},
         "messages":{
-            "none":["Tout bon.", "Rien &agrave; voir ici. On dirait que GitHub est op&eacute;rationnel et a &egrave;t&egrave; stable pour quelque temps.", "Maintenant remets-toi au travail!"]
+            "none":["Tout bon.", "Rien &agrave; voir ici. On dirait que GitHub est op&eacute;rationnel et a &egrave;t&egrave; stable pour quelque temps.", "Maintenant remets-toi au travail!"],
+            "messages":{"Thisincidenthasbeenresolved":"Cet incident a &eacute;t&eacute; r&eacute;solu."}
         }
     },
     "es":{

@@ -1,6 +1,11 @@
 var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'};
+var indicatorMessages = {'resolved':'good', 'investigating':'minor'}
 var language = (window.navigator.userLanguage || window.navigator.language).substring(0, 2);
 // language = "fr";
+
+function mTrim(x){
+    return x.replace(/\s+|\s+/gm,'').replace('.','').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+}
 
 function setUp(){
     var xhttp = new XMLHttpRequest();
@@ -10,7 +15,7 @@ function setUp(){
             if(languages[language] == undefined){ language = 'en'; }
             setHead(languages[language]);
             setInfo('https://www.githubstatus.com/api/v2/status.json', Status, languages);
-            setInfo('https://www.githubstatus.com/api/v2/incidents/unresolved.json', Messages, languages);
+            setInfo('https://www.githubstatus.com/api/v2/incidents.json', Messages, languages);
         }
     };
     xhttp.open("GET", 'languages.json', true);
@@ -71,17 +76,24 @@ function Messages(mess, languages){
         return;
     }else{
         var out = '';
+        var weekOld = new Date();
+        weekOld.setDate(weekOld.getDate() - 7);
         for(var i = 0; i < mess["incidents"].length; i++){
+            if(new Date(mess["incidents"][i]["created_at"]) < weekOld){ break; }
             if(mess["incidents"][i]["incident_updates"].length > 0){
                 for(var j = 0; j < mess["incidents"][i]["incident_updates"].length; j++){
-                    var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "none" : (mess["incidents"][i]["impact"] == 'none' ? 'none' : mess["incidents"][i]["impact"]));
-                    out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + languages[language]["status"][w] + '</div></span></div>';
+                    var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "good" : (mess["incidents"][i]["impact"] == 'none' ? 'good' : mess["incidents"][i]["impact"]));
+                    w = indicatorMessages[mess["incidents"][i]["incident_updates"][j]["status"]];
+                    out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + languages[language].status[(w == 'good' ? 'none' : w)] + '</div></span></div>';
 
                     var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
                     var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
 
+                    // console.log(mTrim(mess["incidents"][i]["incident_updates"][j].body));
+                    // console.log(languages[language]["messages"]["messages"][mTrim(mess["incidents"][i]["incident_updates"][j].body)] == undefined ? mess["incidents"][i]["incident_updates"][j].body : languages[language].messages.messages[mTrim(mess["incidents"][i]["incident_updates"][j].body)]);
+
                     date = '<span class="date empty">'+date+'</span>';
-                    out += '<div class="text-margin">' + mess["incidents"][i]["incident_updates"][j].body + '<br />'+date+'</div>';
+                    out += '<div class="text-margin">' + (languages[language]["messages"]["messages"][mTrim(mess["incidents"][i]["incident_updates"][j].body)] == undefined ? mess["incidents"][i]["incident_updates"][j].body : languages[language].messages.messages[mTrim(mess["incidents"][i]["incident_updates"][j].body)]) + '<br />'+date+'</div>';
                 }
             }
         }
