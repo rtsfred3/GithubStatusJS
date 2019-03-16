@@ -66,7 +66,7 @@ function Messages(mess){
             if(mess["incidents"][i]["incident_updates"].length > 0){
                 for(var j = 0; j < mess["incidents"][i]["incident_updates"].length; j++){
                     var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "good" : (mess["incidents"][i]["impact"] == 'none' ? 'good' : mess["incidents"][i]["impact"]));
-                    // w = indicatorMessages[mess["incidents"][i]["incident_updates"][j]["status"]];
+                    w = indicatorMessages[mess["incidents"][i]["incident_updates"][j]["status"]];
                     out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
                     var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
