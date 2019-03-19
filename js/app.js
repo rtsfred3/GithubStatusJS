@@ -54,19 +54,21 @@ function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
     var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
-    if(mess["incidents"].length == 0){
+    var weekOld = new Date();
+    weekOld.setDate(weekOld.getDate() - 7);
+    var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > weekOld; });
+
+    if(incidents.length == 0){
         document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         return;
     }else{
         var out = '';
-        var weekOld = new Date();
-        weekOld.setDate(weekOld.getDate() - 7);
-        for(var i = 0; i < mess["incidents"].length; i++){
-            if(new Date(mess["incidents"][i]["created_at"]) < weekOld){ break; }
-            if(mess["incidents"][i]["incident_updates"].length > 0){
-                for(var j = 0; j < mess["incidents"][i]["incident_updates"].length; j++){
-                    var w = (mess["incidents"][i]["incident_updates"][j]["status"] == "resolved" ? "good" : (mess["incidents"][i]["impact"] == 'none' ? 'good' : mess["incidents"][i]["impact"]));
-                    w = indicatorMessages[mess["incidents"][i]["incident_updates"][j]["status"]];
+        for(var i = 0; i < incidents.length; i++){
+            if(new Date(incidents[i]["created_at"]) < weekOld){ break; }
+            if(incidents[i]["incident_updates"].length > 0){
+                for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
+                    var w = (incidents[i]["incident_updates"][j]["status"] == "resolved" ? "good" : (incidents[i]["impact"] == 'none' ? 'good' : incidents[i]["impact"]));
+                    w = indicatorMessages[incidents[i]["incident_updates"][j]["status"]];
                     out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
                     var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
