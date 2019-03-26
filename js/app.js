@@ -73,6 +73,13 @@ function Messages(mess){
 
                     var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
 
+                    if(location.hostname == 'do.githubstat.us'){
+                        options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
+                        var t_date = new Date(mess["incidents"][i]["incident_updates"][j].created_at);
+                        t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours()+(t_date.getTimezoneOffset()/60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
+                        date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
+                    }
+
                     date = '<span class="date empty">'+date+'</span>';
                     out += '<div class="text-margin">' + mess["incidents"][i]["incident_updates"][j].body + '<br />'+date+'</div>';
                 }
