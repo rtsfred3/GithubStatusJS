@@ -7,6 +7,7 @@ function setUp(){
         document.getElementById("main").classList.remove("size-zero");
         setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
         setInfo('https://www.githubstatus.com/api/v2/incidents.json', Messages);
+        // PSA_F('Status Update');
     }catch(error){
         setError();
     }
@@ -31,6 +32,11 @@ function setInfo(url, funct){
     };
     xhttp.open("GET", url, true);
     xhttp.send();
+}
+
+function PSA_F(psa){
+    document.getElementById("psa").classList.remove("hidden");
+    document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
 }
 
 function setTheme(status){

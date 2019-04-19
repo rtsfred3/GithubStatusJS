@@ -15,6 +15,18 @@ hr{
     border: 0;
 }
 
+.psa{
+    width: 100vw;
+    text-align: center;
+    display: table;
+
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+
+    font-size: 24pt;
+    background-color: #d83d42;
+}
+
 .status{
     overflow: hidden;
     position: fixed;
@@ -49,7 +61,7 @@ hr{
     }
 }
 
-.size-zero{
+.size-zero, .hidden{
     height: 0;
     width: 0;
     margin: 0 !important;
@@ -68,9 +80,9 @@ hr{
 
     font-size: 48pt;
 
-    -moz-box-shadow: 0 1px 5px 1px gray;
-    -webkit-box-shadow: 0 1px 5px 1px gray;
-    box-shadow: 0 1px 5px 1px gray;
+    -moz-box-shadow: 0 1px 5px 0px gray;
+    -webkit-box-shadow: 0 1px 5px 0px gray;
+    box-shadow: 0 1px 5px 0px gray;
 }
 
 .bold{
