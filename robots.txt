@@ -1,3 +1,10 @@
 Sitemap: https://githubstat.us/sitemap.xml
 User-agent: *
 Disallow: /app/
+
+User-agent: YandexBot
+Disallow: /app/
+Disallow: /components/
+Disallow: /lang/
+Disallow: /min/
+Disallow: /status/
