@@ -4,9 +4,9 @@ var indicatorMessages = {'resolved':'good', 'investigating':'minor'}
 
 function setUp(){
     try{
-        document.getElementById("main").classList.remove("size-zero");
         setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
         setInfo('https://www.githubstatus.com/api/v2/incidents.json', Messages);
+        document.getElementById("main").classList.remove("size-zero");
         // PSA_F('Status Update');
     }catch(error){
         setError();
