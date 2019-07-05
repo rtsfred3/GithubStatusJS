@@ -1,11 +1,12 @@
-var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
-var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error'}
-var indicatorMessages = {'resolved':'good', 'investigating':'minor'}
+var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'};
+var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error'};
+var indicatorMessages = {'resolved':'good', 'investigating':'minor'};
+var baseURL = "https://www.githubstatus.com";
 
 function setUp(){
     try{
-        setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
-        setInfo('https://www.githubstatus.com/api/v2/incidents.json', Messages);
+        setInfo(baseURL+'/api/v2/status.json', Status);
+        setInfo(baseURL+'/api/v2/incidents.json', Messages);
         document.getElementById("main").classList.remove("size-zero");
         // PSA_F('Status Update');
     }catch(error){
