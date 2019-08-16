@@ -9,62 +9,62 @@
 
     "icons": [
         {
-            "src": "https://img.githubstat.us/img/48px.png",
+            "src": "https://img.githubstat.us/img/lite/48px.png",
             "sizes": "48x48",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/72px.png",
+            "src": "https://img.githubstat.us/img/lite/72px.png",
             "sizes": "72x72",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/76px.png",
+            "src": "https://img.githubstat.us/img/lite/76px.png",
             "sizes": "76x76",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/96px.png",
+            "src": "https://img.githubstat.us/img/lite/96px.png",
             "sizes": "96x96",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/120px.png",
+            "src": "https://img.githubstat.us/img/lite/120px.png",
             "sizes": "120x120",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/128px.png",
+            "src": "https://img.githubstat.us/img/lite/128px.png",
             "sizes": "128x128",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/144px.png",
+            "src": "https://img.githubstat.us/img/lite/144px.png",
             "sizes": "144x144",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/152px.png",
+            "src": "https://img.githubstat.us/img/lite/152px.png",
             "sizes": "152x152",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/180px.png",
+            "src": "https://img.githubstat.us/img/lite/180px.png",
             "sizes": "180x180",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/192px.png",
+            "src": "https://img.githubstat.us/img/lite/192px.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/512px.png",
+            "src": "https://img.githubstat.us/img/lite/512px.png",
             "sizes": "512x512",
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/1024px.png",
+            "src": "https://img.githubstat.us/img/lite/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png"
         }
