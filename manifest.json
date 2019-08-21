@@ -4,8 +4,8 @@
     "description": "A website to monitor GitHub status updates.",
     "start_url": "https://githubstat.us/",
     "display": "standalone",
-    "background_color": "#53C68C",
-    "theme_color": "#53C68C",
+    "background_color": "#339966",
+    "theme_color": "#339966",
 
     "icons": [
         {
