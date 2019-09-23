@@ -1,6 +1,6 @@
 var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'};
 var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error'};
-var indicatorMessages = {'resolved':'good', 'investigating':'minor'};
+var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical'};
 var baseURL = "https://www.githubstatus.com";
 
 function setUp(){
@@ -75,7 +75,7 @@ function Messages(mess){
             if(incidents[i]["incident_updates"].length > 0){
                 for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
                     var w = (incidents[i]["incident_updates"][j]["status"] == "resolved" ? "good" : (incidents[i]["impact"] == 'none' ? 'good' : incidents[i]["impact"]));
-                    w = indicatorMessages[incidents[i]["incident_updates"][j]["status"]];
+                    if(w == undefined){ w = indicatorMessages[incidents[i]["incident_updates"][j]["status"]]; }
                     out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
                     var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
