@@ -54,7 +54,7 @@
             *{margin:0;padding:0}body{font-family:arial}.status-height{height:100vh;width:100%;text-align:center;display:table;font-size:48pt}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.none-color{background-color:#396}.minor-color{background-color:#F1C40F}.major-color{background-color:#F90}.critical-color{background-color:#900}.unavailable-color{background-color:#4F93BD}.error-color{background-color:#646464}.status-color{color:#fff}.zero-height{height:0;width:0}
         </style>
 
-        <script>
+        <!-- <script>
             var errorMessage = '<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>';
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js').then(function(reg) {
@@ -63,17 +63,22 @@
                     console.log(err);
                 });
             }
-        </script>
+        </script> -->
 
         <script>
-            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error",unavailable:"unavailable"},indicatorValsFR={none:"bon",minor:"mineur",major:"majeur",critical:"crucial",error:"erreur",unavailable:"indisponible"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status?e(JSON.parse(this.responseText)):Status({page:{id:"kctbh9vrtdwd",name:"GitHub",url:"https://www.githubstatus.com",time_zone:"Etc/UTC",updated_at:"2020-01-24T08:12:08.344Z"},status:{indicator:"error",description:"All Systems Operational"}})},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,19],a=document.getElementsByTagName("meta"),n=0;n<e.length;n++)a[e[n]].setAttribute("content",metaColors[t])}function Status(t){var e=window.navigator.userLanguage||window.navigator.language;"fr"!=e.substring(0,2).toLowerCase()&&!e.toLowerCase().includes("fr")||(indicatorVals=indicatorValsFR),setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").classList.remove("error-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
+            var metaColors={none:"#339966",minor:"#F1C40F",major:"#FF9900",critical:"#990000",unavailable:"#4F93BD",error:"#646464"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error",unavailable:"unavailable"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status?e(JSON.parse(this.responseText)):Status({page:{id:"kctbh9vrtdwd",name:"GitHub",url:"https://www.githubstatus.com",time_zone:"Etc/UTC",updated_at:"2020-01-24T08:12:08.344Z"},status:{indicator:"error",description:"All Systems Operational"}})},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,19],a=document.getElementsByTagName("meta"),s=0;s<e.length;s++)a[e[s]].setAttribute("content",metaColors[t])}function Status(t){setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable-color"),document.getElementById("mainStatus").classList.remove("error-color"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()+"-color"),setTheme(t.status.indicator)}
         </script>
 
         <title>GitHub Status</title>
     </head>
     <body>
         <div id="mainStatus" class="zero-height bold unavailable-color"></div>
-        <script>setInfo('https://www.githubstatus.com/api/v2/status.json', Status);</script>
+        <script>
+            setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
+            setInterval(function() {
+                setInfo('https://www.githubstatus.com/api/v2/status.json', Status);
+            }, 10000);
+        </script>
         <noscript><div id="mainStatus" class="status-height bold error-color status-color"><span class="center-status">ERROR</span></div></noscript>
     </body>
 </html>

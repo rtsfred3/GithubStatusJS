@@ -45,13 +45,13 @@ hr{
     height: 240px !important;
 }
 
-@media only screen and (max-width: 400px){
+@media only screen and (max-height: 400px){
     .status-height{
-        height: 200px !important;
+        height: 45vh !important;
     }
 
     .messages-scroll{
-        padding-top: 200px;
+        padding-top: 45vh;
     }
 }
 
@@ -121,6 +121,10 @@ svg{
     height: 27px;
     margin-top: 0px;
     margin-bottom: -5px;
+}
+
+@media (max-width: 300px) {
+    .right{ float: none; }
 }
 
 .right{
