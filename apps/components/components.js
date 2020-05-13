@@ -16,8 +16,8 @@ function Status(arr){
     var out = "";
     for(var i = 0; i < arr["components"].length; i++){
         var curr = arr["components"][i];
-        if(curr["id"] == "0l2p9nhqnxpd"){ continue; }
-        if(curr["name"][curr["name"].length-1] == ')'){ continue; }
+        if(curr["name"].substring(0, 5) == 'Visit'){ continue; }
+        // if(curr["name"][curr["name"].length-1] == ')'){ continue; }
 
         out += '<div class="status-height bold status-color '+indicatorVals[curr["status"]]+'-color"><span class="center-status">'+curr["name"]+'</span></div>';
     }

@@ -149,27 +149,30 @@ svg{
     margin-bottom: 2.5vh;
 }
 
-.none-color{
+.good, .none{
     background-color: #339966;
 }
 
-.minor-color{
-    background-color: #F1C40F;
+.minor{
+    background-color: #DBAB09;
+    /* background-color: #F1C40F; */
 }
 
-.major-color{
-    background-color: #FF9900;
+.major{
+    background-color: #E25D10;
+    /* background-color: #FF9900; */
 }
 
-.critical-color{
-    background-color: #990000;
+.critical{
+    background-color: #DC3545;
+    /* background-color: #990000; */
 }
 
-.unavailable-color{
+.unavailable{
     background-color: #4F93BD;
 }
 
-.error-color{
+.error{
     background-color: #646464;
 }
 
