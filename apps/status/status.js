@@ -30,11 +30,11 @@ function Status(arr){
 
     setTheme('unavailable');
     document.getElementById("mainStatus").classList.remove("zero-height");
-    document.getElementById("mainStatus").classList.remove("unavailable-color");
-    document.getElementById("mainStatus").classList.remove("error-color");
+    document.getElementById("mainStatus").classList.remove("unavailable");
+    document.getElementById("mainStatus").classList.remove("error");
     document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
     document.getElementById("mainStatus").classList.add("status-height");
     document.getElementById("mainStatus").classList.add("status-color");
-    document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase()+"-color");
+    document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase());
     setTheme(arr.status.indicator);
 }
