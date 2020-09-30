@@ -2,22 +2,13 @@ var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'criti
 var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error'};
 var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical'};
 var baseURL = "https://www.githubstatus.com";
+baseURL = "https://do.githubstat.us";
 
 function setUp(){
-    // var g = document.createElement('div');
-    // g.setAttribute("id", "mainStatus");
-    // g.setAttribute("class", "status-height status-width bold status-color unavailable-color");
-    // document.body.appendChild(g);
-
-    var g = document.createElement('div');
-    g.setAttribute("id", "mainStatus");
-    g.setAttribute("class", "status-height status-width bold status-color unavailable-color");
-    document.body.appendChild(g);
-
     console.log("setUp() started");
     try{
-        setInfo(baseURL+'/api/v2/status.json', Status);
-        setInfo(baseURL+'/api/v2/incidents.json', Messages);
+        setInfo(baseURL+'/amp/api/status.php', Status);
+        // setInfo(baseURL+'/amp/api/incidents.php', Messages);
         document.getElementById("main").classList.remove("size-zero");
         // PSA_F('Status Update');
     }catch(error){
@@ -66,10 +57,16 @@ function setTheme(status){
 function Status(arr){
     console.log(arr.status.indicator);
     setTheme('unavailable');
-    document.getElementById("mainStatus").classList.remove("unavailable-color");
-    document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    document.getElementById("mainStatus").classList.remove("unavailable");
+
+    var mStatus = document.createElement('span');
+    mStatus.setAttribute("class", "center-status");
+
+    document.getElementById("mainStatus").appendChild(mStatus);
+
+    // document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
     document.getElementById("mainStatus").classList.add("status-color");
-    document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase()+"-color");
+    document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase());
     setTheme(arr.status.indicator);
 }
 
@@ -92,7 +89,7 @@ function Messages(mess){
                 for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
                     var w = (incidents[i]["incident_updates"][j]["status"] == "resolved" ? "good" : (incidents[i]["impact"] == 'none' ? 'good' : incidents[i]["impact"]));
                     if(w == undefined){ w = indicatorMessages[incidents[i]["incident_updates"][j]["status"]]; }
-                    out += '<div class="status-box ' + w + '"><span class="message-status"><div class="right">' + w + '</div></span></div>';
+                    out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
                     var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
 
@@ -118,6 +115,23 @@ function Messages(mess){
         document.getElementById('messages').innerHTML = out;
     }
 }
+
+// var main = document.createElement('div');
+// main.setAttribute("id", "main");
+// main.setAttribute("class", "zed size-zero");
+//
+// var mainStatus = document.createElement('div');
+// mainStatus.setAttribute("id", "mainStatus");
+// mainStatus.setAttribute("class", "status-height status-width bold status-color unavailable");
+//
+// var messages = document.createElement('div');
+// messages.setAttribute("id", "messages");
+// messages.setAttribute("class", "messages");
+//
+// main.appendChild(mainStatus);
+// main.appendChild(messages);
+//
+// document.body.appendChild(main);
 
 console.log("Started");
 setUp();
