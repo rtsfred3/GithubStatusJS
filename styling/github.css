@@ -167,21 +167,39 @@ svg{
 
 .minor{
     background-color: #DBAB09;
-    /* background-color: #F1C40F; */
 }
 
 .major{
     background-color: #E25D10;
-    /* background-color: #FF9900; */
 }
 
 .critical{
     background-color: #DC3545;
-    /* background-color: #990000; */
 }
 
 .maintenance{
     background-color: #0366d6;
+}
+
+@media only screen and (min-width: 351px) and (max-width: 450px){
+    .maintenance{
+        font-size: 36pt;
+        font-weight: 500;
+    }
+}
+
+@media only screen and (min-width: 251px) and (max-width: 350px){
+    .maintenance{
+        font-size: 30pt;
+        font-weight: 500;
+    }
+}
+
+@media only screen and (min-width: 151px) and (max-width: 250px){
+    .maintenance{
+        font-size: 20pt;
+        font-weight: 500;
+    }
 }
 
 .unavailable{
