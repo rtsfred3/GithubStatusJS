@@ -72,9 +72,21 @@ hr{
 }
 
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
-    .status-height { height: 25vh; }
+    .status-height { height: 30vh; }
 
-    .status-width { font-size: 14em; }
+    .status-width { font-size: 12em; }
+}
+
+@media only screen and (min-width: 2100px) and (min-height: 1100px) {
+    .status-height { height: 40vh; }
+
+    .status-width { font-size: 16em; }
+}
+
+@media only screen and (min-width: 3000px) and (min-height: 2000px) {
+    .status-height { height: 40vh; }
+
+    .status-width { font-size: 16em; }
 }
 
 @media only screen and (max-width: 450px){
@@ -166,6 +178,10 @@ svg{
 .critical{
     background-color: #DC3545;
     /* background-color: #990000; */
+}
+
+.maintenance{
+    background-color: #0366d6;
 }
 
 .unavailable{

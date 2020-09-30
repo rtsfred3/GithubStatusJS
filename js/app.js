@@ -8,7 +8,6 @@ function setUp(){
         setInfo(baseURL+'/api/v2/status.json', Status);
         setInfo(baseURL+'/api/v2/incidents.json', Messages);
         document.getElementById("main").classList.remove("size-zero");
-        // PSA_F('Status Update');
     }catch(error){
         setError();
     }
@@ -16,8 +15,6 @@ function setUp(){
 
 function setError(){
     setTheme('error');
-    // document.getElementById("main").classList.add("size-zero");
-    // document.getElementById("main").innerHTML = '';
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
 
