@@ -1,4 +1,4 @@
-var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'critical':'#DC3545', 'unavailable':'#4F93BD', 'error':'#646464'};
+var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'critical':'#DC3545', 'unavailable':'#4F93BD', 'error':'#646464', 'maintenance':'#0366d6'};
 var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error', 'maintenance':'maintenance'};
 var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical', 'maintenance':'maintenance'};
 var baseURL = "https://www.githubstatus.com";
