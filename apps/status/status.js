@@ -1,6 +1,6 @@
-var metaColors = {'none':'#339966', 'minor':'#F1C40F', 'major':'#FF9900', 'critical':'#990000', 'unavailable':'#4F93BD', 'error':'#646464'}
-var indicatorVals = {'none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error','unavailable':'unavailable'}
-var indicatorValsFR = {'none':'bon', 'minor':'mineur', 'major':'majeur', 'critical':'crucial', 'error':'erreur','unavailable':'indisponible'}
+var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'critical':'#DC3545', 'unavailable':'#4F93BD', 'error':'#646464', 'maintenance':'#0366d6'};
+var indicatorVals = {'none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error','unavailable':'unavailable', 'maintenance':'maintenance'}
+var indicatorValsFR = {'none':'bon', 'minor':'mineur', 'major':'majeur', 'critical':'crucial', 'error':'erreur', 'unavailable':'indisponible', 'maintenance':'entretien'}
 
 function setInfo(url, funct){
     var xhttp = new XMLHttpRequest();
