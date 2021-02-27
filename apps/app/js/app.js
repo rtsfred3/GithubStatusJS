@@ -17,11 +17,13 @@ function miniStatus(arr){
 function Status(arr){
     var image;
     if(arr.status == 'good'){
-        image = svg('#2D8A54');
+        image = svg('#339966');
     }else if (arr.status == 'minor'){
-        image = svg('#FFA500');
+        image = svg('#DBAB09');
     }else if (arr.status == 'major'){
-        image = svg('#FF0000');
+        image = svg('#E25D10');
+    }else if (arr.status == 'critical'){
+        image = svg('#DC3545');
     }
     miniStatus(arr);
     document.getElementById("color").innerHTML =  getTitle(arr.status);

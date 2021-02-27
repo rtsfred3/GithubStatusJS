@@ -80,17 +80,22 @@ font{
 }
 
 .greens, .good {
-  color: green !important;
+  color: #339966 !important;
   font-family: verdana;
 }
 
 .oranges, .minor {
-  color: orange !important;
+  color: #DBAB09 !important;
   font-family: verdana;
 }
 
-.reds, .major {
-  color: red !important;
+.lightreds, .major {
+  color: #E25D10 !important;
+  font-family: verdana;
+}
+
+.reds, .critical {
+  color: #DC3545 !important;
   font-family: verdana;
 }
 
