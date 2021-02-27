@@ -1,9 +1,10 @@
 Sitemap: https://githubstat.us/sitemap.xml
 User-agent: *
-Disallow: /app/
+Disallow: /apps/
 
 User-agent: *
-Disallow: /app/
+Allow: /apps/app/
+Disallow: /apps/
 Disallow: /components/
 Disallow: /lang/
 Disallow: /min/

@@ -33,18 +33,24 @@ td.size{
 }
 
 td.green, td.goodt {
-    background-color: green !important;
+    background-color: #339966 !important;
 }
 
 td.orange, td.minort {
     /* border: 1px solid black !important; */
-    background-color: orange !important;
+    background-color: #DBAB09 !important;
     /* width: 10px !important; */
 }
 
 td.red, td.majort {
     /* border: 1px solid black !important; */
-    background-color: red !important;
+    background-color: #E25D10 !important;
+    /* width: 10px !important; */
+}
+
+td.red, td.criticalt {
+    /* border: 1px solid black !important; */
+    background-color: #DC3545 !important;
     /* width: 10px !important; */
 }
 

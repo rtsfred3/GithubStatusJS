@@ -1,3 +1,9 @@
+/* #messages{
+    top: 2vh;
+    bottom: 2vh;
+    position: relative;
+} */
+
 .messages{
     margin: 1.5em 0px 1.5em 0px;
     padding: 0px;

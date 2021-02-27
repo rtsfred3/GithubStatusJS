@@ -15,6 +15,12 @@ hr{
     border: 0;
 }
 
+/* #mainStatus{
+    z-index: 1;
+    position: fixed;
+    top: 0vh;
+} */
+
 .psa{
     width: 100vw;
     text-align: center;
