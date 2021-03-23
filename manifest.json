@@ -68,5 +68,17 @@
             "sizes": "1024x1024",
             "type": "image/png"
         }
+    ],
+
+    "categories": ["Status", "GitHub", "GitHub Status", "Tool", "Reference"],
+    "orientation": "portrait-primary",
+    "shortcuts": [
+        {
+            "name": "GitHub Components Status",
+            "short_name": "GitHub Components Page",
+            "description": "Displays the status of the GitHub Components",
+            "url": "/apps/components/",
+            "icons": [{ "src": "./img/lite/192px.png", "sizes": "192x192" }]
+        },
     ]
 }

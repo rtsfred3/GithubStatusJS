@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://githubstat.us/</loc>
-        <lastmod>2020-11-21</lastmod>
-    </url>
-    <url>
-        <loc>https://githubstat.us/apps/components/</loc>
-        <lastmod>2020-11-21</lastmod>
-    </url>
-    <url>
-        <loc>https://githubstat.us/apps/min/</loc>
-        <lastmod>2020-11-21</lastmod>
-    </url>
-    <url>
-        <loc>https://githubstat.us/apps/lang/</loc>
-        <lastmod>2020-11-21</lastmod>
-    </url>
-    <url>
-        <loc>https://githubstat.us/apps/status/</loc>
-        <lastmod>2020-11-21</lastmod>
-    </url>
-    <url>
-        <loc>https://githubstat.us/apps/status/french/</loc>
-        <lastmod>2020-11-21</lastmod>
-    </url>
-</urlset>
+  <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
+      <loc>https://githubstat.us/root_sitemap.xml</loc>
+    </sitemap>
+    <sitemap>
+      <loc>https://do.githubstat.us/sitemap.xml</loc>
+    </sitemap>
+  </sitemapindex>
