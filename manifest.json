@@ -79,6 +79,6 @@
             "description": "Displays the status of the GitHub Components",
             "url": "/apps/components/",
             "icons": [{ "src": "./img/lite/192px.png", "sizes": "192x192" }]
-        },
+        }
     ]
 }
