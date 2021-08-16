@@ -13,11 +13,16 @@
         $image_width  = 1200;
         $image_height = 630;
 
+        if(isset($_GET['name'])){
+            $image_width  = 400;
+            $image_height = 210;
+        }
+
         $im = @imagecreate($image_width, $image_height) or die("Cannot Initialize new GD image stream");
 
         // echo $json_data->status->indicator;
 
-        if($status == "none") {
+        if($status == "none" || $status == "good") {
             $background_color = imagecolorallocate($im, 51, 153, 102);
         }elseif ($status == "minor") {
             $background_color = imagecolorallocate($im, 219, 171, 9);
@@ -25,15 +30,22 @@
             $background_color = imagecolorallocate($im, 226, 93, 16);
         }elseif ($status == "critical") {
             $background_color = imagecolorallocate($im, 220, 53, 69);
+        }elseif ($status == "maintenance") {
+            $background_color = imagecolorallocate($im, 3, 102, 214);
         }else {
             $background_color = imagecolorallocate($im, 79, 147, 189);
         }
 
         $text_color = imagecolorallocate($im, 255, 250, 250);
 
-        $status = "GitHub Status";
+        // $status = "GitHub Status";
+        if(isset($_GET['name'])){
+            if($status == "none") { $status = "good"; }
 
-        // if($status == "none") { $status = "good"; }
+            $status = strtoupper($status);
+        }else{
+            $status = "GitHub Status";
+        }
 
         putenv('GDFONTPATH=' . realpath('.'));
 
@@ -42,6 +54,10 @@
         $font = 'Verdana Bold';
         $text = $status;
         $name = $text . ".png";
+
+        if(isset($_GET['name'])){
+            $font_size = 45;
+        }
 
         $text_box = imagettfbbox($font_size, $angle, $font, $text);
 
@@ -66,7 +82,7 @@
 
         // echo $json_data->status->indicator;
 
-        if($status == "none") {
+        if($status == "none" || $status == "good") {
             $background_color = imagecolorallocate($im, 51, 153, 102);
         }elseif ($status == "minor") {
             $background_color = imagecolorallocate($im, 219, 171, 9);
@@ -80,7 +96,10 @@
 
         $text_color = imagecolorallocate($im, 255, 250, 250);
 
-        $status = "GH";
+        $txt = "GH";
+        if(isset($_GET['txt']) && !empty($_GET['txt'])){
+            $txt = $_GET['txt'];
+        }
 
         // if($status == "none") { $status = "good"; }
 
@@ -89,7 +108,7 @@
         $font_size = 95;
         $angle = 0;
         $font = 'Verdana Bold';
-        $text = $status;
+        $text = $txt;
         $name = $text . ".png";
 
         $text_box = imagettfbbox($font_size, $angle, $font, $text);
@@ -106,13 +125,13 @@
         imagepng($im, NULL, -1);
         imagedestroy($im);
     }
-
+    if(!isset($argv)){ $argv = []; }
     if(isset($_GET['min']) || (count($argv) >= 2 && ($argv[1] == "min" || $argv[1] == "--min"))) {
         image_min($status);
     }else{
         image($status);
     }
 
-    ob_flush();
+    // ob_flush();
 	flush();
 ?>
