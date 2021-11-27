@@ -1,7 +1,7 @@
 {
     "name": "GitHub Status",
     "short_name": "GitHubStatus",
-    "description": "A website to monitor GitHub status updates.",
+    "description": "An unofficial website to monitor GitHub status updates.",
     "start_url": "https://githubstat.us/",
     "display": "standalone",
     "background_color": "#339966",
