@@ -60,6 +60,10 @@ body{
     background-color: #646464;
 }
 
+.maintenance-color{
+    background-color: #0366d6;
+}
+
 .status-color{
     color: #fff;
 }
