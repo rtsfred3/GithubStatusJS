@@ -6,6 +6,7 @@ var baseURL = "https://www.githubstatus.com";
 
 function setUp(){
     try{
+        // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
         setInfo(baseURL+'/api/v2/status.json', Status);
         setInfo(baseURL+'/api/v2/incidents.json', Messages);
         document.getElementById("main").classList.remove("size-zero");
@@ -23,7 +24,12 @@ function setInfo(url, funct){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
-            funct(JSON.parse(this.responseText));
+            if(Array.isArray(funct)){
+                funct[0](JSON.parse(this.responseText));
+                funct[1](JSON.parse(this.responseText));
+            }else{
+                funct(JSON.parse(this.responseText));
+            }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
             console.log(this.readyState, this.status);
             setError();
