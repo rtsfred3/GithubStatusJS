@@ -2,7 +2,7 @@ var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'criti
 var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error', 'maintenance':'maintenance'};
 var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical', 'maintenance':'maintenance'};
 var baseURL = "https://www.githubstatus.com";
-// baseURL = "https://api.githubstat.us/";
+baseURL = "https://apiv2.githubstat.us/";
 
 function setUp(){
     try{
@@ -63,7 +63,7 @@ function Status(arr){
 
 function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
-    var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
     var weekOld = new Date();
     weekOld.setDate(weekOld.getDate() - 7);
