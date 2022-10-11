@@ -2,7 +2,7 @@ var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'criti
 var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error', 'maintenance':'maintenance'};
 var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical', 'maintenance':'maintenance'};
 var baseURL = "https://www.githubstatus.com";
-baseURL = "https://apiv2.githubstat.us/";
+baseURL = "https://apiv3.githubstat.us/";
 
 function setUp(){
     try{
