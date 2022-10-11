@@ -7,6 +7,7 @@
     "background_color": "#339966",
     "theme_color": "#339966",
     "lang": "en-US",
+    "author": "rtsfred3",
 
     "icons": [
         {
@@ -79,7 +80,12 @@
             "short_name": "GitHub Components Page",
             "description": "Displays the status of the GitHub Components",
             "url": "/apps/components/",
-            "icons": [{ "src": "./img/lite/192px.png", "sizes": "192x192" }]
+            "icons": [
+                {
+                    "src": "https://img.githubstat.us/img/lite/192px.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ],
     "screenshots" : [

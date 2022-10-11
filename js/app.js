@@ -2,10 +2,11 @@ var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'criti
 var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error', 'maintenance':'maintenance'};
 var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical', 'maintenance':'maintenance'};
 var baseURL = "https://www.githubstatus.com";
-// baseURL = "https://api.githubstat.us/";
+// baseURL = "https://apiv3.githubstat.us";
 
 function setUp(){
     try{
+        // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
         setInfo(baseURL+'/api/v2/status.json', Status);
         setInfo(baseURL+'/api/v2/incidents.json', Messages);
         document.getElementById("main").classList.remove("size-zero");
@@ -23,7 +24,12 @@ function setInfo(url, funct){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
-            funct(JSON.parse(this.responseText));
+            if(Array.isArray(funct)){
+                funct[0](JSON.parse(this.responseText));
+                funct[1](JSON.parse(this.responseText));
+            }else{
+                funct(JSON.parse(this.responseText));
+            }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
             console.log(this.readyState, this.status);
             setError();
@@ -57,7 +63,7 @@ function Status(arr){
 
 function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
-    var options = { month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
     var weekOld = new Date();
     weekOld.setDate(weekOld.getDate() - 7);
