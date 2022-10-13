@@ -145,5 +145,12 @@
             "sizes": "1280x720",
             "type": "image/webp"
         }
-    ]
+    ],
+    
+    "paquet_features": {
+        "mobile": true,
+        "desktop": true,
+        "offline": true,
+        "open": true
+    }
 }
