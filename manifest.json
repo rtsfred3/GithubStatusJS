@@ -72,14 +72,14 @@
         }
     ],
 
-    "categories": ["Status", "GitHub", "GitHub Status", "Tool", "Reference"],
+    "categories": ["Productivity", "Utilities", "Tool", "Reference"],
     "orientation": "portrait-primary",
     "shortcuts": [
         {
             "name": "GitHub Components Status",
             "short_name": "GitHub Components Page",
             "description": "Displays the status of the GitHub Components",
-            "url": "/apps/components/",
+            "url": "https://githubstat.us/apps/components/",
             "icons": [
                 {
                     "src": "https://img.githubstat.us/img/lite/192px.png",
