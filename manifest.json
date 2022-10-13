@@ -3,12 +3,14 @@
     "short_name": "GitHubStatus",
     "description": "An unofficial website to monitor GitHub status updates.",
     "start_url": "https://githubstat.us/",
+    "display_override": ["standalone"],
     "display": "standalone",
     "background_color": "#339966",
     "theme_color": "#339966",
     "lang": "en-US",
     "author": "rtsfred3",
     "dir": "ltr",
+    "scope": "https://githubstat.us/",
 
     "icons": [
         {
@@ -60,17 +62,19 @@
             "src": "https://img.githubstat.us/img/lite/192px.png",
             "sizes": "192x192",
             "type": "image/png",
-            "purpose": "maskable"
+            "purpose": "any"
         },
         {
             "src": "https://img.githubstat.us/img/lite/512px.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
         },
         {
             "src": "https://img.githubstat.us/img/lite/1024px.png",
             "sizes": "1024x1024",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ],
 
@@ -141,5 +145,12 @@
             "sizes": "1280x720",
             "type": "image/webp"
         }
-    ]
+    ],
+    
+    "paquet_features": {
+        "mobile": true,
+        "desktop": true,
+        "offline": true,
+        "open": true
+    }
 }
