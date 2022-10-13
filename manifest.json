@@ -8,6 +8,7 @@
     "theme_color": "#339966",
     "lang": "en-US",
     "author": "rtsfred3",
+    "dir": "ltr",
 
     "icons": [
         {
@@ -58,7 +59,8 @@
         {
             "src": "https://img.githubstat.us/img/lite/192px.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
         },
         {
             "src": "https://img.githubstat.us/img/lite/512px.png",
@@ -72,7 +74,7 @@
         }
     ],
 
-    "categories": ["Productivity", "Utilities", "Tool", "Reference"],
+    "categories": ["productivity", "utilities"],
     "orientation": "portrait-primary",
     "shortcuts": [
         {
