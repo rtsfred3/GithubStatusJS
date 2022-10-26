@@ -76,8 +76,8 @@ function makeComponent(curr){
 
 function Components(comp){
     var out = '';
-    for(var i = 0; i < arr["components"].length; i++){
-        out += makeComponent(arr["components"][i]);
+    for(var i = 0; i < comp["components"].length; i++){
+        out += makeComponent(comp["components"][i]);
     }
     document.getElementById("mainComponents").innerHTML = out;
 }
