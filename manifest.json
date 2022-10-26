@@ -85,14 +85,26 @@
             "name": "GitHub Components Status",
             "short_name": "GitHub Components Page",
             "description": "Displays the status of the GitHub Components",
-            "url": "https://githubstat.us/apps/components/",
+            "url": "https://githubstat.us/components/",
             "icons": [
                 {
                     "src": "https://img.githubstat.us/img/lite/192px.png",
                     "sizes": "192x192"
                 }
             ]
-        }
+        },
+        {
+            "name": "GitHub Status Page",
+            "short_name": "GHStatus Page",
+            "description": "Displays the overall status of the GitHub",
+            "url": "https://githubstat.us/status/",
+            "icons": [
+                {
+                    "src": "https://img.githubstat.us/img/lite/192px.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
     ],
     
     "screenshots" : [
