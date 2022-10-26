@@ -1,32 +1,42 @@
 var baseURL = "https://www.githubstatus.com";
 // baseURL = "https://apiv2.githubstat.us";
 
+// const pathnameIndex = ;
+
+const pathnameIndex = new Proxy({
+    '/': IndexHome(),
+    '/components/': ComponentsHome(),
+}, {
+    get(target, name) {
+        return setError();
+    }
+});
+
 function Router(){
     try{
         var cloudflareDevRegex = /(spa|master|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
         var cloudflareProdRegex = /githubstat.us/g;
         
-        var onCloudflareDev = location.host.match(cloudflareDevRegex).length >= 1;
-        var onCloudflareProd = location.host.match(cloudflareProdRegex).length >= 1;
+        var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
+        var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
         
         console.log('onCloudflareDev', onCloudflareDev);
         console.log('onCloudflareProd', onCloudflareProd);
         
         if(location.host == 'githubstat.us' || onCloudflareDev){
-            // pathnameIndex[location.pathname];
-            if(location.pathname == '/'){
-                IndexHome();
-            }else if(location.pathname == '/components/'){
-                ComponentsHome();
-            }else{
-                // setError();
-            }
+            pathnameIndex[location.pathname];
+            // if(location.pathname == '/'){
+            //     IndexHome();
+            // }else if(location.pathname == '/components/'){
+            //     ComponentsHome();
+            // }else{
+            //     setError();
+            // }
         }else{
-            // setError();
+            setError();
         }
     }catch(error){
-        console.log(error);
-        // setError();
+        setError();
     }
 }
 
