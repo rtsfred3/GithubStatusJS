@@ -23,11 +23,12 @@ hr{
 
 .psa{
     width: 100vw;
+    height: 1.25em;
     text-align: center;
     display: table;
 
-    padding-top: 2vh;
-    padding-bottom: 2vh;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
 
     font-size: 24pt;
     background-color: #d83d42;
@@ -63,6 +64,14 @@ hr{
 
 .component-height{
     height: 20vh; /* !important; */
+}
+
+.full-status-height{
+    height: 100vh; /* !important; */
+}
+
+.psa-full-status-height{
+    height: calc(100vh - 1.15em + 0.275em);
 }
 
 .status-height{
@@ -112,6 +121,10 @@ hr{
     width: 0;
     margin: 0 !important;
     padding: 0 !important;
+}
+
+.hide{
+    display: none;
 }
 
 .size-max{

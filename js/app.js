@@ -3,11 +3,22 @@ var baseURL = "https://www.githubstatus.com";
 
 function Router(){
     try{
-        if(location.host == 'githubstat.us' || location.host == 'spa.ghstatus.pages.dev'){
+        var cloudflareDevRegex = /(spa|master|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+        var cloudflareProdRegex = /githubstat.us/g;
+        
+        var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
+        var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
+        
+        console.log('onCloudflareDev', onCloudflareDev);
+        console.log('onCloudflareProd', onCloudflareProd);
+        
+        if(onCloudflareProd || onCloudflareDev){
             if(location.pathname == '/'){
                 IndexHome();
             }else if(location.pathname == '/components/'){
                 ComponentsHome();
+            }else if(location.pathname == '/status/'){
+                StatusHome();
             }else{
                 setError();
             }
@@ -24,7 +35,7 @@ function setError(){
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
 
-function setInfo(url, funct){
+function setInfo(url, funct, fullStatus = false){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
@@ -32,7 +43,11 @@ function setInfo(url, funct){
                 funct[0](JSON.parse(this.responseText));
                 funct[1](JSON.parse(this.responseText));
             }else{
-                funct(JSON.parse(this.responseText));
+                if(Status.prototype.constructor.name == 'Status' && fullStatus){
+                    funct(JSON.parse(this.responseText), fullStatus);
+                }else{
+                    funct(JSON.parse(this.responseText));
+                }
             }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
             console.log(this.readyState, this.status);
@@ -44,7 +59,7 @@ function setInfo(url, funct){
 }
 
 function PSA_F(psa){
-    document.getElementById("psa").classList.remove("hidden");
+    document.getElementById("psa").classList.remove("hide");
     document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
 }
 
@@ -57,6 +72,7 @@ function setTheme(status){
 }
 
 function IndexHome(){
+    document.getElementById("mainHome").classList.remove("hide");
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
     setInfo(baseURL+'/api/v2/status.json', Status);
     setInfo(baseURL+'/api/v2/incidents.json', Messages);
@@ -64,8 +80,14 @@ function IndexHome(){
 }
 
 function ComponentsHome(){
+    document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
     document.getElementById("mainComponents").classList.remove("size-zero");
+}
+
+function StatusHome(){
+    document.getElementById("mainStatus").classList.remove("hide");
+    setInfo(baseURL+'/api/v2/status.json', Status, true);
 }
 
 function makeComponent(curr){
@@ -81,12 +103,28 @@ function Components(comp){
     document.getElementById("mainComponents").innerHTML = out;
 }
 
-function Status(arr){
+function Status(arr, fullStatus=false){
     setTheme('unavailable');
-    document.getElementById("mainStatus").classList.remove("unavailable");
-    document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
-    document.getElementById("mainStatus").classList.add("status-color");
-    document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase());
+    var id = fullStatus ? "mainStatus" : "status";
+    
+    document.getElementById(id).classList.remove("unavailable");
+    document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    document.getElementById(id).classList.add("status-color");
+    document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
+    
+    if(fullStatus){
+        document.getElementById('mainHome').innerHTML = '';
+        
+        document.getElementById(id).classList.remove("status-shadow");
+        document.getElementById(id).classList.remove("status-height");
+        
+        if(document.getElementById("psa").classList.contains('hide')){
+            document.getElementById(id).classList.add("full-status-height");
+        }else{
+            document.getElementById(id).classList.add("psa-full-status-height");
+        }
+    }
+    
     setTheme(arr.status.indicator);
 }
 
