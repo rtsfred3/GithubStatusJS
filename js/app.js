@@ -5,7 +5,7 @@ function setUp(){
     try{
         if(location.href == 'http://localhost:8888/GithubHTML/'){
             IndexHome();
-        }else if(location.host == 'githubstat.us'){
+        }else if(location.host == 'githubstat.us' || location.host == 'spa.ghstatus.pages.dev'){
             if(location.pathname == '/'){
                 IndexHome();
             }
