@@ -2,7 +2,7 @@ const validPath = ['summary.json', 'status.json', 'components.json', 'incidents/
 
 export async function onRequestGet({ params }) {
     if(!validPath.includes(params.path)){
-        return new Response(JSON.stringify({}), {
+        return new Response(JSON.stringify({'path': params.path}), {
             headers: { "Content-Type": "application/json" },
         });
     }
