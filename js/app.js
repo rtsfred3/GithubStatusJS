@@ -88,9 +88,10 @@ function StatusHome(){
     document.getElementById("mainStatus").classList.remove("status-height");
     
     if(document.getElementById("psa").classList.contains('hidden')){
-        document.getElementById("mainStatus").classList.add("psa-full-status-height");
-    }else{
         document.getElementById("mainStatus").classList.add("full-status-height");
+    }else{
+        
+        document.getElementById("mainStatus").classList.add("psa-full-status-height");
     }
     
 }
