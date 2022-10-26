@@ -1,17 +1,6 @@
 var baseURL = "https://www.githubstatus.com";
 // baseURL = "https://apiv2.githubstat.us";
 
-// const pathnameIndex = ;
-
-const pathnameIndex = new Proxy({
-    '/': IndexHome(),
-    '/components/': ComponentsHome(),
-}, {
-    get(target, name) {
-        return setError();
-    }
-});
-
 function Router(){
     try{
         var cloudflareDevRegex = /(spa|master|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
@@ -87,6 +76,7 @@ function IndexHome(){
 function ComponentsHome(){
     setInfo(baseURL+'/api/v2/components.json', Components);
     document.getElementById("mainComponents").classList.remove("size-zero");
+    document.getElementById("mainHome").classList.add("hidden");
 }
 
 function makeComponent(curr){
