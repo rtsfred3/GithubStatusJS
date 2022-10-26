@@ -25,7 +25,8 @@ function Router(){
             // setError();
         }
     }catch(error){
-        setError();
+        console.log(error);
+        // setError();
     }
 }
 
