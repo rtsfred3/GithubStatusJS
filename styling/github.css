@@ -65,6 +65,10 @@ hr{
     height: 20vh; /* !important; */
 }
 
+.full-status-height{
+    height: 100vh; /* !important; */
+}
+
 .status-height{
     height: 240px; /* !important; */
 }

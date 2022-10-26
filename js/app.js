@@ -12,12 +12,13 @@ function Router(){
         console.log('onCloudflareDev', onCloudflareDev);
         console.log('onCloudflareProd', onCloudflareProd);
         
-        if(location.host == 'githubstat.us' || onCloudflareDev){
-            console.log(location.pathname);
+        if(onCloudflareProd || onCloudflareDev){
             if(location.pathname == '/'){
                 IndexHome();
             }else if(location.pathname == '/components/'){
                 ComponentsHome();
+            }else if(location.pathname == '/status/'){
+                StatusHome();
             }else{
                 setError();
             }
@@ -76,7 +77,16 @@ function IndexHome(){
 function ComponentsHome(){
     setInfo(baseURL+'/api/v2/components.json', Components);
     document.getElementById("mainComponents").classList.remove("size-zero");
-    document.getElementById("mainHome").classList.add("hidden");
+}
+
+function StatusHome(){
+    setInfo(baseURL+'/api/v2/status.json', Status);
+    document.getElementById("mainComponents").classList.remove("size-zero");
+    document.getElementById("messages").classList.add("hidden");
+    
+    document.getElementById("mainStatus").classList.remove("status-shadow");
+    document.getElementById("mainStatus").classList.remove("status-height");
+    document.getElementById("mainStatus").classList.add("full-status-height");
 }
 
 function makeComponent(curr){
