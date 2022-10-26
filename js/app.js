@@ -6,8 +6,10 @@ function setUp(){
         if(location.href == 'http://localhost:8888/GithubHTML/'){
             IndexHome();
         }else if(location.host == 'githubstat.us' || location.host == 'spa.ghstatus.pages.dev'){
-            if(location.pathname == '/'){
+            if(location.pathname == '/' || location.pathname == '/index.html'){
                 IndexHome();
+            }else if(location.pathname == '/components/'){
+                ComponentsHome();
             }else{
                 setError();
             }
@@ -63,6 +65,23 @@ function IndexHome(){
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
+function ComponentsHome(){
+    setInfo(baseURL+'/api/v2/components.json', Components);
+    document.getElementById("mainComponents").classList.remove("size-zero");
+}
+
+function makeComponent(curr){
+    return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
+}
+
+function Components(comp){
+    var out = '';
+    for(var i = 0; i < arr["components"].length; i++){
+        out += makeComponent(arr["components"][i]);
+    }
+    document.getElementById("mainComponents").innerHTML = out;
+}
+
 function Status(arr){
     setTheme('unavailable');
     document.getElementById("mainStatus").classList.remove("unavailable");
@@ -70,10 +89,6 @@ function Status(arr){
     document.getElementById("mainStatus").classList.add("status-color");
     document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase());
     setTheme(arr.status.indicator);
-}
-
-function makeComponent(statusJSON){
-    return '';
 }
 
 function createMessage(impact, status, body, created_at, shortlink){
