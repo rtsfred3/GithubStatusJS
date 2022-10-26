@@ -123,7 +123,6 @@ function Messages(mess){
     
     var previousDays = 7;
     
-    var weekOld = new Date().setDate((new Date).getDate() - 7);
     var previousDaysDate = new Date().setDate((new Date).getDate() - previousDays);
     
     var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > previousDaysDate; });
