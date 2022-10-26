@@ -24,7 +24,7 @@ function Router(){
         console.log('onCloudflareProd', onCloudflareProd);
         
         if(location.host == 'githubstat.us' || onCloudflareDev){
-            // pathnameIndex[location.pathname];
+            console.log(location.pathname);
             if(location.pathname == '/'){
                 IndexHome();
             }else if(location.pathname == '/components/'){
