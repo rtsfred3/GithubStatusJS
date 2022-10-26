@@ -1,8 +1,9 @@
 const validPath = ['summary.json', 'status.json', 'components.json', 'incidents/unresolved.json', 'incidents.json', 'scheduled-maintenances/upcoming.json', 'scheduled-maintenances/active.json', 'scheduled-maintenances.json'];
 
 export async function onRequestGet({ params }) {
-    if(!validPath.includes(params.path[0])){
-        return new Response(JSON.stringify({ 'path': params.path[0] }), {
+    var pathname = params.path.join('/');
+    if(!validPath.includes(pathname)){
+        return new Response(JSON.stringify({ 'path': pathname }), {
             headers: { "Content-Type": "application/json" },
         });
     }
