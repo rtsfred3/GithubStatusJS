@@ -1,17 +1,6 @@
 var baseURL = "https://www.githubstatus.com";
 // baseURL = "https://apiv2.githubstat.us";
 
-// var pathnameIndex = {
-//     '/': IndexHome(),
-//     '/components/': ComponentsHome(),
-// };
-//
-// pathnameIndex = new Proxy(pathnameIndex, {
-//     get(target, name) {
-//         return setError();
-//     }
-// });
-
 function Router(){
     try{
         var cloudflareDevRegex = /(spa|master|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
@@ -30,10 +19,10 @@ function Router(){
             }else if(location.pathname == '/components/'){
                 ComponentsHome();
             }else{
-                setError();
+                // setError();
             }
         }else{
-            setError();
+            // setError();
         }
     }catch(error){
         setError();

@@ -46,7 +46,7 @@
         </script>
 
         <script>
-            // var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
+            var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
@@ -56,8 +56,8 @@
             }
         </script>
         
-        <link rel="preload" href="/styling/main.min.css" as="style">
-        <link rel="preload" href="/js/main.min.js" as="script">
+        <!-- <link rel="preload" href="/styling/main.min.css" as="style">
+        <link rel="preload" href="/js/main.min.js" as="script"> -->
 
         <link rel="icon" type="image/x-icon" href="https://img.githubstat.us/img/lite/144px.png">
         <link rel="apple-touch-icon" sizes="144x144" href="https://img.githubstat.us/img/lite/144px.png">
@@ -81,12 +81,12 @@
             <div id="messages" class="messages"></div>
         </div>
         <div id="mainComponents" class="zed size-zero"></div>
-        
-        <div class="size-max status-width bold error status-color size-zero"><span class="center-status">ERROR</span></div>
 
         <script>
-            if(!navigator.onLine){ setTheme('error'); document.write(errorMessage); }
-            else{
+            if (!navigator.onLine) {
+                setTheme('error');
+                document.write(errorMessage);
+            } else {
                 PSA_F('Currently Being Rewritten into SPA');
                 Router();
             }
