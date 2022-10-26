@@ -21,14 +21,14 @@ function Router(){
         var onCloudflareProd = location.host.match(cloudflareProdRegex).length >= 1;
         
         if(location.host == 'githubstat.us' || onCloudflareDev){
-            pathnameIndex[location.pathname]
-            // if(location.pathname == '/'){
-            //     IndexHome();
-            // }else if(location.pathname == '/components/'){
-            //     ComponentsHome();
-            // }else{
-            //     setError();
-            // }
+            // pathnameIndex[location.pathname];
+            if(location.pathname == '/'){
+                IndexHome();
+            }else if(location.pathname == '/components/'){
+                ComponentsHome();
+            }else{
+                setError();
+            }
         }else{
             setError();
         }
