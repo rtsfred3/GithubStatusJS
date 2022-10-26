@@ -84,9 +84,9 @@ function ComponentsHome(){
 }
 
 function StatusHome(){
-    setInfo(baseURL+'/api/v2/status.json', Status);
-    document.getElementById("mainComponents").classList.remove("size-zero");
-    document.getElementById("messages").classList.add("hidden");
+    setInfo(baseURL+'/api/v2/status.json', Status, true);
+    // document.getElementById("mainComponents").classList.remove("size-zero");
+    // document.getElementById("messages").classList.add("hidden");
 }
 
 function makeComponent(curr){
@@ -104,19 +104,21 @@ function Components(comp){
 
 function Status(arr, fullStatus=false){
     setTheme('unavailable');
-    document.getElementById("mainStatus").classList.remove("unavailable");
-    document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
-    document.getElementById("mainStatus").classList.add("status-color");
-    document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase());
+    var id = fullStatus ? "mainStatus" : "status";
+    
+    document.getElementById(id).classList.remove("unavailable");
+    document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    document.getElementById(id).classList.add("status-color");
+    document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
     
     if(fullStatus){
-        document.getElementById("mainStatus").classList.remove("status-shadow");
-        document.getElementById("mainStatus").classList.remove("status-height");
+        document.getElementById(id).classList.remove("status-shadow");
+        document.getElementById(id).classList.remove("status-height");
         
         if(document.getElementById("psa").classList.contains('hidden')){
-            document.getElementById("mainStatus").classList.add("full-status-height");
+            document.getElementById(id).classList.add("full-status-height");
         }else{
-            document.getElementById("mainStatus").classList.add("psa-full-status-height");
+            document.getElementById(id).classList.add("psa-full-status-height");
         }
     }
     

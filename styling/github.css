@@ -70,7 +70,7 @@ hr{
 }
 
 .psa-full-status-height{
-    height: 90vh; /* !important; */
+    height: fit-content; /* !important; */
 }
 
 .status-height{
