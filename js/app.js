@@ -1,15 +1,17 @@
-var metaColors = {'none':'#339966', 'minor':'#DBAB09', 'major':'#E25D10', 'critical':'#DC3545', 'unavailable':'#4F93BD', 'error':'#646464', 'maintenance':'#0366d6'};
-var indicatorVals = {'resolved':'good','none':'good', 'minor':'minor', 'major':'major', 'critical':'critical', 'error':'error', 'maintenance':'maintenance'};
-var indicatorMessages = {'resolved':'good', 'investigating':'minor', 'critical':'critical', 'maintenance':'maintenance'};
 var baseURL = "https://www.githubstatus.com";
-// baseURL = "https://apiv3.githubstat.us";
+// baseURL = "https://apiv2.githubstat.us";
 
 function setUp(){
     try{
-        // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-        setInfo(baseURL+'/api/v2/status.json', Status);
-        setInfo(baseURL+'/api/v2/incidents.json', Messages);
-        document.getElementById("main").classList.remove("size-zero");
+        if(location.href == 'http://localhost:8888/GithubHTML/'){
+            IndexHome();
+        }else if(location.host == 'githubstat.us'){
+            if(location.pathname == '/'){
+                IndexHome();
+            }
+        }else{
+            setError();
+        }
     }catch(error){
         setError();
     }
@@ -52,6 +54,13 @@ function setTheme(status){
     }
 }
 
+function IndexHome(){
+    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    setInfo(baseURL+'/api/v2/status.json', Status);
+    setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    document.getElementById("mainHome").classList.remove("size-zero");
+}
+
 function Status(arr){
     setTheme('unavailable');
     document.getElementById("mainStatus").classList.remove("unavailable");
@@ -61,13 +70,47 @@ function Status(arr){
     setTheme(arr.status.indicator);
 }
 
+function makeComponent(statusJSON){
+    return '';
+}
+
+function createMessage(impact, status, body, created_at, shortlink){
+    var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    var out = '';
+    
+    var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
+    if(w == undefined){ w = indicatorMessages[status]; }
+    out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
+
+    var date = new Date(created_at).toLocaleDateString("en-US", options);
+
+    if(location.hostname == 'do.githubstat.us'){
+        options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
+        var t_date = new Date(mess["incidents"][i]["incident_updates"][j].created_at);
+        t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours()+(t_date.getTimezoneOffset()/60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
+        date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
+    }
+    
+    body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
+        return '<a href="' + match + '">here</a>.';
+    });
+
+    date = '<span class="date empty">' + date + '</span>';
+    var lnk = w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
+    out += '<div class="text-margin">' + body + lnk + '<br />' + date + '</div>';
+    
+    return out;
+}
+
 function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
-    var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-
-    var weekOld = new Date();
-    weekOld.setDate(weekOld.getDate() - 7);
-    var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > weekOld; });
+    
+    var previousDays = 30;
+    
+    var weekOld = new Date().setDate((new Date).getDate() - 7);
+    var previousDaysDate = new Date().setDate((new Date).getDate() - previousDays);
+    
+    var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > previousDaysDate; });
 
     if(incidents.length == 0){
         document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
@@ -75,24 +118,14 @@ function Messages(mess){
     }else{
         var out = '';
         for(var i = 0; i < incidents.length; i++){
-            if(new Date(incidents[i]["created_at"]) < weekOld){ break; }
             if(incidents[i]["incident_updates"].length > 0){
                 for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
-                    var w = (incidents[i]["incident_updates"][j]["status"] == "resolved" ? "good" : (incidents[i]["impact"] == 'none' ? 'good' : incidents[i]["impact"]));
-                    if(w == undefined){ w = indicatorMessages[incidents[i]["incident_updates"][j]["status"]]; }
-                    out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
-
-                    var date = new Date(mess["incidents"][i]["incident_updates"][j].created_at).toLocaleDateString("en-US", options);
-
-                    if(location.hostname == 'do.githubstat.us'){
-                        options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-                        var t_date = new Date(mess["incidents"][i]["incident_updates"][j].created_at);
-                        t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours()+(t_date.getTimezoneOffset()/60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
-                        date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
-                    }
-
-                    date = '<span class="date empty">'+date+'</span>';
-                    out += '<div class="text-margin">' + mess["incidents"][i]["incident_updates"][j].body + '<br />'+date+'</div>';
+                    out += createMessage(
+                        incidents[i].impact, incidents[i]["incident_updates"][j].status,
+                        mess["incidents"][i]["incident_updates"][j].body,
+                        mess["incidents"][i]["incident_updates"][j].created_at,
+                        mess["incidents"][i].shortlink
+                    );
                 }
 
                 /*out += '<div class="status-box ' + mess["incidents"][i]["impact"] + '"><span class="message-status"><div class="right">' + indicatorVals[mess["incidents"][i]["impact"]] + '</div></span></div>';

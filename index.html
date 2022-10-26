@@ -56,19 +56,18 @@
             }
         </script>
 
-        <link rel="preload" href="styling/github.min.css" as="style">
-        <link rel="preload" href="styling/messages.min.css" as="style">
-        <link rel="preload" href="js/app.min.js" as="script">
+        <link rel="preload" href="styling/main.min.css" as="style">
+        <link rel="preload" href="js/main.min.js" as="script">
 
         <link rel="icon" type="image/x-icon" href="https://img.githubstat.us/img/lite/144px.png">
         <link rel="apple-touch-icon" sizes="144x144" href="https://img.githubstat.us/img/lite/144px.png">
-        <link rel="stylesheet" type="text/css" href="styling/github.min.css">
-        <link rel="stylesheet" type="text/css" href="styling/messages.min.css">
-        <script src="js/app.min.js"></script>
-
+        <link rel="stylesheet" type="text/css" href="styling/main.min.css">
+        <!-- <script src="js/main.min.js"></script> -->
+        
         <!-- <link rel="stylesheet" type="text/css" href="styling/github.css"> -->
         <!-- <link rel="stylesheet" type="text/css" href="styling/messages.css"> -->
-        <!-- <script src="js/app.js"></script> -->
+        <script src="js/dicts.js"></script>
+        <script src="js/app.js"></script>
 
         <link rel="manifest" href="manifest.json">
 
@@ -76,14 +75,19 @@
     </head>
     <body>
         <div id="psa" class="psa hidden bold status-color"></div>
-        <div id="main" class="zed size-zero">
+        <div id="mainHome" class="zed size-zero">
             <div id="mainStatus" class="status-height status-width bold status-color unavailable"></div>
             <div id="messages" class="messages"></div>
+        </div>
+        <div id="mainComponents" class="zed size-zero">
         </div>
 
         <script>
             if(!navigator.onLine){ setTheme('error'); document.write(errorMessage); }
-            else{ setUp(); }
+            else{
+                PSA_F('Minor JavaScript Rewrites Occuring');
+                setUp();
+            }
         </script>
 
         <noscript>
