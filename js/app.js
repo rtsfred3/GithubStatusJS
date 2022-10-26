@@ -35,7 +35,7 @@ function setError(){
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
 
-function setInfo(url, funct){
+function setInfo(url, funct, fullStatus = false){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
@@ -43,7 +43,11 @@ function setInfo(url, funct){
                 funct[0](JSON.parse(this.responseText));
                 funct[1](JSON.parse(this.responseText));
             }else{
-                funct(JSON.parse(this.responseText));
+                if(Status.prototype.constructor.name == 'Status' && fullStatus){
+                    funct(JSON.parse(this.responseText), fullStatus);
+                }else{
+                    funct(JSON.parse(this.responseText));
+                }
             }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
             console.log(this.readyState, this.status);
@@ -83,17 +87,6 @@ function StatusHome(){
     setInfo(baseURL+'/api/v2/status.json', Status);
     document.getElementById("mainComponents").classList.remove("size-zero");
     document.getElementById("messages").classList.add("hidden");
-    
-    document.getElementById("mainStatus").classList.remove("status-shadow");
-    document.getElementById("mainStatus").classList.remove("status-height");
-    
-    if(document.getElementById("psa").classList.contains('hidden')){
-        document.getElementById("mainStatus").classList.add("full-status-height");
-    }else{
-        
-        document.getElementById("mainStatus").classList.add("psa-full-status-height");
-    }
-    
 }
 
 function makeComponent(curr){
@@ -109,12 +102,24 @@ function Components(comp){
     document.getElementById("mainComponents").innerHTML = out;
 }
 
-function Status(arr){
+function Status(arr, fullStatus=false){
     setTheme('unavailable');
     document.getElementById("mainStatus").classList.remove("unavailable");
     document.getElementById("mainStatus").innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
     document.getElementById("mainStatus").classList.add("status-color");
     document.getElementById("mainStatus").classList.add(arr.status.indicator.toLowerCase());
+    
+    if(fullStatus){
+        document.getElementById("mainStatus").classList.remove("status-shadow");
+        document.getElementById("mainStatus").classList.remove("status-height");
+        
+        if(document.getElementById("psa").classList.contains('hidden')){
+            document.getElementById("mainStatus").classList.add("full-status-height");
+        }else{
+            document.getElementById("mainStatus").classList.add("psa-full-status-height");
+        }
+    }
+    
     setTheme(arr.status.indicator);
 }
 
