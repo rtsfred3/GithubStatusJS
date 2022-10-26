@@ -1,16 +1,34 @@
 var baseURL = "https://www.githubstatus.com";
 // baseURL = "https://apiv2.githubstat.us";
 
+var pathnameIndex = {
+    '/': IndexHome(),
+    '/components/': ComponentsHome(),
+};
+
+pathnameIndex = new Proxy(pathnameIndex, {
+    get(target, name) {
+        return setError();
+    }
+});
+
 function Router(){
     try{
-        if(location.host == 'githubstat.us' || location.host == 'spa.ghstatus.pages.dev'){
-            if(location.pathname == '/'){
-                IndexHome();
-            }else if(location.pathname == '/components/'){
-                ComponentsHome();
-            }else{
-                setError();
-            }
+        var cloudflareDevRegex = /(spa|master|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+        var cloudflareProdRegex = /githubstat.us/g;
+        
+        var onCloudflareDev = location.host.match(cloudflareDevRegex).length >= 1;
+        var onCloudflareProd = location.host.match(cloudflareProdRegex).length >= 1;
+        
+        if(location.host == 'githubstat.us' || onCloudflareDev){
+            pathnameIndex[location.pathname]
+            // if(location.pathname == '/'){
+            //     IndexHome();
+            // }else if(location.pathname == '/components/'){
+            //     ComponentsHome();
+            // }else{
+            //     setError();
+            // }
         }else{
             setError();
         }
