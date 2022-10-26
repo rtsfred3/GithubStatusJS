@@ -1,8 +1,8 @@
 Sitemap: https://githubstat.us/sitemap.xml
 User-agent: *
 Allow: /apps/
+Allow: /components/
+Allow: /status/
 Disallow: /amp/
-Disallow: /components/
 Disallow: /lang/
 Disallow: /min/
-Disallow: /status/
