@@ -46,7 +46,7 @@
         </script>
 
         <script>
-            var errorMessage = '<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>';
+            var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
@@ -57,7 +57,7 @@
         </script>
         
         <link rel="preload" href="/styling/main.min.css" as="style">
-        <link rel="preload" href="js/main.min.js" as="script">
+        <link rel="preload" href="/js/main.min.js" as="script">
 
         <link rel="icon" type="image/x-icon" href="https://img.githubstat.us/img/lite/144px.png">
         <link rel="apple-touch-icon" sizes="144x144" href="https://img.githubstat.us/img/lite/144px.png">
