@@ -72,6 +72,7 @@ function setTheme(status){
 }
 
 function IndexHome(){
+    document.getElementById("mainHome").classList.remove("hide");
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
     setInfo(baseURL+'/api/v2/status.json', Status);
     setInfo(baseURL+'/api/v2/incidents.json', Messages);
@@ -79,11 +80,13 @@ function IndexHome(){
 }
 
 function ComponentsHome(){
+    document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
     document.getElementById("mainComponents").classList.remove("size-zero");
 }
 
 function StatusHome(){
+    document.getElementById("mainStatus").classList.remove("hide");
     setInfo(baseURL+'/api/v2/status.json', Status, true);
 }
 

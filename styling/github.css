@@ -123,6 +123,10 @@ hr{
     padding: 0 !important;
 }
 
+.hide{
+    display: none;
+}
+
 .size-max{
     height: 100vh;
     width: 100vw;
