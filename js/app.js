@@ -59,7 +59,7 @@ function setInfo(url, funct, fullStatus = false){
 }
 
 function PSA_F(psa){
-    document.getElementById("psa").classList.remove("hidden");
+    document.getElementById("psa").classList.remove("hide");
     document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
 }
 
@@ -118,7 +118,7 @@ function Status(arr, fullStatus=false){
         document.getElementById(id).classList.remove("status-shadow");
         document.getElementById(id).classList.remove("status-height");
         
-        if(document.getElementById("psa").classList.contains('hidden')){
+        if(document.getElementById("psa").classList.contains('hide')){
             document.getElementById(id).classList.add("full-status-height");
         }else{
             document.getElementById(id).classList.add("psa-full-status-height");
