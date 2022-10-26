@@ -30,19 +30,19 @@ Object.defineProperties(indicatorVals, {
     'resolved': {
         enumerable: true,
         get: function(){
-            return this.none;
+            return this.good;
         }
     },
     'none': {
         enumerable: true,
         get: function(){
-            return this.none;
+            return this.good;
         }
     },
     'operational': {
         enumerable: true,
         get: function(){
-            return this.none;
+            return this.good;
         }
     },
     'degraded_performance': {

@@ -8,6 +8,8 @@ function setUp(){
         }else if(location.host == 'githubstat.us' || location.host == 'spa.ghstatus.pages.dev'){
             if(location.pathname == '/'){
                 IndexHome();
+            }else{
+                setError();
             }
         }else{
             setError();
