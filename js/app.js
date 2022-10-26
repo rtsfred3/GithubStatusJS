@@ -24,14 +24,14 @@ function Router(){
         console.log('onCloudflareProd', onCloudflareProd);
         
         if(location.host == 'githubstat.us' || onCloudflareDev){
-            pathnameIndex[location.pathname];
-            // if(location.pathname == '/'){
-            //     IndexHome();
-            // }else if(location.pathname == '/components/'){
-            //     ComponentsHome();
-            // }else{
-            //     setError();
-            // }
+            // pathnameIndex[location.pathname];
+            if(location.pathname == '/'){
+                IndexHome();
+            }else if(location.pathname == '/components/'){
+                ComponentsHome();
+            }else{
+                setError();
+            }
         }else{
             setError();
         }
