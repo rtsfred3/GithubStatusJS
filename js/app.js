@@ -85,8 +85,6 @@ function ComponentsHome(){
 
 function StatusHome(){
     setInfo(baseURL+'/api/v2/status.json', Status, true);
-    // document.getElementById("mainComponents").classList.remove("size-zero");
-    // document.getElementById("messages").classList.add("hidden");
 }
 
 function makeComponent(curr){
@@ -112,6 +110,8 @@ function Status(arr, fullStatus=false){
     document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
     
     if(fullStatus){
+        document.getElementById('mainHome').innerHTML = '';
+        
         document.getElementById(id).classList.remove("status-shadow");
         document.getElementById(id).classList.remove("status-height");
         
