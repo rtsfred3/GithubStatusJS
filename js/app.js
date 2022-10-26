@@ -121,7 +121,7 @@ function createMessage(impact, status, body, created_at, shortlink){
 function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
     
-    var previousDays = 30;
+    var previousDays = 7;
     
     var weekOld = new Date().setDate((new Date).getDate() - 7);
     var previousDaysDate = new Date().setDate((new Date).getDate() - previousDays);
