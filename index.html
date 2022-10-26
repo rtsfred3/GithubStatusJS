@@ -48,7 +48,7 @@
         <script>
             var errorMessage = '<div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>';
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js').then(function(reg) {
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
                 }).catch(function(err) {
                     console.log(err);
