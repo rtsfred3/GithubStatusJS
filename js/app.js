@@ -6,7 +6,7 @@ function setUp(){
         if(location.href == 'http://localhost:8888/GithubHTML/'){
             IndexHome();
         }else if(location.host == 'githubstat.us' || location.host == 'spa.ghstatus.pages.dev'){
-            if(location.pathname == '/' || location.pathname == '/index.html'){
+            if(location.pathname == '/'){
                 IndexHome();
             }else if(location.pathname == '/components/'){
                 ComponentsHome();
@@ -77,6 +77,7 @@ function makeComponent(curr){
 function Components(comp){
     var out = '';
     for(var i = 0; i < comp["components"].length; i++){
+        if(curr["name"].substring(0, 5) == 'Visit'){ continue; }
         out += makeComponent(comp["components"][i]);
     }
     document.getElementById("mainComponents").innerHTML = out;
