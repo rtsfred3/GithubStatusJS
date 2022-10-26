@@ -1,16 +1,16 @@
 var baseURL = "https://www.githubstatus.com";
 // baseURL = "https://apiv2.githubstat.us";
 
-var pathnameIndex = {
-    '/': IndexHome(),
-    '/components/': ComponentsHome(),
-};
-
-pathnameIndex = new Proxy(pathnameIndex, {
-    get(target, name) {
-        return setError();
-    }
-});
+// var pathnameIndex = {
+//     '/': IndexHome(),
+//     '/components/': ComponentsHome(),
+// };
+//
+// pathnameIndex = new Proxy(pathnameIndex, {
+//     get(target, name) {
+//         return setError();
+//     }
+// });
 
 function Router(){
     try{
@@ -19,6 +19,9 @@ function Router(){
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex).length >= 1;
         var onCloudflareProd = location.host.match(cloudflareProdRegex).length >= 1;
+        
+        console.log('onCloudflareDev', onCloudflareDev);
+        console.log('onCloudflareProd', onCloudflareProd);
         
         if(location.host == 'githubstat.us' || onCloudflareDev){
             // pathnameIndex[location.pathname];

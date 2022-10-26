@@ -72,38 +72,8 @@ Object.defineProperties(indicatorVals, {
 });
 
 Object.defineProperties(indicatorMessages, {
-    'resolved': {
-        enumerable: true,
-        get: function(){
-            return indicatorVals.good;
-        }
-    },
-    
-    'investigating': {
-        enumerable: true,
-        get: function(){
-            return indicatorVals.minor;
-        }
-    },
-    
-    'critical': {
-        enumerable: true,
-        get: function(){
-            return indicatorVals.critical;
-        }
-    },
-    
-    'maintenance': {
-        enumerable: true,
-        get: function(){
-            return indicatorVals.maintenance;
-        }
-    }
-});
-
-/* Object.defineProperties(indicatorMessages, {
     'resolved': { value: 'good', enumerable: true },
     'investigating': { value: 'minor', enumerable: true },
     'critical': { value: 'critical', enumerable: true },
     'maintenance': { value: 'maintenance', enumerable: true }
-}); */
+});

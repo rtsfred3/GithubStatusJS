@@ -46,7 +46,7 @@
         </script>
 
         <script>
-            var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
+            // var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
@@ -81,6 +81,8 @@
             <div id="messages" class="messages"></div>
         </div>
         <div id="mainComponents" class="zed size-zero"></div>
+        
+        <div class="size-max status-width bold error status-color size-zero"><span class="center-status">ERROR</span></div>
 
         <script>
             if(!navigator.onLine){ setTheme('error'); document.write(errorMessage); }
