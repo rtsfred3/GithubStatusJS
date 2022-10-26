@@ -23,6 +23,7 @@ hr{
 
 .psa{
     width: 100vw;
+    height: 5vh;
     text-align: center;
     display: table;
 
@@ -67,6 +68,10 @@ hr{
 
 .full-status-height{
     height: 100vh; /* !important; */
+}
+
+.psa-full-status-height{
+    height: 90vh; /* !important; */
 }
 
 .status-height{

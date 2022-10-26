@@ -86,7 +86,13 @@ function StatusHome(){
     
     document.getElementById("mainStatus").classList.remove("status-shadow");
     document.getElementById("mainStatus").classList.remove("status-height");
-    document.getElementById("mainStatus").classList.add("full-status-height");
+    
+    if(document.getElementById("psa").classList.contains('hidden')){
+        document.getElementById("mainStatus").classList.add("psa-full-status-height");
+    }else{
+        document.getElementById("mainStatus").classList.add("full-status-height");
+    }
+    
 }
 
 function makeComponent(curr){
