@@ -1,6 +1,6 @@
-// var baseURL = "https://www.githubstatus.com";
+var baseURL = "https://www.githubstatus.com";
 // var baseURL = "https://githubstat.us";
-var baseURL = location.origin;
+// var baseURL = location.origin;
 
 function Router(){
     try{
