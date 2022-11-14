@@ -1,6 +1,6 @@
-// var baseURL = "https://www.githubstatus.com";
+var baseURL = "https://www.githubstatus.com";
 // var baseURL = "https://githubstat.us";
-var baseURL = location.origin;
+// var baseURL = location.origin;
 
 function Router(){
     try{
@@ -10,8 +10,8 @@ function Router(){
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
         
-        console.log('onCloudflareDev', onCloudflareDev);
-        console.log('onCloudflareProd', onCloudflareProd);
+        // console.log('onCloudflareDev', onCloudflareDev);
+        // console.log('onCloudflareProd', onCloudflareProd);
         
         if(onCloudflareProd || onCloudflareDev){
             if(location.pathname == '/'){
