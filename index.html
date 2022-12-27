@@ -21,7 +21,7 @@
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="GitHub Status">
         <meta name="twitter:description" content="A website to monitor GitHub status updates.">
-        <meta name="twitter:image:src" content="https://img.githubstat.us/img/status-twitter-min.png">
+        <meta name="twitter:image:src" content="https://images.githubstat.us/img/status-twitter-min.png">
         
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="GitHub Status">
@@ -47,6 +47,7 @@
 
         <script>
             var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
+            
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
