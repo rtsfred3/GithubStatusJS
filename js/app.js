@@ -151,8 +151,8 @@ function createMessage(impact, status, body, created_at, shortlink){
     });
 
     date = '<span class="date empty">' + date + '</span>';
-    var lnk = w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
-    out += '<div class="text-margin">' + body + lnk + '<br />' + date + '</div>';
+    // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
+    out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
     
     return out;
 }
