@@ -4,7 +4,7 @@ var baseURL = "https://www.githubstatus.com";
 
 function Router(){
     try{
-        var cloudflareDevRegex = /(spa|master|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+        var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
         var cloudflareProdRegex = /githubstat.us/g;
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
