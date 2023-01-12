@@ -42,10 +42,20 @@
         <title>Github Status</title>
     </head>
     <body>
-        <amp-list width="auto" height="200" layout="fixed-height" src="https://master.githubapiwrapper.pages.dev/api/amp/body.json">
+        <amp-list width="auto" height="200" layout="fixed-height" src="https://githubapiwrapper.pages.dev/api/amp/body.json">
             <template type="amp-mustache">
                 {{{body}}}
             </template>
         </amp-list>
+        
+        <!-- <div id="messages" class="messages">
+            <amp-list width="auto" height="200" layout="fixed-height" src="https://master.githubapiwrapper.pages.dev/api/amp/messages.json">
+                <template type="amp-mustache">
+                    <div class="status-box {{status}}-message"><span class="message-status"><div class="right">{{status}}</div></span></div>
+                    
+                    <div class="text-margin">{{body}}<br><span class="date empty">{{date}} UTC</span></div>
+                </template>
+            </amp-list>
+        </div> -->
     </body>
 </html>
