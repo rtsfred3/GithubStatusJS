@@ -78,24 +78,24 @@
         }
     ],
 
-    "categories": ["utilities", "productivity"],
+    "categories": ["utilities", "productivity", "development", "developer tools"],
     "orientation": "portrait-primary",
     "shortcuts": [
         {
             "name": "GitHub Components Status",
-            "short_name": "GitHub Components Page",
+            "short_name": "GH Components",
             "description": "Displays the status of the GitHub Components",
             "url": "https://githubstat.us/components/",
             "icons": [
                 {
-                    "src": "https://img.githubstat.us/img/lite/192px.png",
+                    "src": "https://images.githubstat.us/img/lite/192px.png",
                     "sizes": "192x192"
                 }
             ]
         },
         {
             "name": "GitHub Status Page",
-            "short_name": "GHStatus Page",
+            "short_name": "GH Status",
             "description": "Displays the overall status of the GitHub",
             "url": "https://githubstat.us/status/",
             "icons": [
@@ -163,12 +163,5 @@
             "sizes": "1280x720",
             "type": "image/webp"
         }
-    ],
-    
-    "paquet_features": {
-        "mobile": true,
-        "desktop": true,
-        "offline": true,
-        "open": true
-    }
+    ]
 }
