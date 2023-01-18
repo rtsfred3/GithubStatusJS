@@ -12,10 +12,10 @@
         <meta property="og:description" content="A website to monitor GitHub status updates.">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://githubstat.us/">
-        <meta property="og:image" content="https://img.githubstat.us/img/status-facebook.png">
+        <meta property="og:image" content="https://images.githubstat.us/img/status-twitter-min.png">
         <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="300" />
         <meta property="og:image:alt" content="An image with text that reads 'GitHub Status' with background changing according to GitHub's current status.">
         
         <meta name="twitter:card" content="summary">
@@ -40,7 +40,7 @@
                 "url": "https://githubstat.us/",
                 "description": "A website to monitor GitHub status updates.",
                 "image": [
-                    "https://img.githubstat.us/img/status-twitter-min.webp"
+                    "https://do.githubstat.us/img/status-twitter-min.png"
                 ]
             }
         </script>
@@ -51,6 +51,15 @@
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
+                    
+                    // const registration = await navigator.serviceWorker.ready;
+                    // try {
+                    //     await registration.periodicSync.register('get-latest', {
+                    //         minInterval: 24 * 60 * 60 * 1000,
+                    //     });
+                    // } catch {
+                    //     console.log('Periodic Sync could not be registered!');
+                    // }
                 }).catch(function(err) {
                     console.log(err);
                 });
@@ -76,6 +85,11 @@
         <title>GitHub Status</title>
     </head>
     <body>
+        <div class="hmedia hide">
+            <img class="photo" alt="Github Status" loading="lazy" src="https://do.githubstat.us/img/status-twitter-min.png"/>
+            <span>GitHub Status: <span class="fn"></span></span>
+        </div>
+        
         <div id="psa" class="psa hide bold status-color"></div>
         <div id="mainHome" class="hide zed size-zero">
             <div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div>

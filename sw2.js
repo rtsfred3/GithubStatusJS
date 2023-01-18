@@ -2,10 +2,9 @@ var CACHE_NAME = 'GithubStatus';
 
 var urlsToCache = [
     './',
-
-    './styling/github.min.css',
-    './styling/messages.min.css',
-    './js/app.min.js',
+    
+    './styling/main.min.css',
+    './js/main.min.js',
 
     './img/144px.png'
 ];
@@ -40,4 +39,15 @@ self.addEventListener('fetch', function(event) {
     event.respondWith(
         fetch(event.request).catch(function(){ return caches.match(event.request); })
     );
+});
+
+self.addEventListener('periodicsync', function(event) {
+    if (event.tag === 'get-latest') {
+        event.waitUntil(
+            caches.open(CACHE_NAME).then(function(cache){
+                console.log('Opened cache');
+                return cache.addAll(urlsToCache);
+            })
+        );
+    }
 });
