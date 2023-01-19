@@ -123,7 +123,7 @@ hr{
     padding: 0 !important;
 }
 
-.hide{
+.hide, .hidden{
     display: none;
 }
 

@@ -115,9 +115,7 @@ function Status(arr, fullStatus=false){
     document.getElementById(id).classList.add("status-color");
     document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
     
-    var tempStatus = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1)
-    
-    document.getElementsByClassName('fn')[0].innerHTML = tempStatus;
+    // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
     
     if(fullStatus){
         document.getElementById('mainHome').innerHTML = '';
