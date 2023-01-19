@@ -24,8 +24,8 @@ function Router(){
                 setError();
             }
         }else{
-            // IndexHome();
-            setError();
+            IndexHome();
+            // setError();
         }
     }catch(error){
         // IndexHome();
