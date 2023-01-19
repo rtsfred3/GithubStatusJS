@@ -24,9 +24,11 @@ function Router(){
                 setError();
             }
         }else{
-            setError();
+            IndexHome();
+            // setError();
         }
     }catch(error){
+        // IndexHome();
         setError();
     }
 }
@@ -112,6 +114,8 @@ function Status(arr, fullStatus=false){
     document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
     document.getElementById(id).classList.add("status-color");
     document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
+    
+    // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
     
     if(fullStatus){
         document.getElementById('mainHome').innerHTML = '';
