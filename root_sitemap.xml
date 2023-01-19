@@ -2,15 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://githubstat.us/</loc>
-        <lastmod>2022-11-13</lastmod>
+        <lastmod>2023-01-19</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/components/</loc>
-        <lastmod>2022-11-13</lastmod>
+        <lastmod>2023-01-19</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/status/</loc>
-        <lastmod>2022-11-13</lastmod>
+        <lastmod>2023-01-19</lastmod>
     </url>
     <url>
         <loc>https://githubstat.us/apps/app/</loc>
@@ -21,11 +21,11 @@
         <lastmod>2021-02-26</lastmod>
     </url>
     <url>
-        <loc>https://githubstat.us/apps/min/</loc>
+        <loc>https://githubstat.us/apps/lang/</loc>
         <lastmod>2021-02-26</lastmod>
     </url>
     <url>
-        <loc>https://githubstat.us/apps/lang/</loc>
+        <loc>https://githubstat.us/apps/min/</loc>
         <lastmod>2021-02-26</lastmod>
     </url>
     <url>
