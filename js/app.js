@@ -1,5 +1,5 @@
-var baseURL = "https://www.githubstatus.com";
-// var baseURL = "https://githubstat.us";
+// var baseURL = "https://www.githubstatus.com";
+var baseURL = "https://apiv3.githubstat.us";
 // var baseURL = location.origin;
 
 function Router(){
@@ -76,9 +76,9 @@ function setTheme(status){
 
 function IndexHome(){
     document.getElementById("mainHome").classList.remove("hide");
-    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    setInfo(baseURL+'/api/v2/status.json', Status);
-    setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    // setInfo(baseURL+'/api/v2/status.json', Status);
+    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
@@ -153,11 +153,7 @@ function createMessage(name, impact, status, body, created_at, shortlink, isOlde
         date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
     }
     
-    // body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
-    //     return '<a href="' + match + '">here</a>.';
-    // });
-    
-    body = name + '<br />' + body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
+    body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
         return '<a href="' + match + '">here</a>.';
     });
 
