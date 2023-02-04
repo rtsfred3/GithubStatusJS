@@ -30,9 +30,14 @@
     margin: 1em 2.5vw;
 }
 
-.none-message, .good-message {
+.good-message {
     width: 120px;
     background-color: #339966;
+}
+
+.none-message {
+    width: 200px;
+    background-color: #000000;
 }
 
 .minor-message {
@@ -58,7 +63,7 @@
 @media only screen and (max-width: 850px) {
   .good-message { width: 20vw; }
 
-  .minor-message { width: 40vw; }
+  .none-message, .minor-message { width: 40vw; }
 
   .major-message { width: 60vw; }
 
@@ -80,7 +85,7 @@
 @media (min-width: 2048px) and (min-height: 1080px) {
     .good-message { width: 20vw; }
 
-    .minor-message { width: 40vw; }
+    .none-message, .minor-message { width: 40vw; }
 
     .major-message { width: 60vw; }
 

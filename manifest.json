@@ -89,7 +89,8 @@
             "icons": [
                 {
                     "src": "https://images.githubstat.us/img/lite/192px.png",
-                    "sizes": "192x192"
+                    "sizes": "192x192",
+                    "purpose": "any"
                 }
             ]
         },
@@ -101,7 +102,8 @@
             "icons": [
                 {
                     "src": "https://images.githubstat.us/img/lite/192px.png",
-                    "sizes": "192x192"
+                    "sizes": "192x192",
+                    "purpose": "any"
                 }
             ]
         }

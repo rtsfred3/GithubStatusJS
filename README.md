@@ -1,4 +1,4 @@
-![GitHub Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fapiv2.githubstat.us%2Fapi%2Fv2%2Fendpoint.json)
+![GitHub Status](https://img.shields.io/endpoint?url=https://apiv3.githubstat.us/api/endpoint.json)
 
 ### License
 
