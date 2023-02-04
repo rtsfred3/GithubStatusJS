@@ -133,12 +133,15 @@ function Status(arr, fullStatus=false){
     setTheme(arr.status.indicator);
 }
 
-function createMessage(impact, status, body, created_at, shortlink){
+function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     var out = '';
     
-    var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
+    // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
+    var w = (status == "resolved" ? "good" : impact);
+    
     if(w == undefined){ w = indicatorMessages[status]; }
+    
     out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
     var date = new Date(created_at).toLocaleDateString("en-US", options);
@@ -150,15 +153,21 @@ function createMessage(impact, status, body, created_at, shortlink){
         date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
     }
     
-    body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
+    // body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
+    //     return '<a href="' + match + '">here</a>.';
+    // });
+    
+    body = '<span style="padding-right:1ch;">Incident:</span>' + name + '<br /><span style="padding-right:1.7ch;">Update:</span>' + body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
         return '<a href="' + match + '">here</a>.';
     });
 
     date = '<span class="date empty">' + date + '</span>';
+    
     // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
+    
     out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
     
-    return out;
+    return "<span>" + out + "</span>";
 }
 
 function Messages(mess){
@@ -175,14 +184,16 @@ function Messages(mess){
         return;
     }else{
         var out = '';
+        
         for(var i = 0; i < incidents.length; i++){
             if(incidents[i]["incident_updates"].length > 0){
                 for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
                     out += createMessage(
-                        incidents[i].impact, incidents[i]["incident_updates"][j].status,
+                        incidents[i].name, incidents[i].impact,
+                        incidents[i]["incident_updates"][j].status,
                         mess["incidents"][i]["incident_updates"][j].body,
                         mess["incidents"][i]["incident_updates"][j].created_at,
-                        mess["incidents"][i].shortlink
+                        mess["incidents"][i].shortlink, (j == incidents[i]["incident_updates"].length-1)
                     );
                 }
 
@@ -194,6 +205,7 @@ function Messages(mess){
                 out += '<div class="text-margin">' + mess["incidents"][i].name + '<br />'+date+'</div>';*/
             }
         }
+        
         document.getElementById('messages').innerHTML = out;
     }
 }

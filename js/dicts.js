@@ -33,36 +33,42 @@ Object.defineProperties(indicatorVals, {
             return this.good;
         }
     },
+    
     'none': {
         enumerable: true,
         get: function(){
             return this.good;
         }
     },
+    
     'operational': {
         enumerable: true,
         get: function(){
             return this.good;
         }
     },
+    
     'degraded_performance': {
         enumerable: true,
         get: function(){
             return this.minor;
         }
     },
+    
     'partial_outage': {
         enumerable: true,
         get: function(){
             return this.major;
         }
     },
+    
     'major_outage': {
         enumerable: true,
         get: function(){
             return this.critical;
         }
     },
+    
     'under_maintenance': {
         enumerable: true,
         get: function(){
