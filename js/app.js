@@ -157,7 +157,7 @@ function createMessage(name, impact, status, body, created_at, shortlink, isOlde
     //     return '<a href="' + match + '">here</a>.';
     // });
     
-    body = '<span style="padding-right:1ch;">Incident:</span>' + name + '<br /><span style="padding-right:1.7ch;">Update:</span>' + body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
+    body = name + '<br />' + body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
         return '<a href="' + match + '">here</a>.';
     });
 
