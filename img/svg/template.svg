@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="4px" y="4px" viewBox="0 0 1280 675" enable-background="new 0 0 1280 675" xml:space="preserve">
+	<style>
+		.middle-font {
+			font: bold 150px sans-serif;
+			fill: black;
+		}
+		
+		.incident-header {
+			font: 75px sans-serif;
+			fill: white;
+		}
+		
+		.incident-name {
+			font: bold 60px sans-serif;
+			fill: black;
+		}
+		
+		.incident-status {
+			font: 40px sans-serif;
+			fill: gray;
+		}
+	</style>
+	
+	<polygon points="0,0 0,675 1280,675 1280,0" fill="#FFF" />
+	
+	<polygon points="0,0 0,150 1280,150 1280,0" fill="#DBAB09" />
+	
+	<text x="3%" y="11%" dominant-baseline="central" text-anchor="start" class="incident-header">Incident</text>
+	
+	<text x="3%" y="30%" dominant-baseline="central" text-anchor="start" class="incident-name">Virginia Is Down</text>
+	
+	<text x="3%" y="40%" dominant-baseline="central" text-anchor="start" class="incident-status">Status: Investigating</text>
+	
+	<line x1="0" y1="150" x2="1280" y2="150" stroke="black" stroke-width="3" />
+	
+	<line x1="43%" y1="150" x2="43%" y2="675" stroke="black" stroke-width="3" />
+	
+	<!-- <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" class="middle-font">GOOD</text> -->
+</svg>
