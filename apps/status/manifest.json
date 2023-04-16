@@ -3,9 +3,15 @@
     "short_name": "GHStatus",
     "description": "A simple website to monitor GitHub status updates.",
     "start_url": "https://g.hstat.us/",
+    "display_override": ["standalone"],
     "display": "standalone",
     "background_color": "#339966",
     "theme_color": "#339966",
+    "lang": "en-US",
+    "author": "rtsfred3",
+    "dir": "ltr",
+    "scope": "https://g.hstat.us/",
+    "prefer_related_applications": false,
 
     "icons": [
         {
@@ -68,5 +74,8 @@
             "sizes": "1024x1024",
             "type": "image/png"
         }
-    ]
+    ],
+    
+    "categories": ["utilities", "productivity", "development", "developer tools"],
+    "orientation": "portrait-primary"
 }

@@ -1,5 +1,5 @@
-var baseURL = "https://www.githubstatus.com";
-// var baseURL = "https://githubstat.us";
+// var baseURL = "https://www.githubstatus.com";
+var baseURL = "https://apiv3.githubstat.us";
 // var baseURL = location.origin;
 
 function Router(){
@@ -76,9 +76,9 @@ function setTheme(status){
 
 function IndexHome(){
     document.getElementById("mainHome").classList.remove("hide");
-    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    setInfo(baseURL+'/api/v2/status.json', Status);
-    setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    // setInfo(baseURL+'/api/v2/status.json', Status);
+    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
@@ -133,12 +133,15 @@ function Status(arr, fullStatus=false){
     setTheme(arr.status.indicator);
 }
 
-function createMessage(impact, status, body, created_at, shortlink){
+function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     var out = '';
     
-    var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
+    // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
+    var w = (status == "resolved" ? "good" : impact);
+    
     if(w == undefined){ w = indicatorMessages[status]; }
+    
     out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
     var date = new Date(created_at).toLocaleDateString("en-US", options);
@@ -155,10 +158,12 @@ function createMessage(impact, status, body, created_at, shortlink){
     });
 
     date = '<span class="date empty">' + date + '</span>';
+    
     // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
+    
     out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
     
-    return out;
+    return "<span>" + out + "</span>";
 }
 
 function Messages(mess){
@@ -175,14 +180,16 @@ function Messages(mess){
         return;
     }else{
         var out = '';
+        
         for(var i = 0; i < incidents.length; i++){
             if(incidents[i]["incident_updates"].length > 0){
                 for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
                     out += createMessage(
-                        incidents[i].impact, incidents[i]["incident_updates"][j].status,
+                        incidents[i].name, incidents[i].impact,
+                        incidents[i]["incident_updates"][j].status,
                         mess["incidents"][i]["incident_updates"][j].body,
                         mess["incidents"][i]["incident_updates"][j].created_at,
-                        mess["incidents"][i].shortlink
+                        mess["incidents"][i].shortlink, (j == incidents[i]["incident_updates"].length-1)
                     );
                 }
 
@@ -194,6 +201,7 @@ function Messages(mess){
                 out += '<div class="text-margin">' + mess["incidents"][i].name + '<br />'+date+'</div>';*/
             }
         }
+        
         document.getElementById('messages').innerHTML = out;
     }
 }
