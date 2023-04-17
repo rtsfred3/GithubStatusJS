@@ -33,6 +33,37 @@ function Router(){
     }
 }
 
+async function RouterAsync(){
+    try{
+        var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+        var cloudflareProdRegex = /githubstat.us/g;
+        
+        var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
+        var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
+        
+        // console.log('onCloudflareDev', onCloudflareDev);
+        // console.log('onCloudflareProd', onCloudflareProd);
+        
+        if(onCloudflareProd || onCloudflareDev){
+            if(location.pathname == '/'){
+                await IndexHomeAsync();
+            }else if(location.pathname == '/components/'){
+                await IndexHomeAsync();
+            }else if(location.pathname == '/status/'){
+                await IndexHomeAsync();
+            }else{
+                setError();
+            }
+        }else{
+            IndexHome();
+            // setError();
+        }
+    }catch(error){
+        // IndexHome();
+        setError();
+    }
+}
+
 function setError(){
     setTheme('error');
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
@@ -102,6 +133,14 @@ function IndexHome(){
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
     const result = await setInfoAsync(baseURL+'/api/v2/status.json', Status);
     setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    document.getElementById("mainHome").classList.remove("size-zero");
+}
+
+async function IndexHomeAsync(){
+    document.getElementById("mainHome").classList.remove("hide");
+    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    const result = await setInfoAsync(baseURL+'/api/v2/status.json', Status, true);
+    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
