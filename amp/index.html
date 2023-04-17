@@ -35,7 +35,7 @@
         </style>
         
         <style amp-custom>
-            /* @import url('../styling/main.min.css'); */
+            @import url('../styling/main.min.css');
             @import url('../styling/messages.min.css');
         </style>
 
@@ -63,8 +63,8 @@
         
         <amp-list width="auto" height="200" layout="fixed-height" src="https://master.githubapiwrapper.pages.dev/api/amp/status.json">
             <template type="amp-mustache">
-                <div id="status" class="status-height status-width status-shadow bold status-color {{status}}">
-                    <span class="center-status">{{status}}</span>
+                <div id="status" class="status-height status-width status-shadow bold status-color {{{status}}}">
+                    <span class="center-status">{{{status}}}</span>
                 </div>
             </template>
         </amp-list>
