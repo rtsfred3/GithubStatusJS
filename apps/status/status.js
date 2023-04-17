@@ -8,7 +8,7 @@ function setInfo(url, funct){
         if (this.readyState == 4 && this.status == 200) {
             funct(JSON.parse(this.responseText));
         }else{
-            Status({"page":{"id":"kctbh9vrtdwd","name":"GitHub","url":"https://www.githubstatus.com","time_zone":"Etc/UTC","updated_at":"2020-01-24T08:12:08.344Z"},"status":{"indicator":"error","description":"All Systems Operational"}});
+            Status({"page":{"id":"kctbh9vrtdwd","name":"GitHub","url":"https://www.githubstatus.com","time_zone":"Etc/UTC","updated_at":"2020-01-24T08:12:08.344Z"},"status":{"indicator":"unavailable","description":"All Systems Operational"}});
         }
     };
     xhttp.open("GET", url, true);

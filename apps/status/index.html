@@ -24,11 +24,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="preconnect" href="//www.githubstatus.com">
-        <link rel="dns-prefetch" href="//www.githubstatus.com">
+        <link rel="preconnect" href="//apiv3.githubstat.us">
+        <link rel="dns-prefetch" href="//apiv3.githubstat.us">
         <link rel="prefetch" href="https://g.hstat.us/img/lite/144px.png">
 
         <link rel="canonical" href="https://g.hstat.us/" />
+        
         <link rel="manifest" href="manifest.json">
 
         <link rel="icon" type="image/x-icon" href="https://g.hstat.us/img/lite/144px.png">
@@ -37,15 +38,33 @@
         <script type="application/ld+json">
             {
                 "@context": "http://schema.org/",
-                "@type": "WebSite",
+                "@type": "WebApplication",
                 "name": "GitHub Status",
-                "alternateName": "GitHubStatus",
+                "alternateName": "GH Status",
+                "applicationCategory": "DeveloperApplication",
+                "operatingSystem": "Android, iOS, MacOS, Windows",
+                "softwareRequirements": "Modern Web Browser",
                 "url": "https://g.hstat.us/",
                 "description": "A website to monitor GitHub status updates.",
-                "image": {
-                    "@type": "ImageObject",
-                    "contentUrl": "https://g.hstat.us/img/status-twitter-min.png",
-                    "embedUrl": "https://g.hstat.us/img/status-twitter-min.png"
+                "screenshot": "https://img.githubstat.us/img/screenshots/screenshot1.webp",
+                "image": "https://do.githubstat.us/img/status-twitter-min.png",
+                "thumbnailUrl": "https://do.githubstat.us/img/status-twitter-min.png",
+                "author": [{
+                    "@type": "Person",
+                    "name": "Ryan Fredrickson",
+                    "jobTitle": "Software Developer",
+                    "url": "https://github.com/rtsfred3"
+                }],
+                "maintainer": {
+                    "@type": "Person",
+                    "name": "Ryan Fredrickson",
+                    "jobTitle": "Software Developer",
+                    "url": "https://github.com/rtsfred3"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0.00",
+                    "priceCurrency": "USD"
                 }
             }
         </script>
@@ -56,6 +75,7 @@
 
         <script>
             var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
+            
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js').then(function(reg) {
                     console.log(reg);
@@ -66,14 +86,26 @@
         </script>
 
         <script>
-            var metaColors={none:"#339966",minor:"#DBAB09",major:"#E25D10",critical:"#DC3545",unavailable:"#4F93BD",error:"#646464",maintenance:"#0366d6"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error",unavailable:"unavailable",maintenance:"maintenance"},indicatorValsFR={none:"bon",minor:"mineur",major:"majeur",critical:"crucial",error:"erreur",unavailable:"indisponible",maintenance:"entretien"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status?e(JSON.parse(this.responseText)):Status({page:{id:"kctbh9vrtdwd",name:"GitHub",url:"https://www.githubstatus.com",time_zone:"Etc/UTC",updated_at:"2020-01-24T08:12:08.344Z"},status:{indicator:"error",description:"All Systems Operational"}})},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,19],a=document.getElementsByTagName("meta"),n=0;n<e.length;n++)a[e[n]].setAttribute("content",metaColors[t])}function Status(t){var e=window.navigator.userLanguage||window.navigator.language;"fr"!=e.substring(0,2).toLowerCase()&&!e.toLowerCase().includes("fr")||(indicatorVals=indicatorValsFR),setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable"),document.getElementById("mainStatus").classList.remove("error"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()),setTheme(t.status.indicator)}
+            var metaColors={none:"#339966",minor:"#DBAB09",major:"#E25D10",critical:"#DC3545",unavailable:"#4F93BD",error:"#646464",maintenance:"#0366d6"},indicatorVals={none:"good",minor:"minor",major:"major",critical:"critical",error:"error",unavailable:"unavailable",maintenance:"maintenance"},indicatorValsFR={none:"bon",minor:"mineur",major:"majeur",critical:"crucial",error:"erreur",unavailable:"indisponible",maintenance:"entretien"};function setInfo(t,e){var a=new XMLHttpRequest;a.onreadystatechange=function(){4==this.readyState&&200==this.status?e(JSON.parse(this.responseText)):Status({page:{id:"kctbh9vrtdwd",name:"GitHub",url:"https://www.githubstatus.com",time_zone:"Etc/UTC",updated_at:"2020-01-24T08:12:08.344Z"},status:{indicator:"unavailable",description:"All Systems Operational"}})},a.open("GET",t,!0),a.send()}function setTheme(t){for(var e=[2,19],a=document.getElementsByTagName("meta"),n=0;n<e.length;n++)a[e[n]].setAttribute("content",metaColors[t])}function Status(t){var e=window.navigator.userLanguage||window.navigator.language;"fr"!=e.substring(0,2).toLowerCase()&&!e.toLowerCase().includes("fr")||(indicatorVals=indicatorValsFR),setTheme("unavailable"),document.getElementById("mainStatus").classList.remove("zero-height"),document.getElementById("mainStatus").classList.remove("unavailable"),document.getElementById("mainStatus").classList.remove("error"),document.getElementById("mainStatus").innerHTML='<span class="center-status">'+indicatorVals[t.status.indicator].toUpperCase()+"</span>",document.getElementById("mainStatus").classList.add("status-height"),document.getElementById("mainStatus").classList.add("status-color"),document.getElementById("mainStatus").classList.add(t.status.indicator.toLowerCase()),setTheme(t.status.indicator)}
         </script>
 
         <title>GitHub Status</title>
     </head>
     <body>
-        <div id="mainStatus" class="zero-height bold unavailable-color"></div>
-        <script>setInfo('https://www.githubstatus.com/api/v2/status.json', Status);</script>
-        <noscript><div id="mainStatus" class="status-height bold error-color status-color"><span class="center-status">ERROR</span></div></noscript>
+        <div id="mainStatus" class="zero-height bold unavailable"></div>
+        
+        <script>
+            if (navigator.onLine) {
+                setInfo('https://apiv3.githubstat.us/api/v2/status.json', Status);
+            } else {
+                Status({"status":{"indicator":"error"}})
+            }
+        </script>
+        
+        <noscript>
+            <div id="mainStatus" class="status-height bold error status-color">
+                <span class="center-status">ERROR</span>
+            </div>
+        </noscript>
     </body>
 </html>

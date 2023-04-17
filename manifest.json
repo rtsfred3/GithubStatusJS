@@ -11,6 +11,7 @@
     "author": "rtsfred3",
     "dir": "ltr",
     "scope": "https://githubstat.us/",
+    "prefer_related_applications": false,
 
     "icons": [
         {
@@ -80,6 +81,7 @@
 
     "categories": ["utilities", "productivity", "development", "developer tools"],
     "orientation": "portrait-primary",
+    
     "shortcuts": [
         {
             "name": "GitHub Components Status",
@@ -88,8 +90,14 @@
             "url": "https://githubstat.us/components/",
             "icons": [
                 {
+                    "src": "https://images.githubstat.us/img/lite/96px.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                },
+                {
                     "src": "https://images.githubstat.us/img/lite/192px.png",
                     "sizes": "192x192",
+                    "type": "image/png",
                     "purpose": "any"
                 }
             ]
@@ -101,8 +109,14 @@
             "url": "https://githubstat.us/status/",
             "icons": [
                 {
+                    "src": "https://images.githubstat.us/img/lite/96px.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                },
+                {
                     "src": "https://images.githubstat.us/img/lite/192px.png",
                     "sizes": "192x192",
+                    "type": "image/png",
                     "purpose": "any"
                 }
             ]
