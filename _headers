@@ -1,2 +1,11 @@
 https://master.ghstatus.pages.dev/*
     X-Robots-Tag: nofollow
+
+/*.css
+    Cache-Control: max-age=86400, public
+
+/*.js
+    Cache-Control: max-age=86400, public
+
+/amp/
+    Cache-Control: max-age=300, public

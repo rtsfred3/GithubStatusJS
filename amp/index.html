@@ -61,7 +61,7 @@
             </template>
         </amp-list> -->
         
-        <amp-list width="auto" height="200" layout="fixed-height" src="https://master.githubapiwrapper.pages.dev/api/amp/status.json">
+        <amp-list width="auto" height="auto" layout="fixed-height" src="https://apiv3.githubstat.us/api/amp/status.json">
             <template type="amp-mustache">
                 <div id="status" class="status-height status-width status-shadow bold status-color {{{status}}}">
                     <span class="center-status">{{{status}}}</span>
@@ -70,7 +70,7 @@
         </amp-list>
         
         <div id="messages" class="messages">
-            <amp-list width="auto" height="200" layout="fixed-height" src="https://master.githubapiwrapper.pages.dev/api/amp/messages.json">
+            <amp-list width="auto" height="200" layout="fixed-height" src="https://apiv3.githubstat.us/api/amp/messages.json">
                 <template type="amp-mustache">
                     <div class="status-box {{status}}-message"><span class="message-status"><div class="right">{{status}}</div></span></div>
                     
