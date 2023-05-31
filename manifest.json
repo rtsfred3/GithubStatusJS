@@ -60,19 +60,19 @@
             "type": "image/png"
         },
         {
-            "src": "https://githubstat.us/img/lite/192px.png",
+            "src": "https://images.githubstat.us/img/lite/192px.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "https://githubstat.us/img/lite/512px.png",
+            "src": "https://images.githubstat.us/img/lite/512px.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "https://githubstat.us/img/lite/1024px.png",
+            "src": "https://images.githubstat.us/img/lite/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png",
             "purpose": "maskable"
@@ -90,12 +90,12 @@
             "url": "https://githubstat.us/components/",
             "icons": [
                 {
-                    "src": "https://images.githubstat.us/img/lite/96px.png",
+                    "src": "https://githubstat.us/img/lite/96px.png",
                     "sizes": "96x96",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://images.githubstat.us/img/lite/192px.png",
+                    "src": "https://githubstat.us/img/lite/192px.png",
                     "sizes": "192x192",
                     "type": "image/png",
                     "purpose": "any"
@@ -109,12 +109,12 @@
             "url": "https://githubstat.us/status/",
             "icons": [
                 {
-                    "src": "https://images.githubstat.us/img/lite/96px.png",
+                    "src": "https://githubstat.us/img/lite/96px.png",
                     "sizes": "96x96",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://images.githubstat.us/img/lite/192px.png",
+                    "src": "https://githubstat.us/img/lite/192px.png",
                     "sizes": "192x192",
                     "type": "image/png",
                     "purpose": "any"
