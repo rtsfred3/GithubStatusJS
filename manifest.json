@@ -60,19 +60,19 @@
             "type": "image/png"
         },
         {
-            "src": "https://images.githubstat.us/img/lite/192px.png",
+            "src": "https://githubstat.us/img/lite/192px.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "https://images.githubstat.us/img/lite/512px.png",
+            "src": "https://githubstat.us/img/lite/512px.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "https://images.githubstat.us/img/lite/1024px.png",
+            "src": "https://githubstat.us/img/lite/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png",
             "purpose": "maskable"
@@ -130,52 +130,52 @@
             "type": "image/png"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot1.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot1.webp",
             "sizes": "720x1280",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot2.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot2.webp",
             "sizes": "1280x720",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot3.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot3.webp",
             "sizes": "720x1280",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot4.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot4.webp",
             "sizes": "1280x720",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot5.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot5.webp",
             "sizes": "720x1280",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot6.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot6.webp",
             "sizes": "1280x720",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot7.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot7.webp",
             "sizes": "720x1280",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot8.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot8.webp",
             "sizes": "1280x720",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot9.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot9.webp",
             "sizes": "720x1280",
             "type": "image/webp"
         },
         {
-            "src": "https://img.githubstat.us/img/screenshots/screenshot10.webp",
+            "src": "https://githubstat.us/img/screenshots/screenshot10.webp",
             "sizes": "1280x720",
             "type": "image/webp"
         }
