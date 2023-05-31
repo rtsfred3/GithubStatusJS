@@ -1,6 +1,9 @@
 https://master.ghstatus.pages.dev/*
     X-Robots-Tag: nofollow
 
+/
+    Cache-Control: max-age=86400, public
+
 /*.css
     Cache-Control: max-age=86400, public
 
@@ -8,4 +11,4 @@ https://master.ghstatus.pages.dev/*
     Cache-Control: max-age=86400, public
 
 /amp/
-    Cache-Control: max-age=300, public
+    Cache-Control: max-age=600, public
