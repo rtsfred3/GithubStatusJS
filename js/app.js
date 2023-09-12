@@ -76,9 +76,9 @@ function setTheme(status){
 
 function IndexHome(){
     document.getElementById("mainHome").classList.remove("hide");
-    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    setInfo(baseURL+'/api/v2/status.json', Status);
-    setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    // setInfo(baseURL+'/api/v2/status.json', Status);
+    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
