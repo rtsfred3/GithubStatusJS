@@ -11,7 +11,7 @@
 
 	<!-- <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" class="font">GOOD</text> -->
 
-    <polygon points="0,0 0,1065 2020,1065 2020,0" fill="#339966" />
+    <polygon points="0,0 0,710 1346,710 1346,0" fill="#339966" />
 
 	<text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" class="font">GOOD</text>
 </svg>
