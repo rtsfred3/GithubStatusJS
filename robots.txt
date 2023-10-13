@@ -3,6 +3,7 @@ User-agent: *
 Allow: /
 Allow: /components/
 Allow: /status/
+Allow: /amp/
 Disallow: /apps/
 Disallow: /lang/
 Disallow: /min/
