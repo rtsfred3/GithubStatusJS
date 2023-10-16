@@ -80,7 +80,7 @@ function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
     var metaTags = document.getElementsByTagName("meta");
 
-    for (const cell of cells) {
+    for (const metaTag of metaTags) {
         if(metaTag.hasAttribute("property")){
             console.log(metaTag.getAttribute("property"));
         }else if(metaTag.hasAttribute("name")){
