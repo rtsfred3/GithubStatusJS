@@ -14,12 +14,16 @@ function Router(){
         
         if(onCloudflareProd || onCloudflareDev){
             if(location.pathname == '/'){
+                console.log("IndexHome");
                 IndexHome();
             }else if(location.pathname == '/components/'){
+                console.log("ComponentsHome");
                 ComponentsHome();
             }else if(location.pathname == '/status/'){
+                console.log("StatusHome");
                 StatusHome();
             }else{
+                console.log("StatusHome");
                 setError();
             }
         }else{
