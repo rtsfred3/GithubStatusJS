@@ -1,9 +1,18 @@
-function StatuspageHTML(baseURL, IndexHomeSingleRequest = true){
+function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSingleRequest = true, fetchPsa = false){
     this.baseURL = baseURL;
-    this.IndexHomeSingleRequest = IndexHomeSingleRequest;
+    this._name = _name;
+    this._description = _description;
+
+    if(this.baseURL.slice(-1) == '/'){
+        this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
+    }
+
+    this.IndexHomeSingleRequest = indexHomeSingleRequest;
     this.errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
 
-    this.setInfo("/psa.json", functEnum.PSA, this);
+    if(fetchPsa){
+        this.setInfo("/psa.json", functEnum.PSA, this);
+    }
 
     document.body.innerHTML = '\
     <div id="loading"> \
@@ -20,8 +29,32 @@ function StatuspageHTML(baseURL, IndexHomeSingleRequest = true){
     document.getElementById("mainHome").innerHTML = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>';
 }
 
+StatuspageHTML.prototype.setName = function(_name){
+    console.log(`setName(): ${_name}`);
+    this._name = _name;
+    return this;
+}
+
+StatuspageHTML.prototype.getName = function(){
+    console.log(`getName(): ${this._name}`);
+    return this._name;
+}
+
+StatuspageHTML.prototype.setDescription = function(_description){
+    console.log(`setDescription(): ${_description}`);
+    this._description = _description;
+    return this;
+}
+
+StatuspageHTML.prototype.getDescription = function(){
+    console.log(`getDescription(): ${this._description}`);
+    return this._description;
+}
+
 StatuspageHTML.prototype.IndexHome = function(){
     console.log("IndexHome");
+
+    // this.setTitle(`${this._name} Status`);
 
     this.hidePage("mainHome");
     
@@ -38,7 +71,7 @@ StatuspageHTML.prototype.IndexHome = function(){
 StatuspageHTML.prototype.ComponentsHome = function(){
     console.log("ComponentsHome");
 
-    this.setTitle("GitHub Status | Components");
+    // this.setTitle(`${this._name} Status | Components`);
 
     this.hidePage("mainComponents");
 
@@ -50,7 +83,7 @@ StatuspageHTML.prototype.ComponentsHome = function(){
 StatuspageHTML.prototype.StatusHome = function(){
     console.log("StatusHome");
 
-    this.setTitle("GitHub Status | Status");
+    // this.setTitle(`${this._name} Status | Status`);
 
     this.hidePage("mainStatus");
     
@@ -79,10 +112,13 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                 case functEnum.Status:
                     console.log("Status");
                     routerClass.Status(result);
+                    routerClass.setTitle(`${result.page.name} Status`);
+                    routerClass.setName(result.page.name);
                     break;
                 case functEnum.StatusFull:
                     console.log("Status");
                     routerClass.Status(result, true);
+                    routerClass.setTitle(`${result.page.name} Status | Status`);
                     break;
                 case functEnum.Messages:
                     console.log("Messages");
@@ -92,10 +128,12 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                     console.log("Status + Messages");
                     routerClass.Status(result);
                     routerClass.Messages(result);
+                    routerClass.setTitle(`${result.page.name} Status`);
                     break;
                 case functEnum.Components:
                     console.log("Components");
                     routerClass.Components(result);
+                    routerClass.setTitle(`${result.page.name} Status | Components`);
                     break;
                 case functEnum.PSA:
                     console.log("PSA");
@@ -135,16 +173,21 @@ StatuspageHTML.prototype.hidePage = function(page){
 StatuspageHTML.prototype.setTitle = function(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
-    setMetaTag("twitter:title", title);
-    setMetaTag("og:title", title);
-    setMetaTag("application-name", title);
-    setMetaTag("apple-mobile-web-app-title", title);
+    this.setMetaTag("twitter:title", title);
+    this.setMetaTag("og:title", title);
+    this.setMetaTag("application-name", title);
+    this.setMetaTag("apple-mobile-web-app-title", title);
 }
 
-// StatuspageHTML.prototype.setPSA = function(psa){
-//     document.getElementById("psa").classList.remove("hide");
-//     document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
-// }
+StatuspageHTML.prototype.setDescriptions = function(descript = null){
+    if(descript == null){
+        descript = this._description;
+    }
+
+    this.setMetaTag("description", descript);
+    this.setMetaTag("og:description", descript);
+    this.setMetaTag("twitter:description", descript);
+}
 
 StatuspageHTML.prototype.setTheme = function(status){
     this.setMetaTag("theme-color", metaColors[status]);

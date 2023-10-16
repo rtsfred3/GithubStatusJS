@@ -1,3 +1,4 @@
 .idea/
 
 icons/*.ttf
+.DS_Store
