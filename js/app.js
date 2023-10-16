@@ -25,6 +25,7 @@ function Router(){
             }
         }else{
             IndexHome();
+            // ComponentsHome();
             // StatusHome();
             // setError();
         }
@@ -111,6 +112,11 @@ function setTitles(title){
 
 function IndexHome(){
     console.log("IndexHome");
+
+    if(document.getElementById("loading").classList.contains("hide")){
+        document.getElementById("loading").classList.remove("hide");
+        document.getElementById("mainHome").classList.add("hide");
+    }
     
     setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
     // setInfo(baseURL+'/api/v2/status.json', Status);
@@ -123,13 +129,12 @@ function IndexHome(){
 function ComponentsHome(){
     console.log("ComponentsHome");
 
-    document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Components";
-
     setTitles("GitHub Status | Components");
 
-    document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
-    document.getElementById("mainComponents").classList.remove("size-zero");
+
+    document.getElementById("mainComponents").classList.remove("hide");
+    document.getElementById("loading").classList.add("hide");
 }
 
 function StatusHome(){

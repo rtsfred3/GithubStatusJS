@@ -1,5 +1,6 @@
-function Router(baseURL){
+function StatuspageHTML(baseURL){
     this.baseURL = baseURL;
+    this.errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
 
     document.getElementById("body").innerHTML = '\
     <div id="loading"> \
@@ -14,47 +15,73 @@ function Router(baseURL){
     <div id="mainComponents" class="hide zed size-zero"></div>';
 }
 
-Router.prototype.IndexHome = function(){
+StatuspageHTML.prototype.IndexHome = function(){
     console.log("IndexHome");
 
-    var indexHomeMain = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div> \
-    <div id="messages" class="messages"></div>'
+    document.getElementById("mainHome").innerHTML = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>';
 
-    document.getElementById("mainHome").innerHTML = indexHomeMain;
-
-    // this.setStatus("unavailable");
-    // this.loadingMessages()
+    this.setStatus("unavailable");
+    this.loadingMessages()
     
-    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.Status, this);
-    this.setInfo(this.baseURL+'/api/v2/incidents.json', functEnum.Messages, this);
+    this.setInfo(this.baseURL+'/api/v2/summary.json', functEnum.StatusMessages, this);
+    // this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.Status, this);
+    // this.setInfo(this.baseURL+'/api/v2/incidents.json', functEnum.Messages, this);
 
     document.getElementById("mainHome").classList.remove("hide");
     document.getElementById("loading").classList.add("hide");
 }
 
-Router.prototype.setInfo = function(url, funct, routerClass, fullStatus = false){
+StatuspageHTML.prototype.ComponentsHome = function(){
+    console.log("ComponentsHome");
+
+    this.setTitle("GitHub Status | Components");
+
+    this.setInfo(this.baseURL+'/api/v2/components.json', functEnum.Components, this);
+
+    document.getElementById("mainComponents").classList.remove("hide");
+    document.getElementById("loading").classList.add("hide");
+}
+
+StatuspageHTML.prototype.StatusHome = function(){
+    console.log("StatusHome");
+
+    this.setTitle("GitHub Status | Status");
+    
+    this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.StatusFull, this);
+
+    document.getElementById("mainStatus").classList.remove("hide");
+    document.getElementById("loading").classList.add("hide");
+}
+
+StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
+            var result = JSON.parse(this.responseText);
+
             switch(funct){
                 case functEnum.Status:
                     console.log("Status");
-                    routerClass.Status(JSON.parse(this.responseText));
+                    routerClass.Status(result);
                     break;
                 case functEnum.StatusFull:
                     console.log("Status");
-                    routerClass.Status(JSON.parse(this.responseText), true);
+                    routerClass.Status(result, true);
                     break;
                 case functEnum.Messages:
                     console.log("Messages");
-                    routerClass.Messages(JSON.parse(this.responseText));
+                    routerClass.Messages(result);
                     break;
                 case functEnum.StatusMessages:
-                    routerClass.Status(JSON.parse(this.responseText));
-                    routerClass.Messages(JSON.parse(this.responseText));
+                    console.log("Status + Messages");
+                    routerClass.Status(result);
+                    routerClass.Messages(result);
                     break;
                 case functEnum.Components:
+                    console.log("Components");
+                    routerClass.Components(result);
+                    break;
+                default:
                     break;
             }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
@@ -66,7 +93,7 @@ Router.prototype.setInfo = function(url, funct, routerClass, fullStatus = false)
     xhttp.send();
 }
 
-Router.prototype.setTitles = function(title){
+StatuspageHTML.prototype.setTitle = function(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
     setMetaTag("twitter:title", title);
@@ -75,34 +102,34 @@ Router.prototype.setTitles = function(title){
     setMetaTag("apple-mobile-web-app-title", title);
 }
 
-Router.prototype.setPSA = function(psa){
+StatuspageHTML.prototype.setPSA = function(psa){
     document.getElementById("psa").classList.remove("hide");
     document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
 }
 
-Router.prototype.setTheme = function(status){
+StatuspageHTML.prototype.setTheme = function(status){
     this.setMetaTag("theme-color", metaColors[status]);
     this.setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
 }
 
-Router.prototype.setError = function(){
+StatuspageHTML.prototype.setError = function(){
     document.getElementsByTagName("title")[0].innerHTML = "Error Invalid Page";
 
     this.setTheme('error');
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
 
-Router.prototype.loadingMessages = function(){
-    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="unavailable-font margin-bottom">Loading Messages</div></div>';
+StatuspageHTML.prototype.loadingMessages = function(){
+    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Loading</div></div>';
 }
 
-Router.prototype.setMetaTag = function(id, value){
+StatuspageHTML.prototype.setMetaTag = function(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     metaTag.setAttribute("content", value);
 }
 
-Router.prototype.setTitles = function(title){
+StatuspageHTML.prototype.setTitle = function(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
     this.setMetaTag("twitter:title", title);
@@ -111,9 +138,11 @@ Router.prototype.setTitles = function(title){
     this.setMetaTag("apple-mobile-web-app-title", title);
 }
 
-Router.prototype.setStatus = function(status, fullStatus=false){
+StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
     this.setTheme('unavailable');
     var id = fullStatus ? "mainStatus" : "status";
+
+    console.log(id, fullStatus)
     
     document.getElementById(id).classList.remove("unavailable");
     document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[status].toUpperCase()+'</span>';
@@ -143,11 +172,11 @@ Router.prototype.setStatus = function(status, fullStatus=false){
     this.setTheme(status);
 }
 
-Router.prototype.Status = function(arr, fullStatus=false){
+StatuspageHTML.prototype.Status = function(arr, fullStatus=false){
     this.setStatus(arr.status.indicator, fullStatus);
 }
 
-Router.prototype.createMessage = function(name, impact, status, body, created_at, shortlink, isOldestStatus){
+StatuspageHTML.prototype.createMessage = function(name, impact, status, body, created_at, shortlink, isOldestStatus){
     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     var out = '';
     
@@ -180,7 +209,7 @@ Router.prototype.createMessage = function(name, impact, status, body, created_at
     return "<span>" + out + "</span>";
 }
 
-Router.prototype.Messages = function(mess){
+StatuspageHTML.prototype.Messages = function(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
     
     var previousDays = 7;
@@ -213,4 +242,17 @@ Router.prototype.Messages = function(mess){
         
         document.getElementById('messages').innerHTML = out;
     }
+}
+
+StatuspageHTML.prototype.makeComponent = function(curr){
+    return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
+}
+
+StatuspageHTML.prototype.Components = function(comp){
+    var out = '';
+    for(var i = 0; i < comp["components"].length; i++){
+        if(comp["components"][i]["name"].substring(0, 5) == 'Visit'){ continue; }
+        out += this.makeComponent(comp["components"][i]);
+    }
+    document.getElementById("mainComponents").innerHTML = out;
 }
