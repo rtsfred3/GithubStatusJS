@@ -116,7 +116,7 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
 
 StatuspageHTML.prototype.setPSA = function(psaResult){
     if(psaResult["showPSA"]){
-        document.getElementById("psa").innerHTML = psaResult["PSA"];
+        document.getElementById("psa").innerHTML = '<div class="center-status">' + psaResult["PSA"] + '</div>';
 
         document.getElementById("psa").classList.remove("hide");
     }
@@ -141,10 +141,10 @@ StatuspageHTML.prototype.setTitle = function(title){
     setMetaTag("apple-mobile-web-app-title", title);
 }
 
-StatuspageHTML.prototype.setPSA = function(psa){
-    document.getElementById("psa").classList.remove("hide");
-    document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
-}
+// StatuspageHTML.prototype.setPSA = function(psa){
+//     document.getElementById("psa").classList.remove("hide");
+//     document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
+// }
 
 StatuspageHTML.prototype.setTheme = function(status){
     this.setMetaTag("theme-color", metaColors[status]);
