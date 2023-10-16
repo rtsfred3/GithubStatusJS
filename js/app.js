@@ -1,6 +1,5 @@
 // var baseURL = "https://www.githubstatus.com";
 var baseURL = "https://apiv3.githubstat.us";
-// var baseURL = location.origin;
 
 function Router(){
     try{
@@ -34,6 +33,8 @@ function Router(){
 }
 
 function setError(){
+    document.getElementsByTagName("title")[0].innerHTML = "Error Invalid Page";
+
     setTheme('error');
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
@@ -74,6 +75,17 @@ function setTheme(status){
     }
 }
 
+function setTitles(title){
+    document.getElementsByTagName("title")[0].innerHTML = title;
+    var metaTags = document.getElementsByTagName("meta");
+
+    metaTags.forEach(metaTag => {
+        if(metaTag.hasAttribute("property")){
+            console.log(metaTag.getAttribute("property"));
+        }
+    });
+}
+
 function IndexHome(){
     document.getElementById("mainHome").classList.remove("hide");
     setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
@@ -91,7 +103,8 @@ function ComponentsHome(){
 }
 
 function StatusHome(){
-    document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Status";
+    setTitles("GitHub Status | Status");
+
     document.getElementById("mainStatus").classList.remove("hide");
     setInfo(baseURL+'/api/v2/status.json', Status, true);
 }
