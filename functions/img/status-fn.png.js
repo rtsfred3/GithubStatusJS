@@ -10,9 +10,9 @@ export async function onRequestGet({ params, env }) {
         status = "good";
     }
 
-    const img = await status_images.get(status);
+    const img = await status_images.get(statu, "arrayBuffer");
     
-    return new Response(atob(img), {
+    return new Response(img, {
         headers: {
             "Content-Type": "application/png",
             "Cache-Control": "max-age=60, public"
