@@ -79,22 +79,22 @@ function setTheme(status){
 function updateMetaTag(id, value){
     var metaTags = document.getElementsByTagName("meta");
 
-    var metaTagFromPropertyOrName = Array.from(metaTags).find((element) => (metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name")) == id);
-    metaTagFromPropertyOrName.setAttribute("content", value);
+    // var metaTagFromPropertyOrName = Array.from(metaTags).find((element) => (metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name")) == id);
+    // metaTagFromPropertyOrName.setAttribute("content", value);
 
-    // for (const metaTag of metaTags) {
-    //     var expr = "";
+    for (const metaTag of metaTags) {
+        var expr = "";
 
-    //     if(metaTag.hasAttribute("property")){
-    //         expr = metaTag.getAttribute("property");
-    //     }else if(metaTag.hasAttribute("name")){
-    //         expr = metaTag.getAttribute("name");
-    //     }
+        if(metaTag.hasAttribute("property")){
+            expr = metaTag.getAttribute("property");
+        }else if(metaTag.hasAttribute("name")){
+            expr = metaTag.getAttribute("name");
+        }
 
-    //     if(expr == id){
-    //         metaTag.setAttribute("content", value);
-    //     }
-    // }
+        if(expr == id){
+            metaTag.setAttribute("content", value);
+        }
+    }
 }
 
 function setTitles(title){
