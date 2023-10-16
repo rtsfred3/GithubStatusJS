@@ -45,9 +45,14 @@ function setInfo(url, funct, fullStatus = false){
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
             if(Array.isArray(funct)){
+                console.log(funct[0].prototype.constructor.name);
+                console.log(funct[1].prototype.constructor.name);
+
                 funct[0](JSON.parse(this.responseText));
                 funct[1](JSON.parse(this.responseText));
             }else{
+                console.log(funct.prototype.constructor.name);
+
                 if(Status.prototype.constructor.name == 'Status' && fullStatus){
                     funct(JSON.parse(this.responseText), fullStatus);
                 }else{
@@ -98,7 +103,7 @@ function IndexHome(){
     console.log("IndexHome");
 
     setStatus("unavailable");
-    Messages({"incidents": []})
+    loadingMessages({"incidents": []})
 
     document.getElementById("mainHome").classList.remove("hide");
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
@@ -226,6 +231,10 @@ function createMessage(name, impact, status, body, created_at, shortlink, isOlde
     out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
     
     return "<span>" + out + "</span>";
+}
+
+function loadingMessages(){
+    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Loading Messages</div></div>';
 }
 
 function Messages(mess){
