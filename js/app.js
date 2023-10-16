@@ -1,6 +1,5 @@
 // var baseURL = "https://www.githubstatus.com";
 var baseURL = "https://apiv3.githubstat.us";
-// var baseURL = location.origin;
 
 function Router(){
     try{
@@ -21,6 +20,7 @@ function Router(){
             }else if(location.pathname == '/status/'){
                 StatusHome();
             }else{
+                console.log("Error");
                 setError();
             }
         }else{
@@ -34,6 +34,8 @@ function Router(){
 }
 
 function setError(){
+    document.getElementsByTagName("title")[0].innerHTML = "Error Invalid Page";
+
     setTheme('error');
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
@@ -43,10 +45,15 @@ function setInfo(url, funct, fullStatus = false){
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
             if(Array.isArray(funct)){
+                console.log(funct[0].prototype.constructor.name);
+                console.log(funct[1].prototype.constructor.name);
+
                 funct[0](JSON.parse(this.responseText));
                 funct[1](JSON.parse(this.responseText));
             }else{
-                if(Status.prototype.constructor.name == 'Status' && fullStatus){
+                console.log(funct.prototype.constructor.name);
+
+                if(funct.prototype.constructor.name == Status.prototype.constructor.name && fullStatus){
                     funct(JSON.parse(this.responseText), fullStatus);
                 }else{
                     funct(JSON.parse(this.responseText));
@@ -54,6 +61,15 @@ function setInfo(url, funct, fullStatus = false){
             }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
             console.log(this.readyState, this.status);
+
+            if(Array.isArray(funct)){
+                setError();
+            }else if(funct.prototype.constructor.name == Status.prototype.constructor.name){
+                setStatus("unavailable");
+            }else{
+                setError();
+            }
+
             setError();
         }
     };
@@ -67,28 +83,61 @@ function PSA_F(psa){
 }
 
 function setTheme(status){
-    var metaTags = [2, 18];
-    var meta = document.getElementsByTagName('meta');
-    for(var i = 0; i<metaTags.length; i++){
-        meta[metaTags[i]].setAttribute('content', metaColors[status]);
-    }
+    updateMetaTag("theme-color", metaColors[status]);
+    updateMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+
+    // var metaTags = [2, 18];
+    // var meta = document.getElementsByTagName('meta');
+    // for(var i = 0; i<metaTags.length; i++){
+    //     meta[metaTags[i]].setAttribute('content', metaColors[status]);
+    // }
+}
+
+function updateMetaTag(id, value){
+    let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+    var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    metaTag.setAttribute("content", value);
+}
+
+function setTitles(title){
+    document.getElementsByTagName("title")[0].innerHTML = title;
+
+    updateMetaTag("twitter:title", title);
+    updateMetaTag("og:title", title);
+    updateMetaTag("application-name", title);
+    updateMetaTag("apple-mobile-web-app-title", title);
 }
 
 function IndexHome(){
+    console.log("IndexHome");
+
+    setStatus("unavailable");
+    loadingMessages({"incidents": []})
+
     document.getElementById("mainHome").classList.remove("hide");
-    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    // setInfo(baseURL+'/api/v2/status.json', Status);
-    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    setInfo(baseURL+'/api/v2/status.json', Status);
+    setInfo(baseURL+'/api/v2/incidents.json', Messages);
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
 function ComponentsHome(){
+    console.log("ComponentsHome");
+
+    document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Components";
+
+    setTitles("GitHub Status | Components");
+
     document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
     document.getElementById("mainComponents").classList.remove("size-zero");
 }
 
 function StatusHome(){
+    console.log("StatusHome");
+
+    setTitles("GitHub Status | Status");
+
     document.getElementById("mainStatus").classList.remove("hide");
     setInfo(baseURL+'/api/v2/status.json', Status, true);
 }
@@ -106,16 +155,14 @@ function Components(comp){
     document.getElementById("mainComponents").innerHTML = out;
 }
 
-function Status(arr, fullStatus=false){
+function setStatus(status, fullStatus=false){
     setTheme('unavailable');
     var id = fullStatus ? "mainStatus" : "status";
     
     document.getElementById(id).classList.remove("unavailable");
-    document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[status].toUpperCase()+'</span>';
     document.getElementById(id).classList.add("status-color");
-    document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
-    
-    // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
+    document.getElementById(id).classList.add(status.toLowerCase());
     
     if(fullStatus){
         document.getElementById('mainHome').innerHTML = '';
@@ -130,7 +177,36 @@ function Status(arr, fullStatus=false){
         }
     }
     
-    setTheme(arr.status.indicator);
+    setTheme(status);
+}
+
+function Status(arr, fullStatus=false){
+    setStatus(arr.status.indicator, fullStatus);
+
+    // setTheme('unavailable');
+    // var id = fullStatus ? "mainStatus" : "status";
+    
+    // document.getElementById(id).classList.remove("unavailable");
+    // document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    // document.getElementById(id).classList.add("status-color");
+    // document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
+    
+    // // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
+    
+    // if(fullStatus){
+    //     document.getElementById('mainHome').innerHTML = '';
+        
+    //     document.getElementById(id).classList.remove("status-shadow");
+    //     document.getElementById(id).classList.remove("status-height");
+        
+    //     if(document.getElementById("psa").classList.contains('hide')){
+    //         document.getElementById(id).classList.add("full-status-height");
+    //     }else{
+    //         document.getElementById(id).classList.add("psa-full-status-height");
+    //     }
+    // }
+    
+    // setTheme(arr.status.indicator);
 }
 
 function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
@@ -166,12 +242,18 @@ function createMessage(name, impact, status, body, created_at, shortlink, isOlde
     return "<span>" + out + "</span>";
 }
 
+function loadingMessages(){
+    document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Loading Messages</div></div>';
+}
+
 function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
     
     var previousDays = 7;
-    
-    var previousDaysDate = new Date().setDate((new Date).getDate() - previousDays);
+
+    var previousDate = new Date();
+    previousDate.setHours(0, 0, 0);
+    var previousDaysDate = previousDate.setDate((new Date).getDate() - previousDays);
     
     var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > previousDaysDate; });
 

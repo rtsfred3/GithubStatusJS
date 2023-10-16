@@ -26,6 +26,7 @@ Object.defineProperties(indicatorVals, {
     'critical': { value: 'critical', enumerable: true },
     'error': { value: 'error', enumerable: true },
     'maintenance': { value: 'maintenance', enumerable: true },
+    'unavailable': { value: 'unavailable', enumerable: true },
     
     'resolved': {
         enumerable: true,
