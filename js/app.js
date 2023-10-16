@@ -83,6 +83,8 @@ function IndexHome(){
 }
 
 function ComponentsHome(){
+    document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Components";
+
     document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
     document.getElementById("mainComponents").classList.remove("size-zero");
