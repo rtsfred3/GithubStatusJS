@@ -10,7 +10,7 @@ export async function onRequestGet({ params, env }) {
         status = "good";
     }
 
-    const img = await status_images.get(statu, "arrayBuffer");
+    const img = await status_images.get(status, "arrayBuffer");
     
     return new Response(img, {
         headers: {
