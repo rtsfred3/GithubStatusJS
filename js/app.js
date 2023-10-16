@@ -53,7 +53,7 @@ function setInfo(url, funct, fullStatus = false){
             }else{
                 console.log(funct.prototype.constructor.name);
 
-                if(Status.prototype.constructor.name == 'Status' && fullStatus){
+                if(funct.prototype.constructor.name == Status.prototype.constructor.name && fullStatus){
                     funct(JSON.parse(this.responseText), fullStatus);
                 }else{
                     funct(JSON.parse(this.responseText));
@@ -61,6 +61,15 @@ function setInfo(url, funct, fullStatus = false){
             }
         }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
             console.log(this.readyState, this.status);
+
+            if(Array.isArray(funct)){
+                setError();
+            }else if(funct.prototype.constructor.name == Status.prototype.constructor.name){
+                setStatus("unavailable");
+            }else{
+                setError();
+            }
+
             setError();
         }
     };
