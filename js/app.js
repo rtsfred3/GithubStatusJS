@@ -97,6 +97,8 @@ function setTitles(title){
 function IndexHome(){
     console.log("IndexHome");
 
+    setStatus("unavailable");
+
     document.getElementById("mainHome").classList.remove("hide");
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
     setInfo(baseURL+'/api/v2/status.json', Status);
@@ -138,16 +140,14 @@ function Components(comp){
     document.getElementById("mainComponents").innerHTML = out;
 }
 
-function Status(arr, fullStatus=false){
+function setStatus(status, fullStatus=false){
     setTheme('unavailable');
     var id = fullStatus ? "mainStatus" : "status";
     
     document.getElementById(id).classList.remove("unavailable");
-    document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[status].toUpperCase()+'</span>';
     document.getElementById(id).classList.add("status-color");
-    document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
-    
-    // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
+    document.getElementById(id).classList.add(status.toLowerCase());
     
     if(fullStatus){
         document.getElementById('mainHome').innerHTML = '';
@@ -162,7 +162,36 @@ function Status(arr, fullStatus=false){
         }
     }
     
-    setTheme(arr.status.indicator);
+    setTheme(status);
+}
+
+function Status(arr, fullStatus=false){
+    setStatus(arr.status.indicator, fullStatus);
+
+    // setTheme('unavailable');
+    // var id = fullStatus ? "mainStatus" : "status";
+    
+    // document.getElementById(id).classList.remove("unavailable");
+    // document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
+    // document.getElementById(id).classList.add("status-color");
+    // document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
+    
+    // // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
+    
+    // if(fullStatus){
+    //     document.getElementById('mainHome').innerHTML = '';
+        
+    //     document.getElementById(id).classList.remove("status-shadow");
+    //     document.getElementById(id).classList.remove("status-height");
+        
+    //     if(document.getElementById("psa").classList.contains('hide')){
+    //         document.getElementById(id).classList.add("full-status-height");
+    //     }else{
+    //         document.getElementById(id).classList.add("psa-full-status-height");
+    //     }
+    // }
+    
+    // setTheme(arr.status.indicator);
 }
 
 function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
