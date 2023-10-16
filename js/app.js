@@ -69,30 +69,17 @@ function PSA_F(psa){
 }
 
 function setTheme(status){
-    var metaTags = [2, 18];
-    var meta = document.getElementsByTagName('meta');
-    for(var i = 0; i<metaTags.length; i++){
-        meta[metaTags[i]].setAttribute('content', metaColors[status]);
-    }
+    updateMetaTag("theme-color", metaColors[status]);
+    updateMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+
+    // var metaTags = [2, 18];
+    // var meta = document.getElementsByTagName('meta');
+    // for(var i = 0; i<metaTags.length; i++){
+    //     meta[metaTags[i]].setAttribute('content', metaColors[status]);
+    // }
 }
 
 function updateMetaTag(id, value){
-    var metaTags = document.getElementsByTagName("meta");
-
-    // let metaTagsArr = Array.from(metaTags);
-    // var metaTagFromPropertyOrName = metaTagsArr.find((element) => (metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name")) == id);
-    // metaTagFromPropertyOrName.setAttribute("content", value);
-
-    for (const metaTag of metaTags) {
-        var expr = metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name");
-
-        if(expr == id){
-            metaTag.setAttribute("content", value);
-        }
-    }
-}
-
-function updateMetaTag2(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     metaTag.setAttribute("content", value);
@@ -101,40 +88,19 @@ function updateMetaTag2(id, value){
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
-    updateMetaTag2("twitter:title", title);
-    updateMetaTag2("og:title", title);
-    updateMetaTag2("application-name", title);
-    updateMetaTag2("apple-mobile-web-app-title", title);
-
-    // var metaTags = document.getElementsByTagName("meta");
-    // for (const metaTag of metaTags) {
-    //     var expr = "";
-
-    //     if(metaTag.hasAttribute("property")){
-    //         expr = metaTag.getAttribute("property");
-    //     }else if(metaTag.hasAttribute("name")){
-    //         expr = metaTag.getAttribute("name");
-    //     }
-
-    //     switch(expr){
-    //         case "twitter:title":
-    //         case "og:title":
-    //         case "application-name":
-    //             metaTag.setAttribute("content", title);
-    //             break;
-    //         default:
-    //             console.log("No Match");
-    //     }
-    // }
+    updateMetaTag("twitter:title", title);
+    updateMetaTag("og:title", title);
+    updateMetaTag("application-name", title);
+    updateMetaTag("apple-mobile-web-app-title", title);
 }
 
 function IndexHome(){
     console.log("IndexHome");
 
     document.getElementById("mainHome").classList.remove("hide");
-    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    // setInfo(baseURL+'/api/v2/status.json', Status);
-    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    setInfo(baseURL+'/api/v2/status.json', Status);
+    setInfo(baseURL+'/api/v2/incidents.json', Messages);
     document.getElementById("mainHome").classList.remove("size-zero");
 }
 
@@ -142,6 +108,8 @@ function ComponentsHome(){
     console.log("ComponentsHome");
 
     document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Components";
+
+    setTitles("GitHub Status | Components");
 
     document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
