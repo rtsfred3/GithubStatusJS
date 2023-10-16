@@ -97,7 +97,7 @@ function setTitles(title){
 function IndexHome(){
     console.log("IndexHome");
 
-    setStatus("unavailable");
+    setStatus("unavailable", true);
 
     document.getElementById("mainHome").classList.remove("hide");
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
@@ -231,8 +231,10 @@ function Messages(mess){
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
     
     var previousDays = 7;
-    
-    var previousDaysDate = new Date().setDate((new Date).getDate() - previousDays);
+
+    var previousDate = new Date();
+    previousDate.setHours(0, 0, 0);
+    var previousDaysDate = previousDate.setDate((new Date).getDate() - previousDays);
     
     var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > previousDaysDate; });
 
