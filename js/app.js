@@ -86,22 +86,25 @@ function updateMetaTag(id, value){
     for (const metaTag of metaTags) {
         var expr = metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name");
 
-        // if(metaTag.hasAttribute("property")){
-        //     expr = metaTag.getAttribute("property");
-        // }else if(metaTag.hasAttribute("name")){
-        //     expr = metaTag.getAttribute("name");
-        // }
-
         if(expr == id){
             metaTag.setAttribute("content", value);
         }
     }
 }
 
+function updateMetaTag2(id, value){
+    let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+    var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    metaTag.setAttribute("content", value);
+}
+
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
-    updateMetaTag("twitter:title", title);
+    updateMetaTag2("twitter:title", title);
+    updateMetaTag2("og:title", title);
+    updateMetaTag2("application-name", title);
+    updateMetaTag2("apple-mobile-web-app-title", title);
 
     // var metaTags = document.getElementsByTagName("meta");
     // for (const metaTag of metaTags) {
