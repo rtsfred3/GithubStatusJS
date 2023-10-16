@@ -21,6 +21,11 @@
         <changefreq>hourly</changefreq>
     </url>
     <url>
+        <loc>https://githubstat.us/StatuspageHTML/</loc>
+        <lastmod>2023-10-16</lastmod>
+        <changefreq>hourly</changefreq>
+    </url>
+    <url>
         <loc>https://githubstat.us/apps/app/</loc>
         <lastmod>2021-02-26</lastmod>
         <changefreq>hourly</changefreq>
