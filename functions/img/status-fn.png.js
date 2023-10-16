@@ -10,7 +10,7 @@ export async function onRequestGet({ params, env }) {
         status = "good";
     }
 
-    const img = await KV_IMG.get(status);
+    const img = await status_images.get(status);
     
     return new Response(img, {
         headers: {
