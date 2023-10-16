@@ -10,9 +10,9 @@ export async function onRequestGet({ params, env }) {
         status = "good";
     }
 
-    const img = await status_images.get(status, "arrayBuffer");
+    const imgRes = await fetch(`https://githubstat.us/img/status/status-${status}.png`);
     
-    return new Response(img, {
+    return new Response(imgRes, {
         headers: {
             "Content-Type": "application/png",
             "Cache-Control": "max-age=60, public"
