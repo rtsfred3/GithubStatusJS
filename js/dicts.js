@@ -107,4 +107,5 @@ Object.defineProperties(functEnum, {
     'Messages': { value: 2, enumerable: true },
     'StatusMessages': { value: 3, enumerable: true },
     'Components': { value: 4, enumerable: true },
+    'PSA': { value: 5, enumerable: true },
 });
