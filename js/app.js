@@ -78,7 +78,7 @@ function setTheme(status){
 
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
-    // var metaTags = document.getElementsByTagName("meta");
+    var metaTags = document.getElementsByTagName("meta");
 
     // metaTags.forEach(metaTag => {
     //     if(metaTag.hasAttribute("property")){
