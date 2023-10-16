@@ -2,6 +2,8 @@ var metaColors = {};
 var indicatorVals = {};
 var indicatorMessages = {};
 
+var functEnum = {};
+
 Object.defineProperties(metaColors, {
     'none': { value: '#339966', enumerable: true },
     'minor': { value: '#DBAB09', enumerable: true },
@@ -15,6 +17,13 @@ Object.defineProperties(metaColors, {
         enumerable: true,
         get: function(){
             return this.maintenance;
+        }
+    },
+
+    'loading': {
+        enumerable: true,
+        get: function(){
+            return this.unavailable;
         }
     }
 });
@@ -75,7 +84,14 @@ Object.defineProperties(indicatorVals, {
         get: function(){
             return this.maintenance;
         }
-    }
+    },
+
+    'loading': {
+        enumerable: true,
+        get: function(){
+            return this.unavailable;
+        }
+    },
 });
 
 Object.defineProperties(indicatorMessages, {
@@ -83,4 +99,12 @@ Object.defineProperties(indicatorMessages, {
     'investigating': { value: 'minor', enumerable: true },
     'critical': { value: 'critical', enumerable: true },
     'maintenance': { value: 'maintenance', enumerable: true }
+});
+
+Object.defineProperties(functEnum, {
+    'Status': { value: 0, enumerable: true },
+    'StatusFull': { value: 1, enumerable: true },
+    'Messages': { value: 2, enumerable: true },
+    'StatusMessages': { value: 3, enumerable: true },
+    'Components': { value: 4, enumerable: true },
 });
