@@ -91,6 +91,7 @@ function ComponentsHome(){
 }
 
 function StatusHome(){
+    document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Status";
     document.getElementById("mainStatus").classList.remove("hide");
     setInfo(baseURL+'/api/v2/status.json', Status, true);
 }
