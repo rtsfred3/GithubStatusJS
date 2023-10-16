@@ -77,48 +77,51 @@ function setTheme(status){
 }
 
 function updateMetaTag(id, value){
+    var metaTags = document.getElementsByTagName("meta");
 
+    var metaTagFromPropertyOrName = Array.from(metaTags).find((element) => (metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name")) == id);
+    metaTagFromPropertyOrName.setAttribute("content", value);
+
+    // for (const metaTag of metaTags) {
+    //     var expr = "";
+
+    //     if(metaTag.hasAttribute("property")){
+    //         expr = metaTag.getAttribute("property");
+    //     }else if(metaTag.hasAttribute("name")){
+    //         expr = metaTag.getAttribute("name");
+    //     }
+
+    //     if(expr == id){
+    //         metaTag.setAttribute("content", value);
+    //     }
+    // }
 }
 
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
-    var metaTags = document.getElementsByTagName("meta");
 
-    for (const metaTag of metaTags) {
-        var expr = "";
+    updateMetaTag("twitter:title", title);
 
-        if(metaTag.hasAttribute("property")){
-            expr = metaTag.getAttribute("property");
-        }else if(metaTag.hasAttribute("name")){
-            expr = metaTag.getAttribute("name");
-        }
+    // var metaTags = document.getElementsByTagName("meta");
+    // for (const metaTag of metaTags) {
+    //     var expr = "";
 
-        console.log(expr);
+    //     if(metaTag.hasAttribute("property")){
+    //         expr = metaTag.getAttribute("property");
+    //     }else if(metaTag.hasAttribute("name")){
+    //         expr = metaTag.getAttribute("name");
+    //     }
 
-        switch(expr){
-            case "twitter:title":
-            case "og:title":
-            case "application-name":
-                metaTag.setAttribute("content", title);
-                break;
-            default:
-                console.log("No Match");
-        }
-
-        console.log(metaTag.getAttribute("content"));
-
-        // if(metaTag.hasAttribute("property")){
-        //     console.log(metaTag.getAttribute("property"));
-        // }else if(metaTag.hasAttribute("name")){
-        //     console.log(metaTag.getAttribute("name"));
-        // }else{
-        //     continue
-        // }
-    }
-
-    // metaTags.forEach(metaTag => {
-        
-    // });
+    //     switch(expr){
+    //         case "twitter:title":
+    //         case "og:title":
+    //         case "application-name":
+    //             metaTag.setAttribute("content", title);
+    //             break;
+    //         default:
+    //             console.log("No Match");
+    //     }
+    // }
 }
 
 function IndexHome(){
