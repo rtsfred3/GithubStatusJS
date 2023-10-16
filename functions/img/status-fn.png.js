@@ -23,7 +23,7 @@ export async function onRequestGet({ params, env }) {
     var statusImage = await env.status_images.get(`${status}`);
     statusImage = statusImage.replace("data:image/png;base64,", "");
 
-    return base64Decode(statusImage);
+    return new Response(base64Decode(statusImage));
     
     // return new Response(base64Decode(statusImage), {
     //     headers: {
