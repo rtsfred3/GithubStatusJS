@@ -25,6 +25,8 @@ function Router(){
             }
         }else{
             IndexHome();
+            // ComponentsHome();
+            // StatusHome();
             // setError();
         }
     }catch(error){
@@ -83,8 +85,8 @@ function PSA_F(psa){
 }
 
 function setTheme(status){
-    updateMetaTag("theme-color", metaColors[status]);
-    updateMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+    setMetaTag("theme-color", metaColors[status]);
+    setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
 
     // var metaTags = [2, 18];
     // var meta = document.getElementsByTagName('meta');
@@ -93,7 +95,7 @@ function setTheme(status){
     // }
 }
 
-function updateMetaTag(id, value){
+function setMetaTag(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     metaTag.setAttribute("content", value);
@@ -102,44 +104,48 @@ function updateMetaTag(id, value){
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
-    updateMetaTag("twitter:title", title);
-    updateMetaTag("og:title", title);
-    updateMetaTag("application-name", title);
-    updateMetaTag("apple-mobile-web-app-title", title);
+    setMetaTag("twitter:title", title);
+    setMetaTag("og:title", title);
+    setMetaTag("application-name", title);
+    setMetaTag("apple-mobile-web-app-title", title);
 }
 
 function IndexHome(){
     console.log("IndexHome");
 
-    setStatus("unavailable");
-    loadingMessages({"incidents": []})
+    if(document.getElementById("loading").classList.contains("hide")){
+        document.getElementById("loading").classList.remove("hide");
+        document.getElementById("mainHome").classList.add("hide");
+    }
+    
+    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    // setInfo(baseURL+'/api/v2/status.json', Status);
+    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
 
     document.getElementById("mainHome").classList.remove("hide");
-    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    setInfo(baseURL+'/api/v2/status.json', Status);
-    setInfo(baseURL+'/api/v2/incidents.json', Messages);
-    document.getElementById("mainHome").classList.remove("size-zero");
+    document.getElementById("loading").classList.add("hide");
 }
 
 function ComponentsHome(){
     console.log("ComponentsHome");
 
-    document.getElementsByTagName("title")[0].innerHTML = "GitHub Status | Components";
-
     setTitles("GitHub Status | Components");
 
-    document.getElementById("mainComponents").classList.remove("hide");
     setInfo(baseURL+'/api/v2/components.json', Components);
-    document.getElementById("mainComponents").classList.remove("size-zero");
+
+    document.getElementById("mainComponents").classList.remove("hide");
+    document.getElementById("loading").classList.add("hide");
 }
 
 function StatusHome(){
     console.log("StatusHome");
 
     setTitles("GitHub Status | Status");
+    
+    setInfo(baseURL+'/api/v2/status.json', Status, true);
 
     document.getElementById("mainStatus").classList.remove("hide");
-    setInfo(baseURL+'/api/v2/status.json', Status, true);
+    document.getElementById("loading").classList.add("hide");
 }
 
 function makeComponent(curr){
@@ -163,6 +169,13 @@ function setStatus(status, fullStatus=false){
     document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[status].toUpperCase()+'</span>';
     document.getElementById(id).classList.add("status-color");
     document.getElementById(id).classList.add(status.toLowerCase());
+
+    if(status.toLowerCase() == "unavailable"){
+        document.getElementById(id).classList.add("unavailable-font");
+    }
+    else if(status.toLowerCase() != "unavailable" && document.getElementById(id).classList.contains('unavailable-font')){
+        document.getElementById(id).classList.remove("unavailable-font");
+    }
     
     if(fullStatus){
         document.getElementById('mainHome').innerHTML = '';
@@ -182,31 +195,6 @@ function setStatus(status, fullStatus=false){
 
 function Status(arr, fullStatus=false){
     setStatus(arr.status.indicator, fullStatus);
-
-    // setTheme('unavailable');
-    // var id = fullStatus ? "mainStatus" : "status";
-    
-    // document.getElementById(id).classList.remove("unavailable");
-    // document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[arr.status.indicator].toUpperCase()+'</span>';
-    // document.getElementById(id).classList.add("status-color");
-    // document.getElementById(id).classList.add(arr.status.indicator.toLowerCase());
-    
-    // // document.getElementsByClassName('fn')[0].innerHTML = indicatorVals[arr.status.indicator].charAt(0).toUpperCase() + indicatorVals[arr.status.indicator].slice(1);
-    
-    // if(fullStatus){
-    //     document.getElementById('mainHome').innerHTML = '';
-        
-    //     document.getElementById(id).classList.remove("status-shadow");
-    //     document.getElementById(id).classList.remove("status-height");
-        
-    //     if(document.getElementById("psa").classList.contains('hide')){
-    //         document.getElementById(id).classList.add("full-status-height");
-    //     }else{
-    //         document.getElementById(id).classList.add("psa-full-status-height");
-    //     }
-    // }
-    
-    // setTheme(arr.status.indicator);
 }
 
 function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
