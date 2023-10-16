@@ -14,10 +14,6 @@ export async function onRequestGet({ params, env }) {
 
     var status = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
 
-    // if(status == "none"){
-    //     status = "good";
-    // }
-
     var statusImage = await env.status_images.get(`${status}`);
     statusImage = statusImage.replace("data:image/png;base64,", "");
 
