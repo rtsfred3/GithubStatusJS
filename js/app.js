@@ -80,10 +80,16 @@ function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
     var metaTags = document.getElementsByTagName("meta");
 
+    for (const cell of cells) {
+        if(metaTag.hasAttribute("property")){
+            console.log(metaTag.getAttribute("property"));
+        }else if(metaTag.hasAttribute("name")){
+            console.log(metaTag.getAttribute("name"));
+        }
+    }
+
     // metaTags.forEach(metaTag => {
-    //     if(metaTag.hasAttribute("property")){
-    //         console.log(metaTag.getAttribute("property"));
-    //     }
+        
     // });
 }
 
