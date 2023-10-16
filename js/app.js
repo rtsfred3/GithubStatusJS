@@ -97,7 +97,8 @@ function setTitles(title){
 function IndexHome(){
     console.log("IndexHome");
 
-    setStatus("unavailable", true);
+    setStatus("unavailable");
+    Messages({"incidents": []})
 
     document.getElementById("mainHome").classList.remove("hide");
     // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
