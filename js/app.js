@@ -79,17 +79,18 @@ function setTheme(status){
 function updateMetaTag(id, value){
     var metaTags = document.getElementsByTagName("meta");
 
-    // var metaTagFromPropertyOrName = Array.from(metaTags).find((element) => (metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name")) == id);
+    // let metaTagsArr = Array.from(metaTags);
+    // var metaTagFromPropertyOrName = metaTagsArr.find((element) => (metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name")) == id);
     // metaTagFromPropertyOrName.setAttribute("content", value);
 
     for (const metaTag of metaTags) {
-        var expr = "";
+        var expr = metaTag.hasAttribute("property") ? metaTag.getAttribute("property") : metaTag.getAttribute("name");
 
-        if(metaTag.hasAttribute("property")){
-            expr = metaTag.getAttribute("property");
-        }else if(metaTag.hasAttribute("name")){
-            expr = metaTag.getAttribute("name");
-        }
+        // if(metaTag.hasAttribute("property")){
+        //     expr = metaTag.getAttribute("property");
+        // }else if(metaTag.hasAttribute("name")){
+        //     expr = metaTag.getAttribute("name");
+        // }
 
         if(expr == id){
             metaTag.setAttribute("content", value);
