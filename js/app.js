@@ -76,16 +76,44 @@ function setTheme(status){
     }
 }
 
+function updateMetaTag(id, value){
+
+}
+
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
     var metaTags = document.getElementsByTagName("meta");
 
     for (const metaTag of metaTags) {
+        var expr = "";
+
         if(metaTag.hasAttribute("property")){
-            console.log(metaTag.getAttribute("property"));
+            expr = metaTag.getAttribute("property");
         }else if(metaTag.hasAttribute("name")){
-            console.log(metaTag.getAttribute("name"));
+            expr = metaTag.getAttribute("name");
         }
+
+        console.log(expr);
+
+        switch(expr){
+            case "twitter:title":
+            case "og:title":
+            case "application-name":
+                metaTag.setAttribute("content", title);
+                break;
+            default:
+                console.log("No Match");
+        }
+
+        console.log(metaTag.getAttribute("content"));
+
+        // if(metaTag.hasAttribute("property")){
+        //     console.log(metaTag.getAttribute("property"));
+        // }else if(metaTag.hasAttribute("name")){
+        //     console.log(metaTag.getAttribute("name"));
+        // }else{
+        //     continue
+        // }
     }
 
     // metaTags.forEach(metaTag => {
