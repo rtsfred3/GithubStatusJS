@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="4px" y="4px" viewBox="0 0 673 355" enable-background="new 0 0 673 355" xml:space="preserve">
+	<style>
+		.font {
+			font: bold 100px sans-serif;
+			fill: white;
+		}
+	</style>
+
+	<polygon points="0,0 0,355 673,355 673,0" fill="#E25D10" />
+
+	<text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" class="font">MAJOR</text>
+</svg>
