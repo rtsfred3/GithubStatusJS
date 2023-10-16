@@ -9,26 +9,22 @@ function base64Decode (string) {
 }
 
 export async function onRequestGet({ params, env }) {
-    const status_images = env.status_images;
-
     const statusRes = await fetch("https://www.githubstatus.com/api/v2/status.json");
     const statusData = await statusRes.json();
 
-    var status = statusData.status.indicator;
+    var status = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
 
-    if(status == "none"){
-        status = "good";
-    }
+    // if(status == "none"){
+    //     status = "good";
+    // }
 
     var statusImage = await env.status_images.get(`${status}`);
     statusImage = statusImage.replace("data:image/png;base64,", "");
 
-    return new Response(base64Decode(statusImage));
-    
-    // return new Response(base64Decode(statusImage), {
-    //     headers: {
-    //         "Content-Type": "application/png",
-    //         "Cache-Control": "max-age=60, public"
-    //     },
-    // });
+    return new Response(base64Decode(statusImage), {
+        headers: {
+            "Cache-Control": "max-age=60, s-maxage=60, public",
+            "Cloudflare-CDN-Cache-Control": "max-age=60"
+        },
+    });
 }
