@@ -22,11 +22,13 @@ export async function onRequestGet({ params, env }) {
 
     var statusImage = await env.status_images.get(`${status}`);
     statusImage = statusImage.replace("data:image/png;base64,", "");
+
+    return base64Decode(statusImage);
     
-    return new Response(base64Decode(statusImage), {
-        headers: {
-            "Content-Type": "application/png",
-            "Cache-Control": "max-age=60, public"
-        },
-    });
+    // return new Response(base64Decode(statusImage), {
+    //     headers: {
+    //         "Content-Type": "application/png",
+    //         "Cache-Control": "max-age=60, public"
+    //     },
+    // });
 }
