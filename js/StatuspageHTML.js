@@ -30,24 +30,24 @@ function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSin
 }
 
 StatuspageHTML.prototype.setName = function(_name){
-    console.log(`setName(): ${_name}`);
+    console.log("setName(): " + _name);
     this._name = _name;
     return this;
 }
 
 StatuspageHTML.prototype.getName = function(){
-    console.log(`getName(): ${this._name}`);
+    console.log("getName(): " + _name);
     return this._name;
 }
 
 StatuspageHTML.prototype.setDescription = function(_description){
-    console.log(`setDescription(): ${_description}`);
+    console.log("setDescription(): " + _description);
     this._description = _description;
     return this;
 }
 
 StatuspageHTML.prototype.getDescription = function(){
-    console.log(`getDescription(): ${this._description}`);
+    console.log("getDescription(): " + _description);
     return this._description;
 }
 
@@ -112,13 +112,13 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                 case functEnum.Status:
                     console.log("Status");
                     routerClass.Status(result);
-                    routerClass.setTitle(`${result.page.name} Status`);
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status");
                     routerClass.setName(result.page.name);
                     break;
                 case functEnum.StatusFull:
                     console.log("Status");
                     routerClass.Status(result, true);
-                    routerClass.setTitle(`${result.page.name} Status | Status`);
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status | Status");
                     break;
                 case functEnum.Messages:
                     console.log("Messages");
@@ -128,12 +128,12 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                     console.log("Status + Messages");
                     routerClass.Status(result);
                     routerClass.Messages(result);
-                    routerClass.setTitle(`${result.page.name} Status`);
+                    routerClass.setTitle("Unofficia " + result.page.name + " Status");
                     break;
                 case functEnum.Components:
                     console.log("Components");
                     routerClass.Components(result);
-                    routerClass.setTitle(`${result.page.name} Status | Components`);
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status | Components");
                     break;
                 case functEnum.PSA:
                     console.log("PSA");
@@ -170,6 +170,12 @@ StatuspageHTML.prototype.hidePage = function(page){
     document.getElementById("loading").classList.remove("hide");
 }
 
+StatuspageHTML.prototype.setMetaTag = function(id, value){
+    let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+    var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    metaTag.setAttribute("content", value);
+}
+
 StatuspageHTML.prototype.setTitle = function(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
@@ -196,21 +202,6 @@ StatuspageHTML.prototype.setTheme = function(status){
 
 StatuspageHTML.prototype.loadingMessages = function(){
     document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Loading</div></div>';
-}
-
-StatuspageHTML.prototype.setMetaTag = function(id, value){
-    let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
-    var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
-    metaTag.setAttribute("content", value);
-}
-
-StatuspageHTML.prototype.setTitle = function(title){
-    document.getElementsByTagName("title")[0].innerHTML = title;
-
-    this.setMetaTag("twitter:title", title);
-    this.setMetaTag("og:title", title);
-    this.setMetaTag("application-name", title);
-    this.setMetaTag("apple-mobile-web-app-title", title);
 }
 
 StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
