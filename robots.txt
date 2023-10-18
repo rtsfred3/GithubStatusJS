@@ -9,3 +9,4 @@ Disallow: /apps/
 Disallow: /lang/
 Disallow: /min/
 Disallow: /cache/
+Disallow: /api/
