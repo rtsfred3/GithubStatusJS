@@ -23,10 +23,10 @@ export async function onRequestGet({ params, env }) {
 
     var status = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
 
-    var statusImage = await env.status_images.get(`${status}`);
-    statusImage = statusImage.replace("data:image/png;base64,", "");
+    // var statusImage = await env.status_images.get(`${status}`);
+    // statusImage = statusImage.replace("data:image/png;base64,", "");
 
-    var url = `https://imagedelivery.net/${accountHash}/2b6f1774-e0a4-41af-cefc-00a20d517400/1200x628`;
+    var url = `https://imagedelivery.net/${accountHash}/${imageIds[status]}/1200x628`;
 
     return fetch(url);
 
