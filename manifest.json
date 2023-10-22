@@ -1,7 +1,7 @@
 {
     "id": "us.githubstat",
-    "name": "GitHub Status",
-    "short_name": "GitHubStatus",
+    "name": "(Unofficial) GitHub Status",
+    "short_name": "GH Status",
     "description": "An unofficial website to monitor GitHub status updates.",
     "start_url": "https://githubstat.us/",
     "display_override": ["standalone"],
