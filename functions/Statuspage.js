@@ -2,14 +2,14 @@ export async function onRequestGet({ params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
 
-    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/amp/body.json`).all();
+    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ? OR route = ?`).bind(`/api/amp/body.json`, `/api/v2/status.json`).all();
 
-    const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).first();
+    // const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind().first();
 
-    console.log(statusResults);
-    var statusJson = JSON.parse(statusResults);
-    console.log(statusJson);
-    var status = statusJson.status.indicator == 'none' ? "good" : statusJson["status"]["indicator"];
+    console.log(results);
+    // console.log(statusJson);
+    // var status = statusJson.status.indicator == 'none' ? "good" : statusJson["status"]["indicator"];
+    var status = "---";
 
     const url = "https://githubstat.us/";
     
