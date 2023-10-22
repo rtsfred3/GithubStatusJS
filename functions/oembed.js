@@ -17,11 +17,12 @@ export async function onRequestGet({ params, env }) {
     var result = {
         "version": "1.0",
         "type": "photo",
+        "title": `GitHub Status: ${status} - ${statusResult["status"]["description"]}`,
         "width": 300,
         "height": 300,
-        "title": `GitHub Status: ${status} - ${statusResult["status"]["description"]}`,
         "url": "https://githubstat.us/img/status-min.png",
-        "provider_name": "(Unofficial) GitHub Status",
+        "thumbnail_url": "https://githubstat.us/img/status-min.png",
+        "provider_name": "GitHub Status oEmbed",
         "provider_url": "https://githubstat.us/"
     };
 
