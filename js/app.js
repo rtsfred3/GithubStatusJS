@@ -101,6 +101,12 @@ function setMetaTag(id, value){
     metaTag.setAttribute("content", value);
 }
 
+function getMetaTag(id){
+    let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+    var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    return metaTag.getAttribute("content");
+}
+
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
@@ -108,6 +114,12 @@ function setTitles(title){
     setMetaTag("og:title", title);
     setMetaTag("application-name", title);
     setMetaTag("apple-mobile-web-app-title", title);
+}
+
+function setDescriptions(descript){
+    setMetaTag("description", getMetaTag("description") + " | " + descript);
+    setMetaTag("og:description", getMetaTag("og:description") + " | " + descript);
+    setMetaTag("twitter:description", getMetaTag("twitter:description") + " | " + descript);
 }
 
 function IndexHome(){
@@ -195,6 +207,7 @@ function setStatus(status, fullStatus=false){
 
 function Status(arr, fullStatus=false){
     setStatus(arr.status.indicator, fullStatus);
+    // setDescriptions(arr.status.description);
 }
 
 function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
