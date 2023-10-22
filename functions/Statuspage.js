@@ -6,16 +6,14 @@ export async function onRequestGet({ params, env }) {
 
     // const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind().first();
     
-    console.log(results);
-    
     var statusJson = JSON.parse(results.find((t) => t["route"] == `/api/v2/status.json`).data);
-    console.log(statusJson);
-    var status = statusJson.status.indicator == 'none' ? "good" : statusJson["status"]["indicator"];
-    var status = "---";
+    var status = statusJson["status"]["indicator"] == 'none' ? "good" : statusJson["status"]["indicator"];
 
     const url = "https://githubstat.us/";
     
-    const body = JSON.parse(results[0].data.replace("\n", ""))["items"][0]["body"];
+    const body = JSON.parse(results.find((t) => t["route"] == `/api/amp/body.json`).data.replace("\n", ""))["items"][0]["body"];
+
+    // const body = JSON.parse(results[0].data.replace("\n", ""))["items"][0]["body"];
 
     var title = `GitHub Status: ${status}`;
     var description = `A website to monitor GitHub status updates. | ${statusJson.status.description}`;
