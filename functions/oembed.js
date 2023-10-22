@@ -23,7 +23,9 @@ export async function onRequestGet({ params, env }) {
         "url": "https://githubstat.us/img/status-min.png",
         "thumbnail_url": "https://githubstat.us/img/status-min.png",
         "provider_name": "GitHub Status oEmbed",
-        "provider_url": "https://githubstat.us/"
+        "provider_url": "https://githubstat.us/",
+        "author_name": "GitHub Status oEmbed",
+        "author_url": "https://githubstat.us/"
     };
 
     var info = JSON.stringify(result, null, 2);
