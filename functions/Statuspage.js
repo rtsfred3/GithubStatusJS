@@ -5,10 +5,12 @@ export async function onRequestGet({ params, env }) {
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ? OR route = ?`).bind(`/api/amp/body.json`, `/api/v2/status.json`).all();
 
     // const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind().first();
-
+    
     console.log(results);
-    // console.log(statusJson);
-    // var status = statusJson.status.indicator == 'none' ? "good" : statusJson["status"]["indicator"];
+    
+    var statusJson = JSON.parse(results.find((t) => t["route"] == `/api/v2/status.json`).data);
+    console.log(statusJson);
+    var status = statusJson.status.indicator == 'none' ? "good" : statusJson["status"]["indicator"];
     var status = "---";
 
     const url = "https://githubstat.us/";
