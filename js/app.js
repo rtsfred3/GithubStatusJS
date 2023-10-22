@@ -14,10 +14,13 @@ function Router(){
         
         if(onCloudflareProd || onCloudflareDev){
             if(location.pathname == '/'){
+                setUrl();
                 IndexHome();
             }else if(location.pathname == '/components/'){
+                setUrl();
                 ComponentsHome();
             }else if(location.pathname == '/status/'){
+                setUrl();
                 StatusHome();
             }else{
                 console.log("Error");
@@ -107,6 +110,16 @@ function getMetaTag(id){
     return metaTag.getAttribute("content");
 }
 
+function updateRichTest(id, value){
+    var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
+
+    var ldJson = JSON.parse(ld.innerHTML);
+
+    ldJson[id] = value;
+
+    ld.innerHTML = JSON.stringify(ldJson, null, 4);
+}
+
 function setTitles(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
@@ -114,16 +127,35 @@ function setTitles(title){
     setMetaTag("og:title", title);
     setMetaTag("application-name", title);
     setMetaTag("apple-mobile-web-app-title", title);
+
+    // updateRichTest("name", title);
 }
 
 function setDescriptions(descript){
     setMetaTag("description", getMetaTag("description") + " | " + descript);
     setMetaTag("og:description", getMetaTag("og:description") + " | " + descript);
     setMetaTag("twitter:description", getMetaTag("twitter:description") + " | " + descript);
+
+    // updateRichTest("description", getMetaTag("twitter:description"));
+}
+
+function setUrl(url = null){
+    var currUrl = url == null ? window.location.href : url;
+    
+    setMetaTag("og:url", currUrl);
+
+    let linkTags = Array.from(document.getElementsByTagName("link"));
+    var linkTag = linkTags.find((mTag) => (mTag.getAttribute("rel") == "canonical"));
+    
+    linkTag.setAttribute("href", currUrl);
+
+    // updateRichTest("url", currUrl);
 }
 
 function IndexHome(){
     console.log("IndexHome");
+
+    setTitles("(Unofficial) GitHub Status");
 
     if(document.getElementById("loading").classList.contains("hide")){
         document.getElementById("loading").classList.remove("hide");
@@ -141,7 +173,7 @@ function IndexHome(){
 function ComponentsHome(){
     console.log("ComponentsHome");
 
-    setTitles("GitHub Status | Components");
+    setTitles("(Unofficial) GitHub Status Components");
 
     setInfo(baseURL+'/api/v2/components.json', Components);
 
@@ -152,7 +184,7 @@ function ComponentsHome(){
 function StatusHome(){
     console.log("StatusHome");
 
-    setTitles("GitHub Status | Status");
+    setTitles("(Unofficial) GitHub Status Page");
     
     setInfo(baseURL+'/api/v2/status.json', Status, true);
 
