@@ -59,7 +59,7 @@ export async function onRequestGet({ params, env }) {
 
     return new Response(xml, {
         headers: {
-            "Content-Type": "text/html",
+            "Content-Type": "application/xml",
             "Cache-Control": `max-age=60, s-maxage=60, public`,
             "Cloudflare-CDN-Cache-Control": `max-age=60`
         },

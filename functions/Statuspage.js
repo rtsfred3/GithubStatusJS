@@ -3,8 +3,6 @@ export async function onRequestGet({ params, env }) {
     const table = env.TABLE;
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ? OR route = ?`).bind(`/api/amp/body.json`, `/api/v2/status.json`).all();
-
-    // const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind().first();
     
     var statusJson = JSON.parse(results.find((t) => t["route"] == `/api/v2/status.json`).data);
     var status = statusJson["status"]["indicator"] == 'none' ? "good" : statusJson["status"]["indicator"];
@@ -16,7 +14,7 @@ export async function onRequestGet({ params, env }) {
 
     // const body = JSON.parse(results[0].data.replace("\n", ""))["items"][0]["body"];
 
-    var title = `GitHub Status: ${statusDescription}`;
+    var title = `GitHub Status | ${statusDescription}`;
     var description = `A website to monitor GitHub status updates. | ${statusDescription}`;
 
     var updated_on = new Date(results[0].updated_on);
