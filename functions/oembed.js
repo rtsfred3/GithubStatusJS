@@ -1,12 +1,29 @@
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export async function onRequestGet({ params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
-    var result = results;
+    var statusResult = JSON.parse(results[0].data);
 
-    console.log(result);
+    var status = statusResult["status"]["indicator"] == "none" ? "Good" : capitalizeFirstLetter(statusResult["status"]["indicator"]);
+
+    console.log(statusResult);
+
+    var result = {
+        "version": "1.0",
+        "type": "photo",
+        "width": 300,
+        "height": 300,
+        "title": `GitHub Status: ${status} - ${statusResult["status"]["description"]}`,
+        "url": "https://githubstat.us/img/status-min.png",
+        "provider_name": "(Unofficial) GitHub Status",
+        "provider_url": "https://githubstat.us/"
+    };
 
     var info = JSON.stringify(result, null, 2);
     
