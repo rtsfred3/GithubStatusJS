@@ -26,7 +26,7 @@ export async function onRequestGet({ params, env }) {
     // var statusImage = await env.status_images.get(`${status}`);
     // statusImage = statusImage.replace("data:image/png;base64,", "");
 
-    var url = `https://imagedelivery.net/${accountHash}/${imageIds[status]}/1000px`;
+    var url = `https://imagedelivery.net/${accountHash}/${imageIds[status]}/300px`;
 
     return fetch(url);
 
