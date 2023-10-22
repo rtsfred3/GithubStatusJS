@@ -4,7 +4,7 @@ export async function onRequestGet({ params, env }) {
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/amp/body.json`).all();
     
-    const body = results[0].data.replace("\n", "");
+    const body = JSON.parse(results[0].data.replace("\n", ""))["items"][0]["body"];
 
     var updated_on = new Date(results[0].updated_on);
     var age = parseInt(((new Date()) - updated_on) / 1000);
