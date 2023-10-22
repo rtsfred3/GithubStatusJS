@@ -7,7 +7,7 @@ export async function onRequestGet({ params, env }) {
     const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
     const statusJson = JSON.parse(statusResults[0].data);
-    const status = statusJson.status.indicator == 'none' ? "Good" : statusJson.status.indicator.charAt(0).toUpperCase() + statusJson.status.indicator.slice(1);
+    const status = statusJson.status.indicator == 'none' ? "good" : statusJson.status.indicator;
 
     const url = "https://githubstat.us/";
     
