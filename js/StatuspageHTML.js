@@ -36,7 +36,7 @@ StatuspageHTML.prototype.setName = function(_name){
 }
 
 StatuspageHTML.prototype.getName = function(){
-    console.log("getName(): " + _name);
+    console.log("getName(): " + this._name);
     return this._name;
 }
 
@@ -47,7 +47,7 @@ StatuspageHTML.prototype.setDescription = function(_description){
 }
 
 StatuspageHTML.prototype.getDescription = function(){
-    console.log("getDescription(): " + _description);
+    console.log("getDescription(): " + this._description);
     return this._description;
 }
 
@@ -55,6 +55,8 @@ StatuspageHTML.prototype.IndexHome = function(){
     console.log("IndexHome");
 
     // this.setTitle(`${this._name} Status`);
+
+    this.setUrl();
 
     this.hidePage("mainHome");
     
@@ -176,6 +178,25 @@ StatuspageHTML.prototype.setMetaTag = function(id, value){
     metaTag.setAttribute("content", value);
 }
 
+StatuspageHTML.prototype.getMetaTag = function(id, value){
+    let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+    var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    return metaTag.getAttribute("content", value);
+}
+
+StatuspageHTML.prototype.setUrl = function(){
+    var currUrl = window.location.href;
+    
+    r.setMetaTag("og:url", currUrl);
+
+    let linkTags = Array.from(document.getElementsByTagName("link"));
+    var linkTag = linkTags.find((mTag) => (mTag.getAttribute("rel") == "canonical"));
+    
+    linkTag.setAttribute("href", currUrl);
+    
+    return this;
+}
+
 StatuspageHTML.prototype.setTitle = function(title){
     document.getElementsByTagName("title")[0].innerHTML = title;
 
@@ -240,6 +261,8 @@ StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
 
 StatuspageHTML.prototype.Status = function(arr, fullStatus=false){
     this.setStatus(arr.status.indicator, fullStatus);
+
+    this.setDescriptions(this.getMetaTag("description") + " | " + arr.status.description);
 }
 
 StatuspageHTML.prototype.createMessage = function(name, impact, status, body, created_at, shortlink, isOldestStatus){
