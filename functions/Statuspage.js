@@ -6,6 +6,7 @@ export async function onRequestGet({ params, env }) {
 
     const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
+    console.log(statusResults);
     const statusJson = JSON.parse(statusResults[0].data);
     console.log(statusJson);
     const status = statusJson.status.indicator == 'none' ? "good" : statusJson["status"]["indicator"];
