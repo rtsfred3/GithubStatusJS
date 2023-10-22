@@ -96,7 +96,7 @@ export async function onRequestGet({ params, env }) {
         </body> \
         </html>';
 
-    return new Response(JSON.stringify({}, null, 2), {
+    return new Response(html, {
         headers: {
             "Content-Type": "text/html",
             "X-Age": age,
