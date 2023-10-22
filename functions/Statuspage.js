@@ -8,6 +8,7 @@ export async function onRequestGet({ params, env }) {
     
     var statusJson = JSON.parse(results.find((t) => t["route"] == `/api/v2/status.json`).data);
     var status = statusJson["status"]["indicator"] == 'none' ? "good" : statusJson["status"]["indicator"];
+    var statusDescription = statusJson["status"]["description"];
 
     const url = "https://githubstat.us/";
     
@@ -15,8 +16,8 @@ export async function onRequestGet({ params, env }) {
 
     // const body = JSON.parse(results[0].data.replace("\n", ""))["items"][0]["body"];
 
-    var title = `GitHub Status: ${status}`;
-    var description = `A website to monitor GitHub status updates. | ${statusJson.status.description}`;
+    var title = `GitHub Status: ${statusDescription}`;
+    var description = `A website to monitor GitHub status updates. | ${statusDescription}`;
 
     var updated_on = new Date(results[0].updated_on);
     var age = parseInt(((new Date()) - updated_on) / 1000);
