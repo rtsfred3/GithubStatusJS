@@ -3,8 +3,18 @@ export async function onRequestGet({ params, env }) {
     const table = env.TABLE;
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/amp/body.json`).all();
+
+    const { statusResults } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
+
+    const statusJson = JSON.parse(statusResults[0].data);
+    const status = statusJson.status.indicator == 'none' ? "Good" : statusJson.status.indicator.charAt(0).toUpperCase() + statusJson.status.indicator.slice(1);
+
+    const url = "https://githubstat.us/";
     
     const body = JSON.parse(results[0].data.replace("\n", ""))["items"][0]["body"];
+
+    var title = `GitHub Status: ${status}`;
+    var description = `A website to monitor GitHub status updates. | ${statusJson.status.description}`;
 
     var updated_on = new Date(results[0].updated_on);
     var age = parseInt(((new Date()) - updated_on) / 1000);
@@ -13,16 +23,16 @@ export async function onRequestGet({ params, env }) {
     <html lang="en"> \
         <head> \
             <meta name="author" content="rtsfred3"> \
-            <meta name="application-name" content="GitHub Status"> \
+            <meta name="application-name" content="' + title + '"> \
             <meta name="theme-color" content="#53C68C"> \
-            <meta name="description" content="A website to monitor GitHub status updates."> \
+            <meta name="description" content="' + description + '"> \
             <meta name="keywords" content="GitHubStatus, GitHub Status, GitHub, Status"> \
             \
-            <meta property="og:site_name" content="GitHub Status"> \
-            <meta property="og:title" content="GitHub Status"> \
-            <meta property="og:description" content="A website to monitor GitHub status updates."> \
+            <meta property="og:site_name" content="' + title + '"> \
+            <meta property="og:title" content="' + title + '"> \
+            <meta property="og:description" content="' + description + '"> \
             <meta property="og:type" content="website"> \
-            <meta property="og:url" content="https://githubstat.us/"> \
+            <meta property="og:url" content="' + url + '"> \
             <meta property="og:image" content="https://githubstat.us/img/status-main.png"> \
             <meta property="og:image:type" content="image/jpeg" /> \
             <meta property="og:image:width" content="1200" /> \
@@ -30,30 +40,30 @@ export async function onRequestGet({ params, env }) {
             <meta property="og:image:alt" content="An image with text that reads \'GitHub Status\' with background changing according to GitHub\'s current status."> \
             \
             <meta name="twitter:card" content="summary"> \
-            <meta name="twitter:title" content="GitHub Status"> \
-            <meta name="twitter:description" content="A website to monitor GitHub status updates."> \
+            <meta name="twitter:title" content="' + title + '"> \
+            <meta name="twitter:description" content="' + description + '"> \
             <meta name="twitter:image" content="https://githubstat.us/img/status-twitter-min.png"> \
             \
             <meta name="mobile-web-app-capable" content="yes"> \
-            <meta name="apple-mobile-web-app-title" content="GitHub Status"> \
+            <meta name="apple-mobile-web-app-title" content="' + title + '"> \
             <meta name="apple-mobile-web-app-capable" content="yes"> \
             <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C"> \
             <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" /> \
             <meta name="HandheldFriendly" content="true" /> \
             \
-            <link rel="canonical" href="https://githubstat.us/" /> \
+            <link rel="canonical" href="' + url + '" /> \
             \
             <script type="application/ld+json"> \
                 { \
                     "@context": "http://schema.org/", \
                     "@type": "WebApplication", \
-                    "name": "GitHub Status", \
+                    "name": "' + title + '", \
                     "alternateName": "GH Status", \
                     "applicationCategory": "DeveloperApplication", \
                     "operatingSystem": "Android, iOS, MacOS, Windows", \
                     "softwareRequirements": "Modern Web Browser", \
-                    "url": "https://githubstat.us/", \
-                    "description": "A website to monitor GitHub status updates.", \
+                    "url": "' + url + '", \
+                    "description": "' + description + '", \
                     "screenshot": "https://githubstat.us/img/screenshots/screenshot1.webp", \
                     "image": "https://do.githubstat.us/img/status-twitter-min.png", \
                     "thumbnailUrl": "https://do.githubstat.us/img/status-twitter-min.png", \
@@ -89,7 +99,7 @@ export async function onRequestGet({ params, env }) {
                 \
                 .messages{margin:1.5em 0;padding:0}@media only screen and (min-width:2100px) and (min-height:1100px){.messages{margin:3em 0}}.date{font-size:9pt!important}.status-box{height:45px;font-size:14pt;color:#f8f8f8;display:table!important}.text-margin{font-size:11pt;margin:1em 2.5vw}.good-message{width:120px;background-color:#396}.none-message{width:200px;background-color:#000}.minor-message{width:200px;background-color:#f1c40f}.major-message{width:280px;background-color:#f90}.critical-message{width:360px;background-color:#900}.error-message{width:120px;background-color:#646464}@media only screen and (max-width:850px){.good-message{width:20vw}.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}@media only screen and (max-width:320px) and (max-height:320px){.messages{display:none;height:0}}@media (min-width:2048px) and (min-height:1080px){.status-box,.text-margin{font-size:2.5em}.good-message{width:20vw}.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.status-box{height:2em}.date{font-size:.75em!important}}@media (min-width:2100px) and (min-height:1100px){.status-box{height:1.75em;font-size:3.5em}.text-margin{font-size:3em}}@media (min-width:3000px) and (min-height:2000px){.status-box{height:1.75em;font-size:5em}.text-margin{font-size:4em}}.message-status{width:100%;padding-right:.5em;vertical-align:middle;display:table-cell!important}.message-error{padding:3vh 7.5vw 0!important;color:#646464} \
             </style> \
-            <title>GitHub Status</title> \
+            <title>' + title + '</title> \
         </head> \
         <body> \
         ' + body + '\
