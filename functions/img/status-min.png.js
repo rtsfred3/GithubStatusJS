@@ -31,6 +31,8 @@ export async function onRequestGet({ params, env }) {
     const imgFetch = await fetch(url);
 
     imgFetch.headers.forEach((k, v) => console.log(k + " => " + v));
+    imgFetch.headers.set("cache-control", "max-age=180, s-maxage=180, public");
+    imgFetch.headers.append("Cloudflare-CDN-Cache-Control", "max-age=180");
 
     return imgFetch;
 
