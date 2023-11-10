@@ -1,4 +1,11 @@
 export async function onRequestGet({ params, env }) {
+    var currDate = new Date();
+    currDate.setHours(currDate.getHours(), 0, 0);
+    // currDate.setMinutes(0);
+    // currDate.setSeconds(0);
+
+    console.log(currDate);
+
     let date = new Date().toJSON();
 
     var xml = '<?xml version="1.0" encoding="UTF-8"?> \
