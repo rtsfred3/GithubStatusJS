@@ -55,12 +55,13 @@ export async function onRequestGet({ request, params, env }) {
             // "provider_url": "https://githubstat.us/",
         };
         
-        return new Response(JSON.stringify(result, null, 2), {
+        return new Response(JSON.stringify({}, null, 2), {
             headers: {
                 "Content-Type": "application/json",
                 "access-control-allow-origin": "*",
                 "Cache-Control": "max-age=0, public"
             },
+            status: 404
         });
     }
 
