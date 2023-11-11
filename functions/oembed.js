@@ -9,6 +9,8 @@ export async function onRequestGet({ params, env }) {
     const { searchParams } = new URL(request.url);
     let url = searchParams.get('url');
 
+    console.log(url);
+
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
     var statusResult = JSON.parse(results[0].data);
