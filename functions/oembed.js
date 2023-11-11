@@ -22,11 +22,24 @@ export async function onRequestGet({ request, params, env }) {
 
     console.log("onCloudflareDev: " + onCloudflareDev);
     console.log("onCloudflareProd: " + onCloudflareProd);
-    
-    if (onCloudflareDev || onCloudflareProd) {
-        host = newUrl.host;
+
+    if (newUrl.pathname == "/") {
+        title = "GitHub Status";
+    }
+    else if (newUrl.pathname == "/status/") {
+        title = "GitHub Status Page";
+    }
+    else if (newUrl.pathname == "/components/") {
+        title = "GitHub Status Components";
     }
     else {
+        title = "Error";
+    }
+
+    console.log(url);
+    console.log(newUrl.pathname);
+
+    if (!(onCloudflareDev || onCloudflareProd) || title == "Error") {
         var result = {
             "version": "1.0",
             "type": "photo",
@@ -47,15 +60,6 @@ export async function onRequestGet({ request, params, env }) {
             },
         });
     }
-
-    // if (url.pathname == "/" || url.pathname == "/status/" || url.pathname == "/components/") { }
-
-    if (newUrl.pathname == "/components/") {
-        title = "GitHub Status Components";
-    }
-
-    console.log(url);
-    console.log(newUrl.pathname);
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
