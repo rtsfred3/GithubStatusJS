@@ -360,10 +360,10 @@ StatuspageHTML.prototype.groupedComponents = function(compArr, groupId, groupNam
 StatuspageHTML.prototype.Components = function(comp) {
     var out = '';
 
-    var groups = comp["components"].filter((component) => component.group == true);
+    var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
 
     for (const group of groups) {
-        out += this.groupedComponents(comp["components"], groups[0]["id"]);
+        out += this.groupedComponents(comp["components"], group["id"]);
     }
 
     for (var i = 0; i < comp["components"].length; i++) {
