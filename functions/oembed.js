@@ -47,12 +47,12 @@ export async function onRequestGet({ request, params, env }) {
 
     // if (url.pathname == "/" || url.pathname == "/status/" || url.pathname == "/components/") { }
 
-    if (url.pathname == "/components/") {
+    if (newUrl.pathname == "/components/") {
         title = "GitHub Status Components";
     }
 
     console.log(url);
-    console.log(url.pathname);
+    console.log(newUrl.pathname);
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
