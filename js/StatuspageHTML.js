@@ -333,16 +333,45 @@ StatuspageHTML.prototype.Messages = function(mess){
     }
 }
 
-StatuspageHTML.prototype.makeComponent = function(curr){
-    // return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
-    return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span title="' + curr["description"] + '" class="center-status">' + curr["name"] + '</span></div>';
+StatuspageHTML.prototype.makeComponent = function(curr, parentName = null, isGroup=false) {
+    return '<div id="mainStatus" class="component-height status-width bold ' + (isGroup ? "black" : "status-color") + ' ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + (parentName != null ? parentName + ": " : "") + curr["name"] + '</span></div>';
+    // return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span title="' + curr["description"] + '" class="center-status">' + curr["name"] + '</span></div>';
 }
 
-StatuspageHTML.prototype.Components = function(comp){
+StatuspageHTML.prototype.compareComponents = function(a, b) {
+    if (a["position"] < b["position"]) {
+        return -1;
+    }
+    else if (a["position"] > b["position"]) {
+        return 1;
+    }
+
+    return 0;
+}
+
+StatuspageHTML.prototype.groupedComponents = function(compArr, groupId, groupName = null) {
+    var groupComp = this.makeComponent(compArr.filter((component) => component["id"] == groupId)[0], null, true);
+
+    var group = compArr.filter((component) => component["group_id"] == groupId).sort(this.compareComponents);
+
+    return groupComp + group.map((comp) => this.makeComponent(comp, groupName)).join('');
+}
+
+StatuspageHTML.prototype.Components = function(comp) {
     var out = '';
 
-    for(var i = 0; i < comp["components"].length; i++){
-        if(comp["components"][i]["name"].substring(0, 5) == 'Visit'){ continue; }
+    var groups = comp["components"].filter((component) => component.group == true);
+
+    for (const group of groups) {
+        out += this.groupedComponents(comp["components"], groups[0]["id"]);
+    }
+
+    for (var i = 0; i < comp["components"].length; i++) {
+        if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
+        if (comp["components"][i]["group_id"] != null || comp["components"][i]["group"]) { continue; }
+
+        // var groupName = comp["components"][i]["group_id"] != null ? comp["components"].filter((component) => component.id == comp["components"][i]["group_id"])[0]["name"] : null;
+        
         out += this.makeComponent(comp["components"][i]);
     }
     
