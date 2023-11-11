@@ -34,7 +34,7 @@ export async function onRequestGet({ params, env }) {
             <meta property="og:description" content="' + description + '"> \
             <meta property="og:type" content="website"> \
             <meta property="og:url" content="' + url + '"> \
-            <meta property="og:image" content="https://githubstat.us/img/status-main.png"> \
+            <meta property="og:image" content="https://githubstat.us/img/status-min.png"> \
             <meta property="og:image:type" content="image/jpeg" /> \
             <meta property="og:image:width" content="1200" /> \
             <meta property="og:image:height" content="675" /> \
@@ -43,7 +43,7 @@ export async function onRequestGet({ params, env }) {
             <meta name="twitter:card" content="summary"> \
             <meta name="twitter:title" content="' + title + '"> \
             <meta name="twitter:description" content="' + description + '"> \
-            <meta name="twitter:image" content="https://githubstat.us/img/status-twitter-min.png"> \
+            <meta name="twitter:image" content="https://githubstat.us/img/status-min.png"> \
             \
             <meta name="mobile-web-app-capable" content="yes"> \
             <meta name="apple-mobile-web-app-title" content="' + title + '"> \
@@ -66,8 +66,8 @@ export async function onRequestGet({ params, env }) {
                     "url": "' + url + '", \
                     "description": "' + description + '", \
                     "screenshot": "https://githubstat.us/img/screenshots/screenshot1.webp", \
-                    "image": "https://do.githubstat.us/img/status-twitter-min.png", \
-                    "thumbnailUrl": "https://do.githubstat.us/img/status-twitter-min.png", \
+                    "image": "https://githubstat.us/img/status-min.png", \
+                    "thumbnailUrl": "https://githubstat.us/img/status-min.png", \
                     "author": [{ \
                         "@type": "Person", \
                         "name": "Ryan Fredrickson", \

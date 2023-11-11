@@ -334,7 +334,8 @@ StatuspageHTML.prototype.Messages = function(mess){
 }
 
 StatuspageHTML.prototype.makeComponent = function(curr){
-    return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
+    // return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
+    return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span title="' + curr["description"] + '" class="center-status">' + curr["name"] + '</span></div>';
 }
 
 StatuspageHTML.prototype.Components = function(comp){
