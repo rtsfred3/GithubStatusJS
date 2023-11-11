@@ -32,6 +32,9 @@ export async function onRequestGet({ request, params, env }) {
     else if (newUrl.pathname == "/components/") {
         title = "GitHub Status Components";
     }
+    else if (newUrl.pathname == "/amp/") {
+        title = "GitHub Status AMP";
+    }
     else {
         title = "Error";
     }
