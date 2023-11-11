@@ -43,7 +43,7 @@ export async function onRequestGet({ params, env }) {
     //     init.headers[key] = value;
     // }
 
-    init.headers["Cache-Control"] = "max-age=180, s-maxage=180, public";
+    init.headers["cache-control"] = "max-age=180, s-maxage=180, public";
     init.headers["Cloudflare-CDN-Cache-Control"] = "max-age=180";
 
     console.log(init);
