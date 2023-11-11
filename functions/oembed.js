@@ -11,6 +11,7 @@ export async function onRequestGet({ request, params, env }) {
 
     const { searchParams } = new URL(request.url);
     let url = searchParams.get('url');
+    let format = searchParams.get('format');
 
     const newUrl = new URL(url);
 
@@ -20,6 +21,10 @@ export async function onRequestGet({ request, params, env }) {
     var onCloudflareDev = newUrl.host.match(cloudflareDevRegex) != null;
     var onCloudflareProd = newUrl.host.match(cloudflareProdRegex) != null;
 
+    console.log("URL: " + url);
+    console.log("Format: " + format);
+
+    console.log("Pathname: " + newUrl.pathname);
     console.log("onCloudflareDev: " + onCloudflareDev);
     console.log("onCloudflareProd: " + onCloudflareProd);
 
@@ -35,14 +40,14 @@ export async function onRequestGet({ request, params, env }) {
     else if (newUrl.pathname == "/amp/") {
         title = "GitHub Status AMP";
     }
+    else if (newUrl.pathname == "/testing/") {
+        title = "Test";
+    }
     else {
         title = "Error";
     }
 
-    console.log(url);
-    console.log(newUrl.pathname);
-
-    if (!(onCloudflareDev || onCloudflareProd) || title == "Error") {
+    if (!(onCloudflareDev || onCloudflareProd) || title == "Error" || format == null || format == "xml") {
         var result = {
             "version": "1.0",
             "type": "photo",
