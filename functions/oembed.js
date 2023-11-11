@@ -26,12 +26,13 @@ export async function onRequestGet({ request, params, env }) {
         var result = {
             "version": "1.0",
             "type": "photo",
+            "title": "Error",
             "width": 300,
             "height": 300,
             "url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
             "thumbnail_url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
-            "provider_name": "(Unofficial) GitHub Status",
-            "provider_url": url,
+            "provider_name": "(Unofficial) GitHub Status | Error",
+            "provider_url": "https://githubstat.us/",
         };
     
         var info = JSON.stringify(result, null, 2);
