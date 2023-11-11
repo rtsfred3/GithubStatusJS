@@ -2,7 +2,7 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export async function onRequestGet({ params, env }) {
+export async function onRequestGet({ request, params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
 
