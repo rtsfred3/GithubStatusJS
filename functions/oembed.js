@@ -6,8 +6,48 @@ export async function onRequestGet({ request, params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
 
+    var host = "githubstat.us";
+
     const { searchParams } = new URL(request.url);
     let url = searchParams.get('url');
+
+    const newUrl = new URL(url);
+
+    var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+    var cloudflareProdRegex = /githubstat.us/g;
+    
+    var onCloudflareDev = newUrl.host.match(cloudflareDevRegex) != null;
+    var onCloudflareProd = newUrl.host.match(cloudflareProdRegex) != null;
+    
+    if (onCloudflareDev || onCloudflareProd) {
+        host = newUrl.host;
+    }
+    else {
+        var result = {
+            "version": "1.0",
+            "type": "photo",
+            "width": 300,
+            "height": 300,
+            "url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
+            "thumbnail_url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
+            "provider_name": "(Unofficial) GitHub Status",
+            "provider_url": url,
+        };
+    
+        var info = JSON.stringify(result, null, 2);
+        
+        return new Response(info, {
+            headers: {
+                "Content-Type": "application/json",
+                "access-control-allow-origin": "*",
+                "Cache-Control": "max-age=0, public"
+            },
+        });
+    }
+
+    if (url.pathname == "/" || url.pathname == "/status/" || url.pathname == "/components/") {
+
+    }
 
     console.log(url);
 
@@ -28,7 +68,7 @@ export async function onRequestGet({ request, params, env }) {
         "url": "https://githubstat.us/img/status-min.png",
         "thumbnail_url": "https://githubstat.us/img/status-min.png",
         "provider_name": "(Unofficial) GitHub Status",
-        "provider_url": "https://githubstat.us/",
+        "provider_url": url,
     };
 
     var info = JSON.stringify(result, null, 2);
