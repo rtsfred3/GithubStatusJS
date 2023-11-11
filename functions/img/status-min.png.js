@@ -35,7 +35,7 @@ export async function onRequestGet({ params, env }) {
 
     imgFetch.headers.forEach((k, v) => {
         console.log(v + ": " + k);
-        init.headers[key] = value;
+        init.headers[v] = k;
     });
 
     // for(const [key, value] of Object.entries(imgFetch.headers)){
