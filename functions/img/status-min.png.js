@@ -27,8 +27,6 @@ export async function onRequestGet({ params, env }) {
 
     const imgFetch = await fetch(url);
 
-    // imgFetch.headers.forEach((k, v) => console.log(k + " => " + v));
-
     var init = {
         headers: {}
     };
@@ -38,19 +36,12 @@ export async function onRequestGet({ params, env }) {
         init.headers[v] = k;
     });
 
-    // for(const [key, value] of Object.entries(imgFetch.headers)){
-    //     console.log(key + ": " + value);
-    //     init.headers[key] = value;
-    // }
-
     init.headers["cache-control"] = "max-age=180, s-maxage=180, public";
     init.headers["Cloudflare-CDN-Cache-Control"] = "max-age=180";
 
     console.log(init);
 
     var resp = new Response(imgFetch.body, init);
-
-    // return imgFetch;
 
     return resp;
 }
