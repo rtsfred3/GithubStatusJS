@@ -34,13 +34,11 @@ export async function onRequestGet({ params, env }) {
     };
 
     for(const [key, value] of Object.entries(imgFetch.headers)){
-        init.headers.set(key, value);
+        init.headers[key] = value;
     }
 
-    // init["headers"] = imgFetch.headers;
-
-    init.headers.set("Cache-Control", "max-age=180, s-maxage=180, public");
-    init.headers.append("Cloudflare-CDN-Cache-Control", "max-age=180");
+    init.headers["Cache-Control"] = "max-age=180, s-maxage=180, public";
+    init.headers["Cloudflare-CDN-Cache-Control"] - "max-age=180";
 
     console.log(init);
 
