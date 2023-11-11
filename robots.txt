@@ -5,8 +5,16 @@ Allow: /components/
 Allow: /status/
 Allow: /amp/
 Allow: /StatuspageHTML/
+
 Disallow: /apps/
 Disallow: /lang/
 Disallow: /min/
 Disallow: /cache/
+
 Disallow: /api/
+Disallow: /api/uploads/
+Disallow: /api/mstock/
+
+Disallow: /sso/
+Disallow: /glpi
+Disallow: /cxwebclient/
