@@ -48,23 +48,11 @@ export async function onRequestGet({ request, params, env }) {
     }
 
     if (!(onCloudflareDev || onCloudflareProd) || title == "Error" || format == null || format == "xml") {
-        var result = {
-            "version": "1.0",
-            "type": "photo",
-            "title": "Error",
-            "width": 300,
-            "height": 300,
-            "url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
-            "thumbnail_url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
-            // "provider_name": "(Unofficial) GitHub Status | Error",
-            // "provider_url": "https://githubstat.us/",
-        };
-        
-        return new Response(JSON.stringify({}, null, 2), {
+        return new Response(JSON.stringify({}), {
             headers: {
                 "Content-Type": "application/json",
                 "access-control-allow-origin": "*",
-                "Cache-Control": "max-age=0, public"
+                "Cache-Control": "max-age=0, no-cache"
             },
             status: 404
         });
@@ -88,6 +76,7 @@ export async function onRequestGet({ request, params, env }) {
         "thumbnail_url": "https://githubstat.us/img/status-min.png",
         "provider_name": "(Unofficial) GitHub Status",
         "provider_url": url,
+        "cache_age": 20,
     };
     
     return new Response(JSON.stringify(result, null, 2), {
