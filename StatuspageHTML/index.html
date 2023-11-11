@@ -4,24 +4,24 @@
         <meta name="author" content="rtsfred3">
         <meta name="application-name" content="GitHub Status">
         <meta name="theme-color" content="#53C68C">
-        <meta name="description" content="A website to monitor GitHub status updates.">
+        <meta name="description" content="A website to monitor GitHub status updates. Currently being tested.">
         <meta name="keywords" content="GitHubStatus, GitHub Status, GitHub, Status">
         
         <meta property="og:site_name" content="GitHub Status">
         <meta property="og:title" content="GitHub Status">
-        <meta property="og:description" content="A website to monitor GitHub status updates.">
+        <meta property="og:description" content="A website to monitor GitHub status updates. Currently being tested.">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://githubstat.us/StatuspageHTML/">
-        <meta property="og:image" content="https://githubstat.us/img/status-facebook.png">
+        <meta property="og:image" content="https://githubstat.us/img/status-min.png">
         <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1280" />
-        <meta property="og:image:height" content="675" />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="300" />
         <meta property="og:image:alt" content="An image with text that reads 'GitHub Status' with background changing according to GitHub's current status.">
         
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="GitHub Status">
-        <meta name="twitter:description" content="A website to monitor GitHub status updates.">
-        <meta name="twitter:image" content="https://githubstat.us/img/status-twitter-min.png">
+        <meta name="twitter:description" content="A website to monitor GitHub status updates. Currently being tested.">
+        <meta name="twitter:image" content="https://githubstat.us/img/status-min.png">
         
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="GitHub Status">
@@ -38,11 +38,11 @@
                 "@type": "WebApplication",
                 "name": "Unofficial GitHub Status",
                 "alternateName": "Unofficial GH Status",
+                "description": "A website to monitor GitHub status updates. Currently being tested.",
                 "applicationCategory": "DeveloperApplication",
                 "operatingSystem": "Android, iOS, MacOS, Windows",
                 "softwareRequirements": "Modern Web Browser",
                 "url": "https://githubstat.us/StatuspageHTML/",
-                "description": "A website to monitor GitHub status updates.",
                 "screenshot": "https://githubstat.us/img/screenshots/screenshot1.webp",
                 "image": "https://do.githubstat.us/img/status-twitter-min.png",
                 "thumbnailUrl": "https://do.githubstat.us/img/status-twitter-min.png",
@@ -98,11 +98,12 @@
     </head>
     <body id="body">
         <script>
-            // var r = new StatuspageHTML("https://www.cloudflarestatus.com/", null, null, false);
-            var r = new StatuspageHTML("https://apiv3.githubstat.us/", null, null, false);
+            var r = new StatuspageHTML("https://www.cloudflarestatus.com/", null, null, false);
+            // var r = new StatuspageHTML("https://www.redditstatus.com/", null, null, false);
+            // var r = new StatuspageHTML("https://apiv3.githubstat.us/", null, null, false);
             
-            r.IndexHome();
-            // r.ComponentsHome();
+            // r.IndexHome();
+            r.ComponentsHome();
 
             r.setDescription("A website to monitor GitHub status updates.");
             r.setDescriptions();
