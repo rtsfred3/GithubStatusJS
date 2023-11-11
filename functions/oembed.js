@@ -19,6 +19,9 @@ export async function onRequestGet({ request, params, env }) {
     
     var onCloudflareDev = newUrl.host.match(cloudflareDevRegex) != null;
     var onCloudflareProd = newUrl.host.match(cloudflareProdRegex) != null;
+
+    console.log("onCloudflareDev: " + onCloudflareDev);
+    console.log("onCloudflareProd: " + onCloudflareProd);
     
     if (onCloudflareDev || onCloudflareProd) {
         host = newUrl.host;
