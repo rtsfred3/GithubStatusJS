@@ -7,6 +7,7 @@ export async function onRequestGet({ request, params, env }) {
     const table = env.TABLE;
 
     var host = "githubstat.us";
+    var title = "GitHub Status";
 
     const { searchParams } = new URL(request.url);
     let url = searchParams.get('url');
@@ -31,13 +32,11 @@ export async function onRequestGet({ request, params, env }) {
             "height": 300,
             "url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
             "thumbnail_url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
-            "provider_name": "(Unofficial) GitHub Status | Error",
+            // "provider_name": "(Unofficial) GitHub Status | Error",
             // "provider_url": "https://githubstat.us/",
         };
-    
-        var info = JSON.stringify(result, null, 2);
         
-        return new Response(info, {
+        return new Response(JSON.stringify(result, null, 2), {
             headers: {
                 "Content-Type": "application/json",
                 "access-control-allow-origin": "*",
@@ -46,11 +45,14 @@ export async function onRequestGet({ request, params, env }) {
         });
     }
 
-    if (url.pathname == "/" || url.pathname == "/status/" || url.pathname == "/components/") {
+    // if (url.pathname == "/" || url.pathname == "/status/" || url.pathname == "/components/") { }
 
+    if (newUrl.pathname == "/components/") {
+        title = "GitHub Status Components";
     }
 
     console.log(url);
+    console.log(newUrl.pathname);
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
 
@@ -63,7 +65,7 @@ export async function onRequestGet({ request, params, env }) {
     var result = {
         "version": "1.0",
         "type": "photo",
-        "title": `GitHub Status: ${status} - ${statusResult["status"]["description"]}`,
+        "title": `${title}: ${status} - ${statusResult["status"]["description"]}`,
         "width": 300,
         "height": 300,
         "url": "https://githubstat.us/img/status-min.png",
@@ -71,14 +73,12 @@ export async function onRequestGet({ request, params, env }) {
         "provider_name": "(Unofficial) GitHub Status",
         "provider_url": url,
     };
-
-    var info = JSON.stringify(result, null, 2);
     
-    return new Response(info, {
+    return new Response(JSON.stringify(result, null, 2), {
         headers: {
             "Content-Type": "application/json",
             "access-control-allow-origin": "*",
-            "Cache-Control": "max-age=3600, public"
+            "Cache-Control": "max-age=60, public"
         },
     });
 }
