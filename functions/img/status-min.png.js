@@ -23,23 +23,25 @@ export async function onRequestGet({ params, env }) {
 
     var status = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
 
-    // var statusImage = await env.status_images.get(`${status}`);
-    // statusImage = statusImage.replace("data:image/png;base64,", "");
-
     var url = `https://imagedelivery.net/${accountHash}/${imageIds[status]}/300px`;
 
     const imgFetch = await fetch(url);
 
-    imgFetch.headers.forEach((k, v) => console.log(k + " => " + v));
-    imgFetch.headers.set("cache-control", "max-age=180, s-maxage=180, public");
-    imgFetch.headers.append("Cloudflare-CDN-Cache-Control", "max-age=180");
+    var init = {
+        headers: {}
+    };
 
-    return imgFetch;
+    imgFetch.headers.forEach((k, v) => {
+        console.log(v + ": " + k);
+        init.headers[v] = k;
+    });
 
-    // return new Response(base64Decode(statusImage), {
-    //     headers: {
-    //         "Cache-Control": "max-age=60, s-maxage=60, public",
-    //         "Cloudflare-CDN-Cache-Control": "max-age=60"
-    //     },
-    // });
+    init.headers["cache-control"] = "max-age=180, s-maxage=180, public";
+    init.headers["Cloudflare-CDN-Cache-Control"] = "max-age=180";
+
+    console.log(init);
+
+    var resp = new Response(imgFetch.body, init);
+
+    return resp;
 }
