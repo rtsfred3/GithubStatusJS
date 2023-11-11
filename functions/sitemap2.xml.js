@@ -1,5 +1,10 @@
 export async function onRequestGet({ params, env }) {
-    let date = new Date().toJSON();
+    var currDate = new Date();
+    currDate.setHours(currDate.getHours(), 0, 0, 0);
+
+    console.log(currDate);
+
+    var date = currDate.toJSON();
 
     var xml = '<?xml version="1.0" encoding="UTF-8"?> \
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> \
