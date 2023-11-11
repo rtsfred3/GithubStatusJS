@@ -29,9 +29,15 @@ export async function onRequestGet({ params, env }) {
 
     imgFetch.headers.forEach((k, v) => console.log(k + " => " + v));
 
-    var init = {};
+    var init = {
+        headers: {}
+    };
 
-    init["headers"] = imgFetch.headers;
+    for(const [key, value] of Object.entries(imgFetch.headers)){
+        init.headers.set(key, value);
+    }
+
+    // init["headers"] = imgFetch.headers;
 
     init.headers.set("Cache-Control", "max-age=180, s-maxage=180, public");
     init.headers.append("Cloudflare-CDN-Cache-Control", "max-age=180");
