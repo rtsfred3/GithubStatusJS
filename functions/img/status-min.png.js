@@ -28,7 +28,13 @@ export async function onRequestGet({ params, env }) {
 
     var url = `https://imagedelivery.net/${accountHash}/${imageIds[status]}/300px`;
 
-    return fetch(url);
+    const imgFetch = await fetch(url);
+
+    imgFetch.headers.forEach((k, v) => console.log(k + " => " + v));
+    imgFetch.headers.set("cache-control", "max-age=180, s-maxage=180, public");
+    imgFetch.headers.append("Cloudflare-CDN-Cache-Control", "max-age=180");
+
+    return imgFetch;
 
     // return new Response(base64Decode(statusImage), {
     //     headers: {
