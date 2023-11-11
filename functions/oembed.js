@@ -32,7 +32,7 @@ export async function onRequestGet({ request, params, env }) {
             "url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
             "thumbnail_url": "https://githubstat.us/img/status/lowres/min/status-min-error.png",
             "provider_name": "(Unofficial) GitHub Status | Error",
-            "provider_url": "https://githubstat.us/",
+            // "provider_url": "https://githubstat.us/",
         };
     
         var info = JSON.stringify(result, null, 2);
