@@ -8,7 +8,7 @@ export async function onRequestGet({ params, env }) {
     var status = statusJson["status"]["indicator"] == 'none' ? "good" : statusJson["status"]["indicator"];
     var statusDescription = statusJson["status"]["description"];
 
-    const url = "https://githubstat.us/";
+    const url = "https://githubstat.us/Statuspage/";
     
     const body = JSON.parse(results.find((t) => t["route"] == `/api/amp/body.json`).data.replace("\n", ""))["items"][0]["body"];
 
@@ -36,9 +36,8 @@ export async function onRequestGet({ params, env }) {
             <meta property="og:url" content="' + url + '"> \
             <meta property="og:image" content="https://githubstat.us/img/status-min.png"> \
             <meta property="og:image:type" content="image/jpeg" /> \
-            <meta property="og:image:width" content="1200" /> \
-            <meta property="og:image:height" content="675" /> \
-            <meta property="og:image:alt" content="An image with text that reads \'GitHub Status\' with background changing according to GitHub\'s current status."> \
+            <meta property="og:image:width" content="300" /> \
+            <meta property="og:image:height" content="300" /> \
             \
             <meta name="twitter:card" content="summary"> \
             <meta name="twitter:title" content="' + title + '"> \
