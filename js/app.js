@@ -1,8 +1,10 @@
 // var baseURL = "https://www.githubstatus.com";
 var baseURL = "https://apiv3.githubstat.us";
+// var baseURL = "https://www.redditstatus.com";
+// var baseURL = "https://www.cloudflarestatus.com";
 
-function Router(){
-    try{
+function Router() {
+    try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
         var cloudflareProdRegex = /githubstat.us/g;
         
@@ -12,82 +14,84 @@ function Router(){
         // console.log('onCloudflareDev', onCloudflareDev);
         // console.log('onCloudflareProd', onCloudflareProd);
         
-        if(onCloudflareProd || onCloudflareDev){
-            if(location.pathname == '/'){
+        if (onCloudflareProd || onCloudflareDev) {
+            if (location.pathname == '/') {
                 setUrl();
                 IndexHome();
-            }else if(location.pathname == '/components/'){
+            } else if (location.pathname == '/components/') {
                 setUrl();
                 ComponentsHome();
-            }else if(location.pathname == '/status/'){
+            } else if (location.pathname == '/status/') {
                 setUrl();
                 StatusHome();
-            }else{
+            } else {
                 console.log("Error");
                 setError();
             }
-        }else{
+        } else {
             IndexHome();
             // ComponentsHome();
             // StatusHome();
             // setError();
         }
-    }catch(error){
+    } catch(error) {
         // IndexHome();
         setError();
     }
 }
 
-function setError(){
+function setError() {
     document.getElementsByTagName("title")[0].innerHTML = "Error Invalid Page";
 
     setTheme('error');
     document.getElementsByTagName("body")[0].innerHTML = errorMessage;
 }
 
-function setInfo(url, funct, fullStatus = false){
+function setInfo(url, funct, fullStatus = false) {
     var xhttp = new XMLHttpRequest();
+
     xhttp.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200) {
-            if(Array.isArray(funct)){
+        if (this.readyState == 4 && this.status == 200) {
+            if (Array.isArray(funct)) {
                 console.log(funct[0].prototype.constructor.name);
                 console.log(funct[1].prototype.constructor.name);
 
                 funct[0](JSON.parse(this.responseText));
                 funct[1](JSON.parse(this.responseText));
-            }else{
+            } else {
                 console.log(funct.prototype.constructor.name);
 
-                if(funct.prototype.constructor.name == Status.prototype.constructor.name && fullStatus){
+                if (funct.prototype.constructor.name == Status.prototype.constructor.name && fullStatus) {
                     funct(JSON.parse(this.responseText), fullStatus);
-                }else{
+                } else {
                     funct(JSON.parse(this.responseText));
                 }
             }
-        }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
+        } else if (this.readyState == 4 && this.status != 200 && this.status > 0) {
             console.log(this.readyState, this.status);
 
-            if(Array.isArray(funct)){
+            if (Array.isArray(funct)) {
                 setError();
-            }else if(funct.prototype.constructor.name == Status.prototype.constructor.name){
+            } else if (funct.prototype.constructor.name == Status.prototype.constructor.name) {
                 setStatus("unavailable");
-            }else{
+            } else {
                 setError();
             }
 
             setError();
         }
     };
+
     xhttp.open("GET", url, true);
     xhttp.send();
 }
 
-function PSA_F(psa){
+function PSA_F(psa) {
     document.getElementById("psa").classList.remove("hide");
     document.getElementById("psa").innerHTML = '<div class="center-status">' + psa + '</div>';
 }
 
-function setTheme(status){
+function setTheme(status) {
     setMetaTag("theme-color", metaColors[status]);
     setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
 
@@ -98,19 +102,21 @@ function setTheme(status){
     // }
 }
 
-function setMetaTag(id, value){
+function setMetaTag(id, value) {
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     metaTag.setAttribute("content", value);
 }
 
-function getMetaTag(id){
+function getMetaTag(id) {
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    
     return metaTag.getAttribute("content");
 }
 
-function updateRichTest(id, value){
+function updateRichTest(id, value) {
     var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
 
     var ldJson = JSON.parse(ld.innerHTML);
@@ -120,7 +126,7 @@ function updateRichTest(id, value){
     ld.innerHTML = JSON.stringify(ldJson, null, 4);
 }
 
-function setTitles(title){
+function setTitles(title) {
     document.getElementsByTagName("title")[0].innerHTML = title;
 
     setMetaTag("twitter:title", title);
@@ -128,18 +134,20 @@ function setTitles(title){
     setMetaTag("application-name", title);
     setMetaTag("apple-mobile-web-app-title", title);
 
-    // updateRichTest("name", title);
+    updateRichTest("name", title);
 }
 
-function setDescriptions(descript){
-    setMetaTag("description", getMetaTag("description") + " | " + descript);
-    setMetaTag("og:description", getMetaTag("og:description") + " | " + descript);
-    setMetaTag("twitter:description", getMetaTag("twitter:description") + " | " + descript);
+function setDescriptions(sitename, descript = null) {
+    var description = "An unofficial website to monitor " + sitename  + " status updates." + (descript != null ? " | " + descript : "");
 
-    // updateRichTest("description", getMetaTag("twitter:description"));
+    setMetaTag("description", description);
+    setMetaTag("og:description", description);
+    setMetaTag("twitter:description", description);
+
+    updateRichTest("description", description);
 }
 
-function setUrl(url = null){
+function setUrl(url = null) {
     var currUrl = url == null ? window.location.href : url;
     
     setMetaTag("og:url", currUrl);
@@ -149,15 +157,60 @@ function setUrl(url = null){
     
     linkTag.setAttribute("href", currUrl);
 
-    // updateRichTest("url", currUrl);
+    updateRichTest("url", currUrl);
 }
 
-function IndexHome(){
+function getComponentSummaryByStatus(components, status) {
+    var statuses = {
+        "operational": " are operational.",
+        "degraded_performance": " have degraded performance.",
+        "partial_outage": " have partial outages.",
+        "major_outage": " have major outages.",
+    };
+
+    var statusesSingle = {
+        "operational": " is operational.",
+        "degraded_performance": " has degraded performance.",
+        "partial_outage": " has partial outage.",
+        "major_outage": " has major outage.",
+    };
+
+    var hasGroups = components.filter((comp) => comp["group"]).map((comp) => comp["name"]).length > 0;
+
+    var group = components.filter((comp) => comp["status"] == status && !comp["group"] && !comp["name"].includes("Visit ")).map((comp) => comp["name"]);
+
+    if (hasGroups) {
+        group = components.filter((comp) => comp["status"] == status && (comp["group"] || comp["group_id"] == null) && !comp["name"].includes("Visit ")).map((comp) => comp["name"]);
+    }
+
+    if (group.length == 0) {
+        return "";
+    }
+
+    if (group.length == 1) {
+        return group[0] + statusesSingle[status];
+    }
+
+    if (group.length > 10) {
+        return group.length + " components" + statuses[status];
+    }
+
+    var last = group.pop();
+    return group.join(", ") + ", and " + last + statuses[status];
+}
+
+function getComponentsSummary(components) {
+    var componentStatus = ["operational", "degraded_performance", "partial_outage", "major_outage"];
+
+    return componentStatus.map((c) => getComponentSummaryByStatus(components, c)).filter((t) => t.length > 0).join(" ");
+}
+
+function IndexHome() {
     console.log("IndexHome");
 
     setTitles("(Unofficial) GitHub Status");
 
-    if(document.getElementById("loading").classList.contains("hide")){
+    if (document.getElementById("loading").classList.contains("hide")) {
         document.getElementById("loading").classList.remove("hide");
         document.getElementById("mainHome").classList.add("hide");
     }
@@ -170,7 +223,7 @@ function IndexHome(){
     document.getElementById("loading").classList.add("hide");
 }
 
-function ComponentsHome(){
+function ComponentsHome() {
     console.log("ComponentsHome");
 
     setTitles("(Unofficial) GitHub Status Components");
@@ -181,10 +234,10 @@ function ComponentsHome(){
     document.getElementById("loading").classList.add("hide");
 }
 
-function StatusHome(){
+function StatusHome() {
     console.log("StatusHome");
 
-    setTitles("(Unofficial) GitHub Status Page");
+    setTitles("(Unofficial) Mini GitHub Status");
     
     setInfo(baseURL+'/api/v2/status.json', Status, true);
 
@@ -192,20 +245,22 @@ function StatusHome(){
     document.getElementById("loading").classList.add("hide");
 }
 
-function makeComponent(curr){
+function makeComponent(curr) {
     return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
 }
 
-function Components(comp){
+function Components(comp) {
     var out = '';
-    for(var i = 0; i < comp["components"].length; i++){
-        if(comp["components"][i]["name"].substring(0, 5) == 'Visit'){ continue; }
+    
+    for (var i = 0; i < comp["components"].length; i++) {
+        if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
         out += makeComponent(comp["components"][i]);
     }
+
     document.getElementById("mainComponents").innerHTML = out;
 }
 
-function setStatus(status, fullStatus=false){
+function setStatus(status, fullStatus=false) {
     setTheme('unavailable');
     var id = fullStatus ? "mainStatus" : "status";
     
@@ -214,22 +269,21 @@ function setStatus(status, fullStatus=false){
     document.getElementById(id).classList.add("status-color");
     document.getElementById(id).classList.add(status.toLowerCase());
 
-    if(status.toLowerCase() == "unavailable"){
+    if (status.toLowerCase() == "unavailable") {
         document.getElementById(id).classList.add("unavailable-font");
-    }
-    else if(status.toLowerCase() != "unavailable" && document.getElementById(id).classList.contains('unavailable-font')){
+    } else if (status.toLowerCase() != "unavailable" && document.getElementById(id).classList.contains('unavailable-font')) {
         document.getElementById(id).classList.remove("unavailable-font");
     }
     
-    if(fullStatus){
+    if (fullStatus) {
         document.getElementById('mainHome').innerHTML = '';
         
         document.getElementById(id).classList.remove("status-shadow");
         document.getElementById(id).classList.remove("status-height");
         
-        if(document.getElementById("psa").classList.contains('hide')){
+        if (document.getElementById("psa").classList.contains('hide')) {
             document.getElementById(id).classList.add("full-status-height");
-        }else{
+        } else {
             document.getElementById(id).classList.add("psa-full-status-height");
         }
     }
@@ -237,25 +291,32 @@ function setStatus(status, fullStatus=false){
     setTheme(status);
 }
 
-function Status(arr, fullStatus=false){
+function Status(arr, fullStatus=false) {
     setStatus(arr.status.indicator, fullStatus);
-    // setDescriptions(arr.status.description);
+
+    setDescriptions(arr["page"]["name"], arr["status"]["description"]);
+
+    // if (Object.keys(arr).includes("components")) {
+    //     setDescriptions(arr["page"]["name"], getComponentsSummary(arr["components"]));
+    // } else {
+    //     setDescriptions(arr["page"]["name"], arr["status"]["description"]);
+    // }
 }
 
-function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus){
+function createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus) {
     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     var out = '';
     
     // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
     var w = (status == "resolved" ? "good" : impact);
     
-    if(w == undefined){ w = indicatorMessages[status]; }
+    if (w == undefined) { w = indicatorMessages[status]; }
     
     out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
     var date = new Date(created_at).toLocaleDateString("en-US", options);
 
-    if(location.hostname == 'do.githubstat.us'){
+    if (location.hostname == 'do.githubstat.us') {
         options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
         var t_date = new Date(mess["incidents"][i]["incident_updates"][j].created_at);
         t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours()+(t_date.getTimezoneOffset()/60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
@@ -275,11 +336,11 @@ function createMessage(name, impact, status, body, created_at, shortlink, isOlde
     return "<span>" + out + "</span>";
 }
 
-function loadingMessages(){
+function loadingMessages() {
     document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">Loading Messages</div></div>';
 }
 
-function Messages(mess){
+function Messages(mess) {
     var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
     
     var previousDays = 7;
@@ -290,15 +351,15 @@ function Messages(mess){
     
     var incidents = mess["incidents"].filter(function(incident){ return new Date(incident["created_at"]) > previousDaysDate; });
 
-    if(incidents.length == 0){
+    if (incidents.length == 0) {
         document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         return;
-    }else{
+    } else {
         var out = '';
         
-        for(var i = 0; i < incidents.length; i++){
-            if(incidents[i]["incident_updates"].length > 0){
-                for(var j = 0; j < incidents[i]["incident_updates"].length; j++){
+        for (var i = 0; i < incidents.length; i++) {
+            if (incidents[i]["incident_updates"].length > 0) {
+                for (var j = 0; j < incidents[i]["incident_updates"].length; j++) {
                     out += createMessage(
                         incidents[i].name, incidents[i].impact,
                         incidents[i]["incident_updates"][j].status,
