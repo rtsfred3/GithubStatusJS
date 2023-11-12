@@ -15,7 +15,8 @@ export async function onRequestGet({ params, env }) {
         'minor': '2d1f3cba-2101-4ce4-fa9e-f497e4da9300',
         'major': 'c72f3c60-4751-4be5-84a8-b66e94af3500',
         'critical': 'a32ff186-a4e9-483b-982f-1a1081f2af00',
-        'unavailable': '91a72ef5-fa39-4314-511d-fc3fb2481300'
+        'unavailable': '91a72ef5-fa39-4314-511d-fc3fb2481300',
+        'error': '81d74108-f9a6-46fb-61ed-45832a67d400'
     };
 
     const statusRes = await fetch("https://www.githubstatus.com/api/v2/status.json");

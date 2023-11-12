@@ -34,31 +34,36 @@ export async function onRequestGet({ params, env }) {
             <changefreq>hourly</changefreq> \
         </url> \
         <url> \
+            <loc>https://githubstat.us/Statuspage/</loc> \
+            <lastmod>' + date + '</lastmod> \
+            <changefreq>hourly</changefreq> \
+        </url> \
+        <url> \
             <loc>https://githubstat.us/apps/app/</loc> \
-            <lastmod>2021-02-26</lastmod> \
+            <lastmod>2023-11-01</lastmod> \
             <changefreq>hourly</changefreq> \
         </url> \
         <url> \
             <loc>https://githubstat.us/apps/components/</loc> \
-            <lastmod>2021-02-26</lastmod> \
+            <lastmod>2023-11-01</lastmod> \
             <changefreq>hourly</changefreq> \
         </url> \
         <url> \
             <loc>https://githubstat.us/apps/lang/</loc> \
-            <lastmod>2021-02-26</lastmod> \
+            <lastmod>2023-11-01</lastmod> \
             <changefreq>hourly</changefreq> \
         </url> \
         <url> \
             <loc>https://githubstat.us/apps/min/</loc> \
-            <lastmod>2021-02-26</lastmod> \
+            <lastmod>2023-11-01</lastmod> \
         </url> \
         <url> \
             <loc>https://githubstat.us/apps/status/</loc> \
-            <lastmod>2021-02-26</lastmod> \
+            <lastmod>2023-11-01</lastmod> \
         </url> \
         <url> \
             <loc>https://githubstat.us/apps/status/french/</loc> \
-            <lastmod>2021-02-26</lastmod> \
+            <lastmod>2023-11-01</lastmod> \
         </url> \
     </urlset>';
 
