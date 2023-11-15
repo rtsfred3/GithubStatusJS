@@ -1,5 +1,5 @@
-// var baseURL = "https://www.githubstatus.com";
-var baseURL = "https://apiv3.githubstat.us";
+var baseURL = "https://www.githubstatus.com";
+// var baseURL = "https://apiv3.githubstat.us";
 // var baseURL = "https://www.redditstatus.com";
 // var baseURL = "https://www.cloudflarestatus.com";
 

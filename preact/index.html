@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html amp lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="Testing Page">
+        <meta name="theme-color" content="#339966">
+        <meta name="description" content="Testing page for new features or ideas in GitHub Status.">
+        <!-- <meta name="keywords" content="GitHubStatus, GitHub Status, GitHub, Status, Mini Version"> -->
+
+        <meta property="og:site_name" content="GitHub Status">
+        <meta property="og:title" content="Testing Page">
+        <meta property="og:description" content="Testing page for new features or ideas in GitHub Status.">
+        <meta property="og:image" content="https://githubstat.us/img/status-min.png">
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://githubstat.us/testing/">
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Testing Page">
+        <meta name="twitter:description" content="Testing page for new features or ideas in GitHub Status.">
+        <meta name="twitter:image:src" content="https://githubstat.us/img/status-min.png">
+
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Testing Page">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+
+        <link rel="stylesheet" type="text/css" href="../styling/main.min.css">
+
+        <link rel="canonical" href="https://githubstat.us/preact/" />
+
+        <script type="application/ld+json">
+            {
+                "@context": "http://schema.org/",
+                "@type": "WebApplication",
+                "name": "Testing Page",
+                "alternateName": "Test Page",
+                "description": "Testing page for new features or ideas in GitHub Status.",
+                "applicationCategory": "DeveloperApplication",
+                "operatingSystem": "Android, iOS, MacOS, Windows",
+                "softwareRequirements": "Modern Web Browser",
+                "url": "https://githubstat.us/testing/",
+                "screenshot": "https://githubstat.us/img/screenshots/screenshot1.webp",
+                "image": "https://githubstat.us/img/status-min.png",
+                "thumbnailUrl": "https://githubstat.us/img/status-min.png",
+                "author": [{
+                    "@type": "Person",
+                    "name": "Ryan Fredrickson",
+                    "jobTitle": "Software Developer",
+                    "url": "https://github.com/rtsfred3"
+                }],
+                "maintainer": {
+                    "@type": "Person",
+                    "name": "Ryan Fredrickson",
+                    "jobTitle": "Software Developer",
+                    "url": "https://github.com/rtsfred3"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0.00",
+                    "priceCurrency": "USD"
+                }
+            }
+        </script>
+
+        <script type="module">
+            import { h, render } from 'https://esm.sh/preact@10.19.2';
+            import htm from 'https://esm.sh/htm@3.1.1';
+
+            const html = htm.bind(h);
+
+
+            // import { h, html, Component, render } from 'https://unpkg.com/htm@3.1.1/preact/standalone.module.js';
+
+            import StatuspagePreact from '../js/StatuspagePreact.js';
+
+            var Statuspage = new StatuspagePreact("https://www.githubstatus.com");
+
+            // class App extends Component {
+            //     render(){
+            //         return html`${Statuspage.getBody()}`;
+            //     }
+            // }
+
+            var app = h(
+                'div',
+                { id: 'loading' },
+                h(
+                    'Hello',
+                    { class: 'full-status-height status-width bold status-color unavailable font-36' },
+                    h('span', { class: 'center-status' }, 'LOADING')
+                )
+            );
+            
+            console.log(app);
+            console.log(html`${Statuspage.getBody()}`);
+
+            // render(app, document.body);
+            render(html`${Statuspage.getBody()}`.innerHTML, document.body);
+        </script>
+
+        <title>GitHub Status Preact</title>
+    </head>
+    <body>
+        <!-- <div id="loading">
+            <div class="full-status-height status-width bold status-color unavailable font-36">
+                <span class="center-status">LOADING</span>
+            </div>
+        </div>
+        
+        <div id="psa" class="psa hide bold status-color"></div>
+        <div id="mainHome" class="hide zed">
+            <div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div>
+            <div id="messages" class="messages"></div>
+        </div>
+        <div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div>
+        <div id="mainComponents" class="hide zed"></div> -->
+    </body>
+</html>
