@@ -1,4 +1,4 @@
-function StatuspageHTML(baseURL, page = null, indexHomeSingleRequest = pageEnum.Error, fetchPsa = false, _name = null, _description = null,){
+function StatuspageHTML(baseURL, indexHomeSingleRequest = true, fetchPsa = false, _name = null, _description = null,){
     this.baseURL = baseURL;
     this._name = _name;
     this._description = _description;
@@ -11,7 +11,7 @@ function StatuspageHTML(baseURL, page = null, indexHomeSingleRequest = pageEnum.
     this.errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
 
     if(fetchPsa){
-        this.setInfo("/psa.json", functEnum.PSA, this);
+        this.fetchPsaAsync().then();
     }
 
     this.body = '\
@@ -30,28 +30,11 @@ function StatuspageHTML(baseURL, page = null, indexHomeSingleRequest = pageEnum.
     <div id="mainComponents" class="hide zed"></div>';
 
     document.body.innerHTML = this.body;
-
-    switch(page){
-        case pageEnum.Index:
-            this.IndexHome();
-            break;
-        case pageEnum.Status:
-            this.StatusHome();
-            break;
-        case pageEnum.Components:
-            this.ComponentsHome();
-            break;
-        default:
-            this.ErrorHome();
-            break;
-    }
-
-    // document.getElementById("mainHome").innerHTML = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>';
 }
 
 StatuspageHTML.prototype.setName = function(_name){
-    console.log("setName(): " + _name);
     this._name = _name;
+    console.log("setName(): " + this._name);
     return this;
 }
 
@@ -60,9 +43,9 @@ StatuspageHTML.prototype.getName = function(){
     return this._name;
 }
 
-StatuspageHTML.prototype.setDescript = function(_description){
-    console.log("setDescription(): " + _description);
-    this._description = _description;
+StatuspageHTML.prototype.setDescript = function(sitename, descript = null){
+    this._description = "An unofficial website to monitor " + sitename  + " status updates. Currently being tested." + (descript != null ? " | " + descript : "");
+    console.log("setDescript(): " + this._description);
     return this;
 }
 
@@ -71,19 +54,54 @@ StatuspageHTML.prototype.getDescript = function(){
     return this._description;
 }
 
+StatuspageHTML.prototype.fetchPsaAsync = async function(){
+    console.log("fetchPsaAsync");
+
+    const response = await fetch('/psa.json');
+    const result = await response.json();
+
+    this.setPSA(result);
+
+    this.Components(result);
+}
+
 StatuspageHTML.prototype.IndexHome = function(){
     console.log("IndexHome");
 
+    this.IndexHomeAsync().then();
+}
+
+StatuspageHTML.prototype.IndexHomeAsync = async function(){
+    console.log("IndexHomeAsync");
     this.setUrl();
 
     this.hideAllPages();
-    
+
     if(this.IndexHomeSingleRequest){
-        this.setInfo(this.baseURL+'/api/v2/summary.json', functEnum.StatusMessages, this);
+        const response = await fetch(this.baseURL + '/api/v2/summary.json');
+        const result = await response.json();
+    
+        this.Status(result);
+        this.Messages(result);
+
+        this.setName(result.page.name);
+        this.setDescript(result.page.name, result.status.description);
     }else{
-        this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.Status, this);
-        this.setInfo(this.baseURL+'/api/v2/incidents.json', functEnum.Messages, this);
+        const statusResponse = await fetch(this.baseURL + '/api/v2/status.json');
+        const statusResult = await statusResponse.json();
+
+        const messagesResponse = await fetch(this.baseURL + '/api/v2/incidents.json');
+        const messagesResult = await messagesResponse.json();
+    
+        this.Status(statusResult);
+        this.Messages(messagesResult);
+
+        this.setName(statusResult.page.name);
+        this.setDescript(statusResult.page.name, statusResult.status.description);
     }
+
+    this.setDescriptions();
+    this.setTitle("Unofficial " + this.getName() + " Status");
 
     this.showPage("mainHome");
 }
@@ -91,9 +109,21 @@ StatuspageHTML.prototype.IndexHome = function(){
 StatuspageHTML.prototype.ComponentsHome = function(){
     console.log("ComponentsHome");
 
+    this.ComponentsHomeAsync().then();
+}
+
+StatuspageHTML.prototype.ComponentsHomeAsync = async function(){
+    console.log("ComponentsHomeAsync");
+
     this.hideAllPages();
 
-    this.setInfo(this.baseURL+'/api/v2/components.json', functEnum.Components, this);
+    const response = await fetch(this.baseURL + '/api/v2/components.json');
+    const result = await response.json();
+
+    this.Components(result);
+    this.setTitle("Unofficial " + result.page.name + " Status Components");
+    this.setName(result.page.name);
+    this.setDescriptions(result.page.name);
 
     this.showPage("mainComponents");
 }
@@ -101,9 +131,21 @@ StatuspageHTML.prototype.ComponentsHome = function(){
 StatuspageHTML.prototype.StatusHome = function(){
     console.log("StatusHome");
 
+    this.StatusHomeAsync().then();
+}
+
+StatuspageHTML.prototype.StatusHomeAsync = async function(){
+    console.log("StatusHome");
+
     this.hideAllPages();
-    
-    this.setInfo(this.baseURL + '/api/v2/status.json', functEnum.StatusFull, this);
+
+    const response = await fetch(this.baseURL + '/api/v2/status.json');
+    const result = await response.json();
+
+    this.Status(result, true);
+    this.setTitle("Unofficial Mini " + result.page.name + " Status");
+    this.setName(result.page.name);
+    this.setDescriptions(result.page.name, result.status.description);
 
     this.showPage("mainStatus");
 }
@@ -118,65 +160,6 @@ StatuspageHTML.prototype.ErrorHome = function(){
     this.createMetaTag("robots", "noindex");
     
     document.body.innerHTML = this.errorMessage;
-}
-
-StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200) {
-            var result = JSON.parse(this.responseText);
-
-            switch(funct){
-                case functEnum.Status:
-                    console.log("Status");
-                    routerClass.Status(result);
-                    routerClass.setTitle("Unofficial " + result.page.name + " Status");
-                    routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(result.page.name, result.status.description);
-                    break;
-                case functEnum.StatusFull:
-                    console.log("Status");
-                    routerClass.Status(result, true);
-                    routerClass.setTitle("Unofficial " + result.page.name + " Status | Status");
-                    routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(result.page.name, result.status.description);
-                    break;
-                case functEnum.Messages:
-                    console.log("Messages");
-                    routerClass.Messages(result);
-                    routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(result.page.name);
-                    break;
-                case functEnum.StatusMessages:
-                    console.log("Status + Messages");
-                    routerClass.Status(result);
-                    routerClass.Messages(result);
-                    routerClass.setTitle("Unofficial " + result.page.name + " Status");
-                    routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(result.page.name, result.status.description);
-                    break;
-                case functEnum.Components:
-                    console.log("Components");
-                    routerClass.Components(result);
-                    routerClass.setTitle("Unofficial " + result.page.name + " Status | Components");
-                    routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(result.page.name);
-                    break;
-                case functEnum.PSA:
-                    console.log("PSA");
-                    routerClass.setPSA(result);
-                    break;
-                default:
-                    routerClass.ErrorHome();
-                    break;
-            }
-        }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
-            console.log(this.readyState, this.status);
-            // this.ErrorHome();
-        }
-    };
-    xhttp.open("GET", url, true);
-    xhttp.send();
 }
 
 StatuspageHTML.prototype.setPSA = function(psaResult){
@@ -198,9 +181,9 @@ StatuspageHTML.prototype.hidePage = function(page){
 }
 
 StatuspageHTML.prototype.hideAllPages = function(){
-   this.hidePage("mainHome");
-   this.hidePage("mainStatus");
-   this.hidePage("mainComponents");
+    this.hidePage("mainHome");
+    this.hidePage("mainStatus");
+    this.hidePage("mainComponents");
 }
 
 StatuspageHTML.prototype.setMetaTag = function(id, value){
@@ -270,16 +253,16 @@ StatuspageHTML.prototype.setTitle = function(title){
     return this;
 }
 
-StatuspageHTML.prototype.setDescriptions = function(sitename, descript = null){
-    var description = "An unofficial website to monitor " + sitename  + " status updates. Currently being tested." + (descript != null ? " | " + descript : "");
+StatuspageHTML.prototype.setDescriptions = function(sitename = null, descript = null){
+    if(sitename != null){
+        this.setDescript(sitename, descript);
+    }
 
-    this.setMetaTag("description", description);
-    this.setMetaTag("og:description", description);
-    this.setMetaTag("twitter:description", description);
+    this.setMetaTag("description", this._description);
+    this.setMetaTag("og:description", this._description);
+    this.setMetaTag("twitter:description", this._description);
 
-    this.updateRichTest("description", description);
-
-    this.setDescript(description);
+    this.updateRichTest("description", this._description);
 
     return this;
 }
