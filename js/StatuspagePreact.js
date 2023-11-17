@@ -1,3 +1,5 @@
+import { h, render } from 'https://esm.sh/preact@10.19.2';
+
 function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSingleRequest = true, fetchPsa = false){
     this.baseURL = baseURL;
     this._name = _name;
@@ -20,9 +22,11 @@ function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSin
 }
 
 StatuspageHTML.prototype.getBody = function(){
-    const parser = new DOMParser();
-    const htmlBody = parser.parseFromString(this.body, 'text/html');
-    return htmlBody.body;
+    // const parser = new DOMParser();
+    // const htmlBody = parser.parseFromString(this.body, 'text/html');
+    // return htmlBody.body;
+
+    return this.body;
 }
 
 StatuspageHTML.prototype.setName = function(_name){

@@ -73,34 +73,58 @@
 
             const html = htm.bind(h);
 
-
             // import { h, html, Component, render } from 'https://unpkg.com/htm@3.1.1/preact/standalone.module.js';
 
             import StatuspagePreact from '../js/StatuspagePreact.js';
 
             var Statuspage = new StatuspagePreact("https://www.githubstatus.com");
 
-            // class App extends Component {
-            //     render(){
-            //         return html`${Statuspage.getBody()}`;
-            //     }
-            // }
-
-            var app = h(
+            var loading = h(
                 'div',
                 { id: 'loading' },
                 h(
-                    'Hello',
+                    'div',
                     { class: 'full-status-height status-width bold status-color unavailable font-36' },
                     h('span', { class: 'center-status' }, 'LOADING')
                 )
             );
+
+            var psa = h('div', { id: 'psa', class: 'psa hide bold status-color' }, '');
+
+            var mainHome = h(
+                'div',
+                { id: 'mainHome', class: 'hide zed' },
+                h(
+                    'div',
+                    { id: 'status', class: 'status-height status-width status-shadow bold status-color unavailable' },
+                    ''
+                ),
+                h(
+                    'div',
+                    { id: 'messages', class: 'messages' },
+                    ''
+                )
+            );
             
-            console.log(app);
+            var mainStatus = h('div', { id: 'mainStatus', class: 'hide status-height status-width bold status-color unavailable' }, '');
+            var mainComponents = h('div', { id: 'mainComponents', class: 'hide zed' }, '');
+
+            var app = h(
+                'div',
+                null,
+                loading,
+                psa,
+                mainHome,
+                mainStatus,
+                mainComponents
+            );
+            
+            console.log(app.props.children);
+            console.log(h(html`${Statuspage.body}`));
             console.log(html`${Statuspage.getBody()}`);
 
-            // render(app, document.body);
-            render(html`${Statuspage.getBody()}`.innerHTML, document.body);
+            // render(app.props.children, document.body);
+            render(html`${Statuspage.body}`, document.body);
         </script>
 
         <title>GitHub Status Preact</title>

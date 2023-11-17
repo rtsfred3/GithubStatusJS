@@ -1,4 +1,4 @@
-function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSingleRequest = true, fetchPsa = false){
+function StatuspageHTML(baseURL, page = null, indexHomeSingleRequest = pageEnum.Error, fetchPsa = false, _name = null, _description = null,){
     this.baseURL = baseURL;
     this._name = _name;
     this._description = _description;
@@ -14,7 +14,7 @@ function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSin
         this.setInfo("/psa.json", functEnum.PSA, this);
     }
 
-    document.body.innerHTML = '\
+    this.body = '\
     <div id="loading"> \
         <div class="full-status-height status-width bold status-color unavailable font-36"> \
             <span class="center-status">LOADING</span> \
@@ -22,11 +22,31 @@ function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSin
     </div> \
     \
     <div id="psa" class="psa hide bold status-color"></div> \
-    <div id="mainHome" class="hide zed"></div> \
+    <div id="mainHome" class="hide zed"> \
+        <div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div> \
+        <div id="messages" class="messages"></div> \
+    </div> \
     <div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div> \
     <div id="mainComponents" class="hide zed"></div>';
 
-    document.getElementById("mainHome").innerHTML = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>';
+    document.body.innerHTML = this.body;
+
+    switch(page){
+        case pageEnum.Index:
+            this.IndexHome();
+            break;
+        case pageEnum.Status:
+            this.StatusHome();
+            break;
+        case pageEnum.Components:
+            this.ComponentsHome();
+            break;
+        default:
+            this.ErrorHome();
+            break;
+    }
+
+    // document.getElementById("mainHome").innerHTML = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>';
 }
 
 StatuspageHTML.prototype.setName = function(_name){
@@ -40,13 +60,13 @@ StatuspageHTML.prototype.getName = function(){
     return this._name;
 }
 
-StatuspageHTML.prototype.setDescription = function(_description){
+StatuspageHTML.prototype.setDescript = function(_description){
     console.log("setDescription(): " + _description);
     this._description = _description;
     return this;
 }
 
-StatuspageHTML.prototype.getDescription = function(){
+StatuspageHTML.prototype.getDescript = function(){
     console.log("getDescription(): " + this._description);
     return this._description;
 }
@@ -54,11 +74,9 @@ StatuspageHTML.prototype.getDescription = function(){
 StatuspageHTML.prototype.IndexHome = function(){
     console.log("IndexHome");
 
-    // this.setTitle(`${this._name} Status`);
-
     this.setUrl();
 
-    this.hidePage("mainHome");
+    this.hideAllPages();
     
     if(this.IndexHomeSingleRequest){
         this.setInfo(this.baseURL+'/api/v2/summary.json', functEnum.StatusMessages, this);
@@ -73,9 +91,7 @@ StatuspageHTML.prototype.IndexHome = function(){
 StatuspageHTML.prototype.ComponentsHome = function(){
     console.log("ComponentsHome");
 
-    // this.setTitle(`${this._name} Status | Components`);
-
-    this.hidePage("mainComponents");
+    this.hideAllPages();
 
     this.setInfo(this.baseURL+'/api/v2/components.json', functEnum.Components, this);
 
@@ -85,11 +101,9 @@ StatuspageHTML.prototype.ComponentsHome = function(){
 StatuspageHTML.prototype.StatusHome = function(){
     console.log("StatusHome");
 
-    // this.setTitle(`${this._name} Status | Status`);
-
-    this.hidePage("mainStatus");
+    this.hideAllPages();
     
-    this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.StatusFull, this);
+    this.setInfo(this.baseURL + '/api/v2/status.json', functEnum.StatusFull, this);
 
     this.showPage("mainStatus");
 }
@@ -100,6 +114,8 @@ StatuspageHTML.prototype.ErrorHome = function(){
     this.setTitle("Error Invalid Page");
 
     this.setTheme('error');
+
+    this.createMetaTag("robots", "noindex");
     
     document.body.innerHTML = this.errorMessage;
 }
@@ -116,26 +132,35 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                     routerClass.Status(result);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status");
                     routerClass.setName(result.page.name);
+                    routerClass.setDescriptions(arr.page.name, arr.status.description);
                     break;
                 case functEnum.StatusFull:
                     console.log("Status");
                     routerClass.Status(result, true);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status | Status");
+                    routerClass.setName(result.page.name);
+                    routerClass.setDescriptions(arr.page.name, arr.status.description);
                     break;
                 case functEnum.Messages:
                     console.log("Messages");
                     routerClass.Messages(result);
+                    routerClass.setName(result.page.name);
+                    routerClass.setDescriptions(arr.page.name);
                     break;
                 case functEnum.StatusMessages:
                     console.log("Status + Messages");
                     routerClass.Status(result);
                     routerClass.Messages(result);
-                    routerClass.setTitle("Unofficia " + result.page.name + " Status");
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status");
+                    routerClass.setName(result.page.name);
+                    routerClass.setDescriptions(arr.page.name, arr.status.description);
                     break;
                 case functEnum.Components:
                     console.log("Components");
                     routerClass.Components(result);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status | Components");
+                    routerClass.setName(result.page.name);
+                    routerClass.setDescriptions(arr.page.name);
                     break;
                 case functEnum.PSA:
                     console.log("PSA");
@@ -172,28 +197,63 @@ StatuspageHTML.prototype.hidePage = function(page){
     document.getElementById("loading").classList.remove("hide");
 }
 
+StatuspageHTML.prototype.hideAllPages = function(){
+   this.hidePage("mainHome");
+   this.hidePage("mainStatus");
+   this.hidePage("mainComponents");
+}
+
 StatuspageHTML.prototype.setMetaTag = function(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     metaTag.setAttribute("content", value);
 }
 
-StatuspageHTML.prototype.getMetaTag = function(id, value){
+StatuspageHTML.prototype.getMetaTag = function(id){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
-    return metaTag.getAttribute("content", value);
+    return metaTag.getAttribute("content");
 }
 
-StatuspageHTML.prototype.setUrl = function(){
-    var currUrl = window.location.href;
+StatuspageHTML.prototype.createMetaTag = function(id, content, attr = "name"){
+    var meta = document.createElement('meta');
+    meta.setAttribute(attr, id);
+    meta.setAttribute("content", content);
+
+    document.head.append(meta);
+
+    return this;
+}
+
+StatuspageHTML.prototype.updateRichTest = function(id, value) {
+    var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
+
+    var ldJson = JSON.parse(ld.innerHTML);
+
+    if(Array.isArray(ldJson)){
+        ldJson[0][id] = value;
+    }else{
+        ldJson[id] = value;
+    }    
+
+    ld.innerHTML = JSON.stringify(ldJson, null, 4);
+
+    return this;
+}
+
+StatuspageHTML.prototype.setUrl = function(url = null){
+    // var currUrl = window.location.href;
+    var currUrl = url == null ? window.location.href : url;
     
-    r.setMetaTag("og:url", currUrl);
+    this.setMetaTag("og:url", currUrl);
 
     let linkTags = Array.from(document.getElementsByTagName("link"));
     var linkTag = linkTags.find((mTag) => (mTag.getAttribute("rel") == "canonical"));
     
     linkTag.setAttribute("href", currUrl);
     
+    this.updateRichTest("url", currUrl);
+
     return this;
 }
 
@@ -204,16 +264,24 @@ StatuspageHTML.prototype.setTitle = function(title){
     this.setMetaTag("og:title", title);
     this.setMetaTag("application-name", title);
     this.setMetaTag("apple-mobile-web-app-title", title);
+
+    this.updateRichTest("name", title);
+
+    return this;
 }
 
-StatuspageHTML.prototype.setDescriptions = function(descript = null){
-    if(descript == null){
-        descript = this._description;
-    }
+StatuspageHTML.prototype.setDescriptions = function(sitename, descript = null){
+    var description = "An unofficial website to monitor " + sitename  + " status updates. Currently being tested." + (descript != null ? " | " + descript : "");
 
-    this.setMetaTag("description", descript);
-    this.setMetaTag("og:description", descript);
-    this.setMetaTag("twitter:description", descript);
+    this.setMetaTag("description", description);
+    this.setMetaTag("og:description", description);
+    this.setMetaTag("twitter:description", description);
+
+    this.updateRichTest("description", description);
+
+    this.setDescript(description);
+
+    return this;
 }
 
 StatuspageHTML.prototype.setTheme = function(status){
@@ -228,8 +296,6 @@ StatuspageHTML.prototype.loadingMessages = function(){
 StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
     this.setTheme('unavailable');
     var id = fullStatus ? "mainStatus" : "status";
-
-    console.log(id, fullStatus)
     
     document.getElementById(id).classList.remove("unavailable");
     document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[status].toUpperCase()+'</span>';
@@ -262,7 +328,7 @@ StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
 StatuspageHTML.prototype.Status = function(arr, fullStatus=false){
     this.setStatus(arr.status.indicator, fullStatus);
 
-    this.setDescriptions(this.getMetaTag("description") + " | " + arr.status.description);
+    // this.setDescriptions(arr.page.name, arr.status.description);
 }
 
 StatuspageHTML.prototype.createMessage = function(name, impact, status, body, created_at, shortlink, isOldestStatus){
@@ -362,15 +428,11 @@ StatuspageHTML.prototype.Components = function(comp) {
 
     var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
 
-    for (const group of groups) {
-        out += this.groupedComponents(comp["components"], group["id"]);
-    }
+    // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
 
     for (var i = 0; i < comp["components"].length; i++) {
         if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
-        if (comp["components"][i]["group_id"] != null || comp["components"][i]["group"]) { continue; }
-
-        // var groupName = comp["components"][i]["group_id"] != null ? comp["components"].filter((component) => component.id == comp["components"][i]["group_id"])[0]["name"] : null;
+        // if (comp["components"][i]["group_id"] != null || comp["components"][i]["group"]) { continue; }
         
         out += this.makeComponent(comp["components"][i]);
     }
