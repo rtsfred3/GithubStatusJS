@@ -2,29 +2,28 @@
 <html lang="en">
     <head>
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="GitHub Status">
+        <meta name="application-name" content="Statuspage">
         <meta name="theme-color" content="#53C68C">
-        <meta name="description" content="A website to monitor GitHub status updates. Currently being tested.">
-        <meta name="keywords" content="GitHubStatus, GitHub Status, GitHub, Status">
+        <meta name="description" content="A website to monitor a Statuspage status updates. Currently being tested.">
+        <meta name="keywords" content="Statuspage, Status Page, Status">
         
         <meta property="og:site_name" content="GitHub Status">
-        <meta property="og:title" content="GitHub Status">
-        <meta property="og:description" content="A website to monitor GitHub status updates. Currently being tested.">
+        <meta property="og:title" content="Statuspage">
+        <meta property="og:description" content="A website to monitor a Statuspage status updates. Currently being tested.">
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://githubstat.us/StatuspageHTML/">
         <meta property="og:image" content="https://githubstat.us/img/status-min.png">
         <meta property="og:image:type" content="image/jpeg" />
         <meta property="og:image:width" content="300" />
         <meta property="og:image:height" content="300" />
-        <meta property="og:image:alt" content="An image with text that reads 'GitHub Status' with background changing according to GitHub's current status.">
         
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="GitHub Status">
-        <meta name="twitter:description" content="A website to monitor GitHub status updates. Currently being tested.">
+        <meta name="twitter:title" content="Statuspage">
+        <meta name="twitter:description" content="A website to monitor a Statuspage status updates. Currently being tested.">
         <meta name="twitter:image" content="https://githubstat.us/img/status-min.png">
         
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="GitHub Status">
+        <meta name="apple-mobile-web-app-title" content="Statuspage">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
@@ -36,15 +35,15 @@
             [{
                 "@context": "http://schema.org/",
                 "@type": "WebApplication",
-                "name": "Unofficial GitHub Status",
-                "alternateName": "Unofficial GH Status",
-                "description": "A website to monitor GitHub status updates. Currently being tested.",
+                "name": "Unofficial Statuspage",
+                "alternateName": "Statuspage",
+                "description": "A website to monitor a Statuspage status updates. Currently being tested.",
                 "applicationCategory": "DeveloperApplication",
                 "operatingSystem": "Android, iOS, MacOS, Windows",
                 "softwareRequirements": "Modern Web Browser",
                 "url": "https://githubstat.us/StatuspageHTML/",
                 "screenshot": "https://githubstat.us/img/screenshots/screenshot1.webp",
-                "image": "https://do.githubstat.us/img/status-twitter-min.png",
+                "image": "https://githubstat.us/img/status-min.png",
                 "thumbnailUrl": "https://do.githubstat.us/img/status-twitter-min.png",
                 "author": [{
                     "@type": "Person",
@@ -86,29 +85,21 @@
             .messages{margin:1.5em 0;padding:0}@media only screen and (min-width:2100px) and (min-height:1100px){.messages{margin:3em 0}}.date{font-size:9pt!important}.status-box{height:45px;font-size:14pt;color:#f8f8f8;display:table!important}.text-margin{font-size:11pt;margin:1em 2.5vw}.good-message{width:120px;background-color:#396}.none-message{width:200px;background-color:#000}.minor-message{width:200px;background-color:#f1c40f}.major-message{width:280px;background-color:#f90}.critical-message{width:360px;background-color:#900}.error-message{width:120px;background-color:#646464}@media only screen and (max-width:850px){.good-message{width:20vw}.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}@media only screen and (max-width:320px) and (max-height:320px){.messages{display:none;height:0}}@media (min-width:2048px) and (min-height:1080px){.status-box,.text-margin{font-size:2.5em}.good-message{width:20vw}.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.status-box{height:2em}.date{font-size:.75em!important}}@media (min-width:2100px) and (min-height:1100px){.status-box{height:1.75em;font-size:3.5em}.text-margin{font-size:3em}}@media (min-width:3000px) and (min-height:2000px){.status-box{height:1.75em;font-size:5em}.text-margin{font-size:4em}}.message-status{width:100%;padding-right:.5em;vertical-align:middle;display:table-cell!important}.message-error{padding:3vh 7.5vw 0!important;color:#646464}
         </style>
 
-        <script>
-            var metaColors={},indicatorVals={},indicatorMessages={},functEnum={};Object.defineProperties(metaColors,{none:{value:"#339966",enumerable:!0},minor:{value:"#DBAB09",enumerable:!0},major:{value:"#E25D10",enumerable:!0},critical:{value:"#DC3545",enumerable:!0},unavailable:{value:"#4F93BD",enumerable:!0},error:{value:"#646464",enumerable:!0},maintenance:{value:"#0366d6",enumerable:!0},under_maintenance:{enumerable:!0,get:function(){return this.maintenance}},loading:{enumerable:!0,get:function(){return this.unavailable}}}),Object.defineProperties(indicatorVals,{good:{value:"good",enumerable:!0},minor:{value:"minor",enumerable:!0},major:{value:"major",enumerable:!0},critical:{value:"critical",enumerable:!0},error:{value:"error",enumerable:!0},maintenance:{value:"maintenance",enumerable:!0},unavailable:{value:"unavailable",enumerable:!0},resolved:{enumerable:!0,get:function(){return this.good}},none:{enumerable:!0,get:function(){return this.good}},operational:{enumerable:!0,get:function(){return this.good}},degraded_performance:{enumerable:!0,get:function(){return this.minor}},partial_outage:{enumerable:!0,get:function(){return this.major}},major_outage:{enumerable:!0,get:function(){return this.critical}},under_maintenance:{enumerable:!0,get:function(){return this.maintenance}},loading:{enumerable:!0,get:function(){return this.unavailable}}}),Object.defineProperties(indicatorMessages,{resolved:{value:"good",enumerable:!0},investigating:{value:"minor",enumerable:!0},critical:{value:"critical",enumerable:!0},maintenance:{value:"maintenance",enumerable:!0}}),Object.defineProperties(functEnum,{Status:{value:0,enumerable:!0},StatusFull:{value:1,enumerable:!0},Messages:{value:2,enumerable:!0},StatusMessages:{value:3,enumerable:!0},Components:{value:4,enumerable:!0},PSA:{value:5,enumerable:!0}});
-
-            // function StatuspageHTML(t,e=null,s=null,a=!0,n=!1){this.baseURL=t,this._name=e,this._description=s,"/"==this.baseURL.slice(-1)&&(this.baseURL=this.baseURL.substring(0,this.baseURL.length-1)),this.IndexHomeSingleRequest=a,this.errorMessage='<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>',n&&this.setInfo("/psa.json",functEnum.PSA,this),document.body.innerHTML='    <div id="loading">         <div class="full-status-height status-width bold status-color unavailable font-36">             <span class="center-status">LOADING</span>         </div>     </div>         <div id="psa" class="psa hide bold status-color"></div>     <div id="mainHome" class="hide zed"></div>     <div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div>     <div id="mainComponents" class="hide zed"></div>',document.getElementById("mainHome").innerHTML='<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>'}StatuspageHTML.prototype.setName=function(t){return console.log("setName(): "+t),this._name=t,this},StatuspageHTML.prototype.getName=function(){return console.log("getName(): "+_name),this._name},StatuspageHTML.prototype.setDescription=function(t){return console.log("setDescription(): "+t),this._description=t,this},StatuspageHTML.prototype.getDescription=function(){return console.log("getDescription(): "+_description),this._description},StatuspageHTML.prototype.IndexHome=function(){console.log("IndexHome"),this.hidePage("mainHome"),this.IndexHomeSingleRequest?this.setInfo(this.baseURL+"/api/v2/summary.json",functEnum.StatusMessages,this):(this.setInfo(this.baseURL+"/api/v2/status.json",functEnum.Status,this),this.setInfo(this.baseURL+"/api/v2/incidents.json",functEnum.Messages,this)),this.showPage("mainHome")},StatuspageHTML.prototype.ComponentsHome=function(){console.log("ComponentsHome"),this.hidePage("mainComponents"),this.setInfo(this.baseURL+"/api/v2/components.json",functEnum.Components,this),this.showPage("mainComponents")},StatuspageHTML.prototype.StatusHome=function(){console.log("StatusHome"),this.hidePage("mainStatus"),this.setInfo(this.baseURL+"/api/v2/status.json",functEnum.StatusFull,this),this.showPage("mainStatus")},StatuspageHTML.prototype.ErrorHome=function(){console.log("ErrorHome"),this.setTitle("Error Invalid Page"),this.setTheme("error"),document.body.innerHTML=this.errorMessage},StatuspageHTML.prototype.setInfo=function(t,e,s){var a=new XMLHttpRequest;a.onreadystatechange=function(){if(4==this.readyState&&200==this.status){var t=JSON.parse(this.responseText);switch(e){case functEnum.Status:console.log("Status"),s.Status(t),s.setTitle("Unofficial "+t.page.name+" Status"),s.setName(t.page.name);break;case functEnum.StatusFull:console.log("Status"),s.Status(t,!0),s.setTitle("Unofficial "+t.page.name+" Status | Status");break;case functEnum.Messages:console.log("Messages"),s.Messages(t);break;case functEnum.StatusMessages:console.log("Status + Messages"),s.Status(t),s.Messages(t),s.setTitle("Unofficia "+t.page.name+" Status");break;case functEnum.Components:console.log("Components"),s.Components(t),s.setTitle("Unofficial "+t.page.name+" Status | Components");break;case functEnum.PSA:console.log("PSA"),s.setPSA(t);break;default:s.ErrorHome()}}else 4==this.readyState&&200!=this.status&&0<this.status&&console.log(this.readyState,this.status)},a.open("GET",t,!0),a.send()},StatuspageHTML.prototype.setPSA=function(t){t.showPSA&&(document.getElementById("psa").innerHTML='<div class="center-status">'+t.PSA+"</div>",document.getElementById("psa").classList.remove("hide"))},StatuspageHTML.prototype.showPage=function(t){document.getElementById(t).classList.remove("hide"),document.getElementById("loading").classList.add("hide")},StatuspageHTML.prototype.hidePage=function(t){document.getElementById(t).classList.add("hide"),document.getElementById("loading").classList.remove("hide")},StatuspageHTML.prototype.setMetaTag=function(e,t){let s=Array.from(document.getElementsByTagName("meta"));s.find(t=>(t.hasAttribute("property")?t.getAttribute("property"):t.getAttribute("name"))==e).setAttribute("content",t)},StatuspageHTML.prototype.setTitle=function(t){document.getElementsByTagName("title")[0].innerHTML=t,this.setMetaTag("twitter:title",t),this.setMetaTag("og:title",t),this.setMetaTag("application-name",t),this.setMetaTag("apple-mobile-web-app-title",t)},StatuspageHTML.prototype.setDescriptions=function(t=null){null==t&&(t=this._description),this.setMetaTag("description",t),this.setMetaTag("og:description",t),this.setMetaTag("twitter:description",t)},StatuspageHTML.prototype.setTheme=function(t){this.setMetaTag("theme-color",metaColors[t]),this.setMetaTag("apple-mobile-web-app-status-bar-style",metaColors[t])},StatuspageHTML.prototype.loadingMessages=function(){document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">Loading</div></div>'},StatuspageHTML.prototype.setStatus=function(t,e=!1){this.setTheme("unavailable");var s=e?"mainStatus":"status";console.log(s,e),document.getElementById(s).classList.remove("unavailable"),document.getElementById(s).innerHTML='<span class="center-status">'+indicatorVals[t].toUpperCase()+"</span>",document.getElementById(s).classList.add("status-color"),document.getElementById(s).classList.add(t.toLowerCase()),"unavailable"==t.toLowerCase()?document.getElementById(s).classList.add("unavailable-font"):"unavailable"!=t.toLowerCase()&&document.getElementById(s).classList.contains("unavailable-font")&&document.getElementById(s).classList.remove("unavailable-font"),e&&(document.getElementById("mainHome").innerHTML="",document.getElementById(s).classList.remove("status-shadow"),document.getElementById(s).classList.remove("status-height"),document.getElementById("psa").classList.contains("hide")?document.getElementById(s).classList.add("full-status-height"):document.getElementById(s).classList.add("psa-full-status-height")),this.setTheme(t)},StatuspageHTML.prototype.Status=function(t,e=!1){this.setStatus(t.status.indicator,e)},StatuspageHTML.prototype.createMessage=function(t,e,s,a,n,o,u){var d={year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"numeric"},l="",e="resolved"==s?"good":e;null==e&&(e=indicatorMessages[s]),l+='<div class="status-box '+e+'-message"><span class="message-status"><div class="right">'+e+"</div></span></div>";e=new Date(n).toLocaleDateString("en-US",d);return"do.githubstat.us"==location.hostname&&(d={month:"short",day:"2-digit",hour:"numeric",minute:"numeric"},n=new Date(mess.incidents[i].incident_updates[j].created_at),n=Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),n.getUTCHours()+n.getTimezoneOffset()/60,n.getUTCMinutes(),n.getUTCSeconds()),e=new Date(n).toLocaleDateString("en-US",d)+" UTC"),"<span>"+(l+='<div class="text-margin">'+(a=a.replace(/http(s)?:\/\/[^ ]+/g,(t,e,s,a,n)=>'<a href="'+t+'">here</a>.'))+"<br />"+(e='<span class="date empty">'+e+"</span>")+"</div>")+"</span>"},StatuspageHTML.prototype.Messages=function(t){var e=new Date;e.setHours(0,0,0);var s=e.setDate((new Date).getDate()-7),a=t.incidents.filter(function(t){return new Date(t.created_at)>s});if(0==a.length)document.getElementById("messages").innerHTML='<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';else{for(var n="",o=0;o<a.length;o++)if(0<a[o].incident_updates.length)for(var i=0;i<a[o].incident_updates.length;i++)n+=this.createMessage(a[o].name,a[o].impact,a[o].incident_updates[i].status,t.incidents[o].incident_updates[i].body,t.incidents[o].incident_updates[i].created_at,t.incidents[o].shortlink,i==a[o].incident_updates.length-1);document.getElementById("messages").innerHTML=n}},StatuspageHTML.prototype.makeComponent=function(t){return'<div id="mainStatus" class="component-height status-width bold status-color '+indicatorVals[t.status]+'"><span class="center-status">'+t.name+"</span></div>"},StatuspageHTML.prototype.Components=function(t){for(var e="",s=0;s<t.components.length;s++)"Visit"!=t.components[s].name.substring(0,5)&&(e+=this.makeComponent(t.components[s]));document.getElementById("mainComponents").innerHTML=e};
-        </script>
-
+        <script src="../js/dicts.js"></script>
         <script src="../js/StatuspageHTML.js"></script>
 
         <title>Unofficial GitHub Status</title>
     </head>
     <body id="body">
         <script>
-            var r = new StatuspageHTML("https://www.cloudflarestatus.com/", null, null, false);
-            // var r = new StatuspageHTML("https://www.redditstatus.com/", null, null, false);
-            // var r = new StatuspageHTML("https://apiv3.githubstat.us/", null, null, false);
+            // var r = new StatuspageHTML("https://www.cloudflarestatus.com/");
+            // var r = new StatuspageHTML("https://www.redditstatus.com/");
+            // var r = new StatuspageHTML("https://www.githubstatus.com/");
+            var r = new StatuspageHTML("https://apiv3.githubstat.us/");
             
-            // r.IndexHome();
-            r.ComponentsHome();
-
-            r.setDescription("A website to monitor GitHub status updates.");
-            r.setDescriptions();
-            r.getName();
-            r.getDescription();
+            r.IndexHome();
+            // r.ComponentsHome();
+            // r.StatusHome();
         </script>
     </body>
 </html>

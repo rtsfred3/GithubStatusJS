@@ -3,6 +3,7 @@ var indicatorVals = {};
 var indicatorMessages = {};
 
 var functEnum = {};
+var pageEnum = {};
 
 Object.defineProperties(metaColors, {
     'none': { value: '#339966', enumerable: true },
@@ -108,4 +109,11 @@ Object.defineProperties(functEnum, {
     'StatusMessages': { value: 3, enumerable: true },
     'Components': { value: 4, enumerable: true },
     'PSA': { value: 5, enumerable: true },
+});
+
+Object.defineProperties(pageEnum, {
+    'Index': { value: 0, enumerable: true },
+    'Status': { value: 1, enumerable: true },
+    'Components': { value: 2, enumerable: true },
+    'Error': { value: 3, enumerable: true },
 });

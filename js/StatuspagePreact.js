@@ -1,4 +1,6 @@
-function StatuspageHTML(baseURL, indexHomeSingleRequest = true, fetchPsa = false, _name = null, _description = null,){
+import { h, render } from 'https://esm.sh/preact@10.19.2';
+
+function StatuspageHTML(baseURL, _name = null, _description = null, indexHomeSingleRequest = true, fetchPsa = false){
     this.baseURL = baseURL;
     this._name = _name;
     this._description = _description;
@@ -11,30 +13,25 @@ function StatuspageHTML(baseURL, indexHomeSingleRequest = true, fetchPsa = false
     this.errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
 
     if(fetchPsa){
-        this.fetchPsaAsync().then();
+        this.setInfo("/psa.json", functEnum.PSA, this);
     }
 
-    this.body = '\
-    <div id="loading"> \
-        <div class="full-status-height status-width bold status-color unavailable font-36"> \
-            <span class="center-status">LOADING</span> \
-        </div> \
-    </div> \
-    \
-    <div id="psa" class="psa hide bold status-color"></div> \
-    <div id="mainHome" class="hide zed"> \
-        <div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div> \
-        <div id="messages" class="messages"></div> \
-    </div> \
-    <div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div> \
-    <div id="mainComponents" class="hide zed"></div>';
+    this.body = '<div id="loading"><div class="full-status-height status-width bold status-color unavailable font-36"><span class="center-status">LOADING</span></div></div><div id="psa" class="psa hide bold status-color"></div><div id="mainHome" class="hide zed"><div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div></div><div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div><div id="mainComponents" class="hide zed"></div>';
 
-    document.body.innerHTML = this.body;
+    // document.getElementById("mainHome").innerHTML = '<div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div>';
+}
+
+StatuspageHTML.prototype.getBody = function(){
+    // const parser = new DOMParser();
+    // const htmlBody = parser.parseFromString(this.body, 'text/html');
+    // return htmlBody.body;
+
+    return this.body;
 }
 
 StatuspageHTML.prototype.setName = function(_name){
+    console.log("setName(): " + _name);
     this._name = _name;
-    console.log("setName(): " + this._name);
     return this;
 }
 
@@ -43,65 +40,32 @@ StatuspageHTML.prototype.getName = function(){
     return this._name;
 }
 
-StatuspageHTML.prototype.setDescript = function(sitename, descript = null){
-    this._description = "An unofficial website to monitor " + sitename  + " status updates. Currently being tested." + (descript != null ? " | " + descript : "");
-    console.log("setDescript(): " + this._description);
+StatuspageHTML.prototype.setDescription = function(_description){
+    console.log("setDescription(): " + _description);
+    this._description = _description;
     return this;
 }
 
-StatuspageHTML.prototype.getDescript = function(){
+StatuspageHTML.prototype.getDescription = function(){
     console.log("getDescription(): " + this._description);
     return this._description;
-}
-
-StatuspageHTML.prototype.fetchPsaAsync = async function(){
-    console.log("fetchPsaAsync");
-
-    const response = await fetch('/psa.json');
-    const result = await response.json();
-
-    this.setPSA(result);
-
-    this.Components(result);
 }
 
 StatuspageHTML.prototype.IndexHome = function(){
     console.log("IndexHome");
 
-    this.IndexHomeAsync().then();
-}
+    // this.setTitle(`${this._name} Status`);
 
-StatuspageHTML.prototype.IndexHomeAsync = async function(){
-    console.log("IndexHomeAsync");
     this.setUrl();
 
-    this.hideAllPages();
-
+    this.hidePage("mainHome");
+    
     if(this.IndexHomeSingleRequest){
-        const response = await fetch(this.baseURL + '/api/v2/summary.json');
-        const result = await response.json();
-    
-        this.Status(result);
-        this.Messages(result);
-
-        this.setName(result.page.name);
-        this.setDescript(result.page.name, result.status.description);
+        this.setInfo(this.baseURL+'/api/v2/summary.json', functEnum.StatusMessages, this);
     }else{
-        const statusResponse = await fetch(this.baseURL + '/api/v2/status.json');
-        const statusResult = await statusResponse.json();
-
-        const messagesResponse = await fetch(this.baseURL + '/api/v2/incidents.json');
-        const messagesResult = await messagesResponse.json();
-    
-        this.Status(statusResult);
-        this.Messages(messagesResult);
-
-        this.setName(statusResult.page.name);
-        this.setDescript(statusResult.page.name, statusResult.status.description);
+        this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.Status, this);
+        this.setInfo(this.baseURL+'/api/v2/incidents.json', functEnum.Messages, this);
     }
-
-    this.setDescriptions();
-    this.setTitle("Unofficial " + this.getName() + " Status");
 
     this.showPage("mainHome");
 }
@@ -109,21 +73,11 @@ StatuspageHTML.prototype.IndexHomeAsync = async function(){
 StatuspageHTML.prototype.ComponentsHome = function(){
     console.log("ComponentsHome");
 
-    this.ComponentsHomeAsync().then();
-}
+    // this.setTitle(`${this._name} Status | Components`);
 
-StatuspageHTML.prototype.ComponentsHomeAsync = async function(){
-    console.log("ComponentsHomeAsync");
+    this.hidePage("mainComponents");
 
-    this.hideAllPages();
-
-    const response = await fetch(this.baseURL + '/api/v2/components.json');
-    const result = await response.json();
-
-    this.Components(result);
-    this.setTitle("Unofficial " + result.page.name + " Status Components");
-    this.setName(result.page.name);
-    this.setDescriptions(result.page.name);
+    this.setInfo(this.baseURL+'/api/v2/components.json', functEnum.Components, this);
 
     this.showPage("mainComponents");
 }
@@ -131,21 +85,11 @@ StatuspageHTML.prototype.ComponentsHomeAsync = async function(){
 StatuspageHTML.prototype.StatusHome = function(){
     console.log("StatusHome");
 
-    this.StatusHomeAsync().then();
-}
+    // this.setTitle(`${this._name} Status | Status`);
 
-StatuspageHTML.prototype.StatusHomeAsync = async function(){
-    console.log("StatusHome");
-
-    this.hideAllPages();
-
-    const response = await fetch(this.baseURL + '/api/v2/status.json');
-    const result = await response.json();
-
-    this.Status(result, true);
-    this.setTitle("Unofficial Mini " + result.page.name + " Status");
-    this.setName(result.page.name);
-    this.setDescriptions(result.page.name, result.status.description);
+    this.hidePage("mainStatus");
+    
+    this.setInfo(this.baseURL+'/api/v2/status.json', functEnum.StatusFull, this);
 
     this.showPage("mainStatus");
 }
@@ -156,10 +100,58 @@ StatuspageHTML.prototype.ErrorHome = function(){
     this.setTitle("Error Invalid Page");
 
     this.setTheme('error');
-
-    this.createMetaTag("robots", "noindex");
     
     document.body.innerHTML = this.errorMessage;
+}
+
+StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+            var result = JSON.parse(this.responseText);
+
+            switch(funct){
+                case functEnum.Status:
+                    console.log("Status");
+                    routerClass.Status(result);
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status");
+                    routerClass.setName(result.page.name);
+                    break;
+                case functEnum.StatusFull:
+                    console.log("Status");
+                    routerClass.Status(result, true);
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status | Status");
+                    break;
+                case functEnum.Messages:
+                    console.log("Messages");
+                    routerClass.Messages(result);
+                    break;
+                case functEnum.StatusMessages:
+                    console.log("Status + Messages");
+                    routerClass.Status(result);
+                    routerClass.Messages(result);
+                    routerClass.setTitle("Unofficia " + result.page.name + " Status");
+                    break;
+                case functEnum.Components:
+                    console.log("Components");
+                    routerClass.Components(result);
+                    routerClass.setTitle("Unofficial " + result.page.name + " Status | Components");
+                    break;
+                case functEnum.PSA:
+                    console.log("PSA");
+                    routerClass.setPSA(result);
+                    break;
+                default:
+                    routerClass.ErrorHome();
+                    break;
+            }
+        }else if(this.readyState == 4 && this.status != 200 && this.status > 0){
+            console.log(this.readyState, this.status);
+            // this.ErrorHome();
+        }
+    };
+    xhttp.open("GET", url, true);
+    xhttp.send();
 }
 
 StatuspageHTML.prototype.setPSA = function(psaResult){
@@ -180,63 +172,28 @@ StatuspageHTML.prototype.hidePage = function(page){
     document.getElementById("loading").classList.remove("hide");
 }
 
-StatuspageHTML.prototype.hideAllPages = function(){
-    this.hidePage("mainHome");
-    this.hidePage("mainStatus");
-    this.hidePage("mainComponents");
-}
-
 StatuspageHTML.prototype.setMetaTag = function(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     metaTag.setAttribute("content", value);
 }
 
-StatuspageHTML.prototype.getMetaTag = function(id){
+StatuspageHTML.prototype.getMetaTag = function(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
-    return metaTag.getAttribute("content");
+    return metaTag.getAttribute("content", value);
 }
 
-StatuspageHTML.prototype.createMetaTag = function(id, content, attr = "name"){
-    var meta = document.createElement('meta');
-    meta.setAttribute(attr, id);
-    meta.setAttribute("content", content);
-
-    document.head.append(meta);
-
-    return this;
-}
-
-StatuspageHTML.prototype.updateRichTest = function(id, value) {
-    var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
-
-    var ldJson = JSON.parse(ld.innerHTML);
-
-    if(Array.isArray(ldJson)){
-        ldJson[0][id] = value;
-    }else{
-        ldJson[id] = value;
-    }    
-
-    ld.innerHTML = JSON.stringify(ldJson, null, 4);
-
-    return this;
-}
-
-StatuspageHTML.prototype.setUrl = function(url = null){
-    // var currUrl = window.location.href;
-    var currUrl = url == null ? window.location.href : url;
+StatuspageHTML.prototype.setUrl = function(){
+    var currUrl = window.location.href;
     
-    this.setMetaTag("og:url", currUrl);
+    r.setMetaTag("og:url", currUrl);
 
     let linkTags = Array.from(document.getElementsByTagName("link"));
     var linkTag = linkTags.find((mTag) => (mTag.getAttribute("rel") == "canonical"));
     
     linkTag.setAttribute("href", currUrl);
     
-    this.updateRichTest("url", currUrl);
-
     return this;
 }
 
@@ -247,24 +204,16 @@ StatuspageHTML.prototype.setTitle = function(title){
     this.setMetaTag("og:title", title);
     this.setMetaTag("application-name", title);
     this.setMetaTag("apple-mobile-web-app-title", title);
-
-    this.updateRichTest("name", title);
-
-    return this;
 }
 
-StatuspageHTML.prototype.setDescriptions = function(sitename = null, descript = null){
-    if(sitename != null){
-        this.setDescript(sitename, descript);
+StatuspageHTML.prototype.setDescriptions = function(descript = null){
+    if(descript == null){
+        descript = this._description;
     }
 
-    this.setMetaTag("description", this._description);
-    this.setMetaTag("og:description", this._description);
-    this.setMetaTag("twitter:description", this._description);
-
-    this.updateRichTest("description", this._description);
-
-    return this;
+    this.setMetaTag("description", descript);
+    this.setMetaTag("og:description", descript);
+    this.setMetaTag("twitter:description", descript);
 }
 
 StatuspageHTML.prototype.setTheme = function(status){
@@ -279,6 +228,8 @@ StatuspageHTML.prototype.loadingMessages = function(){
 StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
     this.setTheme('unavailable');
     var id = fullStatus ? "mainStatus" : "status";
+
+    console.log(id, fullStatus)
     
     document.getElementById(id).classList.remove("unavailable");
     document.getElementById(id).innerHTML = '<span class="center-status">'+indicatorVals[status].toUpperCase()+'</span>';
@@ -311,7 +262,7 @@ StatuspageHTML.prototype.setStatus = function(status, fullStatus=false){
 StatuspageHTML.prototype.Status = function(arr, fullStatus=false){
     this.setStatus(arr.status.indicator, fullStatus);
 
-    // this.setDescriptions(arr.page.name, arr.status.description);
+    this.setDescriptions(this.getMetaTag("description") + " | " + arr.status.description);
 }
 
 StatuspageHTML.prototype.createMessage = function(name, impact, status, body, created_at, shortlink, isOldestStatus){
@@ -360,7 +311,7 @@ StatuspageHTML.prototype.Messages = function(mess){
 
     if(incidents.length == 0){
         document.getElementById('messages').innerHTML = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
-        return;
+        return document.getElementById('messages').innerHTML;
     }else{
         var out = '';
         
@@ -379,10 +330,12 @@ StatuspageHTML.prototype.Messages = function(mess){
         }
         
         document.getElementById('messages').innerHTML = out;
+
+        return out;
     }
 }
 
-StatuspageHTML.prototype.makeComponent = function(curr, parentName = null, isGroup=false) {
+StatuspageHTML.prototype.makeComponent = function(curr, parentName = null, isGroup = false) {
     return '<div id="mainStatus" class="component-height status-width bold ' + (isGroup ? "black" : "status-color") + ' ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + (parentName != null ? parentName + ": " : "") + curr["name"] + '</span></div>';
     // return '<div id="mainStatus" class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span title="' + curr["description"] + '" class="center-status">' + curr["name"] + '</span></div>';
 }
@@ -411,7 +364,9 @@ StatuspageHTML.prototype.Components = function(comp) {
 
     var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
 
-    // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
+    // for (const group of groups) {
+    //     out += this.groupedComponents(comp["components"], group["id"]);
+    // }
 
     for (var i = 0; i < comp["components"].length; i++) {
         if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
@@ -421,4 +376,8 @@ StatuspageHTML.prototype.Components = function(comp) {
     }
     
     document.getElementById("mainComponents").innerHTML = out;
+
+    return out;
 }
+
+export default StatuspageHTML;
