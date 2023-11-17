@@ -132,20 +132,20 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                     routerClass.Status(result);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status");
                     routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(arr.page.name, arr.status.description);
+                    routerClass.setDescriptions(result.page.name, result.status.description);
                     break;
                 case functEnum.StatusFull:
                     console.log("Status");
                     routerClass.Status(result, true);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status | Status");
                     routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(arr.page.name, arr.status.description);
+                    routerClass.setDescriptions(result.page.name, result.status.description);
                     break;
                 case functEnum.Messages:
                     console.log("Messages");
                     routerClass.Messages(result);
                     routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(arr.page.name);
+                    routerClass.setDescriptions(result.page.name);
                     break;
                 case functEnum.StatusMessages:
                     console.log("Status + Messages");
@@ -153,14 +153,14 @@ StatuspageHTML.prototype.setInfo = function(url, funct, routerClass){
                     routerClass.Messages(result);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status");
                     routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(arr.page.name, arr.status.description);
+                    routerClass.setDescriptions(result.page.name, result.status.description);
                     break;
                 case functEnum.Components:
                     console.log("Components");
                     routerClass.Components(result);
                     routerClass.setTitle("Unofficial " + result.page.name + " Status | Components");
                     routerClass.setName(result.page.name);
-                    routerClass.setDescriptions(arr.page.name);
+                    routerClass.setDescriptions(result.page.name);
                     break;
                 case functEnum.PSA:
                     console.log("PSA");
