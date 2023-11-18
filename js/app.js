@@ -1,5 +1,5 @@
-var baseURL = "https://www.githubstatus.com";
-// var baseURL = "https://apiv3.githubstat.us";
+// var baseURL = "https://www.githubstatus.com";
+var baseURL = "https://apiv3.githubstat.us";
 // var baseURL = "https://www.redditstatus.com";
 // var baseURL = "https://www.cloudflarestatus.com";
 
@@ -215,9 +215,9 @@ function IndexHome() {
         document.getElementById("mainHome").classList.add("hide");
     }
     
-    // setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
-    setInfo(baseURL+'/api/v2/status.json', Status);
-    setInfo(baseURL+'/api/v2/incidents.json', Messages);
+    setInfo(baseURL+'/api/v2/summary.json', [Status, Messages]);
+    // setInfo(baseURL+'/api/v2/status.json', Status);
+    // setInfo(baseURL+'/api/v2/incidents.json', Messages);
 
     document.getElementById("mainHome").classList.remove("hide");
     document.getElementById("loading").classList.add("hide");
