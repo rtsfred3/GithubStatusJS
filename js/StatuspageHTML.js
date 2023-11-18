@@ -202,6 +202,7 @@ StatuspageHTML.prototype.updateRichTest = function(id, value) {
 
     if(Array.isArray(ldJson)){
         ldJson[0][id] = value;
+        // ldJson.find((t) => t["@type"] == "WebApplication")[id] = value;
     }else{
         ldJson[id] = value;
     }    
