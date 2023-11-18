@@ -1,7 +1,7 @@
 {
     "id": "us.githubstat",
     "name": "(Unofficial) GitHub Status",
-    "short_name": "GH Status",
+    "short_name": "GitHub Status",
     "description": "An unofficial website to monitor GitHub status updates.",
     "start_url": "https://githubstat.us/",
     "display_override": ["standalone"],
@@ -145,64 +145,59 @@
     
     "screenshots" : [
         {
-            "src": "https://do.githubstat.us/img/status-facebook.png",
-            "sizes": "1200x630",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot1.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "https://githubstat.us/img/screenshots/original/screenshot2.png",
+            "sizes": "1280x720",
             "type": "image/png"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot1.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot3.png",
             "sizes": "720x1280",
-            "type": "image/webp",
+            "type": "image/png",
             "form_factor": "narrow"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot2.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot4.png",
             "sizes": "1280x720",
-            "type": "image/webp"
+            "type": "image/png"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot3.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot5.png",
             "sizes": "720x1280",
-            "type": "image/webp",
+            "type": "image/png",
             "form_factor": "narrow"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot4.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot6.png",
             "sizes": "1280x720",
-            "type": "image/webp"
+            "type": "image/png"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot5.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot7.png",
             "sizes": "720x1280",
-            "type": "image/webp",
+            "type": "image/png",
             "form_factor": "narrow"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot6.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot8.webp",
             "sizes": "1280x720",
-            "type": "image/webp"
+            "type": "image/png"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot7.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot9.png",
             "sizes": "720x1280",
-            "type": "image/webp",
+            "type": "image/png",
             "form_factor": "narrow"
         },
         {
-            "src": "https://githubstat.us/img/screenshots/screenshot8.webp",
+            "src": "https://githubstat.us/img/screenshots/original/screenshot10.png",
             "sizes": "1280x720",
-            "type": "image/webp"
-        },
-        {
-            "src": "https://githubstat.us/img/screenshots/screenshot9.webp",
-            "sizes": "720x1280",
-            "type": "image/webp",
-            "form_factor": "narrow"
-        },
-        {
-            "src": "https://githubstat.us/img/screenshots/screenshot10.webp",
-            "sizes": "1280x720",
-            "type": "image/webp"
+            "type": "image/png"
         }
     ]
 }
