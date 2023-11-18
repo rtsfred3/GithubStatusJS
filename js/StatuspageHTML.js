@@ -14,20 +14,7 @@ function StatuspageHTML(baseURL, indexHomeSingleRequest = true, fetchPsa = false
         this.fetchPsaAsync().then();
     }
 
-    this.body = '\
-    <div id="loading"> \
-        <div class="full-status-height status-width bold status-color unavailable font-36"> \
-            <span class="center-status">LOADING</span> \
-        </div> \
-    </div> \
-    \
-    <div id="psa" class="psa hide bold status-color"></div> \
-    <div id="mainHome" class="hide zed"> \
-        <div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div> \
-        <div id="messages" class="messages"></div> \
-    </div> \
-    <div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div> \
-    <div id="mainComponents" class="hide zed"></div>';
+    this.body = '<div id="loading"><div class="full-status-height status-width bold status-color unavailable font-36"><span class="center-status">LOADING</span></div></div><div id="psa" class="psa hide bold status-color"></div><div id="mainHome" class="hide zed"><div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div><div id="messages" class="messages"></div></div><div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div><div id="mainComponents" class="hide zed"></div>';
 
     document.body.innerHTML = this.body;
 }
@@ -215,6 +202,7 @@ StatuspageHTML.prototype.updateRichTest = function(id, value) {
 
     if(Array.isArray(ldJson)){
         ldJson[0][id] = value;
+        // ldJson.find((t) => t["@type"] == "WebApplication")[id] = value;
     }else{
         ldJson[id] = value;
     }    

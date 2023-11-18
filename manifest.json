@@ -91,12 +91,12 @@
             "url": "https://githubstat.us/",
             "icons": [
                 {
-                    "src": "https://githubstat.us/img/lite/96px.png",
+                    "src": "https://githubstat.us/img/maskable/96px.png",
                     "sizes": "96x96",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://githubstat.us/img/lite/192px.png",
+                    "src": "https://githubstat.us/img/maskable/192px.png",
                     "sizes": "192x192",
                     "type": "image/png",
                     "purpose": "any"
@@ -110,12 +110,12 @@
             "url": "https://githubstat.us/components/",
             "icons": [
                 {
-                    "src": "https://githubstat.us/img/lite/96px.png",
+                    "src": "https://githubstat.us/img/maskable/96px.png",
                     "sizes": "96x96",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://githubstat.us/img/lite/192px.png",
+                    "src": "https://githubstat.us/img/maskable/192px.png",
                     "sizes": "192x192",
                     "type": "image/png",
                     "purpose": "any"
@@ -129,12 +129,12 @@
             "url": "https://githubstat.us/status/",
             "icons": [
                 {
-                    "src": "https://githubstat.us/img/lite/96px.png",
+                    "src": "https://githubstat.us/img/maskable/96px.png",
                     "sizes": "96x96",
                     "type": "image/png"
                 },
                 {
-                    "src": "https://githubstat.us/img/lite/192px.png",
+                    "src": "https://githubstat.us/img/maskable/192px.png",
                     "sizes": "192x192",
                     "type": "image/png",
                     "purpose": "any"
