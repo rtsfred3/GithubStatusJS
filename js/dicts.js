@@ -37,7 +37,8 @@ Object.defineProperties(indicatorVals, {
     'error': { value: 'error', enumerable: true },
     'maintenance': { value: 'maintenance', enumerable: true },
     'unavailable': { value: 'unavailable', enumerable: true },
-    
+    'loading': { value: 'loading', enumerable: true },
+
     'resolved': {
         enumerable: true,
         get: function(){
@@ -87,12 +88,12 @@ Object.defineProperties(indicatorVals, {
         }
     },
 
-    'loading': {
-        enumerable: true,
-        get: function(){
-            return this.unavailable;
-        }
-    },
+    // 'loading': {
+    //     enumerable: true,
+    //     get: function(){
+    //         return this.unavailable;
+    //     }
+    // },
 });
 
 Object.defineProperties(indicatorMessages, {
