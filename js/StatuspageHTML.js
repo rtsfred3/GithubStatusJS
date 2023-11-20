@@ -403,7 +403,6 @@ function Router() {
             } else if (location.pathname == '/status/') {
                 r.StatusHome();
             } else {
-                console.log("Error");
                 r.ErrorHome();
             }
         } else {
