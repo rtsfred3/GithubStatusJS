@@ -87,13 +87,6 @@ Object.defineProperties(indicatorVals, {
             return this.maintenance;
         }
     },
-
-    // 'loading': {
-    //     enumerable: true,
-    //     get: function(){
-    //         return this.unavailable;
-    //     }
-    // },
 });
 
 Object.defineProperties(indicatorMessages, {

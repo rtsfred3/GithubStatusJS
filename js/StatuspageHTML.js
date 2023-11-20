@@ -12,8 +12,6 @@ function StatuspageHTML(baseURL, indexHomeSingleRequest = true, fetchPsa = false
     if(fetchPsa && document.getElementById("psa")){
         this.fetchPsaAsync().then();
     }
-    
-    // this.loading = '<div id="loading"><div class="full-status-height status-width bold status-color unavailable font-36"><span class="center-status">LOADING</span></div></div>';
 
     this.loading = this.Status(this.getStatusJson('loading'), true);
 
@@ -22,6 +20,7 @@ function StatuspageHTML(baseURL, indexHomeSingleRequest = true, fetchPsa = false
 
 StatuspageHTML.prototype.setName = function(_name){
     this._name = _name;
+
     return this;
 }
 
@@ -65,8 +64,7 @@ StatuspageHTML.prototype.IndexHomeAsync = async function(){
 
         this.render(statusHTML + messagesHTML);
 
-        this.setName(result.page.name);
-        this.setDescript(result.page.name, result.status.description);
+        this.setName(result.page.name).setDescript(result.page.name, result.status.description);
     }else{
         const statusResponse = await fetch(this.baseURL + '/api/v2/status.json');
         const statusResult = await statusResponse.json();
@@ -79,8 +77,7 @@ StatuspageHTML.prototype.IndexHomeAsync = async function(){
 
         this.render(statusHTML + messagesHTML);
 
-        this.setName(statusResult.page.name);
-        this.setDescript(statusResult.page.name, statusResult.status.description);
+        this.setName(statusResult.page.name).setDescript(statusResult.page.name, statusResult.status.description);
     }
 
     this.setDescriptions();
@@ -101,7 +98,6 @@ StatuspageHTML.prototype.ComponentsHomeAsync = async function(){
 
     var html = this.Components(result);
 
-    // document.getElementById("app").innerHTML = html;
     this.render(html);
 
     this.setTitle("Unofficial " + result.page.name + " Status Components");
@@ -131,8 +127,6 @@ StatuspageHTML.prototype.StatusHomeAsync = async function(){
 StatuspageHTML.prototype.ErrorHome = function(){
     console.log("ErrorHome");
 
-    // var statusJson = ;
-
     this.setTitle("Error - Invalid Route");
 
     this.createMetaTag("robots", "noindex");
@@ -158,18 +152,23 @@ StatuspageHTML.prototype.getStatusJson = function(indicator){
 
 StatuspageHTML.prototype.render = function(html){
     document.getElementById("app").innerHTML = html;
+
+    return this;
 }
 
 StatuspageHTML.prototype.setMetaTag = function(id, value){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    
     metaTag.setAttribute("content", value);
+
     return this;
 }
 
 StatuspageHTML.prototype.getMetaTag = function(id){
     let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
     var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    
     return metaTag.getAttribute("content");
 }
 
@@ -252,6 +251,8 @@ StatuspageHTML.prototype.setDescriptions = function(sitename = null, descript = 
 StatuspageHTML.prototype.setTheme = function(status){
     this.setMetaTag("theme-color", metaColors[status]);
     this.setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+
+    return this;
 }
 
 StatuspageHTML.prototype.getStatus = function(status, fullStatus=false){
