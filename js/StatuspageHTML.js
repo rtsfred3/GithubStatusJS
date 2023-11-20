@@ -28,7 +28,7 @@ class StatuspageHTML {
     getName() {
         return this._name;
     }
-    
+
     setDescript(sitename, descript = null) {
         this._description = "An unofficial website to monitor " + sitename + " status updates. Currently in development." + (descript != null ? " | " + descript : "");
         
@@ -387,22 +387,20 @@ function Router() {
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
-        var cloudflareProdRegex = /githubstat.us/g;
+        var cloudflareProdRegex = /(githubstat.us|ghstatuspagehtml.b-cdn.net|ghstat.us)/g;
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
         
         // console.log('onCloudflareDev', onCloudflareDev);
         // console.log('onCloudflareProd', onCloudflareProd);
-        
-        var pathPrefix = '/StatuspageHTML';
 
         if (onCloudflareProd || onCloudflareDev) {
-            if (location.pathname == pathPrefix + '/') {
+            if (location.pathname == '/') {
                 r.IndexHome();
-            } else if (location.pathname == pathPrefix + '/components/') {
+            } else if (location.pathname == '/components/') {
                 r.ComponentsHome();
-            } else if (location.pathname == pathPrefix + '/status/') {
+            } else if (location.pathname == '/status/') {
                 r.StatusHome();
             } else {
                 console.log("Error");
