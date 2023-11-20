@@ -193,6 +193,10 @@ StatuspageHTML.prototype.createMetaTag = function(id, content, attr = "name"){
 StatuspageHTML.prototype.updateRichTest = function(id, value) {
     var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
 
+    if(ld == null){
+        return this;
+    }
+
     var ldJson = JSON.parse(ld.innerHTML);
 
     if(Array.isArray(ldJson)){
