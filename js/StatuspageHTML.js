@@ -389,12 +389,14 @@ function Router() {
         // console.log('onCloudflareDev', onCloudflareDev);
         // console.log('onCloudflareProd', onCloudflareProd);
         
+        var pathPrefix = '/StatuspageHTML';
+
         if (onCloudflareProd || onCloudflareDev) {
-            if (location.pathname == '/') {
+            if (location.pathname.replace(pathPrefix, "") == '/') {
                 r.IndexHome();
-            } else if (location.pathname == '/components/') {
+            } else if (location.pathname.replace(pathPrefix, "") == '/components/') {
                 r.ComponentsHome();
-            } else if (location.pathname == '/status/') {
+            } else if (location.pathname.replace(pathPrefix, "") == '/status/') {
                 r.StatusHome();
             } else {
                 console.log("Error");
