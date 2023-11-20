@@ -393,11 +393,11 @@ function Router() {
         var pathPrefix = '/StatuspageHTML';
 
         if (onCloudflareProd || onCloudflareDev) {
-            if (location.pathname.replace(pathPrefix, "") == '/') {
+            if (location.pathname == pathPrefix + '/') {
                 r.IndexHome();
-            } else if (location.pathname.replace(pathPrefix, "") == '/components/') {
+            } else if (location.pathname == pathPrefix + '/components/') {
                 r.ComponentsHome();
-            } else if (location.pathname.replace(pathPrefix, "") == '/status/') {
+            } else if (location.pathname == pathPrefix + '/status/') {
                 r.StatusHome();
             } else {
                 console.log("Error");
