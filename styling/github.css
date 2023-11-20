@@ -227,7 +227,7 @@ svg {
     }
 }
 
-.unavailable {
+.unavailable, .loading {
     background-color: #4F93BD;
 }
 
