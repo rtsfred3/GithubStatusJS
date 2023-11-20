@@ -123,10 +123,29 @@
             ]
         },
         {
-            "name": "GitHub Status Page",
-            "short_name": "GH Status",
+            "name": "GitHub Mini Status",
+            "short_name": "GH Mini Status",
             "description": "Displays the overall status of the GitHub",
             "url": "https://githubstat.us/status/",
+            "icons": [
+                {
+                    "src": "https://githubstat.us/img/maskable/96px.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://githubstat.us/img/maskable/192px.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any"
+                }
+            ]
+        },
+        {
+            "name": "GitHub Statuspage",
+            "short_name": "GH Statuspage",
+            "description": "Displays GitHub's Statuspage",
+            "url": "https://githubstat.us/StatuspageHTML/",
             "icons": [
                 {
                     "src": "https://githubstat.us/img/maskable/96px.png",
