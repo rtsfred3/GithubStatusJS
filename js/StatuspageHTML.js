@@ -395,21 +395,25 @@ function Router() {
         // console.log('onCloudflareDev', onCloudflareDev);
         // console.log('onCloudflareProd', onCloudflareProd);
 
-        if (onCloudflareProd || onCloudflareDev) {
-            if (location.pathname == '/') {
-                r.IndexHome();
-            } else if (location.pathname == '/components/') {
-                r.ComponentsHome();
-            } else if (location.pathname == '/status/') {
-                r.StatusHome();
-            } else {
-                r.ErrorHome();
-            }
+        if (!navigator.onLine) {
+            r.ErrorHome();
         } else {
-            r.IndexHome();
-            // r.ComponentsHome();
-            // r.StatusHome();
-            // r.ErrorHome();
+            if (onCloudflareProd || onCloudflareDev) {
+                if (location.pathname == '/') {
+                    r.IndexHome();
+                } else if (location.pathname == '/components/') {
+                    r.ComponentsHome();
+                } else if (location.pathname == '/status/') {
+                    r.StatusHome();
+                } else {
+                    r.ErrorHome();
+                }
+            } else {
+                r.IndexHome();
+                // r.ComponentsHome();
+                // r.StatusHome();
+                // r.ErrorHome();
+            }
         }
     } catch(error) {
         r.ErrorHome();
