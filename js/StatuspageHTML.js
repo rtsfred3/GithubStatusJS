@@ -30,7 +30,7 @@ class StatuspageHTML {
     }
 
     setDescript(sitename, descript = null) {
-        this._description = "An unofficial website to monitor " + sitename + " status updates. Currently in development." + (descript != null ? " | " + descript : "");
+        this._description = "An unofficial website to monitor " + sitename + " status updates." + (descript != null ? " | " + descript : "");
         
         return this;
     }
@@ -83,7 +83,7 @@ class StatuspageHTML {
         }
 
         this.setDescriptions();
-        this.setTitle("Unofficial " + this.getName() + " Status");
+        this.setTitle("(Unofficial) " + this.getName() + " Status");
     }
 
     ComponentsHome() {
@@ -102,7 +102,7 @@ class StatuspageHTML {
 
         this.render(html);
 
-        this.setTitle("Unofficial " + result.page.name + " Status Components");
+        this.setTitle("(Unofficial) " + result.page.name + " Status Components");
         this.setName(result.page.name);
         this.setDescriptions(result.page.name);
     }
@@ -121,7 +121,7 @@ class StatuspageHTML {
 
         this.render(statusHTML);
 
-        this.setTitle("Unofficial Mini " + result.page.name + " Status");
+        this.setTitle("(Unofficial) Mini " + result.page.name + " Status");
         this.setName(result.page.name);
         this.setDescriptions(result.page.name, result.status.description);
     }
