@@ -35,8 +35,6 @@
         <title>(Unofficial) GitHub Status</title>
 
         <link rel="canonical" href="https://githubstat.us/" />
-
-        <!-- <link rel="alternate" type="application/json+oembed" href="https://githubstat.us/oembed" /> -->
         
         <script type="application/ld+json">
             {
@@ -73,8 +71,6 @@
         </script>
 
         <script>
-            // var errorMessage = '<div class="size-max status-width bold error status-color"><span class="center-status">ERROR</span></div>';
-            
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
                     console.log(reg);
@@ -105,38 +101,12 @@
         <link rel="manifest" href="/manifest.json">
     </head>
     <body>
-        <div class="hmedia hide">
-            <img class="photo" alt="Github Status" loading="lazy" src="https://githubstat.us/img/status-min.png"/>
-        </div>
-
         <div id="psa" class="psa hide bold status-color"></div>
         <div id="app"></div>
 
         <script>
             Router();
         </script>
-
-        <!-- <div id="loading" class="full-status-height status-width bold status-color unavailable unavailable-font">
-            <span class="center-status">LOADING</span>
-        </div>
-        
-        <div id="psa" class="psa hide bold status-color"></div>
-        <div id="mainHome" class="hide zed">
-            <div id="status" class="status-height status-width status-shadow bold status-color unavailable"></div>
-            <div id="messages" class="messages"></div>
-        </div>
-        <div id="mainStatus" class="hide status-height status-width bold status-color unavailable"></div>
-        <div id="mainComponents" class="hide zed"></div> -->
-
-        <!-- <script>
-            if (!navigator.onLine) {
-                setTheme('error');
-                document.write(errorMessage);
-            } else {
-                // PSA_F('Currently Being Rewritten into SPA');
-                Router();
-            }
-        </script> -->
 
         <noscript>
             <div class="size-max status-width bold error-color status-color"><span class="center-status">ERROR</span></div>
