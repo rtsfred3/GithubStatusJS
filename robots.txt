@@ -4,7 +4,7 @@ Allow: /
 Allow: /components/
 Allow: /status/
 Allow: /amp/
-Allow: /StatuspageHTML/
+Disallow: /StatuspageHTML/
 Disallow: /apps/
 Disallow: /lang/
 Disallow: /min/
