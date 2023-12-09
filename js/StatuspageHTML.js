@@ -306,14 +306,14 @@ class StatuspageHTML {
     }
 
     getStatus(status, fullStatus = false) {
-        console.log('getStatus()');
+        // console.log('getStatus()');
         var height = fullStatus ? (document.getElementById("psa").classList.contains('hide') ? 'full-status-height' : 'psa-full-status-height') : 'status-height status-shadow';
 
         return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + indicatorVals[status].toUpperCase() + '</span></div>';
     }
 
     Status(arr, fullStatus = false) {
-        console.log('Status()');
+        // console.log('Status()');
         return this.setTheme(arr.status.indicator).getStatus(arr.status.indicator, fullStatus);
     }
 
