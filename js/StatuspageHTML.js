@@ -2,12 +2,17 @@ class StatuspageHTML {
     constructor(baseURL, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false) {
         this.baseURL = baseURL;
         this._fetchPsa = fetchPsa;
-        this._showPsa = fetchPsa;
         this._indexHomeSingleRequest = indexHomeSingleRequest;
         this._displayUTCTime = displayUTCTime;
 
         this._name = null;
         this._description = null;
+        this._showPsa = false;
+
+        this.psaRoute = '/psa.json';
+
+        this.loading = this.Status(this.getStatusJson('loading'), true);
+        this.render(this.loading);
 
         if (this.baseURL.slice(-1) == '/') {
             this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
@@ -23,10 +28,7 @@ class StatuspageHTML {
         this.titleStatusTemplate = "(Unofficial) Mini {} Status";
         this.titleComponentsTemplate = "(Unofficial) {} Status Components";
 
-        this.descriptionTemplate = "An unofficial website to monitor {} status updates.";// + (descript != null ? " | " + descript : "");
-
-        this.loading = this.Status(this.getStatusJson('loading'), true);
-        this.render(this.loading);
+        this.descriptionTemplate = "An unofficial website to monitor {} status updates.";
     }
 
     // emptyIncidentsElement(sitename) {
@@ -75,7 +77,7 @@ class StatuspageHTML {
     async fetchPsaAsync() {
         console.log("fetchPsaAsync");
 
-        const response = await fetch('/psa.json');
+        const response = await fetch(this.psaRoute);
         const result = await response.json();
 
         this.setPSA(result);
@@ -180,9 +182,11 @@ class StatuspageHTML {
             document.getElementById("psa").classList.remove("hide");
 
             this.setTheme('psa');
-        } else {
+
+            this._showPsa = true;
+        } /* else {
             this._showPsa = false;
-        }
+        } */
 
         return this;
     }
@@ -300,12 +304,14 @@ class StatuspageHTML {
     }
 
     getStatus(status, fullStatus = false) {
+        console.log('getStatus()');
         var height = fullStatus ? (document.getElementById("psa").classList.contains('hide') ? 'full-status-height' : 'psa-full-status-height') : 'status-height status-shadow';
 
         return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + indicatorVals[status].toUpperCase() + '</span></div>';
     }
 
     Status(arr, fullStatus = false) {
+        console.log('Status()');
         return this.setTheme(arr.status.indicator).getStatus(arr.status.indicator, fullStatus);
     }
 
@@ -418,8 +424,8 @@ class StatuspageHTML {
     }
 }
 
-function Router(url, showPSA = false) {
-    var r = new StatuspageHTML(url, showPSA);
+function Router(url, showPSA = false, indexHomeSingleRequest = true, displayUTCTime = false) {
+    var r = new StatuspageHTML(url, showPSA, indexHomeSingleRequest, displayUTCTime);
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
