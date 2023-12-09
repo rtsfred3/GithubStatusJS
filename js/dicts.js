@@ -14,6 +14,13 @@ Object.defineProperties(metaColors, {
     'error': { value: '#646464', enumerable: true },
     'maintenance': { value: '#0366d6', enumerable: true },
     
+    'good': {
+        enumerable: true,
+        get: function(){
+            return this.none;
+        }
+    },
+
     'under_maintenance': {
         enumerable: true,
         get: function(){
