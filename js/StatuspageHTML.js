@@ -373,6 +373,8 @@ class StatuspageHTML {
 
         // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
 
+        this.setTheme(indicatorVals[comp["components"][0]["status"]]);
+
         for (var i = 0; i < comp["components"].length; i++) {
             if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
             // if (comp["components"][i]["group_id"] != null || comp["components"][i]["group"]) { continue; }
