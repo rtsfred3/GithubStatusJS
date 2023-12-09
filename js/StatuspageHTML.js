@@ -1,15 +1,18 @@
 class StatuspageHTML {
-    constructor(baseURL, indexHomeSingleRequest = true, fetchPsa = false, _name = null, _description = null) {
+    constructor(baseURL, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false) {
         this.baseURL = baseURL;
-        this._name = _name;
-        this._description = _description;
+        this._fetchPsa = fetchPsa;
+        this._showPsa = fetchPsa;
+        this._indexHomeSingleRequest = indexHomeSingleRequest;
+        this._displayUTCTime = displayUTCTime;
+
+        this._name = null;
+        this._description = null;
 
         if (this.baseURL.slice(-1) == '/') {
             this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
         }
-
-        this.IndexHomeSingleRequest = indexHomeSingleRequest;
-
+        
         if (fetchPsa && document.getElementById("psa")) {
             this.fetchPsaAsync().then();
         }
@@ -26,8 +29,31 @@ class StatuspageHTML {
         this.render(this.loading);
     }
 
-    setName(_name) {
-        this._name = _name;
+    // emptyIncidentsElement(sitename) {
+    //     const emptyIncidents = document.createElement("div");
+    //     emptyIncidents.classList.add("empty", "padding-none");
+
+    //     const emptyIncidentsFirstChild = document.createElement("div");
+    //     const emptyIncidentsSecondChild = document.createElement("div");
+
+    //     emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
+    //     emptyIncidentsSecondChild.classList.add('font-12');
+
+    //     emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
+
+    //     emptyIncidentsSecondChild.appendChild(document.createTextNode("Nothing to see here folks. Looks like " + sitename + " is up and running and has been stable for quite some time."));
+    //     emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+    //     emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+    //     emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
+
+    //     emptyIncidents.appendChild(emptyIncidentsFirstChild);
+    //     emptyIncidents.appendChild(emptyIncidentsSecondChild);
+
+    //     return emptyIncidents.outerHTML;
+    // }
+
+    setName(name) {
+        this._name = name;
 
         return this;
     }
@@ -64,7 +90,7 @@ class StatuspageHTML {
     async IndexHomeAsync() {
         this.setUrl();
 
-        if (this.IndexHomeSingleRequest) {
+        if (this._indexHomeSingleRequest) {
             const response = await fetch(this.baseURL + '/api/v2/summary.json');
             const result = await response.json();
 
@@ -135,9 +161,7 @@ class StatuspageHTML {
     ErrorHome() {
         console.log("ErrorHome");
 
-        this.setTitle("Error - Invalid Route");
-
-        this.createMetaTag("robots", "noindex");
+        this.setTitle("Error - Invalid Route").createMetaTag("robots", "noindex");
 
         var errorHTML = this.Status(this.getStatusJson('error'), true);
 
@@ -146,9 +170,18 @@ class StatuspageHTML {
 
     setPSA(psaResult) {
         if (psaResult["showPSA"]) {
-            document.getElementById("psa").innerHTML = '<div class="center-status">' + psaResult["PSA"] + '</div>';
+            // const newDiv = document.createElement("div");
+            // newDiv.classList.add('center-status');
+            // newDiv.appendChild(document.createTextNode(psaResult["PSA"]));
+            // document.getElementById("psa").appendChild(newDiv);
 
+            document.getElementById("psa").innerHTML = '<div class="center-status">' + psaResult["PSA"] + '</div>';
+            
             document.getElementById("psa").classList.remove("hide");
+
+            this.setTheme('psa');
+        } else {
+            this._showPsa = false;
         }
 
         return this;
@@ -259,8 +292,9 @@ class StatuspageHTML {
     }
 
     setTheme(status) {
-        this.setMetaTag("theme-color", metaColors[status])
-            .setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+        var hexColor = (this._showPsa || status == 'psa') ? metaColors['psa'] : metaColors[status];
+
+        this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
         return this;
     }
@@ -272,9 +306,7 @@ class StatuspageHTML {
     }
 
     Status(arr, fullStatus = false) {
-        this.setTheme(arr.status.indicator);
-
-        return this.getStatus(arr.status.indicator, fullStatus);
+        return this.setTheme(arr.status.indicator).getStatus(arr.status.indicator, fullStatus);
     }
 
     createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus) {
@@ -290,9 +322,9 @@ class StatuspageHTML {
 
         var date = new Date(created_at).toLocaleDateString("en-US", options);
 
-        if (location.hostname == 'do.githubstat.us') {
+        if (this._displayUTCTime) {
             options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-            var t_date = new Date(mess["incidents"][i]["incident_updates"][j].created_at);
+            var t_date = new Date(created_at);
             t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
             date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
         }
@@ -312,7 +344,7 @@ class StatuspageHTML {
     Messages(mess) {
         var out = '';
 
-        var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
+        // var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
 
         var previousDays = 7;
 
@@ -323,6 +355,7 @@ class StatuspageHTML {
         var incidents = mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
         if (incidents.length == 0) {
+            // out = this.emptyIncidentsElement(this.getName());
             out = this.noIncidentsTemplate.replace("{}", this.getName());
             // out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         } else {
@@ -370,8 +403,7 @@ class StatuspageHTML {
     Components(comp) {
         var out = '';
 
-        var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
-
+        // var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
         // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
 
         this.setTheme(indicatorVals[comp["components"][0]["status"]]);
@@ -387,10 +419,7 @@ class StatuspageHTML {
 }
 
 function Router(url, showPSA = false) {
-    // var url = 'https://www.githubstatus.com/';
-    // var url = 'https://apiv3.githubstat.us/';
-    
-    var r = new StatuspageHTML(url, true, showPSA);
+    var r = new StatuspageHTML(url, showPSA);
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
