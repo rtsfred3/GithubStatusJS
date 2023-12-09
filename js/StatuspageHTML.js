@@ -23,7 +23,6 @@ class StatuspageHTML {
         this.descriptionTemplate = "An unofficial website to monitor {} status updates.";// + (descript != null ? " | " + descript : "");
 
         this.loading = this.Status(this.getStatusJson('loading'), true);
-
         this.render(this.loading);
     }
 
@@ -237,10 +236,11 @@ class StatuspageHTML {
     setTitle(title) {
         document.getElementsByTagName("title")[0].innerHTML = title;
 
-        this.setMetaTag("twitter:title", title).setMetaTag("og:title", title);
-        this.setMetaTag("application-name", title).setMetaTag("apple-mobile-web-app-title", title);
-
-        this.updateRichTest("name", title);
+        this.setMetaTag("twitter:title", title)
+            .setMetaTag("og:title", title)
+            .setMetaTag("application-name", title)
+            .setMetaTag("apple-mobile-web-app-title", title)
+            .updateRichTest("name", title);
 
         return this;
     }
@@ -250,16 +250,17 @@ class StatuspageHTML {
             this.setDescript(sitename, descript);
         }
 
-        this.setMetaTag("description", this.getDescript()).setMetaTag("og:description", this.getDescript()).setMetaTag("twitter:description", this.getDescript());
-        
-        this.updateRichTest("description", this.getDescript());
+        this.setMetaTag("description", this.getDescript())
+            .setMetaTag("og:description", this.getDescript())
+            .setMetaTag("twitter:description", this.getDescript())
+            .updateRichTest("description", this.getDescript());
 
         return this;
     }
 
     setTheme(status) {
-        this.setMetaTag("theme-color", metaColors[status]);
-        this.setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+        this.setMetaTag("theme-color", metaColors[status])
+            .setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
 
         return this;
     }
