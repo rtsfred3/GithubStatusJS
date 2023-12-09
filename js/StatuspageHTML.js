@@ -5,6 +5,8 @@ class StatuspageHTML {
         this._indexHomeSingleRequest = indexHomeSingleRequest;
         this._displayUTCTime = displayUTCTime;
 
+        console.log("_indexHomeSingleRequest: " + this._indexHomeSingleRequest);
+
         this._name = null;
         this._description = null;
         this._showPsa = false;
