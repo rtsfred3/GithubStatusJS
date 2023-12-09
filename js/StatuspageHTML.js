@@ -14,6 +14,14 @@ class StatuspageHTML {
             this.fetchPsaAsync().then();
         }
 
+        this.noIncidentsTemplate = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
+
+        this.titleIndexTemplate = "(Unofficial) {} Status";
+        this.titleStatusTemplate = "(Unofficial) Mini {} Status";
+        this.titleComponentsTemplate = "(Unofficial) {} Status Components";
+
+        this.descriptionTemplate = "An unofficial website to monitor {} status updates.";// + (descript != null ? " | " + descript : "");
+
         this.loading = this.Status(this.getStatusJson('loading'), true);
 
         this.render(this.loading);
@@ -30,7 +38,7 @@ class StatuspageHTML {
     }
 
     setDescript(sitename, descript = null) {
-        this._description = "An unofficial website to monitor " + sitename + " status updates." + (descript != null ? " | " + descript : "");
+        this._description = this.descriptionTemplate.replace("{}", sitename) + (descript != null ? " | " + descript : "");
         
         return this;
     }
@@ -61,12 +69,12 @@ class StatuspageHTML {
             const response = await fetch(this.baseURL + '/api/v2/summary.json');
             const result = await response.json();
 
+            this.setName(result.page.name).setDescript(result.page.name, result.status.description);
+
             var statusHTML = this.Status(result);
             var messagesHTML = this.Messages(result);
 
             this.render(statusHTML + messagesHTML);
-
-            this.setName(result.page.name).setDescript(result.page.name, result.status.description);
         } else {
             const statusResponse = await fetch(this.baseURL + '/api/v2/status.json');
             const statusResult = await statusResponse.json();
@@ -74,16 +82,15 @@ class StatuspageHTML {
             const messagesResponse = await fetch(this.baseURL + '/api/v2/incidents.json');
             const messagesResult = await messagesResponse.json();
 
+            this.setName(statusResult.page.name).setDescript(statusResult.page.name, statusResult.status.description);
+
             var statusHTML = this.Status(statusResult);
             var messagesHTML = this.Messages(messagesResult);
 
             this.render(statusHTML + messagesHTML);
-
-            this.setName(statusResult.page.name).setDescript(statusResult.page.name, statusResult.status.description);
         }
 
-        this.setDescriptions();
-        this.setTitle("(Unofficial) " + this.getName() + " Status");
+        this.setTitle(this.titleIndexTemplate.replace("{}", this.getName())).setDescriptions();
     }
 
     ComponentsHome() {
@@ -98,13 +105,13 @@ class StatuspageHTML {
         const response = await fetch(this.baseURL + '/api/v2/components.json');
         const result = await response.json();
 
+        this.setName(result.page.name)
+            .setTitle(this.titleComponentsTemplate.replace("{}", this.getName()))
+            .setDescriptions(this.getName());
+
         var html = this.Components(result);
 
         this.render(html);
-
-        this.setTitle("(Unofficial) " + result.page.name + " Status Components");
-        this.setName(result.page.name);
-        this.setDescriptions(result.page.name);
     }
 
     StatusHome() {
@@ -117,13 +124,13 @@ class StatuspageHTML {
         const response = await fetch(this.baseURL + '/api/v2/status.json');
         const result = await response.json();
 
+        this.setName(result.page.name).setDescript()
+            .setTitle(this.titleStatusTemplate.replace("{}", this.getName()))
+            .setDescriptions(this.getName(), result.status.description);
+
         var statusHTML = this.Status(result, true);
 
         this.render(statusHTML);
-
-        this.setTitle("(Unofficial) Mini " + result.page.name + " Status");
-        this.setName(result.page.name);
-        this.setDescriptions(result.page.name, result.status.description);
     }
 
     ErrorHome() {
@@ -230,10 +237,8 @@ class StatuspageHTML {
     setTitle(title) {
         document.getElementsByTagName("title")[0].innerHTML = title;
 
-        this.setMetaTag("twitter:title", title);
-        this.setMetaTag("og:title", title);
-        this.setMetaTag("application-name", title);
-        this.setMetaTag("apple-mobile-web-app-title", title);
+        this.setMetaTag("twitter:title", title).setMetaTag("og:title", title);
+        this.setMetaTag("application-name", title).setMetaTag("apple-mobile-web-app-title", title);
 
         this.updateRichTest("name", title);
 
@@ -245,11 +250,9 @@ class StatuspageHTML {
             this.setDescript(sitename, descript);
         }
 
-        this.setMetaTag("description", this._description);
-        this.setMetaTag("og:description", this._description);
-        this.setMetaTag("twitter:description", this._description);
-
-        this.updateRichTest("description", this._description);
+        this.setMetaTag("description", this.getDescript()).setMetaTag("og:description", this.getDescript()).setMetaTag("twitter:description", this.getDescript());
+        
+        this.updateRichTest("description", this.getDescript());
 
         return this;
     }
@@ -319,7 +322,8 @@ class StatuspageHTML {
         var incidents = mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
         if (incidents.length == 0) {
-            out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
+            out = this.noIncidentsTemplate.replace("{}", this.getName());
+            // out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         } else {
             for (var i = 0; i < incidents.length; i++) {
                 if (incidents[i]["incident_updates"].length > 0) {
@@ -379,11 +383,11 @@ class StatuspageHTML {
     }
 }
 
-function Router() {
-    var url = 'https://www.githubstatus.com/';
+function Router(url, showPSA = false) {
+    // var url = 'https://www.githubstatus.com/';
     // var url = 'https://apiv3.githubstat.us/';
     
-    var r = new StatuspageHTML(url);
+    var r = new StatuspageHTML(url, true, showPSA);
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
