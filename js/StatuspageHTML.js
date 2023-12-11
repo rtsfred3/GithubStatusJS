@@ -134,6 +134,7 @@ class StorageObject {
         this.template_title_status = "(Unofficial) Mini {} Status";
         this.template_title_components = "(Unofficial) {} Status Components";
         this.template_descrisption = "An unofficial website to monitor {} status updates.";
+        this.template_incidents_none = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
 
         this.dict_meta_colors = StatuspageDictionary.MetaColors;
         this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
@@ -379,6 +380,8 @@ class StatuspageHTML {
      * @param {string} [_psaRouteParam='/psa.json'] PSA route is now passable as a parameter
      */
     constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
+        this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
+        
         // this._baseUrl = baseURL;
         // this._previousDays = previousDays;
         // this._showPsa = fetchPsa;
@@ -389,21 +392,19 @@ class StatuspageHTML {
         // this._name = null;
         // this._description = null;
 
-        this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
-
         // console.log(this.storageObject);
         // console.log(this.storageObject.toJson());
 
         this.loading = this.Status(this.getStatusJson('loading'), true);
         this.render(this.loading);
 
+        this.fetchPsa();
+
         // if (this._baseUrl.slice(-1) == '/') {
         //     this._baseUrl = this._baseUrl.substring(0, this._baseUrl.length - 1);
         // }
-
-        this.fetchPsa();
-
-        this.noIncidentsTemplate = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
+        
+        // this.noIncidentsTemplate = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
 
         // this.titleIndexTemplate = "(Unofficial) {} Status";
         // this.titleStatusTemplate = "(Unofficial) Mini {} Status";
@@ -1011,7 +1012,7 @@ class StatuspageHTML {
 
         if (incidents.length == 0) {
             // out = this.emptyIncidentsElement(this.getName());
-            out = this.storageObject.noIncidentsTemplate.replace("{}", this.getName());
+            out = this.storageObject.template_incidents_none.replace("{}", this.getName());
             // out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         } else {
             for (var i = 0; i < incidents.length; i++) {
