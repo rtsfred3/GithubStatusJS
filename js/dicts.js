@@ -2,8 +2,8 @@ var metaColors = {};
 var indicatorVals = {};
 var indicatorMessages = {};
 
-var functEnum = {};
-var pageEnum = {};
+// var functEnum = {};
+// var pageEnum = {};
 
 Object.defineProperties(metaColors, {
     'none': { value: '#339966', enumerable: true },
@@ -12,7 +12,8 @@ Object.defineProperties(metaColors, {
     'critical': { value: '#DC3545', enumerable: true },
     'unavailable': { value: '#4F93BD', enumerable: true },
     'error': { value: '#646464', enumerable: true },
-    'maintenance': { value: '#0366d6', enumerable: true },
+    'maintenance': { value: '#0366D6', enumerable: true },
+    'psa': { value: '#D83D42', enumerable: true },
     
     'good': {
         enumerable: true,
@@ -103,18 +104,18 @@ Object.defineProperties(indicatorMessages, {
     'maintenance': { value: 'maintenance', enumerable: true }
 });
 
-Object.defineProperties(functEnum, {
-    'Status': { value: 0, enumerable: true },
-    'StatusFull': { value: 1, enumerable: true },
-    'Messages': { value: 2, enumerable: true },
-    'StatusMessages': { value: 3, enumerable: true },
-    'Components': { value: 4, enumerable: true },
-    'PSA': { value: 5, enumerable: true },
-});
+// Object.defineProperties(functEnum, {
+//     'Status': { value: 0, enumerable: true },
+//     'StatusFull': { value: 1, enumerable: true },
+//     'Messages': { value: 2, enumerable: true },
+//     'StatusMessages': { value: 3, enumerable: true },
+//     'Components': { value: 4, enumerable: true },
+//     'PSA': { value: 5, enumerable: true },
+// });
 
-Object.defineProperties(pageEnum, {
-    'Index': { value: 0, enumerable: true },
-    'Status': { value: 1, enumerable: true },
-    'Components': { value: 2, enumerable: true },
-    'Error': { value: 3, enumerable: true },
-});
+// Object.defineProperties(pageEnum, {
+//     'Index': { value: 0, enumerable: true },
+//     'Status': { value: 1, enumerable: true },
+//     'Components': { value: 2, enumerable: true },
+//     'Error': { value: 3, enumerable: true },
+// });
