@@ -403,7 +403,7 @@ class StatuspageHTML {
         // if (this._baseUrl.slice(-1) == '/') {
         //     this._baseUrl = this._baseUrl.substring(0, this._baseUrl.length - 1);
         // }
-        
+
         // this.noIncidentsTemplate = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
 
         // this.titleIndexTemplate = "(Unofficial) {} Status";
@@ -1138,14 +1138,6 @@ function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest =
                 }
             } else {
                 r.IndexHome();
-
-                // r.storageObject.update("baseUrl", 'https://www.githubstatus.com')
-
-                // console.log('Has PSA: ', r.hasPSA());
-                // r.setFetchPsa(true);
-                // r.fetchPsa();
-                // console.log('Has PSA: ', r.hasPSA());
-
                 // r.ComponentsHome();
                 // r.StatusHome();
                 // r.ErrorHome();
