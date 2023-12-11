@@ -1,4 +1,4 @@
 {
-    "showPSA": false,
-    "PSA": "Test PSA Announcement"
+    "showPSA": true,
+    "PSA": "This site is currently being refactored. Things may change or break."
 }

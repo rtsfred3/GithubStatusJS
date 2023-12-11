@@ -1,3 +1,23 @@
+class Helper {
+    /**
+     * 
+     * @param {object} classObject - class to be converted to JSON
+     * @returns {object} Returns JSONified version of class
+     */
+    static ClassToJson(classObject){
+        return JSON.parse(JSON.stringify(classObject));
+    }
+
+    /**
+     * 
+     * @param {object} classObject - class to be converted to JSON
+     * @returns {object} Returns JSONified version of class
+     */
+    static ClassToFormattedJson(classObject){
+        return JSON.parse(JSON.stringify(classObject));
+    }
+}
+
 class StatuspageDictionary {
     /**
      * Creates class of desired variables to be converted to JSON
@@ -64,20 +84,11 @@ class StatuspageDictionary {
     }
 
     /**
-     * 
-     * @param {object} classObject - class to be converted to JSON
-     * @returns {object} Returns JSONified version of class
-     */
-    static ClassToJson(classObject){
-        return JSON.parse(JSON.stringify(classObject))
-    }
-
-    /**
      * Converts StatuspageDictionary._metaColors class to JSON
      * @returns {object} Returns JSONified version of StatuspageDictionary._metaColors
      */
     static get MetaColors(){
-        return StatuspageDictionary.ClassToJson(new StatuspageDictionary._metaColors());
+        return Helper.ClassToJson(new StatuspageDictionary._metaColors());
     }
 
     /**
@@ -85,7 +96,7 @@ class StatuspageDictionary {
      * @returns {object} Returns JSONified version of StatuspageDictionary._indicatorVals
      */
     static get IndicatorVals(){
-        return StatuspageDictionary.ClassToJson(new StatuspageDictionary._indicatorVals());
+        return Helper.ClassToJson(new StatuspageDictionary._indicatorVals());
     }
 
     /**
@@ -93,7 +104,268 @@ class StatuspageDictionary {
      * @returns {object} Returns JSONified version of StatuspageDictionary._indicatorMessages
      */
     static get IndicatorMessages(){
-        return StatuspageDictionary.ClassToJson(new StatuspageDictionary._indicatorMessages());
+        return Helper.ClassToJson(new StatuspageDictionary._indicatorMessages());
+    }
+}
+
+class StorageObject {
+    static get staticLocalStorageKey(){
+        return 'storageObject';
+    }
+
+    constructor(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, psaRouteParam, _name = null, _description = null, _status = null, _themeStatus = null){
+        this.settings_baseUrl = baseURL;
+        this.settings_previousDays = previousDays;
+        this.settings_showPsa = fetchPsa;
+        this.settings_indexHomeSingleRequest = indexHomeSingleRequest;
+        this.settings_displayUTCTime = displayUTCTime;
+        this.settings_psaRoute = psaRouteParam;
+        
+        this.site_name = _name;
+        this.site_description = _description;
+        this.status_main = _status;
+        this.status_theme = _themeStatus;
+
+        if (this.settings_baseUrl.slice(-1) == '/') {
+            this.settings_baseUrl = this.settings_baseUrl.substring(0, this.settings_baseUrl.length - 1);
+        }
+
+        this.template_title_index = "(Unofficial) {} Status";
+        this.template_title_status = "(Unofficial) Mini {} Status";
+        this.template_title_components = "(Unofficial) {} Status Components";
+        this.template_descrisption = "An unofficial website to monitor {} status updates.";
+
+        this.dict_meta_colors = StatuspageDictionary.MetaColors;
+        this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
+        this.dict_indicator_messages = StatuspageDictionary.IndicatorMessages;
+
+        this.localStorageKey = StorageObject.staticLocalStorageKey;
+    }
+
+    setShowPsa(b) {
+        this.settings_showPsa = b;
+
+        return this;
+    }
+
+    setShowPsa() {
+        return this.settings_showPsa;
+    }
+
+    /**
+     * 
+     * @param {string} status 
+     * @returns {StorageObject}
+     */
+    setStatus(status) {
+        this.status_main = status;
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    getStatus() {
+        return this.status_main;
+    }
+
+    /**
+     * 
+     * @param {string} status 
+     * @returns {StorageObject}
+     */
+    setThemeStatus(status) {
+        this.status_theme = status;
+        
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    getThemeStatus() {
+        return this.status_theme;
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @returns {StorageObject}
+     */
+    setName(name) {
+        this.site_name = name;
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    getName() {
+        return this.site_name;
+    }
+
+    /**
+     * 
+     * @param {string} description 
+     * @returns {StorageObject}
+     */
+    setDescription(description) {
+        this.site_description = description;
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    getDescription() {
+        return this.site_description;
+    }
+
+    /**
+     * 
+     * @param {string} key 
+     * @param {*} value 
+     */
+    update(key, value) {
+        var obj = this.toJson();
+        obj[key] = value;
+        this.fromJson(obj);
+    }
+
+    /**
+     * 
+     * @param {string} key 
+     * @param {*} value 
+     */
+    set(key, value) {
+        this.update(key, value);
+    }
+
+    /**
+     * Returns JSON object of class
+     * @returns {object}
+     */
+    toJson() {
+        var newJson = Helper.ClassToJson(this);
+
+        delete newJson['localStorageKey'];
+
+        for (const [key, value] of Object.entries(newJson)) {
+            if (key.includes('_')) {
+                newJson[`${key.toString().replaceAll('_', '.')}`] = value;
+                delete newJson[`${key}`];
+            }
+        }
+
+        return newJson;
+    }
+
+    /**
+     * Returns JSON object of class
+     * @returns {string}
+     */
+    toJsonString() {
+        return JSON.stringify(this.toJson());
+    }
+
+    /**
+     * 
+     * @param {object} jsonObj 
+     * @returns {StorageObject}
+     */
+    fromJson(jsonObj){
+        this.settings_baseUrl = jsonObj["settings_baseUrl"];
+        this.settings_previousDays = jsonObj["settings_previousDays"];
+        this.settings_showPsa = jsonObj["settings_showPsa"];
+        this.settings_indexHomeSingleRequest = jsonObj["settings_indexHomeSingleRequest"];
+        this.settings_displayUTCTime = jsonObj["settings_displayUTCTime"];
+        this.settings_psaRoute = jsonObj["settings_psaRoute"];
+
+        this.setName(jsonObj["site_name"]);
+        this.setDescription(jsonObj["site_description"]);
+
+        this.setStatus(jsonObj["status_main"]);
+        this.setThemeStatus(jsonObj["status_theme"]);
+
+        return this;
+    }
+
+    /**
+     * 
+     * @param {string} jsonStr 
+     * @returns {StorageObject}
+     */
+    fromJsonString(jsonStr){
+        return this.fromJson(JSON.parse(jsonStr));
+    }
+
+    /**
+     * 
+     * @param {object} jsonObject 
+     * @returns {StorageObject}
+     */
+    static fromJson(jsonObject){
+        for (const [key, value] of Object.entries(jsonObject)) {
+            if (key.includes('.')) {
+                jsonObject[`${key.toString().replaceAll('.', '_')}`] = value;
+                delete jsonObject[`${key}`]
+            }
+        }
+
+        var newStorageObject = new StorageObject(
+            jsonObject["settings_baseUrl"], jsonObject["settings_previousDays"], jsonObject["settings_showPsa"],
+            jsonObject["settings_indexHomeSingleRequest"], jsonObject["settings_displayUTCTime"], jsonObject["settings_psaRoute"]
+        );
+
+        newStorageObject.setName(jsonObject["site_name"]);
+        newStorageObject.setDescription(jsonObject["site_description"]);
+
+        newStorageObject.setStatus(jsonObject["status_main"]);
+        newStorageObject.setThemeStatus(jsonObject["status_theme"]);
+
+        return newStorageObject;
+    }
+
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    toLocalStorage(){
+        console.log('toLocalStorage(): ' + this.toJsonString());
+        localStorage.setItem(this.localStorageKey, this.toJsonString());
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    fromLocalStorage(){
+        console.log('fromLocalStorage(): ' + localStorage.getItem(this.localStorageKey));
+
+        return this.fromJsonString(localStorage.getItem(this.localStorageKey));
+    }
+
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    static fromLocalStorage(){
+        console.log('[static] fromLocalStorage()');
+
+        var storageObject = JSON.parse(localStorage.getItem(StorageObject.staticLocalStorageKey));
+
+        var newStorageObj = StorageObject.fromJson(storageObject);
+
+        return newStorageObj;
     }
 }
 
@@ -104,38 +376,39 @@ class StatuspageHTML {
      * @param {boolean} [fetchPsa=false] PSA will get fetched and displayed if PSA is set to be shown in psa.json.
      * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
      * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
+     * @param {string} [_psaRouteParam='/psa.json'] PSA route is now passable as a parameter
      */
-    constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false) {
-        this.baseURL = baseURL;
-        this._previousDays = previousDays;
-        this._fetchPsa = fetchPsa;
-        this._indexHomeSingleRequest = indexHomeSingleRequest;
-        this._displayUTCTime = displayUTCTime;
+    constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
+        // this._baseUrl = baseURL;
+        // this._previousDays = previousDays;
+        // this._showPsa = fetchPsa;
+        // this._indexHomeSingleRequest = indexHomeSingleRequest;
+        // this._displayUTCTime = displayUTCTime;
+        // this._psaRoute = _psaRouteParam;
 
-        this._name = null;
-        this._description = null;
-        this._showPsa = false;
+        // this._name = null;
+        // this._description = null;
 
-        this.psaRoute = '/psa.json';
+        this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
+
+        // console.log(this.storageObject);
+        // console.log(this.storageObject.toJson());
 
         this.loading = this.Status(this.getStatusJson('loading'), true);
         this.render(this.loading);
 
-        if (this.baseURL.slice(-1) == '/') {
-            this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
-        }
-        
-        if (this._fetchPsa && document.getElementById("psa")) {
-            this.fetchPsaAsync().then();
-        }
+        // if (this._baseUrl.slice(-1) == '/') {
+        //     this._baseUrl = this._baseUrl.substring(0, this._baseUrl.length - 1);
+        // }
+
+        this.fetchPsa();
 
         this.noIncidentsTemplate = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
 
-        this.titleIndexTemplate = "(Unofficial) {} Status";
-        this.titleStatusTemplate = "(Unofficial) Mini {} Status";
-        this.titleComponentsTemplate = "(Unofficial) {} Status Components";
-
-        this.descriptionTemplate = "An unofficial website to monitor {} status updates.";
+        // this.titleIndexTemplate = "(Unofficial) {} Status";
+        // this.titleStatusTemplate = "(Unofficial) Mini {} Status";
+        // this.titleComponentsTemplate = "(Unofficial) {} Status Components";
+        // this.descriptionTemplate = "An unofficial website to monitor {} status updates.";
     }
 
     // emptyIncidentsElement(sitename) {
@@ -159,78 +432,7 @@ class StatuspageHTML {
     //     emptyIncidents.appendChild(emptyIncidentsSecondChild);
 
     //     return emptyIncidents.outerHTML;
-    // }
-    
-    /**
-     * Inverts the index page loads the summary or if it loads status and incidents seperately
-     * @returns {StatuspageHTML}
-     */
-    invertIndexHomeSingleRequest(){
-        this._indexHomeSingleRequest = !this._indexHomeSingleRequest;
-
-        return this;
-    }
-
-    /**
-     * Inverts whether or not UTC or local time is shown
-     * @returns {StatuspageHTML}
-     */
-    invertDisplayUTCTime(){
-        this._displayUTCTime = !this._displayUTCTime;
-
-        return this;
-    }
-
-    /**
-     * Sets name in class
-     * @param {string} name 
-     * @returns {StatuspageHTML}
-     */
-    setName(name) {
-        this._name = name;
-
-        return this;
-    }
-
-    /**
-     * Gets name in class
-     * @returns {string}
-     */
-    getName() {
-        return this._name;
-    }
-
-    /**
-     * Sets description in class
-     * @param {string} sitename The Atlassian Statuspage page name
-     * @param {string?} descript A field for attional description details
-     * @returns {StatuspageHTML}
-     */
-    setDescript(sitename, descript = null) {
-        this._description = this.descriptionTemplate.replace("{}", sitename) + (descript != null ? " | " + descript : "");
-        
-        return this;
-    }
-
-    /**
-     * Gets description in class
-     * @returns {string}
-     */
-    getDescript() {
-        return this._description;
-    }
-
-    /**
-     * Async fetches the PSA
-     */
-    async fetchPsaAsync() {
-        console.log("fetchPsaAsync");
-
-        const response = await fetch(this.psaRoute);
-        const result = await response.json();
-
-        this.setPSA(result);
-    }
+    // } 
 
     /**
      * Converts IndexHomeAsync to a synchronous method
@@ -247,21 +449,23 @@ class StatuspageHTML {
     async IndexHomeAsync() {
         this.setUrl();
 
-        if (this._indexHomeSingleRequest) {
-            const response = await fetch(this.baseURL + '/api/v2/summary.json');
+        if (this.storageObject.settings_indexHomeSingleRequest) {
+            const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/summary.json');
             const result = await response.json();
 
             this.setName(result.page.name).setDescript(result.page.name, result.status.description);
 
+            this.storageObject.setStatus(result.status.indicator);
+            
             var statusHTML = this.Status(result);
             var messagesHTML = this.Messages(result);
 
             this.render(statusHTML + messagesHTML);
         } else {
-            const statusResponse = await fetch(this.baseURL + '/api/v2/status.json');
+            const statusResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
             const statusResult = await statusResponse.json();
 
-            const messagesResponse = await fetch(this.baseURL + '/api/v2/incidents.json');
+            const messagesResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/incidents.json');
             const messagesResult = await messagesResponse.json();
 
             this.setName(statusResult.page.name).setDescript(statusResult.page.name, statusResult.status.description);
@@ -272,7 +476,15 @@ class StatuspageHTML {
             this.render(statusHTML + messagesHTML);
         }
 
-        this.setTitle(this.titleIndexTemplate.replace("{}", this.getName())).setDescriptions();
+        this.setTitle(this.storageObject.template_title_index.replace("{}", this.getName())).setDescriptions();
+
+        console.log('storageObject.currStatus: ' + this.storageObject.status_main);
+        console.log('storageObject.themeStatus: ' + this.storageObject.status_theme);
+        console.log('Has PSA in IndexHomeAsync(): ', this.hasPSA());
+
+        this.storageObject.toLocalStorage();
+
+        console.log('StorageObject.fromLocalStorage(): ' + StorageObject.fromLocalStorage());
     }
 
     /**
@@ -290,11 +502,11 @@ class StatuspageHTML {
     async ComponentsHomeAsync() {
         console.log("ComponentsHomeAsync");
 
-        const response = await fetch(this.baseURL + '/api/v2/components.json');
+        const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/components.json');
         const result = await response.json();
 
         this.setName(result.page.name)
-            .setTitle(this.titleComponentsTemplate.replace("{}", this.getName()))
+            .setTitle(this.storageObject.template_title_components.replace("{}", this.getName()))
             .setDescriptions(this.getName());
 
         var html = this.Components(result);
@@ -315,11 +527,11 @@ class StatuspageHTML {
      * Fetches Status and renders the HTML
      */
     async StatusHomeAsync() {
-        const response = await fetch(this.baseURL + '/api/v2/status.json');
+        const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
         const result = await response.json();
 
         this.setName(result.page.name).setDescript()
-            .setTitle(this.titleStatusTemplate.replace("{}", this.getName()))
+            .setTitle(this.storageObject.template_title_status.replace("{}", this.getName()))
             .setDescriptions(this.getName(), result.status.description);
 
         var statusHTML = this.Status(result, true);
@@ -341,24 +553,168 @@ class StatuspageHTML {
     }
 
     /**
+     * 
+     * @param {boolean} b 
+     * @returns {StatuspageHTML}
+     */
+    setFetchPsa(b) {
+        this._showPsa = b;
+
+        return this;
+    }
+
+    /**
+     * 
+     * @param {string} route - psa.json route
+     * @returns {StatuspageHTML}
+     */
+    setPsaRoute(route) {
+        this._psaRoute = route;
+
+        return this;
+    }
+
+    /**
+     * Inverts the index page loads the summary or if it loads status and incidents seperately
+     * @returns {StatuspageHTML}
+     */
+    invertIndexHomeSingleRequest(){
+        this.storageObject.settings_indexHomeSingleRequest = !this.storageObject.settings_indexHomeSingleRequest;
+
+        return this;
+    }
+
+    /**
+     * Inverts whether or not UTC or local time is shown
+     * @returns {StatuspageHTML}
+     */
+    invertDisplayUTCTime(){
+        this._displayUTCTime = !this._displayUTCTime;
+
+        return this;
+    }
+
+    /**
+     * Sets name in class
+     * @param {string} name 
+     * @returns {StatuspageHTML}
+     */
+    setName(name) {
+        this._name = name;
+        this.storageObject.site_name = this._name;
+
+        return this;
+    }
+
+    /**
+     * Gets name in class
+     * @returns {string}
+     */
+    getName() {
+        return this._name;
+    }
+
+    /**
+     * Sets description in class
+     * @param {string} sitename The Atlassian Statuspage page name
+     * @param {string?} descript A field for attional description details
+     * @returns {StatuspageHTML}
+     */
+    setDescript(sitename, descript = null) {
+        this._description = this.storageObject.template_descrisption.replace("{}", sitename) + (descript != null ? " | " + descript : "");
+        this.storageObject.site_description = this._description;
+        
+        return this;
+    }
+
+    /**
+     * Gets description in class
+     * @returns {string}
+     */
+    getDescript() {
+        return this._description;
+    }
+
+    /**
+     * 
+     * @returns {StatuspageHTML}
+     */
+    fetchPsa(){
+        if (this.storageObject.settings_showPsa && document.getElementById("psa")) {
+            this.fetchPsaAsync().then();
+            this.setTheme();
+        } else {
+            this.hidePSA();
+            this.setTheme(this.storageObject.getStatus());
+        }
+
+        return this;
+    }
+
+    /**
+     * Async fetches the PSA
+     */
+    async fetchPsaAsync() {
+        console.log('fetchPsaAsync');
+
+        const response = await fetch(this.storageObject.settings_psaRoute);
+        const result = await response.json();
+
+        this.showPSA(result);
+    }
+
+    /**
+     * 
+     * @returns {boolean}
+     */
+    hasPSA(){
+        return !document.getElementById("psa").classList.contains('hide');
+    }
+
+    /**
      * Sets PSA if PSA should be shown 
      * @param {Array} psaResult 
      * @returns {StatuspageHTML}
      */
-    setPSA(psaResult) {
+    showPSA(psaResult) {
         if (psaResult["showPSA"]) {
-            // const newDiv = document.createElement("div");
-            // newDiv.classList.add('center-status');
-            // newDiv.appendChild(document.createTextNode(psaResult["PSA"]));
-            // document.getElementById("psa").appendChild(newDiv);
-
             document.getElementById("psa").innerHTML = '<div class="center-status">' + psaResult["PSA"] + '</div>';
             
             document.getElementById("psa").classList.remove("hide");
 
-            this.setTheme('psa');
+            this.storageObject.setShowPsa(true);
+        } else {
+            this.storageObject.setShowPsa(false);
 
-            this._showPsa = true;
+            if (document.getElementById("psa").classList.contains('hide')) {
+                document.getElementById("psa").classList.add('hide');
+            }
+        }
+
+        this.setTheme('psa');
+
+        // console.log(`settings_showPsa && psaResult["showPSA"]: ${this.storageObject.settings_showPsa && psaResult["showPSA"]}`);
+        this.storageObject.setShowPsa(this.storageObject.settings_showPsa && psaResult["showPSA"] && this.hasPSA());
+
+        console.log(`settings.showPsa:\t${this.storageObject.settings_showPsa}`);
+        console.log(`psaResult["showPSA"]:\t${psaResult["showPSA"]}`);
+        console.log(`this.hasPSA():\t${this.hasPSA()}`);
+        console.log('----------------');
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {StatuspageHTML}
+     */
+    hidePSA() {
+        if (!this._showPsa && this.hasPSA()) {
+            document.getElementById("psa").classList.add("hide");
+
+            this.storageObject.setShowPsa(false);
+
+            this.setTheme(this.storageObject.getStatus());
         }
 
         return this;
@@ -523,10 +879,47 @@ class StatuspageHTML {
      * @param {string} status 
      * @returns {StatuspageHTML}
      */
-    setTheme(status) {
-        var hexColor = (this._showPsa || status == 'psa') ? StatuspageDictionary.MetaColors['psa'] : StatuspageDictionary.MetaColors[status];
+    setTheme(status = null) {
+        // var hexColor = (this._showPsa || status == 'psa' || status == null) ? StatuspageDictionary.MetaColors['psa'] : StatuspageDictionary.MetaColors[status];
+
+        this.storageObject.status_theme = (this.hasPSA() || status == 'psa' || status == null) ? 'psa' : status;
+
+        console.log(`showPSA: ${this.storageObject.settings_showPsa}; hasPSA(): ${this.hasPSA()}`);
+        // console.log(`status_theme (showPSA: ${this.storageObject.settings_showPsa}, status: ${status}): ${this.storageObject.status_theme}`);
+
+        var hexColor = StatuspageDictionary.MetaColors[this.storageObject.status_theme];
+
+        console.log(`Hex Color: ${hexColor}`);
 
         this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
+
+        return this;
+    }
+
+    updateStorageObject(id, value){
+        var obj = this.storageObject.toJson();
+        obj[id] = value;
+        this.storageObject = StorageObject.fromJsonString(obj);
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {StatuspageHTML}
+     */
+    setLocalStorage() {
+        localStorage.setItem('storageObject', this.storageObject.toJsonString());
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {object}
+     */
+    getLocalStorage() {
+        this.storageObject = StorageObject.fromJsonString(localStorage.getItem('storageObject'));
 
         return this;
     }
@@ -552,6 +945,7 @@ class StatuspageHTML {
      */
     Status(arr, fullStatus = false) {
         // console.log('Status()');
+        this.storageObject.setStatus(arr.status.indicator);
         return this.setTheme(arr.status.indicator).getStatus(arr.status.indicator, fullStatus);
     }
 
@@ -611,13 +1005,13 @@ class StatuspageHTML {
 
         var previousDate = new Date();
         previousDate.setHours(0, 0, 0);
-        var previousDaysDate = previousDate.setDate((new Date).getDate() - this._previousDays);
+        var previousDaysDate = previousDate.setDate((new Date).getDate() - this.storageObject.settings_previousDays);
 
         var incidents = this._previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
         if (incidents.length == 0) {
             // out = this.emptyIncidentsElement(this.getName());
-            out = this.noIncidentsTemplate.replace("{}", this.getName());
+            out = this.storageObject.noIncidentsTemplate.replace("{}", this.getName());
             // out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         } else {
             for (var i = 0; i < incidents.length; i++) {
@@ -713,9 +1107,10 @@ class StatuspageHTML {
  * @param {boolean} [showPSA=false] PSA will get fetched and displayed if PSA is set to be shown in psa.json.
  * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
  * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
+ * @param {string} [_psaRouteParam='/psa.json'] PSA route is now passable as a parameter
  */
-function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest = true, displayUTCTime = false) {
-    var r = new StatuspageHTML(url, previousDays, showPSA, indexHomeSingleRequest, displayUTCTime);
+function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
+    var r = new StatuspageHTML(url, previousDays, showPSA, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
@@ -742,12 +1137,21 @@ function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest =
                 }
             } else {
                 r.IndexHome();
+
+                // r.storageObject.update("baseUrl", 'https://www.githubstatus.com')
+
+                // console.log('Has PSA: ', r.hasPSA());
+                // r.setFetchPsa(true);
+                // r.fetchPsa();
+                // console.log('Has PSA: ', r.hasPSA());
+
                 // r.ComponentsHome();
                 // r.StatusHome();
                 // r.ErrorHome();
             }
         }
     } catch(error) {
+        console.error(error);
         r.ErrorHome();
     }
 }
