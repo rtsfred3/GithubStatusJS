@@ -1,3 +1,102 @@
+class StatuspageDictionary {
+    /**
+     * Creates class of desired variables to be converted to JSON
+     */
+    static get _metaColors() {
+        return class MetaColors {
+            constructor(){
+                this.none = '#339966';
+                this.minor = '#339966';
+                this.major = '#E25D10';
+                this.critical = '#DC3545';
+                this.unavailable = '#4F93BD';
+                this.error = '#646464';
+                this.maintenance = '#0366D6';
+                this.psa = '#D83D42';
+
+                this.good = this.none;
+                this.under_maintenance = this.maintenance;
+                this.loading = this.unavailable;
+            }
+        }
+    }
+
+    /**
+     * Creates class of desired variables to be converted to JSON
+     */
+    static get _indicatorVals() {
+        return class IndicatorVals{
+            constructor(){
+                this.good = 'good';
+                this.minor = 'minor';
+                this.major = 'major';
+                this.critical = 'critical';
+                this.error = 'error';
+                this.maintenance = 'maintenance';
+                this.unavailable = 'unavailable';
+                this.loading = 'loading';
+
+                this.resolved = this.good;
+                this.none = this.good;
+                this.operational = this.good;
+                this.degraded_performance = this.minor;
+                this.partial_outage = this.major;
+                this.major_outage = this.critical;
+                this.under_maintenance = this.maintenance;
+            }
+        }
+    }
+
+    /**
+     * Creates class of desired variables to be converted to JSON
+     */
+    static get _indicatorMessages() {
+        return class IndicatorMessages {
+            constructor() {
+                var __indicatorVals = new StatuspageDictionary._indicatorVals();
+
+                this.resolved = __indicatorVals.good;
+                this.investigating = __indicatorVals.minor;
+                this.critical = __indicatorVals.critical;
+                this.maintenance = __indicatorVals.maintenance;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param {object} classObject - class to be converted to JSON
+     * @returns {object} Returns JSONified version of class
+     */
+    static ClassToJson(classObject){
+        return JSON.parse(JSON.stringify(classObject))
+    }
+
+    /**
+     * Converts StatuspageDictionary._metaColors class to JSON
+     * @returns {object} Returns JSONified version of StatuspageDictionary._metaColors
+     */
+    static get MetaColors(){
+        return StatuspageDictionary.ClassToJson(new StatuspageDictionary._metaColors());
+    }
+
+    /**
+     * Converts StatuspageDictionary._indicatorVals class to JSON
+     * @returns {object} Returns JSONified version of StatuspageDictionary._indicatorVals
+     */
+    static get IndicatorVals(){
+        return StatuspageDictionary.ClassToJson(new StatuspageDictionary._indicatorVals());
+    }
+
+    /**
+     * Converts StatuspageDictionary._indicatorMessages class to JSON
+     * @returns {object} Returns JSONified version of StatuspageDictionary._indicatorMessages
+     */
+    static get IndicatorMessages(){
+        return StatuspageDictionary.ClassToJson(new StatuspageDictionary._indicatorMessages());
+    }
+}
+
 class StatuspageHTML {
     /**
      * @param {string} baseURL Atlassian Statuspage URL - Required
@@ -12,8 +111,6 @@ class StatuspageHTML {
         this._fetchPsa = fetchPsa;
         this._indexHomeSingleRequest = indexHomeSingleRequest;
         this._displayUTCTime = displayUTCTime;
-
-        console.log("_indexHomeSingleRequest: " + this._indexHomeSingleRequest);
 
         this._name = null;
         this._description = null;
@@ -427,7 +524,7 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setTheme(status) {
-        var hexColor = (this._showPsa || status == 'psa') ? metaColors['psa'] : metaColors[status];
+        var hexColor = (this._showPsa || status == 'psa') ? StatuspageDictionary.MetaColors['psa'] : StatuspageDictionary.MetaColors[status];
 
         this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
@@ -444,7 +541,7 @@ class StatuspageHTML {
         // console.log('getStatus()');
         var height = fullStatus ? (document.getElementById("psa").classList.contains('hide') ? 'full-status-height' : 'psa-full-status-height') : 'status-height status-shadow';
 
-        return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + indicatorVals[status].toUpperCase() + '</span></div>';
+        return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + StatuspageDictionary.IndicatorVals[status].toUpperCase() + '</span></div>';
     }
 
     /**
@@ -460,6 +557,7 @@ class StatuspageHTML {
 
     /**
      * Returns an incident update
+     * @param {string} incident_update_id 
      * @param {string} name 
      * @param {string} impact 
      * @param {string} status 
@@ -469,14 +567,14 @@ class StatuspageHTML {
      * @param {bool} isOldestStatus 
      * @returns {string}
      */
-    createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus) {
+    createMessage(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus) {
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var out = '';
 
         // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
         var w = (status == "resolved" ? "good" : impact);
 
-        if (w == undefined) { w = indicatorMessages[status]; }
+        if (w == undefined) { w = StatuspageDictionary.IndicatorMessages[status]; }
 
         out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
@@ -498,7 +596,7 @@ class StatuspageHTML {
         // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
         out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
 
-        return "<span>" + out + "</span>";
+        return `<span id="${incident_update_id}">${out}</span>`;// + out + "</span>";
     }
 
     /**
@@ -524,15 +622,20 @@ class StatuspageHTML {
         } else {
             for (var i = 0; i < incidents.length; i++) {
                 if (incidents[i]["incident_updates"].length > 0) {
+                    out += `<span id="${incidents[i].id}">`;
                     for (var j = 0; j < incidents[i]["incident_updates"].length; j++) {
                         out += this.createMessage(
-                            incidents[i].name, incidents[i].impact,
+                            incidents[i].id,
+                            incidents[i].name,
+                            incidents[i].impact,
                             incidents[i]["incident_updates"][j].status,
                             mess["incidents"][i]["incident_updates"][j].body,
                             mess["incidents"][i]["incident_updates"][j].created_at,
-                            mess["incidents"][i].shortlink, (j == incidents[i]["incident_updates"].length - 1)
+                            mess["incidents"][i].shortlink, 
+                            (j == incidents[i]["incident_updates"].length - 1)
                         );
                     }
+                    out += '</span>';
                 }
             }
         }
@@ -546,7 +649,7 @@ class StatuspageHTML {
      * @returns {string}
      */
     makeComponent(curr) {
-        return '<div' + (curr["id"] != null ? ' id="' + curr["id"] + '"' : '') + ' class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
+        return '<div' + (curr["id"] != null ? ' id="' + curr["id"] + '"' : '') + ' class="component-height status-width bold status-color ' + StatuspageDictionary.IndicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
     }
 
     /**
@@ -592,7 +695,7 @@ class StatuspageHTML {
         // var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
         // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
 
-        this.setTheme(indicatorVals[comp["components"][0]["status"]]);
+        this.setTheme(StatuspageDictionary.IndicatorVals[comp["components"][0]["status"]]);
 
         for (var i = 0; i < comp["components"].length; i++) {
             if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
