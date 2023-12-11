@@ -1,16 +1,34 @@
 class StatuspageHTML {
-    constructor(baseURL, indexHomeSingleRequest = true, fetchPsa = false, _name = null, _description = null) {
+    /**
+     * @param {string} baseURL Atlassian Statuspage URL - Required
+     * @param {number} [previousDays=7] Shows previous upto the N days of incidents (if set to 0, all incidents shown)
+     * @param {boolean} [fetchPsa=false] PSA will get fetched and displayed if PSA is set to be shown in psa.json.
+     * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
+     * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
+     */
+    constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false) {
         this.baseURL = baseURL;
-        this._name = _name;
-        this._description = _description;
+        this._previousDays = previousDays;
+        this._fetchPsa = fetchPsa;
+        this._indexHomeSingleRequest = indexHomeSingleRequest;
+        this._displayUTCTime = displayUTCTime;
+
+        console.log("_indexHomeSingleRequest: " + this._indexHomeSingleRequest);
+
+        this._name = null;
+        this._description = null;
+        this._showPsa = false;
+
+        this.psaRoute = '/psa.json';
+
+        this.loading = this.Status(this.getStatusJson('loading'), true);
+        this.render(this.loading);
 
         if (this.baseURL.slice(-1) == '/') {
             this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
         }
-
-        this.IndexHomeSingleRequest = indexHomeSingleRequest;
-
-        if (fetchPsa && document.getElementById("psa")) {
+        
+        if (this._fetchPsa && document.getElementById("psa")) {
             this.fetchPsaAsync().then();
         }
 
@@ -20,52 +38,119 @@ class StatuspageHTML {
         this.titleStatusTemplate = "(Unofficial) Mini {} Status";
         this.titleComponentsTemplate = "(Unofficial) {} Status Components";
 
-        this.descriptionTemplate = "An unofficial website to monitor {} status updates.";// + (descript != null ? " | " + descript : "");
-
-        this.loading = this.Status(this.getStatusJson('loading'), true);
-
-        this.render(this.loading);
+        this.descriptionTemplate = "An unofficial website to monitor {} status updates.";
     }
 
-    setName(_name) {
-        this._name = _name;
+    // emptyIncidentsElement(sitename) {
+    //     const emptyIncidents = document.createElement("div");
+    //     emptyIncidents.classList.add("empty", "padding-none");
+
+    //     const emptyIncidentsFirstChild = document.createElement("div");
+    //     const emptyIncidentsSecondChild = document.createElement("div");
+
+    //     emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
+    //     emptyIncidentsSecondChild.classList.add('font-12');
+
+    //     emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
+
+    //     emptyIncidentsSecondChild.appendChild(document.createTextNode("Nothing to see here folks. Looks like " + sitename + " is up and running and has been stable for quite some time."));
+    //     emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+    //     emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+    //     emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
+
+    //     emptyIncidents.appendChild(emptyIncidentsFirstChild);
+    //     emptyIncidents.appendChild(emptyIncidentsSecondChild);
+
+    //     return emptyIncidents.outerHTML;
+    // }
+    
+    /**
+     * Inverts the index page loads the summary or if it loads status and incidents seperately
+     * @returns {StatuspageHTML}
+     */
+    invertIndexHomeSingleRequest(){
+        this._indexHomeSingleRequest = !this._indexHomeSingleRequest;
 
         return this;
     }
 
+    /**
+     * Inverts whether or not UTC or local time is shown
+     * @returns {StatuspageHTML}
+     */
+    invertDisplayUTCTime(){
+        this._displayUTCTime = !this._displayUTCTime;
+
+        return this;
+    }
+
+    /**
+     * Sets name in class
+     * @param {string} name 
+     * @returns {StatuspageHTML}
+     */
+    setName(name) {
+        this._name = name;
+
+        return this;
+    }
+
+    /**
+     * Gets name in class
+     * @returns {string}
+     */
     getName() {
         return this._name;
     }
 
+    /**
+     * Sets description in class
+     * @param {string} sitename The Atlassian Statuspage page name
+     * @param {string?} descript A field for attional description details
+     * @returns {StatuspageHTML}
+     */
     setDescript(sitename, descript = null) {
         this._description = this.descriptionTemplate.replace("{}", sitename) + (descript != null ? " | " + descript : "");
         
         return this;
     }
 
+    /**
+     * Gets description in class
+     * @returns {string}
+     */
     getDescript() {
         return this._description;
     }
 
+    /**
+     * Async fetches the PSA
+     */
     async fetchPsaAsync() {
         console.log("fetchPsaAsync");
 
-        const response = await fetch('/psa.json');
+        const response = await fetch(this.psaRoute);
         const result = await response.json();
 
         this.setPSA(result);
     }
 
+    /**
+     * Converts IndexHomeAsync to a synchronous method
+     */
     IndexHome() {
         console.log("IndexHome");
 
         this.IndexHomeAsync().then();
     }
 
+    /**
+     * Fetches Status & Incidents and renders the HTML
+     */
     async IndexHomeAsync() {
         this.setUrl();
 
-        if (this.IndexHomeSingleRequest) {
+        if (this._indexHomeSingleRequest) {
             const response = await fetch(this.baseURL + '/api/v2/summary.json');
             const result = await response.json();
 
@@ -93,12 +178,18 @@ class StatuspageHTML {
         this.setTitle(this.titleIndexTemplate.replace("{}", this.getName())).setDescriptions();
     }
 
+    /**
+     * Converts ComponentsHomeAsync to a synchronous method
+     */
     ComponentsHome() {
         console.log("ComponentsHome");
 
         this.ComponentsHomeAsync().then();
     }
 
+    /**
+     * Fetches Components and renders the HTML
+     */
     async ComponentsHomeAsync() {
         console.log("ComponentsHomeAsync");
 
@@ -114,12 +205,18 @@ class StatuspageHTML {
         this.render(html);
     }
 
+    /**
+     * Converts StatusHomeAsync to a synchronous method
+     */
     StatusHome() {
         console.log("StatusHome");
 
         this.StatusHomeAsync().then();
     }
 
+    /**
+     * Fetches Status and renders the HTML
+     */
     async StatusHomeAsync() {
         const response = await fetch(this.baseURL + '/api/v2/status.json');
         const result = await response.json();
@@ -133,38 +230,69 @@ class StatuspageHTML {
         this.render(statusHTML);
     }
 
+    /**
+     * Generates and renders an error page
+     */
     ErrorHome() {
         console.log("ErrorHome");
 
-        this.setTitle("Error - Invalid Route");
-
-        this.createMetaTag("robots", "noindex");
+        this.setTitle("Error - Invalid Route").createMetaTag("robots", "noindex");
 
         var errorHTML = this.Status(this.getStatusJson('error'), true);
 
         this.render(errorHTML);
     }
 
+    /**
+     * Sets PSA if PSA should be shown 
+     * @param {Array} psaResult 
+     * @returns {StatuspageHTML}
+     */
     setPSA(psaResult) {
         if (psaResult["showPSA"]) {
-            document.getElementById("psa").innerHTML = '<div class="center-status">' + psaResult["PSA"] + '</div>';
+            // const newDiv = document.createElement("div");
+            // newDiv.classList.add('center-status');
+            // newDiv.appendChild(document.createTextNode(psaResult["PSA"]));
+            // document.getElementById("psa").appendChild(newDiv);
 
+            document.getElementById("psa").innerHTML = '<div class="center-status">' + psaResult["PSA"] + '</div>';
+            
             document.getElementById("psa").classList.remove("hide");
+
+            this.setTheme('psa');
+
+            this._showPsa = true;
         }
 
         return this;
     }
 
+    /**
+     * Create a dummy Status JSON 
+     * @param {string} indicator 
+     * @returns {object}
+     */
     getStatusJson(indicator) {
         return { 'status': { 'indicator': indicator } };
     }
 
+    /**
+     * Renders a string of HTML in <div id="app">
+     * @param {string} html 
+     * @returns {StatuspageHTML}
+     */
     render(html) {
         document.getElementById("app").innerHTML = html;
 
         return this;
     }
 
+    /**
+     * Sets a meta tag
+     * @param {string} id 
+     * @param {string} value 
+     * @returns {StatuspageHTML}
+     */
     setMetaTag(id, value) {
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
         var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
@@ -174,6 +302,11 @@ class StatuspageHTML {
         return this;
     }
 
+    /**
+     * Gets a value from a meta tag
+     * @param {string} id 
+     * @returns {string}
+     */
     getMetaTag(id) {
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
         var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
@@ -181,6 +314,13 @@ class StatuspageHTML {
         return metaTag.getAttribute("content");
     }
 
+    /**
+     * Creates a new meta tag
+     * @param {string} id 
+     * @param {string} content 
+     * @param {string} attr 
+     * @returns {StatuspageHTML}
+     */
     createMetaTag(id, content, attr = "name") {
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
         var metaTags = metaTagsArr.filter((mTag) => mTag.getAttribute(attr) == id);
@@ -199,6 +339,12 @@ class StatuspageHTML {
         return this;
     }
 
+    /**
+     * Updates value in rich results test
+     * @param {string} id 
+     * @param {*} value 
+     * @returns {StatuspageHTML}
+     */
     updateRichTest(id, value) {
         var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
 
@@ -219,6 +365,11 @@ class StatuspageHTML {
         return this;
     }
 
+    /**
+     * Sets urls to current or defined url
+     * @param {string} url 
+     * @returns {StatuspageHTML}
+     */
     setUrl(url = null) {
         var currUrl = url == null ? window.location.href : url;
 
@@ -234,48 +385,90 @@ class StatuspageHTML {
         return this;
     }
 
+    /**
+     * Sets title in HTML
+     * @param {string} title 
+     * @returns {StatuspageHTML}
+     */
     setTitle(title) {
         document.getElementsByTagName("title")[0].innerHTML = title;
 
-        this.setMetaTag("twitter:title", title).setMetaTag("og:title", title);
-        this.setMetaTag("application-name", title).setMetaTag("apple-mobile-web-app-title", title);
-
-        this.updateRichTest("name", title);
+        this.setMetaTag("twitter:title", title)
+            .setMetaTag("og:title", title)
+            .setMetaTag("application-name", title)
+            .setMetaTag("apple-mobile-web-app-title", title)
+            .updateRichTest("name", title);
 
         return this;
     }
 
+    /**
+     * Sets description in HTML
+     * @param {string} sitename 
+     * @param {string} descript 
+     * @returns {StatuspageHTML}
+     */
     setDescriptions(sitename = null, descript = null) {
         if (sitename != null) {
             this.setDescript(sitename, descript);
         }
 
-        this.setMetaTag("description", this.getDescript()).setMetaTag("og:description", this.getDescript()).setMetaTag("twitter:description", this.getDescript());
-        
-        this.updateRichTest("description", this.getDescript());
+        this.setMetaTag("description", this.getDescript())
+            .setMetaTag("og:description", this.getDescript())
+            .setMetaTag("twitter:description", this.getDescript())
+            .updateRichTest("description", this.getDescript());
 
         return this;
     }
 
+    /**
+     * Sets meta tag themes
+     * @param {string} status 
+     * @returns {StatuspageHTML}
+     */
     setTheme(status) {
-        this.setMetaTag("theme-color", metaColors[status]);
-        this.setMetaTag("apple-mobile-web-app-status-bar-style", metaColors[status]);
+        var hexColor = (this._showPsa || status == 'psa') ? metaColors['psa'] : metaColors[status];
+
+        this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
         return this;
     }
 
+    /**
+     * Generates HTML for a status
+     * @param {string} status 
+     * @param {bool} fullStatus 
+     * @returns {string}
+     */
     getStatus(status, fullStatus = false) {
+        // console.log('getStatus()');
         var height = fullStatus ? (document.getElementById("psa").classList.contains('hide') ? 'full-status-height' : 'psa-full-status-height') : 'status-height status-shadow';
 
         return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + indicatorVals[status].toUpperCase() + '</span></div>';
     }
 
+    /**
+     * Gets HTML for a status
+     * @param {object} arr 
+     * @param {bool} fullStatus 
+     * @returns {string}
+     */
     Status(arr, fullStatus = false) {
-        this.setTheme(arr.status.indicator);
-
-        return this.getStatus(arr.status.indicator, fullStatus);
+        // console.log('Status()');
+        return this.setTheme(arr.status.indicator).getStatus(arr.status.indicator, fullStatus);
     }
 
+    /**
+     * Returns an incident update
+     * @param {string} name 
+     * @param {string} impact 
+     * @param {string} status 
+     * @param {string} body 
+     * @param {*} created_at 
+     * @param {string} shortlink 
+     * @param {bool} isOldestStatus 
+     * @returns {string}
+     */
     createMessage(name, impact, status, body, created_at, shortlink, isOldestStatus) {
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var out = '';
@@ -289,9 +482,9 @@ class StatuspageHTML {
 
         var date = new Date(created_at).toLocaleDateString("en-US", options);
 
-        if (location.hostname == 'do.githubstat.us') {
+        if (this._displayUTCTime) {
             options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-            var t_date = new Date(mess["incidents"][i]["incident_updates"][j].created_at);
+            var t_date = new Date(created_at);
             t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
             date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
         }
@@ -308,20 +501,24 @@ class StatuspageHTML {
         return "<span>" + out + "</span>";
     }
 
+    /**
+     * Returns HTML string containing incidents for past seven days
+     * @param {object} mess 
+     * @returns {string}
+     */
     Messages(mess) {
         var out = '';
 
-        var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
-
-        var previousDays = 7;
+        // var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
 
         var previousDate = new Date();
         previousDate.setHours(0, 0, 0);
-        var previousDaysDate = previousDate.setDate((new Date).getDate() - previousDays);
+        var previousDaysDate = previousDate.setDate((new Date).getDate() - this._previousDays);
 
-        var incidents = mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
+        var incidents = this._previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
         if (incidents.length == 0) {
+            // out = this.emptyIncidentsElement(this.getName());
             out = this.noIncidentsTemplate.replace("{}", this.getName());
             // out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         } else {
@@ -343,10 +540,21 @@ class StatuspageHTML {
         return '<div id="messages" class="messages">' + out + '</div>';
     }
 
+    /**
+     * Gets individual component
+     * @param {object} curr 
+     * @returns {string}
+     */
     makeComponent(curr) {
         return '<div' + (curr["id"] != null ? ' id="' + curr["id"] + '"' : '') + ' class="component-height status-width bold status-color ' + indicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
     }
 
+    /**
+     * 
+     * @param {object} a 
+     * @param {object} b 
+     * @returns {int}
+     */
     compareComponents(a, b) {
         if (a["position"] < b["position"]) {
             return -1;
@@ -358,6 +566,13 @@ class StatuspageHTML {
         return 0;
     }
 
+    /**
+     * 
+     * @param {Array} compArr 
+     * @param {string} groupId 
+     * @param {string} groupName 
+     * @returns {string}
+     */
     groupedComponents(compArr, groupId, groupName = null) {
         var groupComp = this.makeComponent(compArr.filter((component) => component["id"] == groupId)[0], null, true);
 
@@ -366,11 +581,15 @@ class StatuspageHTML {
         return groupComp + group.map((comp) => this.makeComponent(comp, groupName)).join('');
     }
 
+    /**
+     * Returns HTML string of all components
+     * @param {object} comp 
+     * @returns {string}
+     */
     Components(comp) {
         var out = '';
 
-        var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
-
+        // var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
         // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
 
         this.setTheme(indicatorVals[comp["components"][0]["status"]]);
@@ -385,11 +604,15 @@ class StatuspageHTML {
     }
 }
 
-function Router(url, showPSA = false) {
-    // var url = 'https://www.githubstatus.com/';
-    // var url = 'https://apiv3.githubstat.us/';
-    
-    var r = new StatuspageHTML(url, true, showPSA);
+/**
+ * @param {string} url Atlassian Statuspage URL - Required
+ * @param {number} [previousDays=7] Shows previous upto the N days of incidents (if set to 0, all incidents shown)
+ * @param {boolean} [showPSA=false] PSA will get fetched and displayed if PSA is set to be shown in psa.json.
+ * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
+ * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
+ */
+function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest = true, displayUTCTime = false) {
+    var r = new StatuspageHTML(url, previousDays, showPSA, indexHomeSingleRequest, displayUTCTime);
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;

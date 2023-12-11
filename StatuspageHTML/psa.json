@@ -1,4 +1,4 @@
 {
-  "showPSA": true,
-  "PSA": "TEST"
+    "showPSA": false,
+    "PSA": "Test PSA Announcement"
 }
