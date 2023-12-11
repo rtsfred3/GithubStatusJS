@@ -28,7 +28,7 @@ class StatuspageHTML {
             this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
         }
         
-        if (fetchPsa && document.getElementById("psa")) {
+        if (this._fetchPsa && document.getElementById("psa")) {
             this.fetchPsaAsync().then();
         }
 
@@ -64,6 +64,26 @@ class StatuspageHTML {
     //     return emptyIncidents.outerHTML;
     // }
     
+    /**
+     * Inverts the index page loads the summary or if it loads status and incidents seperately
+     * @returns {StatuspageHTML}
+     */
+    invertIndexHomeSingleRequest(){
+        this._indexHomeSingleRequest = !this._indexHomeSingleRequest;
+
+        return this;
+    }
+
+    /**
+     * Inverts whether or not UTC or local time is shown
+     * @returns {StatuspageHTML}
+     */
+    invertDisplayUTCTime(){
+        this._displayUTCTime = !this._displayUTCTime;
+
+        return this;
+    }
+
     /**
      * Sets name in class
      * @param {string} name 
@@ -242,9 +262,7 @@ class StatuspageHTML {
             this.setTheme('psa');
 
             this._showPsa = true;
-        } /* else {
-            this._showPsa = false;
-        } */
+        }
 
         return this;
     }
