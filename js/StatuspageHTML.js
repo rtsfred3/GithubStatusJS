@@ -138,7 +138,9 @@ class StorageObject {
         this.template_title_index = `(Unofficial) ${StorageObject.replaceableStringValue} Status`;
         this.template_title_status = `(Unofficial) Mini ${StorageObject.replaceableStringValue} Status`;
         this.template_title_components = `(Unofficial) ${StorageObject.replaceableStringValue} Status Components`;
+        this.template_title_error = `Error - Invalid Route`;
         this.template_descrisption = `An unofficial website to monitor ${StorageObject.replaceableStringValue} status updates.`;
+        this.template_descrisption_error = `An error has occured.`;
         this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StorageObject.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
 
         this.dict_meta_colors = StatuspageDictionary.MetaColors;
@@ -155,6 +157,17 @@ class StorageObject {
         this.api_maintenances_all = null;
 
         this.localStorageKey = StorageObject.staticLocalStorageKey;
+    }
+
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    setError(){
+        this.setName(this.template_title_error);
+        this.setTitleError();
+        this.setDescription(this.template_descrisption_error);
+        return this.toLocalStorage();
     }
 
     /**
@@ -366,6 +379,14 @@ class StorageObject {
 
     /**
      * 
+     * @returns {StorageObject}
+     */
+    setTitleError(){
+        return this.setTitle(this.template_title_error);
+    }
+
+    /**
+     * 
      * @returns {string}
      */
     getTitle() {
@@ -557,7 +578,7 @@ class StatuspageHTML {
     constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
         this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
         
-        this.loading = this.Status(this.getStatusJson('loading'), true);
+        this.loading = this.StatusHTML(this.getStatusJson('loading'), true);
         this.render(this.loading);
 
         this.fetchPsa();
@@ -607,10 +628,11 @@ class StatuspageHTML {
 
             this.storageObject.setApiSummary(result);
             
-            var statusHTML = this.Status(result);
-            var messagesHTML = this.Messages(result);
+            // var statusHTML = this.StatusHTML(result);
+            // var messagesHTML = this.MessagesHTML(result);
+            // this.render(statusHTML + messagesHTML);
 
-            this.render(statusHTML + messagesHTML);
+            this.render(this.SummaryHTML(result));
         } else {
             const statusResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
             const statusResult = await statusResponse.json();
@@ -621,24 +643,18 @@ class StatuspageHTML {
             this.storageObject.setApiStatus(statusResult);
             this.storageObject.setApiIncidentsAll(messagesResult);
 
-            var statusHTML = this.Status(statusResult);
-            var messagesHTML = this.Messages(messagesResult);
+            // var statusHTML = this.StatusHTML(statusResult);
+            // var messagesHTML = this.MessagesHTML(messagesResult);
+            // this.render(statusHTML + messagesHTML);
 
-            this.render(statusHTML + messagesHTML);
+            this.render(this.SummaryHTML(result));
         }
 
         this.storageObject.setTitleIndex();
 
-        console.log('storageObject.title: '+this.storageObject.getTitle());
-
         this.setTitles().setDescriptions();
 
-        console.log('storageObject.currStatus: ' + this.storageObject.status_main);
-        console.log('storageObject.themeStatus: ' + this.storageObject.status_theme);
-
         this.storageObject.toLocalStorage();
-
-        // console.log('StorageObject.fromLocalStorage(): ' + StorageObject.fromLocalStorage());
     }
 
     /**
@@ -664,7 +680,7 @@ class StatuspageHTML {
 
         this.setTitles().setDescriptions();
 
-        var html = this.Components(result);
+        var html = this.ComponentsHTML(result);
 
         this.render(html);
     }
@@ -690,7 +706,7 @@ class StatuspageHTML {
 
         this.setTitles().setDescriptions();
 
-        var statusHTML = this.Status(result, true);
+        var statusHTML = this.StatusHTML(result, true);
 
         this.render(statusHTML);
     }
@@ -701,9 +717,11 @@ class StatuspageHTML {
     ErrorHome() {
         console.log("ErrorHome");
 
-        this.setTitles("Error - Invalid Route").createMetaTag("robots", "noindex");
+        this.storageObject.setError();
 
-        var errorHTML = this.Status(this.getStatusJson('error'), true);
+        this.setTitles().createMetaTag("robots", "noindex");
+
+        var errorHTML = this.StatusHTML(this.getStatusJson('error'), true);
 
         this.render(errorHTML);
     }
@@ -717,57 +735,6 @@ class StatuspageHTML {
 
         return this;
     }
-
-    /**
-     * Inverts whether or not UTC or local time is shown
-     * @returns {StatuspageHTML}
-     */
-    // invertDisplayUTCTime(){
-    //     this._displayUTCTime = !this._displayUTCTime;
-
-    //     return this;
-    // }
-
-    /**
-     * Sets name in class
-     * @param {string} name 
-     * @returns {StatuspageHTML}
-     */
-    // setName(name) {
-    //     this._name = name;
-    //     this.storageObject.site_name = this._name;
-
-    //     return this;
-    // }
-
-    /**
-     * Gets name in class
-     * @returns {string}
-     */
-    // getName() {
-    //     return this._name;
-    // }
-
-    /**
-     * Sets description in class
-     * @param {string} sitename The Atlassian Statuspage page name
-     * @param {string?} descript A field for attional description details
-     * @returns {StatuspageHTML}
-     */
-    // setDescript(sitename, descript = null) {
-    //     this._description = this.storageObject.template_descrisption.replace("{}", sitename) + (descript != null ? " | " + descript : "");
-    //     this.storageObject.site_description = this._description;
-        
-    //     return this;
-    // }
-
-    /**
-     * Gets description in class
-     * @returns {string}
-     */
-    // getDescript() {
-    //     return this._description;
-    // }
 
     /**
      * 
@@ -826,14 +793,8 @@ class StatuspageHTML {
         }
 
         this.setTheme('psa');
-
-        // console.log(`settings_showPsa && psaResult["showPSA"]: ${this.storageObject.settings_showPsa && psaResult["showPSA"]}`);
+        
         this.storageObject.setShowPsa(this.storageObject.settings_showPsa && psaResult["showPSA"] && this.hasPSA());
-
-        console.log(`settings.showPsa:\t${this.storageObject.settings_showPsa}`);
-        console.log(`psaResult["showPSA"]:\t${psaResult["showPSA"]}`);
-        console.log(`this.hasPSA():\t${this.hasPSA()}`);
-        console.log('----------------');
 
         return this;
     }
@@ -977,7 +938,7 @@ class StatuspageHTML {
      * @param {string} title 
      * @returns {StatuspageHTML}
      */
-    setTitles(title) {
+    setTitles() {
         document.getElementsByTagName("title")[0].innerHTML = this.storageObject.getTitle();
 
         this.setMetaTag("twitter:title", this.storageObject.getTitle())
@@ -1024,32 +985,8 @@ class StatuspageHTML {
         return this;
     }
 
-    updateStorageObject(id, value){
-        var obj = this.storageObject.toJson();
-        obj[id] = value;
-        this.storageObject = StorageObject.fromJsonString(obj);
-
-        return this;
-    }
-
-    /**
-     * 
-     * @returns {StatuspageHTML}
-     */
-    setLocalStorage() {
-        localStorage.setItem('storageObject', this.storageObject.toJsonString());
-
-        return this;
-    }
-
-    /**
-     * 
-     * @returns {object}
-     */
-    getLocalStorage() {
-        this.storageObject = StorageObject.fromJsonString(localStorage.getItem('storageObject'));
-
-        return this;
+    SummaryHTML(summaryJson){
+        return this.StatusHTML(summaryJson) + this.MessagesHTML(summaryJson);
     }
 
     /**
@@ -1059,7 +996,6 @@ class StatuspageHTML {
      * @returns {string}
      */
     getStatus(status, fullStatus = false) {
-        // console.log('getStatus()');
         var height = fullStatus ? (document.getElementById("psa").classList.contains('hide') ? 'full-status-height' : 'psa-full-status-height') : 'status-height status-shadow';
 
         return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + StatuspageDictionary.IndicatorVals[status].toUpperCase() + '</span></div>';
@@ -1071,7 +1007,7 @@ class StatuspageHTML {
      * @param {bool} fullStatus 
      * @returns {string}
      */
-    Status(arr, fullStatus = false) {
+    StatusHTML(arr, fullStatus = false) {
         // console.log('Status()');
         this.storageObject.setStatus(arr.status.indicator);
         return this.setTheme(arr.status.indicator).getStatus(arr.status.indicator, fullStatus);
@@ -1126,7 +1062,7 @@ class StatuspageHTML {
      * @param {object} mess 
      * @returns {string}
      */
-    Messages(mess) {
+    MessagesHTML(mess) {
         var out = '';
 
         // var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
@@ -1213,7 +1149,7 @@ class StatuspageHTML {
      * @param {object} comp 
      * @returns {string}
      */
-    Components(comp) {
+    ComponentsHTML(comp) {
         var out = '';
 
         // var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
@@ -1248,9 +1184,6 @@ function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest =
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
-        
-        // console.log('onCloudflareDev', onCloudflareDev);
-        // console.log('onCloudflareProd', onCloudflareProd);
 
         if (!navigator.onLine) {
             r.ErrorHome();
