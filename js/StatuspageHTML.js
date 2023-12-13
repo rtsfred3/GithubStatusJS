@@ -140,15 +140,113 @@ class StorageObject {
         this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
         this.dict_indicator_messages = StatuspageDictionary.IndicatorMessages;
 
+        this.api_summary = null;
+        this.api_status = null;
+        this.api_components = null;
+        this.api_incidents_unresolved = null;
+        this.api_incidents_all = null;
+        this.api_maintenances_upcoming = null;
+        this.api_maintenances_active = null;
+        this.api_maintenances_all = null;
+
         this.localStorageKey = StorageObject.staticLocalStorageKey;
     }
 
+    /**
+     * 
+     * @param {object} summaryJson 
+     * @returns {StorageObject}
+     */
+    setApiSummary(summaryJson){
+        this.api_summary = summaryJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} statusJson 
+     * @returns {StorageObject}
+     */
+    setApiStatus(statusJson){
+        this.api_status = statusJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} componentsJson 
+     * @returns {StorageObject}
+     */
+    setApiComponents(componentsJson){
+        this.api_components = componentsJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} incidentsJson 
+     * @returns {StorageObject}
+     */
+    setApiIncidentsAll(incidentsJson){
+        this.api_incidents_all = incidentsJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} incidentsJson 
+     * @returns {StorageObject}
+     */
+    setApiIncidentsUnresolved(incidentsJson){
+        this.api_incidents_unresolved = incidentsJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} maintenancesJson 
+     * @returns {StorageObject}
+     */
+    setApiMaintenancesUpcoming(maintenancesJson){
+        this.api_maintenances_upcoming = maintenancesJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} maintenancesJson 
+     * @returns {StorageObject}
+     */
+    setApiMaintenancesActive(maintenancesJson){
+        this.api_maintenances_active = maintenancesJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {object} maintenancesJson 
+     * @returns {StorageObject}
+     */
+    setApiMaintenancesAll(maintenancesJson){
+        this.api_maintenances_all = maintenancesJson;
+        return this.toLocalStorage();
+    }
+
+    /**
+     * 
+     * @param {boolean} b 
+     * @returns {StorageObject}
+     */
     setShowPsa(b) {
         this.settings_showPsa = b;
 
         return this;
     }
 
+    /**
+     * 
+     * @returns {boolean}
+     */
     setShowPsa() {
         return this.settings_showPsa;
     }
@@ -198,8 +296,7 @@ class StorageObject {
      */
     setName(name) {
         this.site_name = name;
-
-        return this;
+        return this.toLocalStorage();
     }
 
     /**
@@ -218,7 +315,7 @@ class StorageObject {
     setDescription(description) {
         this.site_description = description;
 
-        return this;
+        return this.toLocalStorage();
     }
 
     /**
@@ -340,6 +437,7 @@ class StorageObject {
      */
     toLocalStorage(){
         console.log('toLocalStorage(): ' + this.toJsonString());
+
         localStorage.setItem(this.localStorageKey, this.toJsonString());
 
         return this;
@@ -382,6 +480,8 @@ class StatuspageHTML {
     constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
         this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
         
+        // this.storageObject = StorageObject.fromLocalStorage();
+
         // this._baseUrl = baseURL;
         // this._previousDays = previousDays;
         // this._showPsa = fetchPsa;
@@ -454,7 +554,10 @@ class StatuspageHTML {
             const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/summary.json');
             const result = await response.json();
 
-            this.setName(result.page.name).setDescript(result.page.name, result.status.description);
+            this.storageObject.setApiSummary(result);
+
+            this.storageObject.setName(result.page.name)
+            this.storageObject.setDescription(result.page.name, result.status.description);
 
             this.storageObject.setStatus(result.status.indicator);
             
@@ -468,6 +571,9 @@ class StatuspageHTML {
 
             const messagesResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/incidents.json');
             const messagesResult = await messagesResponse.json();
+
+            this.storageObject.setApiStatus(statusResult);
+            this.storageObject.setApiIncidentsAll(messagesResult);
 
             this.setName(statusResult.page.name).setDescript(statusResult.page.name, statusResult.status.description);
 
@@ -485,7 +591,7 @@ class StatuspageHTML {
 
         this.storageObject.toLocalStorage();
 
-        console.log('StorageObject.fromLocalStorage(): ' + StorageObject.fromLocalStorage());
+        // console.log('StorageObject.fromLocalStorage(): ' + StorageObject.fromLocalStorage());
     }
 
     /**
@@ -885,12 +991,10 @@ class StatuspageHTML {
 
         this.storageObject.status_theme = (this.hasPSA() || status == 'psa' || status == null) ? 'psa' : status;
 
-        console.log(`showPSA: ${this.storageObject.settings_showPsa}; hasPSA(): ${this.hasPSA()}`);
+        // console.log(`showPSA: ${this.storageObject.settings_showPsa}; hasPSA(): ${this.hasPSA()}`);
         // console.log(`status_theme (showPSA: ${this.storageObject.settings_showPsa}, status: ${status}): ${this.storageObject.status_theme}`);
 
         var hexColor = StatuspageDictionary.MetaColors[this.storageObject.status_theme];
-
-        console.log(`Hex Color: ${hexColor}`);
 
         this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
