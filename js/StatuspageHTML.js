@@ -113,7 +113,11 @@ class StorageObject {
         return 'storageObject';
     }
 
-    constructor(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, psaRouteParam, _name = null, _description = null, _status = null, _themeStatus = null){
+    static get replaceableStringValue(){
+        return '{}';
+    }
+
+    constructor(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, psaRouteParam, _name = null, _description = null, _title = null, _status = null, _themeStatus = null){
         this.settings_baseUrl = baseURL;
         this.settings_previousDays = previousDays;
         this.settings_showPsa = fetchPsa;
@@ -123,6 +127,7 @@ class StorageObject {
         
         this.site_name = _name;
         this.site_description = _description;
+        this.site_title = _title;
         this.status_main = _status;
         this.status_theme = _themeStatus;
 
@@ -130,11 +135,11 @@ class StorageObject {
             this.settings_baseUrl = this.settings_baseUrl.substring(0, this.settings_baseUrl.length - 1);
         }
 
-        this.template_title_index = "(Unofficial) {} Status";
-        this.template_title_status = "(Unofficial) Mini {} Status";
-        this.template_title_components = "(Unofficial) {} Status Components";
-        this.template_descrisption = "An unofficial website to monitor {} status updates.";
-        this.template_incidents_none = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
+        this.template_title_index = `(Unofficial) ${StorageObject.replaceableStringValue} Status`;
+        this.template_title_status = `(Unofficial) Mini ${StorageObject.replaceableStringValue} Status`;
+        this.template_title_components = `(Unofficial) ${StorageObject.replaceableStringValue} Status Components`;
+        this.template_descrisption = `An unofficial website to monitor ${StorageObject.replaceableStringValue} status updates.`;
+        this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StorageObject.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
 
         this.dict_meta_colors = StatuspageDictionary.MetaColors;
         this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
@@ -159,6 +164,9 @@ class StorageObject {
      */
     setApiSummary(summaryJson){
         this.api_summary = summaryJson;
+        this.setStatus(summaryJson.status.indicator);
+        this.setName(summaryJson.page.name);
+        this.setDescription(summaryJson.status.description);
         return this.toLocalStorage();
     }
 
@@ -169,6 +177,9 @@ class StorageObject {
      */
     setApiStatus(statusJson){
         this.api_status = statusJson;
+        this.setStatus(statusJson.status.indicator);
+        this.setName(statusJson.page.name);
+        this.setDescription(statusJson.status.description);
         return this.toLocalStorage();
     }
 
@@ -179,6 +190,8 @@ class StorageObject {
      */
     setApiComponents(componentsJson){
         this.api_components = componentsJson;
+        this.setName(componentsJson.page.name);
+        this.setDescription();
         return this.toLocalStorage();
     }
 
@@ -189,6 +202,8 @@ class StorageObject {
      */
     setApiIncidentsAll(incidentsJson){
         this.api_incidents_all = incidentsJson;
+        this.setName(incidentsJson.page.name);
+        this.setDescription();
         return this.toLocalStorage();
     }
 
@@ -199,6 +214,8 @@ class StorageObject {
      */
     setApiIncidentsUnresolved(incidentsJson){
         this.api_incidents_unresolved = incidentsJson;
+        this.setName(incidentsJson.page.name);
+        this.setDescription();
         return this.toLocalStorage();
     }
 
@@ -209,6 +226,8 @@ class StorageObject {
      */
     setApiMaintenancesUpcoming(maintenancesJson){
         this.api_maintenances_upcoming = maintenancesJson;
+        this.setName(maintenancesJson.page.name);
+        this.setDescription();
         return this.toLocalStorage();
     }
 
@@ -219,6 +238,8 @@ class StorageObject {
      */
     setApiMaintenancesActive(maintenancesJson){
         this.api_maintenances_active = maintenancesJson;
+        this.setName(maintenancesJson.page.name);
+        this.setDescription();
         return this.toLocalStorage();
     }
 
@@ -229,6 +250,8 @@ class StorageObject {
      */
     setApiMaintenancesAll(maintenancesJson){
         this.api_maintenances_all = maintenancesJson;
+        this.setName(maintenancesJson.page.name);
+        this.setDescription();
         return this.toLocalStorage();
     }
 
@@ -309,12 +332,64 @@ class StorageObject {
 
     /**
      * 
-     * @param {string} description 
+     * @param {string} template 
      * @returns {StorageObject}
      */
-    setDescription(description) {
-        this.site_description = description;
+    setTitle(template){
+        this.site_title = template.replace(StorageObject.replaceableStringValue, this.site_name);
+        return this.toLocalStorage();
+    }
 
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    setTitleIndex(){
+        return this.setTitle(this.template_title_index);
+    }
+    
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    setTitleStatus(){
+        return this.setTitle(this.template_title_status);
+    }
+
+    /**
+     * 
+     * @returns {StorageObject}
+     */
+    setTitleComponents(){
+        return this.setTitle(this.template_title_components);
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    getTitle() {
+        return this.site_title;
+    }
+
+    /**
+     * 
+     * @returns {string}
+     */
+    getIncidentsNoneHTML(){
+        return this.template_incidents_none.replaceAll(StorageObject.replaceableStringValue, this.getName());
+    }
+
+    /**
+     * 
+     * @param {string} descript 
+     * @returns {StorageObject}
+     */
+    setDescription(descript = null) {
+        if(this.site_description == null){
+            this.site_description = this.template_descrisption.replaceAll(StorageObject.replaceableStringValue, this.getName()) + (descript != null ? " | " + descript : "");
+        }
+        
         return this.toLocalStorage();
     }
 
@@ -379,18 +454,41 @@ class StorageObject {
      * @returns {StorageObject}
      */
     fromJson(jsonObj){
-        this.settings_baseUrl = jsonObj["settings_baseUrl"];
-        this.settings_previousDays = jsonObj["settings_previousDays"];
-        this.settings_showPsa = jsonObj["settings_showPsa"];
-        this.settings_indexHomeSingleRequest = jsonObj["settings_indexHomeSingleRequest"];
-        this.settings_displayUTCTime = jsonObj["settings_displayUTCTime"];
-        this.settings_psaRoute = jsonObj["settings_psaRoute"];
+        console.log(jsonObj);
 
-        this.setName(jsonObj["site_name"]);
-        this.setDescription(jsonObj["site_description"]);
+        this.settings_baseUrl = jsonObj["settings.baseUrl"];
+        this.settings_previousDays = jsonObj["settings.previousDays"];
+        this.settings_showPsa = jsonObj["settings.showPsa"];
+        this.settings_indexHomeSingleRequest = jsonObj["settings.indexHomeSingleRequest"];
+        this.settings_displayUTCTime = jsonObj["settings.displayUTCTime"];
+        this.settings_psaRoute = jsonObj["settings.psaRoute"];
 
-        this.setStatus(jsonObj["status_main"]);
-        this.setThemeStatus(jsonObj["status_theme"]);
+        this.site_name = jsonObj["site.name"];
+        this.site_description = jsonObj["site.description"];
+        this.site_title = jsonObj["site.title"];
+        this.status_main = jsonObj["site.main"];
+        this.status_theme = jsonObj["site.theme"];
+
+        this.template_title_index = jsonObj["template.title.index"];
+        this.template_title_status = jsonObj["template.title.status"];
+        this.template_title_components = jsonObj["template.title.components"];
+        this.template_descrisption = jsonObj["template.description"];
+        this.template_incidents_none = jsonObj["template.incidents.none"];
+
+        this.api_summary = jsonObj["api.summary"];
+        this.api_status = jsonObj["api.status"];
+        this.api_components = jsonObj["api.components"];
+        this.api_incidents_unresolved = jsonObj["api.incidents.unresolved"];
+        this.api_incidents_all = jsonObj["api.incidents.all"];
+        this.api_maintenances_upcoming = jsonObj["api.maintenances.upcoming"];
+        this.api_maintenances_active = jsonObj["api.maintenances.active"];
+        this.api_maintenances_all = jsonObj["api.maintenances.all"];
+
+        this.dict_meta_colors = StatuspageDictionary.MetaColors;
+        this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
+        this.dict_indicator_messages = StatuspageDictionary.IndicatorMessages;
+
+        this.localStorageKey = StorageObject.staticLocalStorageKey;
 
         return this;
     }
@@ -410,25 +508,9 @@ class StorageObject {
      * @returns {StorageObject}
      */
     static fromJson(jsonObject){
-        for (const [key, value] of Object.entries(jsonObject)) {
-            if (key.includes('.')) {
-                jsonObject[`${key.toString().replaceAll('.', '_')}`] = value;
-                delete jsonObject[`${key}`]
-            }
-        }
+        var newStorageObject = new StorageObject(jsonObject["settings.baseUrl"]);
 
-        var newStorageObject = new StorageObject(
-            jsonObject["settings_baseUrl"], jsonObject["settings_previousDays"], jsonObject["settings_showPsa"],
-            jsonObject["settings_indexHomeSingleRequest"], jsonObject["settings_displayUTCTime"], jsonObject["settings_psaRoute"]
-        );
-
-        newStorageObject.setName(jsonObject["site_name"]);
-        newStorageObject.setDescription(jsonObject["site_description"]);
-
-        newStorageObject.setStatus(jsonObject["status_main"]);
-        newStorageObject.setThemeStatus(jsonObject["status_theme"]);
-
-        return newStorageObject;
+        return newStorageObject.fromJson(jsonObject);
     }
 
     /**
@@ -436,10 +518,7 @@ class StorageObject {
      * @returns {StorageObject}
      */
     toLocalStorage(){
-        console.log('toLocalStorage(): ' + this.toJsonString());
-
         localStorage.setItem(this.localStorageKey, this.toJsonString());
-
         return this;
     }
 
@@ -462,9 +541,7 @@ class StorageObject {
 
         var storageObject = JSON.parse(localStorage.getItem(StorageObject.staticLocalStorageKey));
 
-        var newStorageObj = StorageObject.fromJson(storageObject);
-
-        return newStorageObj;
+        return StorageObject.fromJson(storageObject);
     }
 }
 
@@ -480,36 +557,10 @@ class StatuspageHTML {
     constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
         this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
         
-        // this.storageObject = StorageObject.fromLocalStorage();
-
-        // this._baseUrl = baseURL;
-        // this._previousDays = previousDays;
-        // this._showPsa = fetchPsa;
-        // this._indexHomeSingleRequest = indexHomeSingleRequest;
-        // this._displayUTCTime = displayUTCTime;
-        // this._psaRoute = _psaRouteParam;
-
-        // this._name = null;
-        // this._description = null;
-
-        // console.log(this.storageObject);
-        // console.log(this.storageObject.toJson());
-
         this.loading = this.Status(this.getStatusJson('loading'), true);
         this.render(this.loading);
 
         this.fetchPsa();
-
-        // if (this._baseUrl.slice(-1) == '/') {
-        //     this._baseUrl = this._baseUrl.substring(0, this._baseUrl.length - 1);
-        // }
-
-        // this.noIncidentsTemplate = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like {} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
-
-        // this.titleIndexTemplate = "(Unofficial) {} Status";
-        // this.titleStatusTemplate = "(Unofficial) Mini {} Status";
-        // this.titleComponentsTemplate = "(Unofficial) {} Status Components";
-        // this.descriptionTemplate = "An unofficial website to monitor {} status updates.";
     }
 
     // emptyIncidentsElement(sitename) {
@@ -555,11 +606,6 @@ class StatuspageHTML {
             const result = await response.json();
 
             this.storageObject.setApiSummary(result);
-
-            this.storageObject.setName(result.page.name)
-            this.storageObject.setDescription(result.page.name, result.status.description);
-
-            this.storageObject.setStatus(result.status.indicator);
             
             var statusHTML = this.Status(result);
             var messagesHTML = this.Messages(result);
@@ -575,19 +621,20 @@ class StatuspageHTML {
             this.storageObject.setApiStatus(statusResult);
             this.storageObject.setApiIncidentsAll(messagesResult);
 
-            this.setName(statusResult.page.name).setDescript(statusResult.page.name, statusResult.status.description);
-
             var statusHTML = this.Status(statusResult);
             var messagesHTML = this.Messages(messagesResult);
 
             this.render(statusHTML + messagesHTML);
         }
 
-        this.setTitle(this.storageObject.template_title_index.replace("{}", this.getName())).setDescriptions();
+        this.storageObject.setTitleIndex();
+
+        console.log('storageObject.title: '+this.storageObject.getTitle());
+
+        this.setTitles().setDescriptions();
 
         console.log('storageObject.currStatus: ' + this.storageObject.status_main);
         console.log('storageObject.themeStatus: ' + this.storageObject.status_theme);
-        console.log('Has PSA in IndexHomeAsync(): ', this.hasPSA());
 
         this.storageObject.toLocalStorage();
 
@@ -612,9 +659,10 @@ class StatuspageHTML {
         const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/components.json');
         const result = await response.json();
 
-        this.setName(result.page.name)
-            .setTitle(this.storageObject.template_title_components.replace("{}", this.getName()))
-            .setDescriptions(this.getName());
+        this.storageObject.setApiComponents(result);
+        this.storageObject.setTitleComponents();
+
+        this.setTitles().setDescriptions();
 
         var html = this.Components(result);
 
@@ -637,9 +685,10 @@ class StatuspageHTML {
         const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
         const result = await response.json();
 
-        this.setName(result.page.name).setDescript()
-            .setTitle(this.storageObject.template_title_status.replace("{}", this.getName()))
-            .setDescriptions(this.getName(), result.status.description);
+        this.storageObject.setApiStatus(result);
+        this.storageObject.setTitleStatus();
+
+        this.setTitles().setDescriptions();
 
         var statusHTML = this.Status(result, true);
 
@@ -652,33 +701,11 @@ class StatuspageHTML {
     ErrorHome() {
         console.log("ErrorHome");
 
-        this.setTitle("Error - Invalid Route").createMetaTag("robots", "noindex");
+        this.setTitles("Error - Invalid Route").createMetaTag("robots", "noindex");
 
         var errorHTML = this.Status(this.getStatusJson('error'), true);
 
         this.render(errorHTML);
-    }
-
-    /**
-     * 
-     * @param {boolean} b 
-     * @returns {StatuspageHTML}
-     */
-    setFetchPsa(b) {
-        this._showPsa = b;
-
-        return this;
-    }
-
-    /**
-     * 
-     * @param {string} route - psa.json route
-     * @returns {StatuspageHTML}
-     */
-    setPsaRoute(route) {
-        this._psaRoute = route;
-
-        return this;
     }
 
     /**
@@ -695,31 +722,31 @@ class StatuspageHTML {
      * Inverts whether or not UTC or local time is shown
      * @returns {StatuspageHTML}
      */
-    invertDisplayUTCTime(){
-        this._displayUTCTime = !this._displayUTCTime;
+    // invertDisplayUTCTime(){
+    //     this._displayUTCTime = !this._displayUTCTime;
 
-        return this;
-    }
+    //     return this;
+    // }
 
     /**
      * Sets name in class
      * @param {string} name 
      * @returns {StatuspageHTML}
      */
-    setName(name) {
-        this._name = name;
-        this.storageObject.site_name = this._name;
+    // setName(name) {
+    //     this._name = name;
+    //     this.storageObject.site_name = this._name;
 
-        return this;
-    }
+    //     return this;
+    // }
 
     /**
      * Gets name in class
      * @returns {string}
      */
-    getName() {
-        return this._name;
-    }
+    // getName() {
+    //     return this._name;
+    // }
 
     /**
      * Sets description in class
@@ -727,20 +754,20 @@ class StatuspageHTML {
      * @param {string?} descript A field for attional description details
      * @returns {StatuspageHTML}
      */
-    setDescript(sitename, descript = null) {
-        this._description = this.storageObject.template_descrisption.replace("{}", sitename) + (descript != null ? " | " + descript : "");
-        this.storageObject.site_description = this._description;
+    // setDescript(sitename, descript = null) {
+    //     this._description = this.storageObject.template_descrisption.replace("{}", sitename) + (descript != null ? " | " + descript : "");
+    //     this.storageObject.site_description = this._description;
         
-        return this;
-    }
+    //     return this;
+    // }
 
     /**
      * Gets description in class
      * @returns {string}
      */
-    getDescript() {
-        return this._description;
-    }
+    // getDescript() {
+    //     return this._description;
+    // }
 
     /**
      * 
@@ -950,14 +977,14 @@ class StatuspageHTML {
      * @param {string} title 
      * @returns {StatuspageHTML}
      */
-    setTitle(title) {
-        document.getElementsByTagName("title")[0].innerHTML = title;
+    setTitles(title) {
+        document.getElementsByTagName("title")[0].innerHTML = this.storageObject.getTitle();
 
-        this.setMetaTag("twitter:title", title)
-            .setMetaTag("og:title", title)
-            .setMetaTag("application-name", title)
-            .setMetaTag("apple-mobile-web-app-title", title)
-            .updateRichTest("name", title);
+        this.setMetaTag("twitter:title", this.storageObject.getTitle())
+            .setMetaTag("og:title", this.storageObject.getTitle())
+            .setMetaTag("application-name", this.storageObject.getTitle())
+            .setMetaTag("apple-mobile-web-app-title", this.storageObject.getTitle())
+            .updateRichTest("name", this.storageObject.getTitle());
 
         return this;
     }
@@ -969,14 +996,10 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setDescriptions(sitename = null, descript = null) {
-        if (sitename != null) {
-            this.setDescript(sitename, descript);
-        }
-
-        this.setMetaTag("description", this.getDescript())
-            .setMetaTag("og:description", this.getDescript())
-            .setMetaTag("twitter:description", this.getDescript())
-            .updateRichTest("description", this.getDescript());
+        this.setMetaTag("description", this.storageObject.getDescription())
+            .setMetaTag("og:description", this.storageObject.getDescription())
+            .setMetaTag("twitter:description", this.storageObject.getDescription())
+            .updateRichTest("description", this.storageObject.getDescription());
 
         return this;
     }
@@ -989,7 +1012,7 @@ class StatuspageHTML {
     setTheme(status = null) {
         // var hexColor = (this._showPsa || status == 'psa' || status == null) ? StatuspageDictionary.MetaColors['psa'] : StatuspageDictionary.MetaColors[status];
 
-        this.storageObject.status_theme = (this.hasPSA() || status == 'psa' || status == null) ? 'psa' : status;
+        this.storageObject.setThemeStatus((this.hasPSA() || status == 'psa' || status == null) ? 'psa' : status);
 
         // console.log(`showPSA: ${this.storageObject.settings_showPsa}; hasPSA(): ${this.hasPSA()}`);
         // console.log(`status_theme (showPSA: ${this.storageObject.settings_showPsa}, status: ${status}): ${this.storageObject.status_theme}`);
@@ -1115,8 +1138,10 @@ class StatuspageHTML {
         var incidents = this._previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
         if (incidents.length == 0) {
+            out += this.storageObject.getIncidentsNoneHTML();
+
             // out = this.emptyIncidentsElement(this.getName());
-            out = this.storageObject.template_incidents_none.replace("{}", this.getName());
+            // out = this.storageObject.template_incidents_none.replace("{}", this.getName());
             // out = '<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like GitHub is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>';
         } else {
             for (var i = 0; i < incidents.length; i++) {
