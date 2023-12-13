@@ -16,6 +16,15 @@ class Helper {
     static ClassToFormattedJson(classObject){
         return JSON.parse(JSON.stringify(classObject));
     }
+
+    /**
+     * 
+     * @param {string} indicator 
+     * @returns {object}
+     */
+    static getStatusJson(indicator) {
+        return { 'status': { 'indicator': indicator } };
+    }
 }
 
 class StatuspageDictionary {
@@ -578,7 +587,7 @@ class StatuspageHTML {
     constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
         this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
         
-        this.loading = this.StatusHTML(this.getStatusJson('loading'), true);
+        this.loading = this.StatusHTML(Helper.getStatusJson('loading'), true);
         this.render(this.loading);
 
         this.fetchPsa();
@@ -721,7 +730,7 @@ class StatuspageHTML {
 
         this.setTitles().createMetaTag("robots", "noindex");
 
-        var errorHTML = this.StatusHTML(this.getStatusJson('error'), true);
+        var errorHTML = this.StatusHTML(Helper.getStatusJson('error'), true);
 
         this.render(errorHTML);
     }
@@ -793,7 +802,7 @@ class StatuspageHTML {
         }
 
         this.setTheme('psa');
-        
+
         this.storageObject.setShowPsa(this.storageObject.settings_showPsa && psaResult["showPSA"] && this.hasPSA());
 
         return this;
@@ -813,15 +822,6 @@ class StatuspageHTML {
         }
 
         return this;
-    }
-
-    /**
-     * Create a dummy Status JSON 
-     * @param {string} indicator 
-     * @returns {object}
-     */
-    getStatusJson(indicator) {
-        return { 'status': { 'indicator': indicator } };
     }
 
     /**
@@ -956,7 +956,7 @@ class StatuspageHTML {
      * @param {string} descript 
      * @returns {StatuspageHTML}
      */
-    setDescriptions(sitename = null, descript = null) {
+    setDescriptions() {
         this.setMetaTag("description", this.storageObject.getDescription())
             .setMetaTag("og:description", this.storageObject.getDescription())
             .setMetaTag("twitter:description", this.storageObject.getDescription())
@@ -971,12 +971,7 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setTheme(status = null) {
-        // var hexColor = (this._showPsa || status == 'psa' || status == null) ? StatuspageDictionary.MetaColors['psa'] : StatuspageDictionary.MetaColors[status];
-
         this.storageObject.setThemeStatus((this.hasPSA() || status == 'psa' || status == null) ? 'psa' : status);
-
-        // console.log(`showPSA: ${this.storageObject.settings_showPsa}; hasPSA(): ${this.hasPSA()}`);
-        // console.log(`status_theme (showPSA: ${this.storageObject.settings_showPsa}, status: ${status}): ${this.storageObject.status_theme}`);
 
         var hexColor = StatuspageDictionary.MetaColors[this.storageObject.status_theme];
 
@@ -985,6 +980,11 @@ class StatuspageHTML {
         return this;
     }
 
+    /**
+     * 
+     * @param {object} summaryJson 
+     * @returns {string}
+     */
     SummaryHTML(summaryJson){
         return this.StatusHTML(summaryJson) + this.MessagesHTML(summaryJson);
     }
@@ -1199,10 +1199,10 @@ function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest =
                     r.ErrorHome();
                 }
             } else {
-                r.IndexHome();
+                // r.IndexHome();
                 // r.ComponentsHome();
                 // r.StatusHome();
-                // r.ErrorHome();
+                r.ErrorHome();
             }
         }
     } catch(error) {
