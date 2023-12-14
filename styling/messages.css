@@ -35,9 +35,17 @@
     background-color: #339966;
 }
 
+.good-message .message-status .right::before {
+    content: 'good';
+}
+
 .none-message {
     width: 200px;
     background-color: #000000;
+}
+
+.none-message .message-status .right::before {
+    content: 'none';
 }
 
 .minor-message {
@@ -45,9 +53,26 @@
     background-color: #F1C40F;
 }
 
+.minor-message .message-status .right::before {
+    content: 'minor';
+}
+
+.maintenance-message {
+    width: 200px;
+    background-color: #0366d6;
+}
+
+.maintenance-message .message-status .right::before {
+    content: 'maintenance';
+}
+
 .major-message {
     width: 280px;
     background-color: #FF9900;
+}
+
+.major-message .message-status .right::before {
+    content: 'major';
 }
 
 .critical-message {
@@ -55,15 +80,23 @@
     background-color: #990000;
 }
 
+.critical-message .message-status .right::before {
+    content: 'critical';
+}
+
 .error-message {
     width: 120px;
     background-color: #646464;
 }
 
+.error-message .message-status .right::before {
+    content: 'error';
+}
+
 @media only screen and (max-width: 850px) {
   .good-message { width: 20vw; }
 
-  .none-message, .minor-message { width: 40vw; }
+  .none-message, .minor-message, .maintenance-message { width: 40vw; }
 
   .major-message { width: 60vw; }
 
@@ -85,7 +118,7 @@
 @media (min-width: 2048px) and (min-height: 1080px) {
     .good-message { width: 20vw; }
 
-    .none-message, .minor-message { width: 40vw; }
+    .none-message, .minor-message, .maintenance-message { width: 40vw; }
 
     .major-message { width: 60vw; }
 

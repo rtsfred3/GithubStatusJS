@@ -190,20 +190,67 @@ svg {
     background-color: #339966;
 }
 
+.good.min .center-status::before, .none.min .center-status::before {
+    content: 'good';
+    text-transform: uppercase;
+}
+
 .minor {
     background-color: #DBAB09;
+}
+
+.minor.min .center-status::before {
+    content: 'MINOR';
 }
 
 .major {
     background-color: #E25D10;
 }
 
+.major.min .center-status::before {
+    content: 'major';
+    text-transform: uppercase;
+}
+
 .critical {
     background-color: #DC3545;
 }
 
+.critical.min .center-status::before {
+    content: 'critical';
+    text-transform: uppercase;
+}
+
 .maintenance {
     background-color: #0366d6;
+}
+
+.maintenance.min .center-status::before {
+    content: 'maintenance';
+    text-transform: uppercase;
+}
+
+.unavailable, .loading {
+    background-color: #4F93BD;
+}
+
+.unavailable.min .center-status::before {
+    content: 'unavailable';
+    text-transform: uppercase;
+}
+
+.loading.min .center-status::before {
+    content: 'loading';
+    text-transform: uppercase;
+}
+
+.error {
+    background-color: #646464;
+}
+
+.error.min .center-status::before {
+    content: 'error';
+    text-transform: uppercase;
 }
 
 @media only screen and (min-width: 351px) and (max-width: 450px) {
@@ -227,13 +274,7 @@ svg {
     }
 }
 
-.unavailable, .loading {
-    background-color: #4F93BD;
-}
 
-.error {
-    background-color: #646464;
-}
 
 .status-color {
     color: white;

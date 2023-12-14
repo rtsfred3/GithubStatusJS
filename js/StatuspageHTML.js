@@ -36,11 +36,14 @@ class StatuspageHTMLElements {
         return StatuspageHTMLElements.StatusHTMLElement(StatuspageHelper.GetStatusJson('loading'), true);
     }
 
-    static CenterStatusDivHTMLElement(text){
+    static CenterStatusDivHTMLElement(text, isPsa = false){
         const centerStatusDivElement = document.createElement("span");
         centerStatusDivElement.classList.add('center-status');
 
-        centerStatusDivElement.appendChild(document.createTextNode(text));
+        if (isPsa) {
+            centerStatusDivElement.appendChild(document.createTextNode(text));
+        }
+        
 
         return centerStatusDivElement;
     }
@@ -69,9 +72,17 @@ class StatuspageHTMLElements {
             storageObject.toLocalStorage();
         }
 
-        var heightArray = fullStatus ? (!storageObject.getShowPsa() && document.getElementById("psa").classList.contains('hide') ? [ 'full-status-height' ] : [ 'psa-full-status-height' ]) : [ 'status-height', 'status-shadow' ];
+        console.log(!storageObject.getShowPsa());
+        console.log(document.getElementById("psa").classList.contains('hide'));
+        console.log(`${(!storageObject.getShowPsa() && document.getElementById("psa").classList.contains('hide'))}`);
 
-        var classArray = heightArray.concat(['status-width', 'bold', 'status-color', status.toLowerCase()]);
+        var checkForPsaArray = (!storageObject.getShowPsa() && document.getElementById("psa").classList.contains('hide') || status == 'loading' ? [ 'full-status-height' ] : [ 'psa-full-status-height' ]);
+
+        var heightArray = fullStatus ? checkForPsaArray : [ 'status-height', 'status-shadow' ];
+        var classArray = heightArray.concat(['min', 'status-width', 'bold', 'status-color', status.toLowerCase()]);
+
+        console.log(`checkForPsaArray: ${checkForPsaArray}`);
+        console.log(`heightArray: ${heightArray}`);
 
         const statusElement = document.createElement("div");
         statusElement.setAttribute("id", "status");
@@ -123,7 +134,7 @@ class StatuspageHTMLElements {
 
         const innerTextStatusBoxElement = document.createElement('span');
         innerTextStatusBoxElement.classList.add('right');
-        innerTextStatusBoxElement.appendChild(document.createTextNode(newStatus));
+        // innerTextStatusBoxElement.appendChild(document.createTextNode(newStatus));
 
         innerStatusBoxElement.appendChild(innerTextStatusBoxElement);
         statusBoxElement.appendChild(innerStatusBoxElement);
@@ -389,6 +400,13 @@ class StorageObject {
         this.setStatus(summaryJson.status.indicator);
         this.setName(summaryJson.page.name);
         this.setDescription(summaryJson.status.description);
+
+        if (!this.showPSA) {
+            this.setThemeStatus(summaryJson.status.indicator);
+        } else {
+            this.setThemeStatus('psa');
+        }
+
         return this.toLocalStorage();
     }
 
@@ -405,6 +423,8 @@ class StorageObject {
 
         if (!this.showPSA) {
             this.setThemeStatus(statusJson.status.indicator);
+        } else {
+            this.setThemeStatus('psa');
         }
 
         return this.toLocalStorage();
@@ -825,6 +845,8 @@ class StatuspageHTML {
 
             this.storageObject.setApiSummary(result);
 
+            this.setTheme(this.storageObject.getStatus());
+
             this.renderElement(this.SummaryHTMLElement(result));
         } else {
             const statusResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
@@ -840,6 +862,8 @@ class StatuspageHTML {
                 StatuspageHTMLElements.StatusHTMLElement(statusResult),
                 StatuspageHTMLElements.IncidentsHTMLElements(messagesResult)
             ];
+
+            this.setTheme(this.storageObject.getStatus());
 
             this.renderElement(elements);
         }
@@ -941,7 +965,7 @@ class StatuspageHTML {
     fetchPsa(){
         if (this.storageObject.getShowPsa() && document.getElementById("psa")) {
             this.fetchPsaAsync().then();
-            this.setTheme();
+            this.setTheme(this.storageObject.getStatus());
         } else {
             this.hidePSA();
             this.setTheme(this.storageObject.getStatus());
@@ -976,21 +1000,26 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     showPSA(psaResult) {
+        console.log(`psaResult["showPSA"]: ${psaResult["showPSA"]}`);
         if (psaResult["showPSA"]) {
-            document.getElementById("psa").appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement(psaResult["PSA"]));
+            document.getElementById("psa").appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement(psaResult["PSA"], true));
             document.getElementById("psa").classList.remove("hide");
 
-            this.setTheme('psa');
+            // this.setTheme(this.storageObject.getStatus());
 
             this.storageObject.setShowPsa(true);
         } else {
             this.storageObject.setShowPsa(false);
+            this.storageObject.setThemeStatus(this.storageObject.getStatus());
+            this.storageObject.toLocalStorage();
+
+            // this.storageObject = this.storageObject.fromLocalStorage();
 
             if (document.getElementById("psa").classList.contains('hide')) {
                 document.getElementById("psa").classList.add('hide');
             }
 
-            this.setTheme(this.storageObject.getStatus());
+            // this.setTheme(this.storageObject.getStatus());
         }
 
         this.storageObject.setShowPsa(this.storageObject.settings_showPsa && psaResult["showPSA"] && this.hasPSA());
@@ -1199,9 +1228,13 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setTheme(status = null) {
-        this.storageObject.setThemeStatus((this.hasPSA() && this.storageObject.getShowPsa() || status == 'psa' || status == null) ? 'psa' : status);
+        this.storageObject.setThemeStatus((this.hasPSA() && this.storageObject.getShowPsa() || status == null) ? 'psa' : status);
 
-        var hexColor = StatuspageDictionary.MetaColors[this.storageObject.status_theme];
+        console.log(this.hasPSA() && this.storageObject.getShowPsa() && status == null);
+
+        console.log('Theme Status: ' + this.storageObject.getThemeStatus());
+
+        var hexColor = StatuspageDictionary.MetaColors[this.storageObject.getThemeStatus()];
 
         this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
@@ -1428,9 +1461,9 @@ function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest =
                     r.ErrorHome();
                 }
             } else {
-                r.IndexHome();
+                // r.IndexHome();
                 // r.ComponentsHome();
-                // r.StatusHome();
+                r.StatusHome();
                 // r.ErrorHome();
             }
         }
