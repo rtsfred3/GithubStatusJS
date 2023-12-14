@@ -61,28 +61,14 @@ class StatuspageHTMLElements {
             return document.createElement("div");
         }
 
-        if(typeof(status) == "object" && Object.keys(status).includes('status') && Object.keys(status.status).includes('indicator')){
+        if(typeof(status) == "object" && 'status' in status && 'indicator' in status.status){
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
         }
 
-        var storageObject = StorageObject.fromLocalStorage();
-
-        if (!storageObject.getShowPsa() && document.getElementById("psa").classList.contains('hide')) {
-            storageObject.setThemeStatus(storageObject.getStatus());
-            storageObject.toLocalStorage();
-        }
-
-        console.log(!storageObject.getShowPsa());
-        console.log(document.getElementById("psa").classList.contains('hide'));
-        console.log(`${(!storageObject.getShowPsa() && document.getElementById("psa").classList.contains('hide'))}`);
-
-        var checkForPsaArray = (!storageObject.getShowPsa() && document.getElementById("psa").classList.contains('hide') || status == 'loading' ? [ 'full-status-height' ] : [ 'psa-full-status-height' ]);
+        var checkForPsaArray = (document.getElementById("psa").classList.contains('hide') || status == 'loading' ? [ 'full-status-height' ] : [ 'psa-full-status-height' ]);
 
         var heightArray = fullStatus ? checkForPsaArray : [ 'status-height', 'status-shadow' ];
         var classArray = heightArray.concat(['min', 'status-width', 'bold', 'status-color', status.toLowerCase()]);
-
-        console.log(`checkForPsaArray: ${checkForPsaArray}`);
-        console.log(`heightArray: ${heightArray}`);
 
         const statusElement = document.createElement("div");
         statusElement.setAttribute("id", "status");
@@ -160,20 +146,18 @@ class StatuspageHTMLElements {
 
     /**
      * 
-     * @param {object} mess 
+     * @param {object} incidentsJson 
      * @returns {Element}
      */
-    static IncidentsHTMLElements(mess) {
-        var storageObject = StorageObject.fromLocalStorage();
-
+    static IncidentsHTMLElements(incidentsJson, previousDays = 7, displayUTCTime = false) {
         var previousDate = new Date();
         previousDate.setHours(0, 0, 0);
-        var previousDaysDate = previousDate.setDate((new Date).getDate() - storageObject.settings_previousDays);
+        var previousDaysDate = previousDate.setDate((new Date).getDate() - previousDays);
 
-        var incidents = storageObject.settings_previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
+        var incidents = previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
         if (incidents.length == 0) {
-            return storageObject.getIncidentsNoneHTMLElement();
+            return StatuspageHTMLElements.NoIncidentsHTMLElement(incidentsJson.page.name);
         } else {
             var messagesList = document.createElement("div");
             messagesList.setAttribute("id", "messages");
@@ -190,11 +174,13 @@ class StatuspageHTMLElements {
                             incidents[i].name,
                             incidents[i].impact,
                             incidents[i]["incident_updates"][j].status,
-                            mess["incidents"][i]["incident_updates"][j].body,
-                            mess["incidents"][i]["incident_updates"][j].created_at,
-                            mess["incidents"][i].shortlink, 
+                            incidents[i]["incident_updates"][j].body,
+                            incidents[i]["incident_updates"][j].created_at,
+                            // incidentsJson["incidents"][i]["incident_updates"][j].body,
+                            // incidentsJson["incidents"][i]["incident_updates"][j].created_at,
+                            incidentsJson["incidents"][i].shortlink, 
                             (j == incidents[i]["incident_updates"].length - 1),
-                            storageObject.settings_displayUTCTime
+                            displayUTCTime
                         ));
                     }
 
@@ -204,6 +190,17 @@ class StatuspageHTMLElements {
 
             return messagesList;
         }
+    }
+
+    static SummaryHTMLElement(summaryJson){
+        const summeryElement = document.createElement("div");
+        
+        if (typeof(summaryJson) == "object" && 'status' in summaryJson && 'incidents' in summaryJson){
+            summeryElement.appendChild(StatuspageHTMLElements.StatusHTMLElement(summaryJson));
+            summeryElement.appendChild(StatuspageHTMLElements.IncidentsHTMLElements(summaryJson));
+        }
+        
+        return summeryElement;
     }
 
     /**
@@ -244,7 +241,7 @@ class StatuspageDictionary {
         return class MetaColors {
             constructor(){
                 this.none = '#339966';
-                this.minor = '#339966';
+                this.minor = '#DBAB09';
                 this.major = '#E25D10';
                 this.critical = '#DC3545';
                 this.unavailable = '#4F93BD';
@@ -553,7 +550,7 @@ class StorageObject {
      * @returns {string}
      */
     getThemeStatus() {
-        return this.status_theme;
+        return this.status_theme;// != null ? this.status_theme : 'loading';
     }
 
     /**
@@ -819,6 +816,7 @@ class StatuspageHTML {
     constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
         this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
 
+        this.setTheme('loading');
         this.renderElement(StatuspageHTMLElements.LoadingHTMLElement);
 
         this.fetchPsa();
@@ -845,7 +843,10 @@ class StatuspageHTML {
 
             this.storageObject.setApiSummary(result);
 
-            this.setTheme(this.storageObject.getStatus());
+            this.storageObject.setThemeStatus(this.storageObject.getStatus());
+            this.setTheme(result.status.indicator);
+
+            console.log(this.storageObject.getStatus());
 
             this.renderElement(this.SummaryHTMLElement(result));
         } else {
@@ -863,7 +864,8 @@ class StatuspageHTML {
                 StatuspageHTMLElements.IncidentsHTMLElements(messagesResult)
             ];
 
-            this.setTheme(this.storageObject.getStatus());
+            this.storageObject.setThemeStatus(this.storageObject.getStatus());
+            this.setTheme(statusResult.status.indicator);
 
             this.renderElement(elements);
         }
@@ -922,8 +924,6 @@ class StatuspageHTML {
         this.storageObject.setApiStatus(result);
         this.storageObject.setTitleStatus();
 
-        // console.log(this.storageObject.getStatus());
-
         this.setTitles().setDescriptions();
 
         this.renderElement(StatuspageHTMLElements.StatusHTMLElement(result, true));
@@ -965,10 +965,8 @@ class StatuspageHTML {
     fetchPsa(){
         if (this.storageObject.getShowPsa() && document.getElementById("psa")) {
             this.fetchPsaAsync().then();
-            this.setTheme(this.storageObject.getStatus());
         } else {
             this.hidePSA();
-            this.setTheme(this.storageObject.getStatus());
         }
 
         return this;
@@ -1005,8 +1003,6 @@ class StatuspageHTML {
             document.getElementById("psa").appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement(psaResult["PSA"], true));
             document.getElementById("psa").classList.remove("hide");
 
-            // this.setTheme(this.storageObject.getStatus());
-
             this.storageObject.setShowPsa(true);
         } else {
             this.storageObject.setShowPsa(false);
@@ -1018,8 +1014,6 @@ class StatuspageHTML {
             if (document.getElementById("psa").classList.contains('hide')) {
                 document.getElementById("psa").classList.add('hide');
             }
-
-            // this.setTheme(this.storageObject.getStatus());
         }
 
         this.storageObject.setShowPsa(this.storageObject.settings_showPsa && psaResult["showPSA"] && this.hasPSA());
@@ -1036,8 +1030,8 @@ class StatuspageHTML {
             document.getElementById("psa").classList.add("hide");
 
             this.storageObject.setShowPsa(false);
-
-            this.setTheme(this.storageObject.getStatus());
+        } else if (!this.storageObject.getShowPsa() && !this.hasPSA()) {
+            this.storageObject.setShowPsa(false);
         }
 
         return this;
@@ -1227,14 +1221,12 @@ class StatuspageHTML {
      * @param {string} status 
      * @returns {StatuspageHTML}
      */
-    setTheme(status = null) {
-        this.storageObject.setThemeStatus((this.hasPSA() && this.storageObject.getShowPsa() || status == null) ? 'psa' : status);
+    setTheme(status = 'loading') {
+        console.log(`setTheme()`);
+        var hexColor = StatuspageDictionary.MetaColors[status];
 
-        console.log(this.hasPSA() && this.storageObject.getShowPsa() && status == null);
-
-        console.log('Theme Status: ' + this.storageObject.getThemeStatus());
-
-        var hexColor = StatuspageDictionary.MetaColors[this.storageObject.getThemeStatus()];
+        console.log(`status ${status}`);
+        console.log(`hexColor ${hexColor}`);
 
         this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
@@ -1247,123 +1239,115 @@ class StatuspageHTML {
      * @returns {string}
      */
     SummaryHTML(summaryJson){
-        return this.StatusHTML(summaryJson) + this.MessagesHTML(summaryJson);
+        return this.StatusHTML(summaryJson).outerHTML + StatuspageHTMLElements.IncidentsHTMLElements(summaryJson).outerHTML;
     }
 
+    /**
+     * 
+     * @param {object} summaryJson 
+     * @returns {Element}
+     */
     SummaryHTMLElement(summaryJson){
         return [ StatuspageHTMLElements.StatusHTMLElement(summaryJson.status.indicator), StatuspageHTMLElements.IncidentsHTMLElements(summaryJson) ];
     }
 
     // /**
-    //  * Generates HTML for a status
-    //  * @param {string} status 
+    //  * Gets HTML for a status
+    //  * @param {object} arr 
     //  * @param {bool} fullStatus 
     //  * @returns {string}
     //  */
-    // getStatus(status, fullStatus = false) {
-    //     var height = fullStatus ? (document.getElementById("psa").classList.contains('hide') ? 'full-status-height' : 'psa-full-status-height') : 'status-height status-shadow';
-
-    //     return '<div id="status" class="' + height + ' status-width bold status-color ' + status.toLowerCase() + '"><span class="center-status">' + StatuspageDictionary.IndicatorVals[status].toUpperCase() + '</span></div>';
+    // StatusHTML(arr, fullStatus = false) {
+    //     this.setTheme(arr.status.indicator);
+    //     return StatuspageHTMLElements.StatusHTMLElement(arr.status.indicator, fullStatus).outerHTML;
     // }
 
-    /**
-     * Gets HTML for a status
-     * @param {object} arr 
-     * @param {bool} fullStatus 
-     * @returns {string}
-     */
-    StatusHTML(arr, fullStatus = false) {
-        // this.storageObject.setStatus(arr.status.indicator);
-        this.setTheme(arr.status.indicator);
-        return StatuspageHTMLElements.StatusHTMLElement(arr.status.indicator, fullStatus).outerHTML;
-    }
+    // /**
+    //  * Returns an incident update
+    //  * @param {string} incident_update_id 
+    //  * @param {string} name 
+    //  * @param {string} impact 
+    //  * @param {string} status 
+    //  * @param {string} body 
+    //  * @param {*} created_at 
+    //  * @param {string} shortlink 
+    //  * @param {bool} isOldestStatus 
+    //  * @returns {string}
+    //  */
+    // createMessage(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus) {
+    //     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    //     var out = '';
 
-    /**
-     * Returns an incident update
-     * @param {string} incident_update_id 
-     * @param {string} name 
-     * @param {string} impact 
-     * @param {string} status 
-     * @param {string} body 
-     * @param {*} created_at 
-     * @param {string} shortlink 
-     * @param {bool} isOldestStatus 
-     * @returns {string}
-     */
-    createMessage(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus) {
-        var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        var out = '';
+    //     // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
+    //     var w = (status == "resolved" ? "good" : impact);
 
-        // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
-        var w = (status == "resolved" ? "good" : impact);
+    //     if (w == undefined) { w = StatuspageDictionary.IndicatorMessages[status]; }
 
-        if (w == undefined) { w = StatuspageDictionary.IndicatorMessages[status]; }
+    //     out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
 
-        out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
+    //     var date = new Date(created_at).toLocaleDateString("en-US", options);
 
-        var date = new Date(created_at).toLocaleDateString("en-US", options);
+    //     if (this.storageObject.settings_displayUTCTime) {
+    //         options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
+    //         var t_date = new Date(created_at);
+    //         t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
+    //         date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
+    //     }
 
-        if (this.storageObject.settings_displayUTCTime) {
-            options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-            var t_date = new Date(created_at);
-            t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
-            date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
-        }
+    //     body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
+    //         return '<a href="' + match + '">here</a>.';
+    //     });
 
-        body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
-            return '<a href="' + match + '">here</a>.';
-        });
+    //     date = '<span class="date empty">' + date + '</span>';
 
-        date = '<span class="date empty">' + date + '</span>';
+    //     // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
+    //     out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
 
-        // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
-        out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
+    //     return `<span id="${incident_update_id}">${out}</span>`;// + out + "</span>";
+    // }
 
-        return `<span id="${incident_update_id}">${out}</span>`;// + out + "</span>";
-    }
+    // /**
+    //  * Returns HTML string containing incidents for past seven days
+    //  * @param {object} mess 
+    //  * @returns {string}
+    //  */
+    // MessagesHTML(mess) {
+    //     var out = '';
 
-    /**
-     * Returns HTML string containing incidents for past seven days
-     * @param {object} mess 
-     * @returns {string}
-     */
-    MessagesHTML(mess) {
-        var out = '';
+    //     // var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
 
-        // var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
+    //     var previousDate = new Date();
+    //     previousDate.setHours(0, 0, 0);
+    //     var previousDaysDate = previousDate.setDate((new Date).getDate() - this.storageObject.settings_previousDays);
 
-        var previousDate = new Date();
-        previousDate.setHours(0, 0, 0);
-        var previousDaysDate = previousDate.setDate((new Date).getDate() - this.storageObject.settings_previousDays);
+    //     var incidents = this._previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
-        var incidents = this._previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
+    //     if (incidents.length == 0) {
+    //         out += this.storageObject.getIncidentsNoneHTML();
+    //     } else {
+    //         for (var i = 0; i < incidents.length; i++) {
+    //             if (incidents[i]["incident_updates"].length > 0) {
+    //                 out += `<span id="${incidents[i].id}">`;
+    //                 for (var j = 0; j < incidents[i]["incident_updates"].length; j++) {
+    //                     out += StatuspageHTMLElements.MessageHTMLElement(
+    //                         incidents[i]["incident_updates"][j].id,
+    //                         incidents[i].name,
+    //                         incidents[i].impact,
+    //                         incidents[i]["incident_updates"][j].status,
+    //                         mess["incidents"][i]["incident_updates"][j].body,
+    //                         mess["incidents"][i]["incident_updates"][j].created_at,
+    //                         mess["incidents"][i].shortlink, 
+    //                         (j == incidents[i]["incident_updates"].length - 1),
+    //                         this.storageObject.settings_displayUTCTime
+    //                     ).outerHTML;
+    //                 }
+    //                 out += '</span>';
+    //             }
+    //         }
+    //     }
 
-        if (incidents.length == 0) {
-            out += this.storageObject.getIncidentsNoneHTML();
-        } else {
-            for (var i = 0; i < incidents.length; i++) {
-                if (incidents[i]["incident_updates"].length > 0) {
-                    out += `<span id="${incidents[i].id}">`;
-                    for (var j = 0; j < incidents[i]["incident_updates"].length; j++) {
-                        out += StatuspageHTMLElements.MessageHTMLElement(
-                            incidents[i]["incident_updates"][j].id,
-                            incidents[i].name,
-                            incidents[i].impact,
-                            incidents[i]["incident_updates"][j].status,
-                            mess["incidents"][i]["incident_updates"][j].body,
-                            mess["incidents"][i]["incident_updates"][j].created_at,
-                            mess["incidents"][i].shortlink, 
-                            (j == incidents[i]["incident_updates"].length - 1),
-                            this.storageObject.settings_displayUTCTime
-                        ).outerHTML;
-                    }
-                    out += '</span>';
-                }
-            }
-        }
-
-        return '<div id="messages" class="messages">' + out + '</div>';
-    }
+    //     return '<div id="messages" class="messages">' + out + '</div>';
+    // }
 
     /**
      * Gets individual component
@@ -1461,9 +1445,9 @@ function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest =
                     r.ErrorHome();
                 }
             } else {
-                // r.IndexHome();
+                r.IndexHome();
                 // r.ComponentsHome();
-                r.StatusHome();
+                // r.StatusHome();
                 // r.ErrorHome();
             }
         }
