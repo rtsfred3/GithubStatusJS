@@ -353,7 +353,6 @@ class StorageObject {
         this.site_description = _description;
         this.site_title = _title;
         this.status_main = _status;
-        // this.status_theme = _themeStatus;
 
         if (this.settings_baseUrl.slice(-1) == '/') {
             this.settings_baseUrl = this.settings_baseUrl.substring(0, this.settings_baseUrl.length - 1);
@@ -598,8 +597,6 @@ class StatuspageHTML {
             // this.storageObject.setThemeStatus(this.storageObject.getStatus());
             this.setTheme(result.status.indicator);
 
-            console.log(this.storageObject.getStatus());
-
             this.renderElement(StatuspageHTMLElements.SummaryHTMLElement(result));
         } else {
             const statusResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
@@ -617,8 +614,6 @@ class StatuspageHTML {
 
             // this.storageObject.setThemeStatus(this.storageObject.getStatus());
             this.setTheme(statusResult.status.indicator);
-
-            console.log(this.storageObject.getStatus());
 
             this.renderElement(elements);
         }
@@ -873,8 +868,8 @@ class StatuspageHTML {
         console.log(`setTheme()`);
         var hexColor = StatuspageDictionary.MetaColors[status];
 
-        console.log(`status ${status}`);
-        console.log(`hexColor ${hexColor}`);
+        // console.log(`status ${status}`);
+        // console.log(`hexColor ${hexColor}`);
 
         this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
 
@@ -889,7 +884,6 @@ class StatuspageHTML {
  * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
  */
 function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTCTime = false) {
-    console.log(previousDays);
     var r = new StatuspageHTML(url, previousDays, indexHomeSingleRequest, displayUTCTime);
 
     try {
@@ -914,8 +908,8 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
                 }
             } else {
                 r.IndexHome();
-                r.ComponentsHome();
-                r.StatusHome();
+                // r.ComponentsHome();
+                // r.StatusHome();
                 // r.ErrorHome();
             }
         }
