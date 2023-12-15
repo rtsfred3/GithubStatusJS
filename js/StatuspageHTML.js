@@ -353,7 +353,7 @@ class StorageObject {
         this.site_description = _description;
         this.site_title = _title;
         this.status_main = _status;
-        this.status_theme = _themeStatus;
+        // this.status_theme = _themeStatus;
 
         if (this.settings_baseUrl.slice(-1) == '/') {
             this.settings_baseUrl = this.settings_baseUrl.substring(0, this.settings_baseUrl.length - 1);
@@ -371,14 +371,14 @@ class StorageObject {
         this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
         this.dict_indicator_messages = StatuspageDictionary.IndicatorMessages;
 
-        this.api_summary = null;
-        this.api_status = null;
-        this.api_components = null;
-        this.api_incidents_unresolved = null;
-        this.api_incidents_all = null;
-        this.api_maintenances_upcoming = null;
-        this.api_maintenances_active = null;
-        this.api_maintenances_all = null;
+        // this.api_summary = null;
+        // this.api_status = null;
+        // this.api_components = null;
+        // this.api_incidents_unresolved = null;
+        // this.api_incidents_all = null;
+        // this.api_maintenances_upcoming = null;
+        // this.api_maintenances_active = null;
+        // this.api_maintenances_all = null;
         this.api_json = null;
 
         this.localStorageKey = StorageObject.staticLocalStorageKey;
@@ -914,8 +914,8 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
                 }
             } else {
                 r.IndexHome();
-                // r.ComponentsHome();
-                // r.StatusHome();
+                r.ComponentsHome();
+                r.StatusHome();
                 // r.ErrorHome();
             }
         }
