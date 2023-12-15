@@ -35,8 +35,28 @@
     background-color: #339966;
 }
 
-.good-message .message-status .right::before {
+.good-message.message-status .right::before {
     content: 'good';
+}
+
+.none-message.message-status .right::before {
+    content: 'none';
+}
+
+.minor-message.message-status .right::before {
+    content: 'minor';
+}
+
+.maintenance-message.message-status .right::before {
+    content: 'maintenance';
+}
+
+.major-message.message-status .right::before {
+    content: 'major';
+}
+
+.critical-message.message-status .right::before {
+    content: 'critical';
 }
 
 .none-message {
@@ -44,17 +64,9 @@
     background-color: #000000;
 }
 
-.none-message .message-status .right::before {
-    content: 'none';
-}
-
 .minor-message {
     width: 200px;
     background-color: #F1C40F;
-}
-
-.minor-message .message-status .right::before {
-    content: 'minor';
 }
 
 .maintenance-message {
@@ -62,17 +74,9 @@
     background-color: #0366d6;
 }
 
-.maintenance-message .message-status .right::before {
-    content: 'maintenance';
-}
-
 .major-message {
     width: 280px;
     background-color: #FF9900;
-}
-
-.major-message .message-status .right::before {
-    content: 'major';
 }
 
 .critical-message {
@@ -80,16 +84,12 @@
     background-color: #990000;
 }
 
-.critical-message .message-status .right::before {
-    content: 'critical';
-}
-
 .error-message {
     width: 120px;
     background-color: #646464;
 }
 
-.error-message .message-status .right::before {
+.error-message .message-status.right::before {
     content: 'error';
 }
 
@@ -146,7 +146,7 @@
 }
 
 .message-status {
-    width: 100%;
+    /* width: 100%; */
     padding-right: 0.5em;
     vertical-align: middle;
     display: table-cell !important;

@@ -1,20 +1,10 @@
-class StatuspageHelper {
-    /**
-     * 
-     * @param {object} classObject - class to be converted to JSON
-     * @returns {object} Returns JSONified version of class
-     */
-    static ClassToJson(classObject){
-        return JSON.parse(JSON.stringify(classObject));
+class StatuspageHTMLElements {
+    static get ErrorHTMLElement(){
+        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('error'), true);
     }
 
-    /**
-     * 
-     * @param {object} classObject - class to be converted to JSON
-     * @returns {object} Returns JSONified version of class
-     */
-    static ClassToFormattedJson(classObject){
-        return JSON.parse(JSON.stringify(classObject));
+    static get LoadingHTMLElement(){
+        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('loading'), true);
     }
 
     /**
@@ -25,25 +15,14 @@ class StatuspageHelper {
     static GetStatusJson(indicator) {
         return { 'status': { 'indicator': indicator } };
     }
-}
 
-class StatuspageHTMLElements {
-    static get ErrorHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHelper.GetStatusJson('error'), true);
-    }
-
-    static get LoadingHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHelper.GetStatusJson('loading'), true);
-    }
-
-    static CenterStatusDivHTMLElement(text, isPsa = false){
+    static CenterStatusDivHTMLElement(text = null){
         const centerStatusDivElement = document.createElement("span");
         centerStatusDivElement.classList.add('center-status');
 
-        if (isPsa) {
+        if (text != null) {
             centerStatusDivElement.appendChild(document.createTextNode(text));
         }
-        
 
         return centerStatusDivElement;
     }
@@ -65,20 +44,51 @@ class StatuspageHTMLElements {
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
         }
 
-        var checkForPsaArray = (document.getElementById("psa").classList.contains('hide') || status == 'loading' ? [ 'full-status-height' ] : [ 'psa-full-status-height' ]);
-
-        var heightArray = fullStatus ? checkForPsaArray : [ 'status-height', 'status-shadow' ];
+        var heightArray = fullStatus ? [ 'full-status-height' ] : [ 'status-height', 'status-shadow' ];
         var classArray = heightArray.concat(['min', 'status-width', 'bold', 'status-color', status.toLowerCase()]);
 
         const statusElement = document.createElement("div");
         statusElement.setAttribute("id", "status");
         statusElement.classList.add(...classArray);
 
-        var innerStatusElement = StatuspageHTMLElements.CenterStatusDivHTMLElement(StatuspageDictionary.IndicatorVals[status].toUpperCase())
+        // var innerStatusElement = StatuspageHTMLElements.CenterStatusDivHTMLElement;
 
-        statusElement.appendChild(innerStatusElement);
+        statusElement.appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement());
 
         return statusElement;
+    }
+
+    /**
+     * 
+     * @param {object} componentJson 
+     * @returns {Element}
+     */
+    static SingleComponentHTMLElement(componentJson){
+        const componentDivElement = document.createElement("div");
+
+        componentDivElement.setAttribute('id', componentJson['id']);
+        componentDivElement.classList.add('component-height', 'status-width', 'bold', 'status-color', StatuspageDictionary.IndicatorVals[componentJson["status"]]);
+        componentDivElement.appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement(componentJson["name"]));
+
+        return componentDivElement;
+    }
+
+    /**
+     * 
+     * @param {object} componentsJson 
+     * @returns {Array<Element>}
+     */
+    static ComponentsHTMLElement(componentsJson){
+        var componentsArr = [];
+
+        if (!(typeof(componentsJson) == "object" && 'components' in componentsJson)) { return componentsArr; }
+
+        for (var i = 0; i < componentsJson.components.length; i++) {
+            if (componentsJson.components[i].name.substring(0, 5) == 'Visit') { continue; }
+            componentsArr.push(StatuspageHTMLElements.SingleComponentHTMLElement(componentsJson.components[i]));
+        }
+
+        return componentsArr;
     }
 
     /**
@@ -113,16 +123,10 @@ class StatuspageHTMLElements {
 
         // Creating status box
         const statusBoxElement = document.createElement("div");
-        statusBoxElement.classList.add("status-box", `${newStatus}-message`);
+        statusBoxElement.classList.add("status-box", `${newStatus}-message`, 'message-status');
 
-        const innerStatusBoxElement = document.createElement('div');
-        innerStatusBoxElement.classList.add('message-status');//, 'right');
-
-        const innerTextStatusBoxElement = document.createElement('span');
-        innerTextStatusBoxElement.classList.add('right');
-        // innerTextStatusBoxElement.appendChild(document.createTextNode(newStatus));
-
-        innerStatusBoxElement.appendChild(innerTextStatusBoxElement);
+        const innerStatusBoxElement = document.createElement('span');
+        innerStatusBoxElement.classList.add('right');
         statusBoxElement.appendChild(innerStatusBoxElement);
 
         // Creating message & date
@@ -192,15 +196,22 @@ class StatuspageHTMLElements {
         }
     }
 
+    /**
+     * 
+     * @param {object} summaryJson 
+     * @returns {Element}
+     */
     static SummaryHTMLElement(summaryJson){
         const summeryElement = document.createElement("div");
         
         if (typeof(summaryJson) == "object" && 'status' in summaryJson && 'incidents' in summaryJson){
             summeryElement.appendChild(StatuspageHTMLElements.StatusHTMLElement(summaryJson));
             summeryElement.appendChild(StatuspageHTMLElements.IncidentsHTMLElements(summaryJson));
+
+            return summeryElement;
+        } else {
+            return StatuspageHTMLElements.StatusHTMLElement('error', true);
         }
-        
-        return summeryElement;
     }
 
     /**
@@ -303,7 +314,7 @@ class StatuspageDictionary {
      * @returns {object} Returns JSONified version of StatuspageDictionary._metaColors
      */
     static get MetaColors(){
-        return StatuspageHelper.ClassToJson(new StatuspageDictionary._metaColors());
+        return JSON.parse(JSON.stringify(new StatuspageDictionary._metaColors()));
     }
 
     /**
@@ -311,7 +322,7 @@ class StatuspageDictionary {
      * @returns {object} Returns JSONified version of StatuspageDictionary._indicatorVals
      */
     static get IndicatorVals(){
-        return StatuspageHelper.ClassToJson(new StatuspageDictionary._indicatorVals());
+        return JSON.parse(JSON.stringify(new StatuspageDictionary._indicatorVals()));
     }
 
     /**
@@ -319,7 +330,7 @@ class StatuspageDictionary {
      * @returns {object} Returns JSONified version of StatuspageDictionary._indicatorMessages
      */
     static get IndicatorMessages(){
-        return StatuspageHelper.ClassToJson(new StatuspageDictionary._indicatorMessages());
+        return JSON.parse(JSON.stringify(new StatuspageDictionary._indicatorMessages()));
     }
 }
 
@@ -332,13 +343,11 @@ class StorageObject {
         return '{}';
     }
 
-    constructor(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, psaRouteParam, _name = null, _description = null, _title = null, _status = null, _themeStatus = null){
+    constructor(baseURL, previousDays, indexHomeSingleRequest, displayUTCTime, _name = null, _description = null, _title = null, _status = null, _themeStatus = null){
         this.settings_baseUrl = baseURL;
         this.settings_previousDays = previousDays;
-        this.settings_showPsa = fetchPsa;
         this.settings_indexHomeSingleRequest = indexHomeSingleRequest;
         this.settings_displayUTCTime = displayUTCTime;
-        this.settings_psaRoute = psaRouteParam;
         
         this.site_name = _name;
         this.site_description = _description;
@@ -370,6 +379,7 @@ class StorageObject {
         this.api_maintenances_upcoming = null;
         this.api_maintenances_active = null;
         this.api_maintenances_all = null;
+        this.api_json = null;
 
         this.localStorageKey = StorageObject.staticLocalStorageKey;
 
@@ -389,132 +399,20 @@ class StorageObject {
 
     /**
      * 
-     * @param {object} summaryJson 
+     * @param {object} apiJson 
      * @returns {StorageObject}
      */
-    setApiSummary(summaryJson){
-        this.api_summary = summaryJson;
-        this.setStatus(summaryJson.status.indicator);
-        this.setName(summaryJson.page.name);
-        this.setDescription(summaryJson.status.description);
+    setApiJson(apiJson){
+        if (typeof(apiJson) == "object") {
+            this.api_json = apiJson;
+            
+            this.setName(apiJson.page.name);
+            if('status' in apiJson) { this.setStatus(apiJson.status.indicator);  }
 
-        if (!this.showPSA) {
-            this.setThemeStatus(summaryJson.status.indicator);
-        } else {
-            this.setThemeStatus('psa');
+            this.setDescription('status' in apiJson ? apiJson.status.description : null);
         }
 
         return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} statusJson 
-     * @returns {StorageObject}
-     */
-    setApiStatus(statusJson){
-        this.api_status = statusJson;
-        this.setStatus(statusJson.status.indicator);
-        this.setName(statusJson.page.name);
-        this.setDescription(statusJson.status.description);
-
-        if (!this.showPSA) {
-            this.setThemeStatus(statusJson.status.indicator);
-        } else {
-            this.setThemeStatus('psa');
-        }
-
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} componentsJson 
-     * @returns {StorageObject}
-     */
-    setApiComponents(componentsJson){
-        this.api_components = componentsJson;
-        this.setName(componentsJson.page.name);
-        this.setDescription();
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} incidentsJson 
-     * @returns {StorageObject}
-     */
-    setApiIncidentsAll(incidentsJson){
-        this.api_incidents_all = incidentsJson;
-        this.setName(incidentsJson.page.name);
-        this.setDescription();
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} incidentsJson 
-     * @returns {StorageObject}
-     */
-    setApiIncidentsUnresolved(incidentsJson){
-        this.api_incidents_unresolved = incidentsJson;
-        this.setName(incidentsJson.page.name);
-        this.setDescription();
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} maintenancesJson 
-     * @returns {StorageObject}
-     */
-    setApiMaintenancesUpcoming(maintenancesJson){
-        this.api_maintenances_upcoming = maintenancesJson;
-        this.setName(maintenancesJson.page.name);
-        this.setDescription();
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} maintenancesJson 
-     * @returns {StorageObject}
-     */
-    setApiMaintenancesActive(maintenancesJson){
-        this.api_maintenances_active = maintenancesJson;
-        this.setName(maintenancesJson.page.name);
-        this.setDescription();
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {object} maintenancesJson 
-     * @returns {StorageObject}
-     */
-    setApiMaintenancesAll(maintenancesJson){
-        this.api_maintenances_all = maintenancesJson;
-        this.setName(maintenancesJson.page.name);
-        this.setDescription();
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {boolean} b 
-     * @returns {StorageObject}
-     */
-    setShowPsa(b) {
-        this.settings_showPsa = b;
-        return this.toLocalStorage;
-    }
-
-    /**
-     * 
-     * @returns {boolean}
-     */
-    getShowPsa() {
-        return this.settings_showPsa;
     }
 
     /**
@@ -533,24 +431,6 @@ class StorageObject {
      */
     getStatus() {
         return this.status_main;
-    }
-
-    /**
-     * 
-     * @param {string} status 
-     * @returns {StorageObject}
-     */
-    setThemeStatus(status) {
-        this.status_theme = status;
-        return this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @returns {string}
-     */
-    getThemeStatus() {
-        return this.status_theme;// != null ? this.status_theme : 'loading';
     }
 
     /**
@@ -623,22 +503,6 @@ class StorageObject {
 
     /**
      * 
-     * @returns {string}
-     */
-    getIncidentsNoneHTML(){
-        return StatuspageHTMLElements.NoIncidentsHTMLElement(this.getName()).outerHTML;
-    }
-
-    /**
-     * 
-     * @returns {Element}
-     */
-    getIncidentsNoneHTMLElement(){
-        return StatuspageHTMLElements.NoIncidentsHTMLElement(this.getName());
-    }
-
-    /**
-     * 
      * @param {string} descript 
      * @returns {StorageObject}
      */
@@ -659,32 +523,11 @@ class StorageObject {
     }
 
     /**
-     * 
-     * @param {string} key 
-     * @param {*} value 
-     */
-    update(key, value) {
-        var obj = this.toJson();
-        obj[key] = value;
-        this.fromJson(obj);
-        this.toLocalStorage();
-    }
-
-    /**
-     * 
-     * @param {string} key 
-     * @param {*} value 
-     */
-    set(key, value) {
-        this.update(key, value);
-    }
-
-    /**
      * Returns JSON object of class
      * @returns {object}
      */
     toJson() {
-        var newJson = StatuspageHelper.ClassToJson(this);
+        var newJson = JSON.parse(JSON.stringify(this));
 
         delete newJson['localStorageKey'];
 
@@ -708,99 +551,11 @@ class StorageObject {
 
     /**
      * 
-     * @param {object} jsonObj 
-     * @returns {StorageObject}
-     */
-    fromJson(jsonObj){
-        this.settings_baseUrl = jsonObj["settings.baseUrl"];
-        this.settings_previousDays = jsonObj["settings.previousDays"];
-        this.settings_showPsa = jsonObj["settings.showPsa"];
-        this.settings_indexHomeSingleRequest = jsonObj["settings.indexHomeSingleRequest"];
-        this.settings_displayUTCTime = jsonObj["settings.displayUTCTime"];
-        this.settings_psaRoute = jsonObj["settings.psaRoute"];
-
-        this.site_name = jsonObj["site.name"];
-        this.site_description = jsonObj["site.description"];
-        this.site_title = jsonObj["site.title"];
-        this.status_main = jsonObj["status.main"];
-        this.status_theme = jsonObj["status.theme"];
-
-        this.template_title_index = jsonObj["template.title.index"];
-        this.template_title_status = jsonObj["template.title.status"];
-        this.template_title_components = jsonObj["template.title.components"];
-        this.template_descrisption = jsonObj["template.description"];
-        this.template_incidents_none = jsonObj["template.incidents.none"];
-
-        this.api_summary = jsonObj["api.summary"];
-        this.api_status = jsonObj["api.status"];
-        this.api_components = jsonObj["api.components"];
-        this.api_incidents_unresolved = jsonObj["api.incidents.unresolved"];
-        this.api_incidents_all = jsonObj["api.incidents.all"];
-        this.api_maintenances_upcoming = jsonObj["api.maintenances.upcoming"];
-        this.api_maintenances_active = jsonObj["api.maintenances.active"];
-        this.api_maintenances_all = jsonObj["api.maintenances.all"];
-
-        this.dict_meta_colors = StatuspageDictionary.MetaColors;
-        this.dict_indicator_vals = StatuspageDictionary.IndicatorVals;
-        this.dict_indicator_messages = StatuspageDictionary.IndicatorMessages;
-
-        this.localStorageKey = StorageObject.staticLocalStorageKey;
-
-        return this;
-    }
-
-    /**
-     * 
-     * @param {string} jsonStr 
-     * @returns {StorageObject}
-     */
-    fromJsonString(jsonStr){
-        return this.fromJson(JSON.parse(jsonStr));
-    }
-
-    /**
-     * 
-     * @param {object} jsonObject 
-     * @returns {StorageObject}
-     */
-    static fromJson(jsonObject){
-        var newStorageObject = new StorageObject(jsonObject["settings.baseUrl"]);
-
-        newStorageObject = newStorageObject.fromJson(jsonObject);
-        newStorageObject.toLocalStorage();
-
-        return newStorageObject;
-    }
-
-    /**
-     * 
      * @returns {StorageObject}
      */
     toLocalStorage(){
         localStorage.setItem(this.localStorageKey, this.toJsonString());
         return this;
-    }
-
-    /**
-     * 
-     * @returns {StorageObject}
-     */
-    fromLocalStorage(){
-        console.log('fromLocalStorage(): ' + localStorage.getItem(this.localStorageKey));
-
-        return this.fromJsonString(localStorage.getItem(this.localStorageKey));
-    }
-
-    /**
-     * 
-     * @returns {StorageObject}
-     */
-    static fromLocalStorage(){
-        console.log('[static] fromLocalStorage()');
-
-        var storageObject = JSON.parse(localStorage.getItem(StorageObject.staticLocalStorageKey));
-
-        return StorageObject.fromJson(storageObject);
     }
 }
 
@@ -808,18 +563,14 @@ class StatuspageHTML {
     /**
      * @param {string} baseURL Atlassian Statuspage URL - Required
      * @param {number} [previousDays=7] Shows previous upto the N days of incidents (if set to 0, all incidents shown)
-     * @param {boolean} [fetchPsa=false] PSA will get fetched and displayed if PSA is set to be shown in psa.json.
      * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
      * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
-     * @param {string} [_psaRouteParam='/psa.json'] PSA route is now passable as a parameter
      */
-    constructor(baseURL, previousDays = 7, fetchPsa = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
-        this.storageObject = new StorageObject(baseURL, previousDays, fetchPsa, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
+    constructor(baseURL, previousDays = 7, indexHomeSingleRequest = true, displayUTCTime = false) {
+        this.storageObject = new StorageObject(baseURL, previousDays, indexHomeSingleRequest, displayUTCTime);
 
         this.setTheme('loading');
         this.renderElement(StatuspageHTMLElements.LoadingHTMLElement);
-
-        this.fetchPsa();
     }
     
     /**
@@ -841,14 +592,15 @@ class StatuspageHTML {
             const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/summary.json');
             const result = await response.json();
 
-            this.storageObject.setApiSummary(result);
+            // this.storageObject.setApiSummary(result);
+            this.storageObject.setApiJson(result);
 
-            this.storageObject.setThemeStatus(this.storageObject.getStatus());
+            // this.storageObject.setThemeStatus(this.storageObject.getStatus());
             this.setTheme(result.status.indicator);
 
             console.log(this.storageObject.getStatus());
 
-            this.renderElement(this.SummaryHTMLElement(result));
+            this.renderElement(StatuspageHTMLElements.SummaryHTMLElement(result));
         } else {
             const statusResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
             const statusResult = await statusResponse.json();
@@ -856,16 +608,17 @@ class StatuspageHTML {
             const messagesResponse = await fetch(this.storageObject.settings_baseUrl + '/api/v2/incidents.json');
             const messagesResult = await messagesResponse.json();
 
-            this.storageObject.setApiStatus(statusResult);
-            this.storageObject.setApiIncidentsAll(messagesResult);
+            this.storageObject.setApiJson(statusResult);
 
             var elements = [
                 StatuspageHTMLElements.StatusHTMLElement(statusResult),
-                StatuspageHTMLElements.IncidentsHTMLElements(messagesResult)
+                StatuspageHTMLElements.IncidentsHTMLElements(messagesResult, this.storageObject.settings_previousDays)
             ];
 
-            this.storageObject.setThemeStatus(this.storageObject.getStatus());
+            // this.storageObject.setThemeStatus(this.storageObject.getStatus());
             this.setTheme(statusResult.status.indicator);
+
+            console.log(this.storageObject.getStatus());
 
             this.renderElement(elements);
         }
@@ -895,14 +648,13 @@ class StatuspageHTML {
         const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/components.json');
         const result = await response.json();
 
-        this.storageObject.setApiComponents(result);
+        this.storageObject.setApiJson(result);
         this.storageObject.setTitleComponents();
 
         this.setTitles().setDescriptions();
+        this.setTheme(result.components[0].status);
 
-        var html = this.ComponentsHTML(result);
-
-        this.render(html);
+        this.renderElement(StatuspageHTMLElements.ComponentsHTMLElement(result));
     }
 
     /**
@@ -921,16 +673,13 @@ class StatuspageHTML {
         const response = await fetch(this.storageObject.settings_baseUrl + '/api/v2/status.json');
         const result = await response.json();
 
-        this.storageObject.setApiStatus(result);
+        this.storageObject.setApiJson(result);
         this.storageObject.setTitleStatus();
 
         this.setTitles().setDescriptions();
+        this.setTheme(result.status.indicator);
 
         this.renderElement(StatuspageHTMLElements.StatusHTMLElement(result, true));
-
-        // var statusHTML = this.StatusHTML(result, true);
-
-        // this.render(statusHTML);
     }
 
     /**
@@ -949,113 +698,12 @@ class StatuspageHTML {
     }
 
     /**
-     * Inverts the index page loads the summary or if it loads status and incidents seperately
-     * @returns {StatuspageHTML}
-     */
-    invertIndexHomeSingleRequest(){
-        this.storageObject.settings_indexHomeSingleRequest = !this.storageObject.settings_indexHomeSingleRequest;
-
-        return this;
-    }
-
-    /**
-     * 
-     * @returns {StatuspageHTML}
-     */
-    fetchPsa(){
-        if (this.storageObject.getShowPsa() && document.getElementById("psa")) {
-            this.fetchPsaAsync().then();
-        } else {
-            this.hidePSA();
-        }
-
-        return this;
-    }
-
-    /**
-     * Async fetches the PSA
-     */
-    async fetchPsaAsync() {
-        console.log('fetchPsaAsync');
-
-        const response = await fetch(this.storageObject.settings_psaRoute);
-        const result = await response.json();
-
-        this.showPSA(result);
-    }
-
-    /**
-     * 
-     * @returns {boolean}
-     */
-    hasPSA(){
-        return !document.getElementById("psa").classList.contains('hide');
-    }
-
-    /**
-     * Sets PSA if PSA should be shown 
-     * @param {Array} psaResult 
-     * @returns {StatuspageHTML}
-     */
-    showPSA(psaResult) {
-        console.log(`psaResult["showPSA"]: ${psaResult["showPSA"]}`);
-        if (psaResult["showPSA"]) {
-            document.getElementById("psa").appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement(psaResult["PSA"], true));
-            document.getElementById("psa").classList.remove("hide");
-
-            this.storageObject.setShowPsa(true);
-        } else {
-            this.storageObject.setShowPsa(false);
-            this.storageObject.setThemeStatus(this.storageObject.getStatus());
-            this.storageObject.toLocalStorage();
-
-            // this.storageObject = this.storageObject.fromLocalStorage();
-
-            if (document.getElementById("psa").classList.contains('hide')) {
-                document.getElementById("psa").classList.add('hide');
-            }
-        }
-
-        this.storageObject.setShowPsa(this.storageObject.settings_showPsa && psaResult["showPSA"] && this.hasPSA());
-
-        return this;
-    }
-
-    /**
-     * 
-     * @returns {StatuspageHTML}
-     */
-    hidePSA() {
-        if (!this.storageObject.getShowPsa() && this.hasPSA()) {
-            document.getElementById("psa").classList.add("hide");
-
-            this.storageObject.setShowPsa(false);
-        } else if (!this.storageObject.getShowPsa() && !this.hasPSA()) {
-            this.storageObject.setShowPsa(false);
-        }
-
-        return this;
-    }
-
-    /**
      * 
      * @returns {StatuspageHTML}
      */
     clearRender() {
         console.log("clearRender()");
         document.getElementById("app").replaceChildren();
-        return this;
-    }
-
-    /**
-     * Renders a string of HTML in <div id="app">
-     * @param {string} html 
-     * @returns {StatuspageHTML}
-     */
-    render(html) {
-        console.log("render()");
-        document.getElementById("app").innerHTML = html;
-
         return this;
     }
 
@@ -1232,197 +880,17 @@ class StatuspageHTML {
 
         return this;
     }
-
-    /**
-     * 
-     * @param {object} summaryJson 
-     * @returns {string}
-     */
-    SummaryHTML(summaryJson){
-        return this.StatusHTML(summaryJson).outerHTML + StatuspageHTMLElements.IncidentsHTMLElements(summaryJson).outerHTML;
-    }
-
-    /**
-     * 
-     * @param {object} summaryJson 
-     * @returns {Element}
-     */
-    SummaryHTMLElement(summaryJson){
-        return [ StatuspageHTMLElements.StatusHTMLElement(summaryJson.status.indicator), StatuspageHTMLElements.IncidentsHTMLElements(summaryJson) ];
-    }
-
-    // /**
-    //  * Gets HTML for a status
-    //  * @param {object} arr 
-    //  * @param {bool} fullStatus 
-    //  * @returns {string}
-    //  */
-    // StatusHTML(arr, fullStatus = false) {
-    //     this.setTheme(arr.status.indicator);
-    //     return StatuspageHTMLElements.StatusHTMLElement(arr.status.indicator, fullStatus).outerHTML;
-    // }
-
-    // /**
-    //  * Returns an incident update
-    //  * @param {string} incident_update_id 
-    //  * @param {string} name 
-    //  * @param {string} impact 
-    //  * @param {string} status 
-    //  * @param {string} body 
-    //  * @param {*} created_at 
-    //  * @param {string} shortlink 
-    //  * @param {bool} isOldestStatus 
-    //  * @returns {string}
-    //  */
-    // createMessage(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus) {
-    //     var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    //     var out = '';
-
-    //     // var w = (status == "resolved" ? "good" : (impact == 'none' ? 'good' : impact));
-    //     var w = (status == "resolved" ? "good" : impact);
-
-    //     if (w == undefined) { w = StatuspageDictionary.IndicatorMessages[status]; }
-
-    //     out += '<div class="status-box ' + w + '-message"><span class="message-status"><div class="right">' + w + '</div></span></div>';
-
-    //     var date = new Date(created_at).toLocaleDateString("en-US", options);
-
-    //     if (this.storageObject.settings_displayUTCTime) {
-    //         options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-    //         var t_date = new Date(created_at);
-    //         t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
-    //         date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
-    //     }
-
-    //     body = body.replace(/http(s)?:\/\/[^ ]+/g, (match, p1, offset, string, groups) => {
-    //         return '<a href="' + match + '">here</a>.';
-    //     });
-
-    //     date = '<span class="date empty">' + date + '</span>';
-
-    //     // body += w == 'good' ? '<br /><span class="date empty">Incident Page: </span><a class="date empty" href="' + shortlink + '">' + shortlink + '</a>' : '';
-    //     out += '<div class="text-margin">' + body + '<br />' + date + '</div>';
-
-    //     return `<span id="${incident_update_id}">${out}</span>`;// + out + "</span>";
-    // }
-
-    // /**
-    //  * Returns HTML string containing incidents for past seven days
-    //  * @param {object} mess 
-    //  * @returns {string}
-    //  */
-    // MessagesHTML(mess) {
-    //     var out = '';
-
-    //     // var patt = /(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}\/([a-zA-Z0-9-\/_.])*[^.]/i;
-
-    //     var previousDate = new Date();
-    //     previousDate.setHours(0, 0, 0);
-    //     var previousDaysDate = previousDate.setDate((new Date).getDate() - this.storageObject.settings_previousDays);
-
-    //     var incidents = this._previousDays == 0 ? mess["incidents"] : mess["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
-
-    //     if (incidents.length == 0) {
-    //         out += this.storageObject.getIncidentsNoneHTML();
-    //     } else {
-    //         for (var i = 0; i < incidents.length; i++) {
-    //             if (incidents[i]["incident_updates"].length > 0) {
-    //                 out += `<span id="${incidents[i].id}">`;
-    //                 for (var j = 0; j < incidents[i]["incident_updates"].length; j++) {
-    //                     out += StatuspageHTMLElements.MessageHTMLElement(
-    //                         incidents[i]["incident_updates"][j].id,
-    //                         incidents[i].name,
-    //                         incidents[i].impact,
-    //                         incidents[i]["incident_updates"][j].status,
-    //                         mess["incidents"][i]["incident_updates"][j].body,
-    //                         mess["incidents"][i]["incident_updates"][j].created_at,
-    //                         mess["incidents"][i].shortlink, 
-    //                         (j == incidents[i]["incident_updates"].length - 1),
-    //                         this.storageObject.settings_displayUTCTime
-    //                     ).outerHTML;
-    //                 }
-    //                 out += '</span>';
-    //             }
-    //         }
-    //     }
-
-    //     return '<div id="messages" class="messages">' + out + '</div>';
-    // }
-
-    /**
-     * Gets individual component
-     * @param {object} curr 
-     * @returns {string}
-     */
-    makeComponent(curr) {
-        return '<div' + (curr["id"] != null ? ' id="' + curr["id"] + '"' : '') + ' class="component-height status-width bold status-color ' + StatuspageDictionary.IndicatorVals[curr["status"]] + '"><span class="center-status">' + curr["name"] + '</span></div>';
-    }
-
-    /**
-     * 
-     * @param {object} a 
-     * @param {object} b 
-     * @returns {int}
-     */
-    compareComponents(a, b) {
-        if (a["position"] < b["position"]) {
-            return -1;
-        }
-        else if (a["position"] > b["position"]) {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    /**
-     * 
-     * @param {Array} compArr 
-     * @param {string} groupId 
-     * @param {string} groupName 
-     * @returns {string}
-     */
-    groupedComponents(compArr, groupId, groupName = null) {
-        var groupComp = this.makeComponent(compArr.filter((component) => component["id"] == groupId)[0], null, true);
-
-        var group = compArr.filter((component) => component["group_id"] == groupId).sort(this.compareComponents);
-
-        return groupComp + group.map((comp) => this.makeComponent(comp, groupName)).join('');
-    }
-
-    /**
-     * Returns HTML string of all components
-     * @param {object} comp 
-     * @returns {string}
-     */
-    ComponentsHTML(comp) {
-        var out = '';
-
-        // var groups = comp["components"].filter((component) => component.group == true).sort(this.compareComponents);
-        // for (const group of groups) { out += this.groupedComponents(comp["components"], group["id"]); }
-
-        this.setTheme(StatuspageDictionary.IndicatorVals[comp["components"][0]["status"]]);
-
-        for (var i = 0; i < comp["components"].length; i++) {
-            if (comp["components"][i]["name"].substring(0, 5) == 'Visit') { continue; }
-            // if (comp["components"][i]["group_id"] != null || comp["components"][i]["group"]) { continue; }
-            out += this.makeComponent(comp["components"][i]);
-        }
-
-        return out;
-    }
 }
 
 /**
  * @param {string} url Atlassian Statuspage URL - Required
  * @param {number} [previousDays=7] Shows previous upto the N days of incidents (if set to 0, all incidents shown)
- * @param {boolean} [showPSA=false] PSA will get fetched and displayed if PSA is set to be shown in psa.json.
  * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
  * @param {boolean} [displayUTCTime=false] If true, incident times will be shown in UTC; if false, incident times will be shown in local time.
- * @param {string} [_psaRouteParam='/psa.json'] PSA route is now passable as a parameter
  */
-function Router(url, previousDays = 7, showPSA = false, indexHomeSingleRequest = true, displayUTCTime = false, _psaRouteParam = '/psa.json') {
-    var r = new StatuspageHTML(url, previousDays, showPSA, indexHomeSingleRequest, displayUTCTime, _psaRouteParam);
+function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTCTime = false) {
+    console.log(previousDays);
+    var r = new StatuspageHTML(url, previousDays, indexHomeSingleRequest, displayUTCTime);
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
