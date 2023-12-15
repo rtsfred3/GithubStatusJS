@@ -7,6 +7,12 @@ class StatuspageHTMLElements {
         return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('loading'), true);
     }
 
+    static get AppHTMLElement(){
+        const appElement = document.createElement("div");
+        appElement.setAttribute('id', 'app');
+        return appElement;
+    }
+
     /**
      * 
      * @param {string} indicator 
@@ -50,8 +56,6 @@ class StatuspageHTMLElements {
         const statusElement = document.createElement("div");
         statusElement.setAttribute("id", "status");
         statusElement.classList.add(...classArray);
-
-        // var innerStatusElement = StatuspageHTMLElements.CenterStatusDivHTMLElement;
 
         statusElement.appendChild(StatuspageHTMLElements.CenterStatusDivHTMLElement());
 
@@ -160,13 +164,13 @@ class StatuspageHTMLElements {
 
         var incidents = previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
 
-        if (incidents.length == 0) {
-            return StatuspageHTMLElements.NoIncidentsHTMLElement(incidentsJson.page.name);
-        } else {
-            var messagesList = document.createElement("div");
-            messagesList.setAttribute("id", "messages");
-            messagesList.classList.add('messages');
+        var messagesList = document.createElement("div");
+        messagesList.setAttribute("id", "messages");
+        messagesList.classList.add('messages');
 
+        if (incidents.length == 0) {
+            messagesList.appendChild(StatuspageHTMLElements.NoIncidentsHTMLElement(incidentsJson.page.name));
+        } else {
             for (var i = 0; i < incidents.length; i++) {
                 if (incidents[i]["incident_updates"].length > 0) {
                     const incidentElement = document.createElement("span");
@@ -191,9 +195,9 @@ class StatuspageHTMLElements {
                     messagesList.appendChild(incidentElement);
                 }
             }
-
-            return messagesList;
         }
+
+        return messagesList;
     }
 
     /**
@@ -567,6 +571,10 @@ class StatuspageHTML {
      */
     constructor(baseURL, previousDays = 7, indexHomeSingleRequest = true, displayUTCTime = false) {
         this.storageObject = new StorageObject(baseURL, previousDays, indexHomeSingleRequest, displayUTCTime);
+
+        if (document.getElementById('app') == null) {
+            document.body.appendChild(StatuspageHTMLElements.AppHTMLElement);
+        }
 
         this.setTheme('loading');
         this.renderElement(StatuspageHTMLElements.LoadingHTMLElement);
