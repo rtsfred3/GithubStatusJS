@@ -815,9 +815,9 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
                     r.ErrorHome();
                 }
             } else {
-                // r.IndexHome();
+                r.IndexHome();
                 // r.ComponentsHome();
-                r.StatusHome();
+                // r.StatusHome();
                 // r.ErrorHome();
             }
         }
