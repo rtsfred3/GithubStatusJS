@@ -79,12 +79,10 @@
 
             customElements.define('statuspage-status', StatuspageStatusElement);
             // var Statuspage = new StatuspageHTML("https://www.githubstatus.com");
-
             
-
             
             // render(StatuspageHTMLElements.LoadingHTMLElement, document.body);
-            render(h('statuspage-status', { 'status': 'good', 'fullStatus': false }), document.body);
+            render(h('statuspage-status', { 'status': 'good', 'fullStatus': true }), document.body);
         </script>
 
         <title>GitHub Status Preact</title>
