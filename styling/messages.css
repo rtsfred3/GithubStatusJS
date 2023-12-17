@@ -35,6 +35,42 @@
     background-color: #339966;
 }
 
+.message-status[data-impact]::before {
+    content: attr(data-impact);
+}
+
+/* .good-message.message-status .right::before {
+    content: 'good';
+}
+
+.good-message::before {
+    content: 'good';
+}
+
+.none-message::before {
+    content: 'none';
+}
+
+.minor-message::before {
+    content: 'minor';
+}
+
+.maintenance-message::before {
+    content: 'maintenance';
+}
+
+.major-message::before {
+    content: 'major';
+}
+
+.critical-message::before {
+    content: 'critical';
+}
+
+.error-message::before {
+    content: 'error';
+} */
+
 .none-message {
     width: 200px;
     background-color: #000000;
@@ -43,6 +79,11 @@
 .minor-message {
     width: 200px;
     background-color: #F1C40F;
+}
+
+.maintenance-message {
+    width: 200px;
+    background-color: #0366d6;
 }
 
 .major-message {
@@ -63,7 +104,7 @@
 @media only screen and (max-width: 850px) {
   .good-message { width: 20vw; }
 
-  .none-message, .minor-message { width: 40vw; }
+  .none-message, .minor-message, .maintenance-message { width: 40vw; }
 
   .major-message { width: 60vw; }
 
@@ -85,7 +126,7 @@
 @media (min-width: 2048px) and (min-height: 1080px) {
     .good-message { width: 20vw; }
 
-    .none-message, .minor-message { width: 40vw; }
+    .none-message, .minor-message, .maintenance-message { width: 40vw; }
 
     .major-message { width: 60vw; }
 
@@ -113,10 +154,11 @@
 }
 
 .message-status {
-    width: 100%;
+    /* width: 100%; */
     padding-right: 0.5em;
     vertical-align: middle;
     display: table-cell !important;
+    text-align: end;
 }
 
 .message-error {
