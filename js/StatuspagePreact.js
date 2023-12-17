@@ -25,8 +25,6 @@ class StatuspageHTMLElement {
                     this.parseJson(JSON.parse(this.getAttribute('data-json')));
                 }
 
-                console.log(this.statusElement);
-
                 this.replaceWith(this.statusElement);
             }
 
@@ -143,8 +141,6 @@ class StatuspageHTMLElement {
                 var shortlink = this.getAttribute('data-shortlink');
                 var isOldestStatus = this.hasAttribute('data-is-oldest-status');
                 var _displayUTCTime = this.hasAttribute('data-display-utc-time');
-
-                console.log(_displayUTCTime);
 
                 var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
                 var currImpact = (status == "resolved" ? "good" : impact);
@@ -314,7 +310,6 @@ class StatuspageHTMLElement {
                 }
 
                 if (this.hasAttribute('data-url')) {
-                    console.log(this.getAttribute('data-url'));
                     this.fetchSummary(this.getAttribute('data-url'));
                 }
             }
@@ -330,12 +325,14 @@ class StatuspageHTMLElement {
                             var status = document.createElement('statuspage-status', { is: 'statuspage-status' });
                             status.setAttribute('data-json', JSON.stringify(json));
 
-                            this.appendChild(status);
+                            this.app.appendChild(status);
 
                             var incidents = document.createElement('statuspage-incidents', { is: 'statuspage-incidents' });
                             incidents.setAttribute('data-json', JSON.stringify(json));
 
-                            this.appendChild(incidents);
+                            this.app.appendChild(incidents);
+
+                            this.replaceWith(this.app);
 
                             res();
                         }).catch((error) => rej(error));
