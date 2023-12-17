@@ -1,4 +1,4 @@
-class StatuspageHTMLElement {
+class StatuspageWebComponents {
     static get Status() {
         return class extends HTMLElement {
             // static observedAttributes = ['data-url', "data=kspm", "fullStatus"];
@@ -299,6 +299,15 @@ class StatuspageHTMLElement {
                 this.app = document.createElement('div');
                 this.app.setAttribute('id', 'app');
 
+                this.loadingApp = this.app.cloneNode();
+                var status = document.createElement('statuspage-status', { is: 'statuspage-status' });
+                status.setAttribute('data-json', JSON.stringify({
+                    'status': { 'indicator': 'loading' }
+                }));
+                status.setAttribute('fullStatus', null);
+                this.loadingApp.appendChild(status);
+                this.replaceWith(this.loadingApp);
+
                 if (this.hasAttribute('data-previous-days')) {
                     this.previousDays = this.getAttribute('data-previous-days')
                 } else {
@@ -321,18 +330,7 @@ class StatuspageHTMLElement {
                     fetch(baseUrl + '/api/v2/summary.json')
                         .then(data => data.json())
                         .then((json) => {
-
-                            var status = document.createElement('statuspage-status', { is: 'statuspage-status' });
-                            status.setAttribute('data-json', JSON.stringify(json));
-
-                            this.app.appendChild(status);
-
-                            var incidents = document.createElement('statuspage-incidents', { is: 'statuspage-incidents' });
-                            incidents.setAttribute('data-json', JSON.stringify(json));
-
-                            this.app.appendChild(incidents);
-
-                            this.replaceWith(this.app);
+                            this.parseJson(json)
 
                             res();
                         }).catch((error) => rej(error));
@@ -340,7 +338,16 @@ class StatuspageHTMLElement {
             }
 
             parseJson(json) {
-                this.app.appendChild(document.createElement('div'));
+                var status = document.createElement('statuspage-status', { is: 'statuspage-status' });
+                status.setAttribute('data-json', JSON.stringify(json));
+                
+                this.app.appendChild(status);
+                
+                var incidents = document.createElement('statuspage-incidents', { is: 'statuspage-incidents' });
+                incidents.setAttribute('data-json', JSON.stringify(json));
+                
+                this.app.appendChild(incidents);
+                this.loadingApp.replaceWith(this.app);
             }
 
             static get is(){
@@ -456,8 +463,10 @@ class StatuspageDictionary {
     }
 }
 
-customElements.define(StatuspageHTMLElement.Summary.is, StatuspageHTMLElement.Summary);
-customElements.define(StatuspageHTMLElement.Status.is, StatuspageHTMLElement.Status);
-customElements.define(StatuspageHTMLElement.Components.is, StatuspageHTMLElement.Components);
-customElements.define(StatuspageHTMLElement.IncidentUpdate.is, StatuspageHTMLElement.IncidentUpdate);
-customElements.define(StatuspageHTMLElement.Incidents.is, StatuspageHTMLElement.Incidents);
+customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
+customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
+customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
+customElements.define(StatuspageWebComponents.IncidentUpdate.is, StatuspageWebComponents.IncidentUpdate);
+customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
+
+export default StatuspageWebComponents;
