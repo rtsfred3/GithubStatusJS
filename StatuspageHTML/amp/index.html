@@ -44,7 +44,7 @@
         </noscript>
         
         <script async src="https://cdn.ampproject.org/v0.js"></script>
-        <!-- <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script> -->
+        <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
         <script async custom-template = "amp-mustache" src = "https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
         <script async custom-element="amp-render" src="https://cdn.ampproject.org/v0/amp-render-1.0.js"></script>
 
@@ -59,9 +59,30 @@
     <body>
         <amp-render src="https://www.cloudflarestatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
             <template type="amp-mustache">
-                <div id="status" class="min full-status-height status-width bold status-color {{indicator}}">
+                <div id="status" class="full-status-height status-width bold status-color {{indicator}}">
                     <span class="center-status"></span>
                 </div>
+            </template>
+            <div placeholder>
+                <div id="status" class="min full-status-height status-width bold status-color loeading">
+                    <span class="center-status"></span>
+                </div>
+            </div>
+        </amp-render>
+
+        <amp-render src="https://www.cloudflarestatus.com/api/v2/incidents.json" binding="never" height="0" width="0" layout="responsive">
+            <template type="amp-mustache">
+                {{#incidents}}
+                    <span id="{{id}}">
+                        {{#incident_updates}}
+                            <div class="text-margin">
+                                {{body}}
+                                <br>
+                                <span class="date empty">{{created_at}}</span>
+                            </div>
+                        {{/incident_updates}}
+                    </span>
+                {{/incidents}}
             </template>
             <div placeholder>
                 <div id="status" class="min full-status-height status-width bold status-color loeading">

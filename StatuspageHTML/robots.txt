@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 Allow: /components/
 Allow: /status/
+Allow: /amp/
