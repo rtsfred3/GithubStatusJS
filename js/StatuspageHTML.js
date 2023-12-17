@@ -365,9 +365,7 @@ class StatuspageHTML {
     setNameDescriptionTheme(statuspageJson) {
         if ('status' in statuspageJson) {
             this.setTheme(statuspageJson.status.indicator)
-        }
-
-        if ('components' in statuspageJson) {
+        } else if ('components' in statuspageJson) {
             this.setTheme(statuspageJson.components[0].status)
         }
 
