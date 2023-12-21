@@ -74,48 +74,43 @@ class StatuspageHTMLElements {
      * @param {!boolean} [fullStatus=false] this will determine if the status page will fill the current view of the screen
      * @returns {HTMLDivElement}
      */
-    static StatusHTMLElement(status, fullStatus=false){
+    static StatusHTMLElement(status, fullStatus=false, _id="status", message=null){
         if(typeof(status) != "string" && typeof(status) != "object"){
             console.error(`Invaid parameter - ${typeof(status)}`);
             return document.createElement("div");
+        }
+
+        if(typeof(status) == "object" && 'id' in status && 'name' in status){
+            return StatuspageHTMLElements.StatusHTMLElement(status.status, false, status.id, status.name);
         }
 
         if(typeof(status) == "object" && 'status' in status && 'indicator' in status.status){
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
         }
 
-        var heightArray = fullStatus ? [ 'full-status-height' ] : [ 'status-height', 'status-shadow' ];
-        var classArray = heightArray.concat(['min', 'center-status', 'status-width', 'bold', 'status-color', status.toLowerCase()]);
-        // var classArray = heightArray.concat(['min', 'center-status', 'status-width', 'bold', 'status-color']);
-
         const statusElement = document.createElement("div");
-        statusElement.setAttribute("data-status", status.toLowerCase());
-        statusElement.setAttribute("data-background", StatuspageDictionary.MetaColors[status.toLowerCase()]);
-        statusElement.setAttribute("id", "status");
-        statusElement.classList.add(...classArray);
 
+        statusElement.setAttribute("id", _id);
+        statusElement.classList.add('min', 'status-width');
+        statusElement.style.fontWeight = "bold";
+        statusElement.style.color = "white";
+        statusElement.style.backgroundColor = StatuspageDictionary.MetaColors[status];
+
+        if (message == null) {
+            var heightArray = fullStatus ? [ 'full-status-height' ] : [ 'status-height', 'status-shadow' ];
+
+            statusElement.setAttribute("data-status", status.toLowerCase());
+            statusElement.classList.add(...heightArray);
+            statusElement.classList.add('center-status');
+        } else {
+            const centerStatusDivElement = document.createElement("span");
+            centerStatusDivElement.classList.add('center-status', 'component-height');
+            centerStatusDivElement.setAttribute('data-message', message);
+        
+            statusElement.appendChild(centerStatusDivElement);
+        }
+        
         return statusElement;
-    }
-
-    /**
-     * Creates a single Component element
-     * 
-     * @param {Object} componentJson 
-     * @returns {HTMLDivElement}
-     */
-    static SingleComponentHTMLElement(componentJson){
-        const componentDivElement = document.createElement("div");
-
-        componentDivElement.setAttribute('id', componentJson['id']);
-        componentDivElement.classList.add('component-height', 'status-width', 'bold', 'status-color', StatuspageDictionary.IndicatorVals[componentJson["status"]]);
-
-        const centerStatusDivElement = document.createElement("span");
-        centerStatusDivElement.classList.add('center-status');
-        centerStatusDivElement.appendChild(document.createTextNode(componentJson["name"]));
-
-        componentDivElement.appendChild(centerStatusDivElement);
-
-        return componentDivElement;
     }
 
     /**
@@ -131,7 +126,7 @@ class StatuspageHTMLElements {
 
         for (var i = 0; i < componentsJson.components.length; i++) {
             if (componentsJson.components[i].name.substring(0, 5) == 'Visit') { continue; }
-            componentsArr.push(StatuspageHTMLElements.SingleComponentHTMLElement(componentsJson.components[i]));
+            componentsArr.push(StatuspageHTMLElements.StatusHTMLElement(componentsJson.components[i]));
         }
 
         return componentsArr;
@@ -170,8 +165,8 @@ class StatuspageHTMLElements {
 
         // Creating status box
         const statusBoxElement = document.createElement("div");
-        statusBoxElement.classList.add("status-box", 'message-status', `${currImpact}-message`);
-        // statusBoxElement.classList.add("status-box", 'message-status');//, `${currImpact}-message`);
+        statusBoxElement.classList.add("status-box", 'message-status');
+        // statusBoxElement.classList.add("status-box", 'message-status', `${currImpact}-message`);
         statusBoxElement.setAttribute('data-impact', currImpact);
 
         // Creating message & date
@@ -707,8 +702,8 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
                     r.ErrorHome();
                 }
             } else {
-                r.IndexHome();
-                // r.ComponentsHome();
+                // r.IndexHome();
+                r.ComponentsHome();
                 // r.StatusHome();
                 // r.ErrorHome();
             }

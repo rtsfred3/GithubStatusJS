@@ -30,7 +30,7 @@ class StatuspageDictionary {
                 this.degraded_performance = this.minor;
                 this.partial_outage = this.major;
 
-                this.major = '#e36209';
+                this.major = '#E36209';
             }
         }
     }
