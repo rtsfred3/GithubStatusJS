@@ -206,7 +206,7 @@ svg {
     text-transform: uppercase;
 }
 
-/* .good, .none, .min[data-background="none"], .min[data-background="good"] {
+.good, .none, .min[data-background="none"], .min[data-background="good"] {
     background-color: var(--none);
 }
 
@@ -232,7 +232,7 @@ svg {
 
 .error, .min[data-background="error"] {
     background-color: var(--error);
-} */
+}
 
 @media only screen and (min-width: 351px) and (max-width: 450px) {
     .maintenance {
@@ -255,9 +255,9 @@ svg {
     }
 }
 
-/* .status-color {
+.status-color {
     color: white;
-} */
+}
 
 .black {
     color: black !important;

@@ -683,7 +683,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
 
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
-        var cloudflareProdRegex = /(githubstat.us|ghstatuspagehtml.b-cdn.net|ghstat.us)/g;
+        var cloudflareProdRegex = /(githubstat.us|ghstatuspagehtml.b-cdn.net|ghstat.us|spstat.us)/g;
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
@@ -702,8 +702,8 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
                     r.ErrorHome();
                 }
             } else {
-                // r.IndexHome();
-                r.ComponentsHome();
+                r.IndexHome();
+                // r.ComponentsHome();
                 // r.StatusHome();
                 // r.ErrorHome();
             }
