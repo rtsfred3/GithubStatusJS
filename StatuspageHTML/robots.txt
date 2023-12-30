@@ -3,3 +3,4 @@ Allow: /
 Allow: /components/
 Allow: /status/
 Allow: /amp/
+Allow: /preact/

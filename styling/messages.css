@@ -10,7 +10,7 @@
 }
 
 @media only screen and (min-width: 2100px) and (min-height: 1100px) {
-    .messages { margin: 3em 0px; }
+    
 }
 
 .date {
@@ -30,13 +30,46 @@
     margin: 1em 2.5vw;
 }
 
-.good-message {
+.message-status[data-impact]::before {
+    content: attr(data-impact);
+}
+
+.message-status[data-impact="good"], .message-status[data-impact="error"] {
     width: 120px;
+}
+
+.message-status[data-impact="none"], .message-status[data-impact="minor"], .message-status[data-impact="maintenance"] {
+    width: 200px;
+}
+
+.message-status[data-impact="good"] {
     background-color: #339966;
 }
 
-.message-status[data-impact]::before {
-    content: attr(data-impact);
+.message-status[data-impact="none"] {
+    background-color: #000000;
+}
+
+.message-status[data-impact="minor"] {
+    background-color: #F1C40F;
+}
+
+.message-status[data-impact="maintenance"] {
+    background-color: #0366D6;
+}
+
+.message-status[data-impact="major"] {
+    width: 280px;
+    background-color: #FF9900;
+}
+
+.message-status[data-impact="critical"] {
+    width: 360px;
+    background-color: #990000;
+}
+
+.message-status[data-impact="error"] {
+    background-color: #646464;
 }
 
 /* .good-message.message-status .right::before {
@@ -71,6 +104,11 @@
     content: 'error';
 } */
 
+/* .good-message {
+    width: 120px;
+    background-color: #339966;
+}
+
 .none-message {
     width: 200px;
     background-color: #000000;
@@ -99,20 +137,20 @@
 .error-message {
     width: 120px;
     background-color: #646464;
-}
+} */
 
 @media only screen and (max-width: 850px) {
-  .good-message { width: 20vw; }
-
-  .none-message, .minor-message, .maintenance-message { width: 40vw; }
-
-  .major-message { width: 60vw; }
-
-  .critical-message { width: 80vw; }
-
-  .error-message { width: 50vw; }
-
-  .text-margin { margin: 3vh 4vw; }
+    .message-status[data-impact="good"] { width: 20vw; }
+  
+    .message-status[data-impact="none"], .message-status[data-impact="minor"], .message-status[data-impact="maintenance"] { width: 40vw; }
+  
+    .message-status[data-impact="major"] { width: 60vw; }
+  
+    .message-status[data-impact="critical"] { width: 80vw; }
+  
+    .message-status[data-impact="error"] { width: 50vw; }
+  
+    .text-margin { margin: 3vh 4vw; }
 }
 
 @media only screen and (max-width: 400px) {
@@ -123,16 +161,16 @@
     .messages { display: none; height: 0vh; }
 }
 
-@media (min-width: 2048px) and (min-height: 1080px) {
-    .good-message { width: 20vw; }
+@media only screen and (min-width: 2048px) and (min-height: 1080px) {
+    .message-status[data-impact="good"] { width: 20vw; }
 
-    .none-message, .minor-message, .maintenance-message { width: 40vw; }
+    .message-status[data-impact="none"], .message-status[data-impact="minor"], .message-status[data-impact="maintenance"] { width: 40vw; }
 
-    .major-message { width: 60vw; }
+    .message-status[data-impact="major"] { width: 60vw; }
 
-    .critical-message { width: 80vw; }
+    .message-status[data-impact="critical"] { width: 80vw; }
 
-    .error-message { width: 50vw; }
+    .message-status[data-impact="error"] { width: 50vw; }
 
     .status-box { height: 2em; font-size: 2.5em; }
 
@@ -145,6 +183,8 @@
     .status-box { height: 1.75em; font-size: 3.5em; }
 
     .text-margin { font-size: 3em; }
+
+    .messages { margin: 3em 0px; }
 }
 
 @media (min-width: 3000px) and (min-height: 2000px) {
@@ -162,6 +202,6 @@
 }
 
 .message-error {
-  padding: 3vh 7.5vw 0vh 7.5vw !important;
-  color: #646464;
+    padding: 3vh 7.5vw 0vh 7.5vw !important;
+    color: #646464;
 }
