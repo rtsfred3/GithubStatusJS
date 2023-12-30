@@ -4,46 +4,44 @@
         <meta charset="utf-8">
 
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="Testing Page">
+        <meta name="application-name" content="Web Component Page">
         <meta name="theme-color" content="#339966">
         <meta name="description" content="Testing page for new features or ideas in GitHub Status.">
         <!-- <meta name="keywords" content="GitHubStatus, GitHub Status, GitHub, Status, Mini Version"> -->
 
         <meta property="og:site_name" content="GitHub Status">
-        <meta property="og:title" content="Testing Page">
+        <meta property="og:title" content="Web Component Page">
         <meta property="og:description" content="Testing page for new features or ideas in GitHub Status.">
         <meta property="og:image" content="https://githubstat.us/img/status-min.png">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
-        <meta property="og:url" content="https://githubstat.us/testing/">
+        <meta property="og:url" content="https://ghstat.us/preact/">
 
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="Testing Page">
+        <meta name="twitter:title" content="Web Component Page">
         <meta name="twitter:description" content="Testing page for new features or ideas in GitHub Status.">
         <meta name="twitter:image:src" content="https://githubstat.us/img/status-min.png">
 
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="Testing Page">
+        <meta name="apple-mobile-web-app-title" content="Web Component Page">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="stylesheet" type="text/css" href="../styling/main.min.css">
-
-        <link rel="canonical" href="https://githubstat.us/preact/" />
+        <link rel="canonical" href="https://ghstat.us/preact/" />
 
         <script type="application/ld+json">
             {
                 "@context": "http://schema.org/",
                 "@type": "WebApplication",
-                "name": "Testing Page",
-                "alternateName": "Test Page",
+                "name": "Web Component Page",
+                "alternateName": "Web Component Page",
                 "description": "Testing page for new features or ideas in GitHub Status.",
                 "applicationCategory": "DeveloperApplication",
                 "operatingSystem": "Android, iOS, MacOS, Windows",
                 "softwareRequirements": "Modern Web Browser",
-                "url": "https://githubstat.us/testing/",
+                "url": "https://ghstat.us/preact/",
                 "screenshot": "https://githubstat.us/img/screenshots/screenshot1.webp",
                 "image": "https://githubstat.us/img/status-min.png",
                 "thumbnailUrl": "https://githubstat.us/img/status-min.png",
@@ -67,27 +65,23 @@
             }
         </script>
 
-        <script type="module">
-            import { createElement, h, render } from 'https://esm.sh/preact@10.19.2';
-            import htm from 'https://esm.sh/htm@3.1.1';
-            const html = htm.bind(h);
+        <!-- <link rel="stylesheet" type="text/css" href="../styling/main.min.css"> -->
+        
+        <!-- <script src="../js/StatuspageDictionary.js"></script>    
+        <script src="../js/StatuspageWebComponents.js"></script> -->
 
-            // import { h, html, Component, render } from 'https://unpkg.com/htm@3.1.1/preact/standalone.module.js';
+        <script src="/js/StatuspageDictionary.min.js"></script>    
+        <script src="/js/StatuspageWebComponents.min.js"></script>
 
-            import { StatuspageHTML, StatuspageHTMLElements, StatuspageStatusElement } from '../js/StatuspagePreact.js';
+        <style>
+            .psa,.status-width{width:100vw;text-align:center;display:table}*{margin:0;padding:0}body{font-family:arial}hr{height:7.5px;color:grey;background-color:grey;margin:1px 0 2px;border:0}.psa{height:1.25em;padding-top:.25em;padding-bottom:.25em;font-size:24pt;background-color:#d83d42}.status{overflow:hidden;position:fixed;top:0;left:0;transition:height .1s}.messages-scroll{padding-top:240px;scroll-behavior:auto;overflow-y:scroll}.status-width{font-size:48pt}.status-shadow{-moz-box-shadow:0 1px 5px 0 gray;-webkit-box-shadow:0 1px 5px 0 gray;box-shadow:0 1px 5px 0 gray}.component-height{height:20vh}.full-status-height{height:100vh}.psa-full-status-height{height:calc(100vh - 1.15em + .275em)}.status-height{height:240px}@media only screen and (max-height:400px){.status-height{height:45vh}.messages-scroll{padding-top:45vh}}@media only screen and (max-width:320px) and (max-height:320px){.status-height{height:100vh}}@media only screen and (min-width:2048px) and (min-height:1080px){.status-height{height:30vh}.status-width{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.status-height{height:40vh}.status-width{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.status-height{height:40vh}.status-width{font-size:16em}}@media only screen and (max-width:450px){.unavailable-font{font-size:28pt!important}}.hidden,.size-zero{height:0;width:0;margin:0!important;padding:0!important}.hidden,.hide{display:none}.size-max{height:100vh;width:100vw}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.empty{color:#646464!important}.font-36{font-size:36pt;font-weight:600}.font-12{font-size:9pt;font-weight:500}svg{height:27px;margin-top:0;margin-bottom:-5px}@media (max-width:300px){.right{float:none}}.right{float:right}.margin{margin:5px}.margin-bottom{margin-bottom:2.5vh}.good,.none{background-color:#396}.min[data-status]::before{content:attr(data-status);text-transform:uppercase}.min[data-background]::before{background-color:attr(data-background color,red)}.min[data-status=none]::before{content:"good";text-transform:uppercase}.minor{background-color:#dbab09}.major{background-color:#e25d10}.critical.min.center-status::before{content:'critical';text-transform:uppercase}.critical{background-color:#dc3545}.maintenance{background-color:#0366d6}.maintenance.min.center-status::before{content:'maintenance';text-transform:uppercase}.loading,.unavailable{background-color:#4f93bd}.error{background-color:#646464}@media only screen and (min-width:351px) and (max-width:450px){.maintenance{font-size:36pt;font-weight:500}}@media only screen and (min-width:251px) and (max-width:350px){.maintenance{font-size:30pt;font-weight:500}}@media only screen and (min-width:151px) and (max-width:250px){.maintenance{font-size:20pt;font-weight:500}}.status-color{color:#fff}.black{color:#000!important}
 
+            .messages{margin:1.5em 0;padding:0}@media only screen and (min-width:2100px) and (min-height:1100px){.messages{margin:3em 0}}.date{font-size:9pt!important}.status-box{height:45px;font-size:14pt;color:#f8f8f8;display:table!important}.text-margin{font-size:11pt;margin:1em 2.5vw}.good-message{width:120px;background-color:#396}.message-status[data-impact]::before{content:attr(data-impact)}.none-message{width:200px;background-color:#000}.minor-message{width:200px;background-color:#f1c40f}.maintenance-message{width:200px;background-color:#0366d6}.major-message{width:280px;background-color:#f90}.critical-message{width:360px;background-color:#900}.error-message{width:120px;background-color:#646464}@media only screen and (max-width:850px){.good-message{width:20vw}.maintenance-message,.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}@media only screen and (max-width:320px) and (max-height:320px){.messages{display:none;height:0}}@media (min-width:2048px) and (min-height:1080px){.status-box,.text-margin{font-size:2.5em}.good-message{width:20vw}.maintenance-message,.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.status-box{height:2em}.date{font-size:.75em!important}}@media (min-width:2100px) and (min-height:1100px){.status-box{height:1.75em;font-size:3.5em}.text-margin{font-size:3em}}@media (min-width:3000px) and (min-height:2000px){.status-box{height:1.75em;font-size:5em}.text-margin{font-size:4em}}.message-status{padding-right:.5em;vertical-align:middle;display:table-cell!important;text-align:end}.message-error{padding:3vh 7.5vw 0!important;color:#646464}
+        </style>
 
-            customElements.define('statuspage-status', StatuspageStatusElement);
-            // var Statuspage = new StatuspageHTML("https://www.githubstatus.com");
-            
-            
-            // render(StatuspageHTMLElements.LoadingHTMLElement, document.body);
-            render(h('statuspage-status', { 'status': 'good', 'fullStatus': true }), document.body);
-        </script>
-
-        <title>GitHub Status Preact</title>
+        <title>Web Component Page</title>
     </head>
     <body>
-        <!-- <div id="app"></div> -->
+        <statuspage-summary data-url="https://www.cloudflarestatus.com"></statuspage-summary>
     </body>
 </html>

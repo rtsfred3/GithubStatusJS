@@ -12,15 +12,15 @@
         <meta property="og:site_name" content="Cloudflare Status">
         <meta property="og:title" content="(Unofficial) Cloudflare Status - AMP">
         <meta property="og:description" content="A minified AMP website to monitor Cloudflare status updates.">
-        <meta property="og:image" content="https://ghstat.us/img/status-min.png">
+        <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
-        <meta property="og:url" content="https://ghstat.us/amp/">
+        <meta property="og:url" content="https://spstat.us/amp/">
 
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="(Unofficial) Cloudflare Status - AMP">
         <meta name="twitter:description" content="A minified AMP website to monitor Cloudflare status updates.">
-        <meta name="twitter:image:src" content="https://ghstat.us/img/status-min.png">
+        <meta name="twitter:image:src" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status - AMP">
@@ -29,39 +29,36 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://ghstat.us/amp/" />
+        <link rel="canonical" href="https://spstat.us/amp/" />
 
         <link rel="dns-prefetch" href="//www.cloudflarestatus.com/" />
         <link rel="preconnect" href="//www.cloudflarestatus.com/">
 
         <style amp-boilerplate>
-            body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+            body{-webkit-animation:8s steps(1,end) both -amp-start;-moz-animation:8s steps(1,end) both -amp-start;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:8s steps(1,end) both -amp-start}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
         </style>
         <noscript>
             <style amp-boilerplate>
                 body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
             </style>
         </noscript>
-        
+
         <script async src="https://cdn.ampproject.org/v0.js"></script>
-        <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
-        <script async custom-template = "amp-mustache" src = "https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+        <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
         <script async custom-element="amp-render" src="https://cdn.ampproject.org/v0/amp-render-1.0.js"></script>
 
         <style amp-custom>
-            .psa,.status-width{width:100vw;text-align:center;display:table}*{margin:0;padding:0}body{font-family:arial}hr{height:7.5px;color:grey;background-color:grey;margin:1px 0 2px;border:0}.psa{height:1.25em;padding-top:.25em;padding-bottom:.25em;font-size:24pt;background-color:#d83d42}.status{overflow:hidden;position:fixed;top:0;left:0;transition:height .1s}.messages-scroll{padding-top:240px;scroll-behavior:auto;overflow-y:scroll}.status-width{font-size:48pt}.status-shadow{-moz-box-shadow:0 1px 5px 0 gray;-webkit-box-shadow:0 1px 5px 0 gray;box-shadow:0 1px 5px 0 gray}.component-height{height:20vh}.full-status-height{height:100vh}.psa-full-status-height{height:calc(100vh - 1.15em + .275em)}.status-height{height:240px}@media only screen and (max-height:400px){.status-height{height:45vh}.messages-scroll{padding-top:45vh}}@media only screen and (max-width:320px) and (max-height:320px){.status-height{height:100vh}}@media only screen and (min-width:2048px) and (min-height:1080px){.status-height{height:30vh}.status-width{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.status-height{height:40vh}.status-width{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.status-height{height:40vh}.status-width{font-size:16em}}@media only screen and (max-width:450px){.unavailable-font{font-size:28pt}}.hidden,.size-zero{height:0;width:0;margin:0;padding:0}.hidden,.hide{display:none}.size-max{height:100vh;width:100vw}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center}.center-status{vertical-align:middle;display:table-cell}.empty{color:#646464}.font-36{font-size:36pt;font-weight:600}.font-12{font-size:9pt;font-weight:500}svg{height:27px;margin-top:0;margin-bottom:-5px}@media (max-width:300px){.right{float:none}}.right{float:right}.margin{margin:5px}.margin-bottom{margin-bottom:2.5vh}.good,.none{background-color:#396}.good.min .center-status::before,.none.min .center-status::before{content:'good';text-transform:uppercase}.minor{background-color:#dbab09}.minor.min .center-status::before{content:'MINOR'}.major{background-color:#e25d10}.major.min .center-status::before{content:'major';text-transform:uppercase}.critical{background-color:#dc3545}.critical.min .center-status::before{content:'critical';text-transform:uppercase}.maintenance{background-color:#0366d6}.maintenance.min .center-status::before{content:'maintenance';text-transform:uppercase}.loading,.unavailable{background-color:#4f93bd}.unavailable.min .center-status::before{content:'unavailable';text-transform:uppercase}.loading.min .center-status::before{content:'loading';text-transform:uppercase}.error{background-color:#646464}.error.min .center-status::before{content:'error';text-transform:uppercase}@media only screen and (min-width:351px) and (max-width:450px){.maintenance{font-size:36pt;font-weight:500}}@media only screen and (min-width:251px) and (max-width:350px){.maintenance{font-size:30pt;font-weight:500}}@media only screen and (min-width:151px) and (max-width:250px){.maintenance{font-size:20pt;font-weight:500}}.status-color{color:#fff}.black{color:#000}
-            
-            .messages{margin:1.5em 0;padding:0}@media only screen and (min-width:2100px) and (min-height:1100px){.messages{margin:3em 0}}.date{font-size:9pt}.status-box{height:45px;font-size:14pt;color:#f8f8f8;display:table}.text-margin{font-size:11pt;margin:1em 2.5vw}.good-message{width:120px;background-color:#396}.good-message .message-status .right::before{content:'good'}.none-message{width:200px;background-color:#000}.none-message .message-status .right::before{content:'none'}.minor-message{width:200px;background-color:#f1c40f}.minor-message .message-status .right::before{content:'minor'}.maintenance-message{width:200px;background-color:#0366d6}.maintenance-message .message-status .right::before{content:'maintenance'}.major-message{width:280px;background-color:#f90}.major-message .message-status .right::before{content:'major'}.critical-message{width:360px;background-color:#900}.critical-message .message-status .right::before{content:'critical'}.error-message{width:120px;background-color:#646464}.error-message .message-status .right::before{content:'error'}@media only screen and (max-width:850px){.good-message{width:20vw}.maintenance-message,.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}@media only screen and (max-width:320px) and (max-height:320px){.messages{display:none;height:0}}@media (min-width:2048px) and (min-height:1080px){.status-box,.text-margin{font-size:2.5em}.good-message{width:20vw}.maintenance-message,.minor-message,.none-message{width:40vw}.major-message{width:60vw}.critical-message{width:80vw}.error-message{width:50vw}.status-box{height:2em}.date{font-size:.75em}}@media (min-width:2100px) and (min-height:1100px){.status-box{height:1.75em;font-size:3.5em}.text-margin{font-size:3em}}@media (min-width:3000px) and (min-height:2000px){.status-box{height:1.75em;font-size:5em}.text-margin{font-size:4em}}.message-status{width:100%;padding-right:.5em;vertical-align:middle;display:table-cell}.message-error{padding:3vh 7.5vw 0;color:#646464}
+            .psa,.status-width{width:100vw;text-align:center;display:table}:root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464}*{margin:0;padding:0}body{font-family:arial}hr{height:7.5px;color:grey;background-color:grey;margin:1px 0 2px;border:0}.psa{height:1.25em;padding-top:.25em;padding-bottom:.25em;font-size:24pt;background-color:#d83d42}.status{overflow:hidden;position:fixed;top:0;left:0;transition:height .1s}.messages-scroll{padding-top:240px;scroll-behavior:auto;overflow-y:scroll}.status-width{font-size:48pt}.status-shadow{-moz-box-shadow:0 1px 5px 0 gray;-webkit-box-shadow:0 1px 5px 0 gray;box-shadow:0 1px 5px 0 gray}.component-height{height:20vh}.full-status-height{height:100vh}.psa-full-status-height{height:calc(100vh - 1.15em + .275em)}.status-height{height:240px}@media only screen and (max-height:400px){.status-height{height:45vh}.messages-scroll{padding-top:45vh}}@media only screen and (max-width:320px) and (max-height:320px){.status-height{height:100vh}}@media only screen and (min-width:2048px) and (min-height:1080px){.status-height{height:30vh}.status-width{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.status-height{height:40vh}.status-width{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.status-height{height:40vh}.status-width{font-size:16em}}@media only screen and (max-width:450px){.unavailable-font{font-size:28pt!important}}.hidden,.size-zero{height:0;width:0;margin:0!important;padding:0!important}.hidden,.hide{display:none}.size-max{height:100vh;width:100vw}.bold{font-weight:700}.padding-none{padding:3vh 7.5vw 0}.center{width:auto;text-align:center!important}.center-status{vertical-align:middle;display:table-cell}.empty{color:#646464!important}.font-36{font-size:36pt;font-weight:600}.font-12{font-size:9pt;font-weight:500}svg{height:27px;margin-top:0;margin-bottom:-5px}@media (max-width:300px){.right{float:none}}.right{float:right}.margin{margin:5px}.margin-bottom{margin-bottom:2.5vh}[data-message]::before{content:attr(data-message)}.min[data-status]::before{content:attr(data-status);text-transform:uppercase}.min[data-status=good]::before,.min[data-status=none]::before{content:"good";text-transform:uppercase}.good,.min[data-background=good],.min[data-background=none],.none{background-color:var(--none)}.min[data-background=minor],.minor{background-color:var(--minor)}.major,.min[data-background=major]{background-color:var(--major)}.critical,.min[data-background=critical]{background-color:var(--critical)}.maintenance,.min[data-background=maintenance]{background-color:var(--maintenance)}.loading,.min[data-background=loading],.min[data-background=unavailable],.unavailable{background-color:var(--loading)}.error,.min[data-background=error]{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){.maintenance{font-size:36pt;font-weight:500}}@media only screen and (min-width:251px) and (max-width:350px){.maintenance{font-size:30pt;font-weight:500}}@media only screen and (min-width:151px) and (max-width:250px){.maintenance{font-size:20pt;font-weight:500}}.status-color{color:#fff}.black{color:#000!important}
         </style>
 
         <title>(Unofficial) Cloudflare Status - AMP</title>
     </head>
+
     <body>
-        <amp-render src="https://www.cloudflarestatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
+        <amp-render src="https://www.cloudflarestatus.com/api/v2/status.json" binding="never" height="0" width="0"
+            layout="responsive" key="status">
             <template type="amp-mustache">
-                <div id="status" class="full-status-height status-width bold status-color {{indicator}}">
-                    <span class="center-status"></span>
-                </div>
+                <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div>
             </template>
             <div placeholder>
                 <div id="status" class="min full-status-height status-width bold status-color loeading">
@@ -69,37 +66,5 @@
                 </div>
             </div>
         </amp-render>
-
-        <amp-render src="https://www.cloudflarestatus.com/api/v2/incidents.json" binding="never" height="0" width="0" layout="responsive">
-            <template type="amp-mustache">
-                {{#incidents}}
-                    <span id="{{id}}">
-                        {{#incident_updates}}
-                            <div class="text-margin">
-                                {{body}}
-                                <br>
-                                <span class="date empty">{{created_at}}</span>
-                            </div>
-                        {{/incident_updates}}
-                    </span>
-                {{/incidents}}
-            </template>
-            <div placeholder>
-                <div id="status" class="min full-status-height status-width bold status-color loeading">
-                    <span class="center-status"></span>
-                </div>
-            </div>
-        </amp-render>
-
-        <!-- <amp-render src="https://www.githubstatus.com/api/v2/summary.json" binding="never" height="0" width="0" layout="responsive" key="incidents">
-            <template type="amp-mustache">
-                {{id}}
-            </template>
-            <div placeholder>
-                <div id="status" class="min full-status-height status-width bold status-color loeading">
-                    <span class="center-status"></span>
-                </div>
-            </div>
-        </amp-render> -->
     </body>
 </html>
