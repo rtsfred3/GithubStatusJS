@@ -9,9 +9,12 @@ class StatuspageWebComponents {
                 this.statusElement = document.createElement('div');
                 this.statusElement.setAttribute('id', 'status');
 
-                this.statusElement.classList.add('min', 'status-width', 'bold', 'status-color', 'center-status');
+                this.statusElement.classList.add('min', 'status-width', 'center-status');
 
-                if (this.hasAttribute('fullStatus')) {
+                this.statusElement.style.fontWeight = "bold";
+                this.statusElement.style.color = "white";
+
+                if (this.hasAttribute('fullStatus') && this.getAttribute('fullStatus') != "false") {
                     this.statusElement.classList.add('full-status-height');
                 } else {
                     this.statusElement.classList.add('status-height', 'status-shadow');
@@ -48,9 +51,9 @@ class StatuspageWebComponents {
             }
 
             parseStatus(statusString){
-                this.statusElement.classList.add(statusString.toLowerCase());
                 this.statusElement.setAttribute('status', statusString);
                 this.statusElement.setAttribute('data-status', statusString);
+                this.statusElement.style.backgroundColor = StatuspageDictionary.MetaColors[statusString.toLowerCase()];
             }
 
             static get is(){
@@ -68,13 +71,8 @@ class StatuspageWebComponents {
             connectedCallback() {
                 if (this.hasAttribute('data-json')) {
                     this.json = JSON.parse(this.getAttribute('data-json'));
-
-                    if ('components' in this.json) {
-                        for (var i = 0; i < this.json.components.length; i++) {
-                            if (this.json.components[i].name.substring(0, 5) == 'Visit') { continue; }
-                            this.singleComponentElement(this.json.components[i]);
-                        }
-                    }
+                    
+                    this.parseJSON(this.json);
                 }
 
                 if (this.hasAttribute('data-url')) {
@@ -89,10 +87,7 @@ class StatuspageWebComponents {
                     fetch(baseUrl + '/api/v2/components.json')
                         .then(data => data.json())
                         .then((json) => {
-                            for (var i = 0; i < json.components.length; i++) {
-                                if (json.components[i].name.substring(0, 5) == 'Visit') { continue; }
-                                this.singleComponentElement(json.components[i]);
-                            }
+                            this.parseJSON(json);
                             res();
                         }).catch((error) => rej(error));
                 })
@@ -102,7 +97,11 @@ class StatuspageWebComponents {
                 const componentDivElement = document.createElement("div");
 
                 componentDivElement.setAttribute('id', componentJson.id);
-                componentDivElement.classList.add('component-height', 'status-width', 'bold', 'status-color', StatuspageDictionary.IndicatorVals[componentJson.status]);
+                componentDivElement.classList.add('min', 'component-height', 'status-width');
+                
+                componentDivElement.style.fontWeight = "bold";
+                componentDivElement.style.color = "white";
+                componentDivElement.style.backgroundColor = StatuspageDictionary.MetaColors[componentJson.status.toLowerCase()];
 
                 const centerStatusDivElement = document.createElement("span");
                 centerStatusDivElement.classList.add('center-status');
@@ -111,6 +110,15 @@ class StatuspageWebComponents {
                 componentDivElement.appendChild(centerStatusDivElement);
 
                 this.appendChild(componentDivElement);
+            }
+
+            parseJSON(componentsJSON) {
+                if ('components' in componentsJSON) {
+                    for (var i = 0; i < componentsJSON.components.length; i++) {
+                        if (componentsJSON.components[i].name.substring(0, 5) == 'Visit') { continue; }
+                        this.singleComponentElement(componentsJSON.components[i]);
+                    }
+                }
             }
 
             static get is(){
@@ -304,7 +312,7 @@ class StatuspageWebComponents {
                 status.setAttribute('data-json', JSON.stringify({
                     'status': { 'indicator': 'loading' }
                 }));
-                status.setAttribute('fullStatus', null);
+                status.setAttribute('fullStatus', "false");
                 this.loadingApp.appendChild(status);
                 this.replaceWith(this.loadingApp);
 
