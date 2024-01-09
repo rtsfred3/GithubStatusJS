@@ -1,8 +1,8 @@
 User-agent: *
 Allow: /
-#Allow: /components/
-#Allow: /status/
+Allow: /components/
+Allow: /status/
 Allow: /amp/
 Allow: /preact/
-Disallow: /components/
-Disallow: /status/
+#Disallow: /components/
+#Disallow: /status/
