@@ -103,8 +103,10 @@ class StatuspageHTMLElements {
             statusElement.classList.add(...heightArray);
             statusElement.classList.add('center-status');
         } else {
+            statusElement.classList.add('component-height');
+            
             const centerStatusDivElement = document.createElement("span");
-            centerStatusDivElement.classList.add('center-status', 'component-height');
+            centerStatusDivElement.classList.add('center-status');
             centerStatusDivElement.setAttribute('data-message', message);
         
             statusElement.appendChild(centerStatusDivElement);
