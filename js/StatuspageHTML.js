@@ -428,6 +428,7 @@ class StatuspageHTML {
      */
     async ComponentsHomeAsync() {
         console.log("ComponentsHomeAsync");
+        this.setUrl();
 
         const response = await fetch(this.settings_baseUrl + '/api/v2/components.json');
         const result = await response.json();
@@ -451,6 +452,9 @@ class StatuspageHTML {
      * @async
      */
     async StatusHomeAsync() {
+        console.log("StatusHomeAsync");
+        this.setUrl();
+
         const response = await fetch(this.settings_baseUrl + '/api/v2/status.json');
         const result = await response.json();
 
