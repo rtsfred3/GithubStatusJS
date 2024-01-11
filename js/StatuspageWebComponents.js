@@ -283,9 +283,9 @@ class StatuspageWebComponents {
     
                             incidentElement.appendChild(incidentUpdate);
                         }
+
+                        this.incidents.appendChild(incidentElement);
                     }
-                
-                    this.incidents.appendChild(incidentElement);
                 }
 
                 this.replaceWith(this.incidents);

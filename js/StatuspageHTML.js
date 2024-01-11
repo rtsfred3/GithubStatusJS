@@ -38,6 +38,18 @@
  * @prop {StatuspageStatusObject} status 
  */
 
+class StatuspageAppComponent extends HTMLElement {
+    constructor() { super(); }
+    
+    connectedCallback() {
+        this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+    }
+
+    static get is(){ return 'statuspage-app'; }
+}
+
+customElements.define(StatuspageAppComponent.is, StatuspageAppComponent);
+
 class StatuspageHTMLElements {
     /**
      * @static
@@ -48,14 +60,35 @@ class StatuspageHTMLElements {
         return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('error'), true);
     }
 
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
     static get LoadingHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('loading'), true);
+        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.loading, true);
     }
 
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
     static get AppHTMLElement(){
         const appElement = document.createElement("div");
         appElement.setAttribute('id', 'app');
         return appElement;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
+    static get AppLoadingHTMLElement() {
+        var app = StatuspageHTMLElements.AppHTMLElement;
+        app.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
+        return app;
     }
 
     /**
@@ -86,6 +119,19 @@ class StatuspageHTMLElements {
 
         if(typeof(status) == "object" && 'status' in status && 'indicator' in status.status){
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
+        }
+
+        if (status instanceof StatuspageDictionary.StatusEnums) {
+            return StatuspageHTMLElements.StatusHTMLElement(status.toString(), fullStatus);
+        }
+
+        if (Object.keys(status).includes('val')) {
+            return StatuspageHTMLElements.StatusHTMLElement(status['val'], fullStatus);
+        }
+
+        if (typeof status != 'string') {
+            console.error(typeof status != 'string');
+            return document.createElement("div");
         }
 
         const statusElement = document.createElement("div");
@@ -150,7 +196,9 @@ class StatuspageHTMLElements {
      */
     static MessageHTMLElement(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus, _displayUTCTime){
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        var currImpact = (status == "resolved" ? "good" : impact);
+        var currImpact = (status == StatuspageDictionary.StatusEnums.resolved.toString()
+            ? StatuspageDictionary.StatusEnums.good.toString()
+            : impact);
         if (currImpact == undefined) { currImpact = StatuspageDictionary.IndicatorMessages[status]; }
 
         var date = new Date(created_at).toLocaleDateString("en-US", options);
@@ -294,10 +342,10 @@ class StatuspageHTML {
         this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StatuspageDictionary.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
 
         if (document.getElementById('app') == null) {
-            document.body.appendChild(StatuspageHTMLElements.AppHTMLElement);
+            document.body.appendChild(StatuspageHTMLElements.AppLoadingHTMLElement);
+        } else {
+            document.getElementById('app').replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
         }
-
-        this.app = document.getElementById('app');
 
         this.setTheme('loading').renderElement(StatuspageHTMLElements.LoadingHTMLElement);
     }
@@ -532,6 +580,7 @@ class StatuspageHTML {
             if (clearApp) { this.clearRender(); }
             
             document.getElementById("app").appendChild(htmlElement);
+            // this.app.appendChild(htmlElement);
 
             console.log("renderElement(): Success");
         } else {
@@ -544,16 +593,22 @@ class StatuspageHTML {
     /**
      * Sets a meta tag
      * 
-     * @param {string} id 
+     * @param {string|Array} id 
      * @param {string} value 
      * @returns {StatuspageHTML} 
      */
     setMetaTag(id, value) {
         console.log(`setMetaTag(${id}, ${value})`);
 
-        this.getMetaTag(id).setAttribute("content", value);
+        if(typeof id == 'string'){
+            this.getMetaTag(id).setAttribute("content", value);
+        } else if(Array.isArray(id)) {
+            for(var i = 0; i < id.length; i++){
+                this.getMetaTag(id[i]).setAttribute("content", value);
+            }
+        }
 
-        console.log("setMetaTag(): Success");
+        console.log(`setMetaTag(${id}, ${value}) - Success`);
 
         return this;
     }
@@ -662,10 +717,7 @@ class StatuspageHTML {
     setTitles() {
         document.getElementsByTagName("title")[0].innerHTML = this.getTitle();
 
-        return this.setMetaTag("twitter:title", this.getTitle())
-            .setMetaTag("og:title", this.getTitle())
-            .setMetaTag("application-name", this.getTitle())
-            .setMetaTag("apple-mobile-web-app-title", this.getTitle())
+        return this.setMetaTag(["twitter:title", "og:title", "application-name", "apple-mobile-web-app-title"], this.getTitle())
             .updateRichTest("name", this.getTitle());
     }
 
@@ -675,9 +727,7 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setDescriptions() {
-        return this.setMetaTag("description", this.getDescription())
-            .setMetaTag("og:description", this.getDescription())
-            .setMetaTag("twitter:description", this.getDescription())
+        return this.setMetaTag(["description", "og:description", "twitter:description"], this.getDescription())
             .updateRichTest("description", this.getDescription());
     }
 
@@ -688,13 +738,13 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setTheme(status = 'loading') {
-        console.log(`setTheme(${status})`);
+        console.log(`setTheme(status: ${status})`);
 
         var hexColor = StatuspageDictionary.MetaColors[status];
 
-        console.log(`setTheme(): Success`);
+        console.log(`setTheme(hexColor: ${hexColor}): Success`);
 
-        return this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
+        return this.setMetaTag(["theme-color", "apple-mobile-web-app-status-bar-style"], hexColor);
     }
 }
 
