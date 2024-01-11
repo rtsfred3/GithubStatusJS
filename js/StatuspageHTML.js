@@ -297,6 +297,8 @@ class StatuspageHTML {
             document.body.appendChild(StatuspageHTMLElements.AppHTMLElement);
         }
 
+        this.app = document.getElementById('app');
+
         this.setTheme('loading').renderElement(StatuspageHTMLElements.LoadingHTMLElement);
     }
 
@@ -386,14 +388,18 @@ class StatuspageHTML {
     async IndexHomeAsync() {
         this.setUrl();
 
-        // var elementsList = [];
+        var elements = [];
 
         if (this.settings_indexHomeSingleRequest) {
             const response = await fetch(this.settings_baseUrl + '/api/v2/summary.json');
             const result = await response.json();
 
+            elements = [
+                StatuspageHTMLElements.StatusHTMLElement(result),
+                StatuspageHTMLElements.IncidentsHTMLElements(result)
+            ];
+
             this.setNameDescriptionTheme(result)
-                .renderElements([ StatuspageHTMLElements.StatusHTMLElement(result), StatuspageHTMLElements.IncidentsHTMLElements(result) ]);
         } else {
             const statusResponse = await fetch(this.settings_baseUrl + '/api/v2/status.json');
             const statusResult = await statusResponse.json();
@@ -401,16 +407,18 @@ class StatuspageHTML {
             const messagesResponse = await fetch(this.settings_baseUrl + '/api/v2/incidents.json');
             const messagesResult = await messagesResponse.json();
 
-            var elements = [
+            elements = [
                 StatuspageHTMLElements.StatusHTMLElement(statusResult),
                 StatuspageHTMLElements.IncidentsHTMLElements(messagesResult, this.settings_previousDays)
             ];
 
-            this.setNameDescriptionTheme(statusResult)
-                .renderElements(elements);
+            this.setNameDescriptionTheme(statusResult);
         }
 
-        this.setTitle(this.template_title_index);
+        this.setTitle(this.template_title_index)
+            .renderElements(elements);
+
+        return elements;
     }
 
     /**
@@ -501,13 +509,13 @@ class StatuspageHTML {
 
         if (Array.isArray(htmlElements)) {
             for(var element of htmlElements){
-                if (element instanceof Element) {
-                    document.getElementById("app").appendChild(element);
-                }
+                this.renderElement(element, false);
             }
-        }
 
-        console.log("Success: renderElements()");
+            console.log("renderElements(): Success");
+        } else {
+            console.log("renderElements(): htmlElements is an Array.");
+        }
 
         return this;
     }
@@ -517,15 +525,18 @@ class StatuspageHTML {
      * @param {Element} htmlElement 
      * @returns {StatuspageHTML} 
      */
-    renderElement(htmlElement) {
+    renderElement(htmlElement, clearApp = true) {
         console.log("renderElement()");
 
         if (htmlElement instanceof Element) {
-            this.clearRender();
+            if (clearApp) { this.clearRender(); }
+            
             document.getElementById("app").appendChild(htmlElement);
-        }
 
-        console.log("Success: renderElement()");
+            console.log("renderElement(): Success");
+        } else {
+            console.log("renderElement(): htmlElement is an Element.");
+        }
 
         return this;
     }
@@ -538,10 +549,11 @@ class StatuspageHTML {
      * @returns {StatuspageHTML} 
      */
     setMetaTag(id, value) {
-        let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
-        var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+        console.log(`setMetaTag(${id}, ${value})`);
 
-        metaTag.setAttribute("content", value);
+        this.getMetaTag(id).setAttribute("content", value);
+
+        console.log("setMetaTag(): Success");
 
         return this;
     }
@@ -552,12 +564,19 @@ class StatuspageHTML {
      * @param {string} id 
      * @returns {string}
      */
+    getMetaTagValue(id) {
+        return this.getMetaTag(id).getAttribute("content");
+    }
+
+    /**
+     * Gets a value from a meta tag
+     * 
+     * @param {string} id 
+     * @returns {Element}
+     */
     getMetaTag(id) {
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
-        return metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id).getAttribute("content");
-
-        // var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
-        // return metaTag.getAttribute("content");
+        return metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     }
 
     /**
@@ -568,6 +587,8 @@ class StatuspageHTML {
      * @returns {StatuspageHTML} 
      */
     createMetaTag(id, content, attr = "name") {
+        console.log(`createMetaTag(${id}, ${content}, ${attr})`);
+
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
         var metaTags = metaTagsArr.filter((mTag) => mTag.getAttribute(attr) == id);
 
@@ -593,6 +614,8 @@ class StatuspageHTML {
      * @returns {StatuspageHTML} 
      */
     updateRichTest(id, value, _type = "WebApplication") {
+        console.log(`updateRichTest(${id}, ${value}, ${_type})`);
+
         var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
 
         if (ld == null) {
@@ -634,7 +657,6 @@ class StatuspageHTML {
     /**
      * Sets title in HTML
      * 
-     * @param {string} title 
      * @returns {StatuspageHTML}
      */
     setTitles() {
@@ -650,8 +672,6 @@ class StatuspageHTML {
     /**
      * Sets description in HTML
      * 
-     * @param {string} sitename 
-     * @param {string} descript 
      * @returns {StatuspageHTML}
      */
     setDescriptions() {
@@ -668,11 +688,11 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setTheme(status = 'loading') {
-        console.log(`setTheme()`);
+        console.log(`setTheme(${status})`);
+
         var hexColor = StatuspageDictionary.MetaColors[status];
 
-        console.log(`status ${status}`);
-        console.log(`hexColor ${hexColor}`);
+        console.log(`setTheme(): Success`);
 
         return this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
     }
