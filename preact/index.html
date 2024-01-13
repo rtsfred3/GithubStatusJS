@@ -67,8 +67,8 @@
 
         <link rel="stylesheet" type="text/css" href="../styling/main.min.css">
         
-        <script src="../js/StatuspageDictionary.js"></script>    
-        <script src="../js/StatuspageWebComponents.js"></script>
+        <!-- <script src="../js/StatuspageDictionary.js"></script>    
+        <script src="../js/StatuspageWebComponents.js"></script> -->
 
         <!-- <script src="../js/StatuspageWebComponents.min.js"></script> -->
 
@@ -87,16 +87,47 @@
         
         <!-- <statuspage-summary data-url="https://www.cloudflarestatus.com"></statuspage-summary> -->
 
-        <script type="module">
-            import StatuspageDictionary  from '../modules/StatuspageDictionary.esm.js';
-            import { StatuspageWebComponents, StatuspageHTMLElements, StatuspageHTML } from '../modules/StatuspageHTML.esm.js';
+        <!-- <script type="importmap">
+            {
+              "imports": {
+                "statuspage": "https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.6/modules/Statuspage.esm.js",
+                "preact": "https://esm.sh/htm@3.1.1/preact/standalone"
+              }
+            }
+        </script> -->
 
-            // import { StatuspageDictionary } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.5/modules/StatuspageDictionary.esm.js';
-            // import { StatuspageWebComponents, StatuspageHTMLElements, StatuspageHTML } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.5/modules/StatuspageDictionary.esm.js';
-
-            customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+        <script type="importmap">
+            {
+              "imports": {
+                "statuspage": "../modules/Statuspage.esm.js",
+                "preact": "https://esm.sh/htm@3.1.1/preact/standalone"
+              }
+            }
         </script>
 
-        <statuspage-app></statuspage-app>
+        <script type="module">
+            // import StatuspageDictionary  from '../modules/StatuspageDictionary.esm.js';
+            // import { StatuspageWebComponents, StatuspageHTMLElements, StatuspageHTML } from '../modules/StatuspageHTML.esm.js';
+            // import { StatuspageDictionary, StatuspageWebComponents, StatuspageHTMLElements } from '../modules/Statuspage.esm.js';
+
+            // import StatuspageDictionary from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.6/modules/StatuspageDictionary.esm.js';
+            // import { StatuspageWebComponents, StatuspageHTMLElements, StatuspageHTML } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.6/modules/StatuspageHTML.esm.js';
+            // import { StatuspageDictionary, StatuspageWebComponents, StatuspageHTMLElements } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.6/modules/Statuspage.esm.js';
+
+            // import { h, render } from 'https://esm.sh/preact';
+            // const app = h('statuspage-app');
+            // render(app, document.body);
+
+            import { StatuspageDictionary, StatuspageWebComponents, StatuspageHTMLElements } from 'statuspage';
+            import { html, render } from 'preact';
+
+            function App(props) {
+                return html`<statuspage-summary data-url="https://www.cloudflarestatus.com/"></statuspage-summary>`;
+            }
+
+            render(html`<${App} />`, document.body);
+        </script>
+
+        <!-- <statuspage-app></statuspage-app> -->
     </body>
 </html>
