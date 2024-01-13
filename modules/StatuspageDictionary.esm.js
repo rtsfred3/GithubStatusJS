@@ -3,105 +3,79 @@
  * @class
  */
 class StatuspageDictionary {
-    static get replaceableStringValue(){
-        return '{}';
+    static get replaceableStringValue() { return '{}'; }
+
+    static get StatusEnums() {
+        return {
+            good: "good",
+            minor: "minor",
+            major:'major',
+            critical: 'critical',
+            error: 'error',
+            maintenance: 'maintenance',
+            unavailable: 'unavailable',
+            loading: 'loading',
+            none: 'none',
+            resolved: 'resolved',
+            operational: 'operational',
+            degraded_performance: 'degraded_performance',
+            partial_outage: 'partial_outage',
+            major_outage: 'major_outage',
+            under_maintenance: 'under_maintenance'
+        };
     }
 
-    /**
-     * Creates class of desired variables to be converted to JSON
-     */
-    static get _metaColors() {
-        return class MetaColors {
-            constructor(){
-                this.none = '#339966';
-                this.minor = '#DBAB09';
-                this.major = '#E25D10';
-                this.critical = '#DC3545';
-                this.unavailable = '#4F93BD';
-                this.error = '#646464';
-                this.maintenance = '#0366D6';
-                this.psa = '#D83D42';
+    static get MetaColors() {
+        return {
+            none: '#339966',
+            minor: '#DBAB09',
+            major: '#E25D10',
+            critical: '#DC3545',
+            unavailable: '#4F93BD',
+            error: '#646464',
+            maintenance: '#0366D6',
+            psa: '#D83D42',
 
-                this.good = this.none;
-                this.under_maintenance = this.maintenance;
-                this.loading = this.unavailable;
+            get good() { return this.none; },
+            get under_maintenance() { return this.maintenance; },
+            get loading() { return this.unavailable; },
 
-                this.operational = this.good;
-                this.degraded_performance = this.minor;
-                this.partial_outage = this.major;
-
-                this.major = '#E36209';
-            }
-        }
+            get operational(){ return this.none; },
+            get degraded_performance(){ return this.minor; },
+            get partial_outage(){ return this.major; }
+        };
     }
 
-    /**
-     * Creates class of desired variables to be converted to JSON
-     */
-    static get _indicatorVals() {
-        return class IndicatorVals{
-            constructor(){
-                this.good = 'good';
-                this.minor = 'minor';
-                this.major = 'major';
-                this.critical = 'critical';
-                this.error = 'error';
-                this.maintenance = 'maintenance';
-                this.unavailable = 'unavailable';
-                this.loading = 'loading';
+    static get IndicatorVals() {
+        return {
+            good: StatuspageDictionary.StatusEnums.good,
+            minor: StatuspageDictionary.StatusEnums.minor,
+            major: StatuspageDictionary.StatusEnums.major,
+            critical: StatuspageDictionary.StatusEnums.critical,
+            error: StatuspageDictionary.StatusEnums.error,
+            maintenance: StatuspageDictionary.StatusEnums.maintenance,
+            unavailable: StatuspageDictionary.StatusEnums.unavailable,
+            loading: StatuspageDictionary.StatusEnums.loading,
 
-                this.resolved = this.good;
-                this.none = this.good;
-                this.operational = this.good;
-                this.degraded_performance = this.minor;
-                this.partial_outage = this.major;
-                this.major_outage = this.critical;
-                this.under_maintenance = this.maintenance;
-            }
-        }
+            get resolved() { return this.good; },
+            get none() { return this.good; },
+            get operational() { return this.good; },
+
+            get degraded_performance() { return this.minor; },
+            get partial_outage() { return this.major; },
+            get major_outage() { return this.critical; },
+            get under_maintenance() { return this.maintenance; }
+        };
     }
 
-    /**
-     * Creates class of desired variables to be converted to JSON
-     */
-    static get _indicatorMessages() {
-        return class IndicatorMessages {
-            constructor() {
-                var __indicatorVals = new StatuspageDictionary._indicatorVals();
-
-                this.resolved = __indicatorVals.good;
-                this.investigating = __indicatorVals.minor;
-                this.critical = __indicatorVals.critical;
-                this.maintenance = __indicatorVals.maintenance;
-            }
-        }
-    }
-
-    /**
-     * Converts StatuspageDictionary._metaColors class to JSON
-     * 
-     * @returns {MetaColors} Returns JSONified version of StatuspageDictionary._metaColors
-     */
-    static get MetaColors(){
-        return JSON.parse(JSON.stringify(new StatuspageDictionary._metaColors()));
-    }
-
-    /**
-     * Converts StatuspageDictionary._indicatorVals class to JSON
-     * 
-     * @returns {IndicatorVals} Returns JSONified version of StatuspageDictionary._indicatorVals
-     */
-    static get IndicatorVals(){
-        return JSON.parse(JSON.stringify(new StatuspageDictionary._indicatorVals()));
-    }
-
-    /**
-     * Converts StatuspageDictionary._indicatorMessages class to JSON
-     * @returns {IndicatorMessages} Returns JSONified version of StatuspageDictionary._indicatorMessages
-     */
-    static get IndicatorMessages(){
-        return JSON.parse(JSON.stringify(new StatuspageDictionary._indicatorMessages()));
+    static get IndicatorMessages() {
+        return {
+            resolved: StatuspageDictionary.StatusEnums.good,
+            minor: StatuspageDictionary.StatusEnums.minor,
+            major: StatuspageDictionary.StatusEnums.major,
+            critical: StatuspageDictionary.StatusEnums.critical
+        };
     }
 }
 
-export default StatuspageDictionary;
+export { StatuspageDictionary };

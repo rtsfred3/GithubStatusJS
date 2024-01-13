@@ -38,17 +38,194 @@
  * @prop {StatuspageStatusObject} status 
  */
 
-class StatuspageAppComponent extends HTMLElement {
-    constructor() { super(); }
+class StatuspageWebComponents {
+    static get AppLoading() {
+        return class extends HTMLElement {
+            constructor() { super(); }
     
-    connectedCallback() {
-        this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+            connectedCallback() { this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement); }
+            
+            static get is() { return 'statuspage-app'; }
+        }
     }
 
-    static get is(){ return 'statuspage-app'; }
+    static get Status() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+        
+            connectedCallback() {
+                this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
+                    ? this.getAttribute('status')
+                    : StatuspageDictionary.StatusEnums.error;
+        
+                this.fullScreen = this.hasAttribute('status') || this.hasAttribute('data-url')
+                    ? this.hasAttribute('fullScreen')
+                    : true;
+
+                if (this.hasAttribute('data-url')) {
+                    this.fetchStatus(this.getAttribute('data-url'));
+                } else {
+                    this.parseStatus(this.status, this.fullScreen);
+                }
+            }
+
+            fetchStatus(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/status.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            if ('status' in json) {
+                                this.parseStatus(json.status.indicator, this.fullScreen);
+                            } else {
+                                this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                            }
+                            
+                            res();
+                        }).catch((error) => {
+                            this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                            rej(error);
+                        });
+                })
+            }
+
+            parseStatus(status, fullScreen) {
+                console.log(status, fullScreen);
+                this.replaceWith(StatuspageHTMLElements.StatusHTMLElement(status, fullScreen));
+            }
+        
+            static get is() { return 'statuspage-status'; }
+        }
+    }
+
+    static get Components() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+        
+            connectedCallback() {
+                if (this.hasAttribute('data-json')) {
+                    this.parseJson(JSON.parse(this.getAttribute('data-json')));
+                } else if (this.hasAttribute('data-url')) {
+                    this.fetchComponents(this.getAttribute('data-url'));
+                }
+            }
+        
+            fetchComponents(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/components.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            this.parseJson(json);
+                            res();
+                        }).catch((error) => rej(error));
+                })
+            }
+        
+            parseJson(json) {
+                var componentsArr = StatuspageHTMLElements.ComponentsHTMLElement(json);
+        
+                for(var i = 0; i < componentsArr.length; i++){ this.append(componentsArr[i]); }
+            }
+        
+            static get is(){ return 'statuspage-components'; }
+        }
+    }
+
+    static get Incidents() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+
+            connectedCallback() {
+                if (this.hasAttribute('data-json')) {
+                    this.parseJson(JSON.parse(this.getAttribute('data-json')));
+                } else if (this.hasAttribute('data-url')) {
+                    this.fetchIncidents(this.getAttribute('data-url'));
+                }
+            }
+
+            fetchIncidents(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/incidents/unresolved.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            this.parseJson(json);
+                            res();
+                        }).catch((error) => rej(error));
+                })
+            }
+
+            parseJson(json){
+                if ('incidents' in json) {
+                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(json));
+                }
+            }
+
+            static get is(){ return 'statuspage-incidents'; }
+        }
+    }
+
+    static get Summary() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+
+            connectedCallback() {
+                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+
+                this.app = document.getElementById('app');
+
+                if (this.hasAttribute('data-url')) {
+                    this.fetchSummary(this.getAttribute('data-url'));
+                } else {
+                    app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                }
+            }
+
+            fetchSummary(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/summary.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            this.parseJson(json);
+                            res();
+                        }).catch((error) => {
+                            rej(error)
+                        });
+                });
+            }
+
+            parseJson(json) {
+                if (!('status' in json)) {
+                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    return;
+                }
+
+                var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                status.setAttribute('status', json.status.indicator);
+
+                var summary = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
+                summary.setAttribute('data-json', JSON.stringify(json));
+
+                this.app.firstChild.replaceWith(status);
+                this.app.appendChild(summary);
+            }
+
+            static get is(){ return 'statuspage-summary'; }
+        }
+    }
 }
 
-customElements.define(StatuspageAppComponent.is, StatuspageAppComponent);
+customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
+customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
+customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
+customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
 class StatuspageHTMLElements {
     /**
@@ -93,6 +270,34 @@ class StatuspageHTMLElements {
 
     /**
      * 
+     * @param {string} siteName 
+     * @returns {HTMLDivElement}
+     */
+    static NoIncidentsElement(siteName) {
+        const emptyIncidents = document.createElement("div");
+        emptyIncidents.classList.add("empty", "padding-none");
+    
+        const emptyIncidentsFirstChild = document.createElement("div");
+        const emptyIncidentsSecondChild = document.createElement("div");
+        
+        emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
+        emptyIncidentsSecondChild.classList.add('font-12');
+        
+        emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
+    
+        emptyIncidentsSecondChild.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${siteName} is up and running and has been stable for quite some time.`));
+        emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+        emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+        emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
+    
+        emptyIncidents.appendChild(emptyIncidentsFirstChild);
+        emptyIncidents.appendChild(emptyIncidentsSecondChild);
+
+        return emptyIncidents;
+    }
+
+    /**
+     * 
      * @param {string} indicator dummy status
      * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output that only contains `status.indicator`
      */
@@ -119,10 +324,6 @@ class StatuspageHTMLElements {
 
         if(typeof(status) == "object" && 'status' in status && 'indicator' in status.status){
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
-        }
-
-        if (status instanceof StatuspageDictionary.StatusEnums) {
-            return StatuspageHTMLElements.StatusHTMLElement(status.toString(), fullStatus);
         }
 
         if (Object.keys(status).includes('val')) {
@@ -196,8 +397,8 @@ class StatuspageHTMLElements {
      */
     static MessageHTMLElement(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus, _displayUTCTime){
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        var currImpact = (status == StatuspageDictionary.StatusEnums.resolved.toString()
-            ? StatuspageDictionary.StatusEnums.good.toString()
+        var currImpact = (status == StatuspageDictionary.StatusEnums.resolved
+            ? StatuspageDictionary.StatusEnums.good
             : impact);
         if (currImpact == undefined) { currImpact = StatuspageDictionary.IndicatorMessages[status]; }
 
@@ -258,28 +459,7 @@ class StatuspageHTMLElements {
         messagesList.classList.add('messages');
 
         if (incidents.length == 0) {
-            const emptyIncidents = document.createElement("div");
-            emptyIncidents.classList.add("empty", "padding-none");
-        
-            const emptyIncidentsFirstChild = document.createElement("div");
-            const emptyIncidentsSecondChild = document.createElement("div");
-            
-            emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
-            emptyIncidentsSecondChild.classList.add('font-12');
-            
-            emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
-        
-            emptyIncidentsSecondChild.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${incidentsJson.page.name} is up and running and has been stable for quite some time.`));
-            emptyIncidentsSecondChild.appendChild(document.createElement("br"));
-            emptyIncidentsSecondChild.appendChild(document.createElement("br"));
-            emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
-        
-            emptyIncidents.appendChild(emptyIncidentsFirstChild);
-            emptyIncidents.appendChild(emptyIncidentsSecondChild);
-
-            messagesList.appendChild(emptyIncidents);
-
-            // messagesList.appendChild(StatuspageHTMLElements.NoIncidentsHTMLElement(incidentsJson.page.name));
+            messagesList.appendChild(StatuspageHTMLElements.NoIncidentsElement(incidentsJson.page.name));
         } else {
             for (var i = 0; i < incidents.length; i++) {
                 if (incidents[i]["incident_updates"].length > 0) {
@@ -336,10 +516,10 @@ class StatuspageHTML {
         this.template_title_index = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`;
         this.template_title_status = `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`;
         this.template_title_components = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`;
-        this.template_title_error = `Error - Invalid Route`;
+        // this.template_title_error = `Error - Invalid Route`;
         this.template_descrisption = `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`;
-        this.template_descrisption_error = `An error has occured.`;
-        this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StatuspageDictionary.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
+        // this.template_descrisption_error = `An error has occured.`;
+        // this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StatuspageDictionary.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
 
         if (document.getElementById('app') == null) {
             document.body.appendChild(StatuspageHTMLElements.AppLoadingHTMLElement);
@@ -348,6 +528,22 @@ class StatuspageHTML {
         }
 
         this.setTheme('loading').renderElement(StatuspageHTMLElements.LoadingHTMLElement);
+    }
+
+    getTemplateTitleIndex() {
+        return `(Unofficial) ${this.getName()} Status`;
+    }
+
+    getTemplateTitleStatus() {
+        return `(Unofficial) Mini ${this.getName()} Status`
+    }
+
+    getTemplateTitleComponents() {
+        return `(Unofficial) ${this.getName()} Status Components`;
+    }
+
+    getTemplateDescription(siteName) {
+        return `An unofficial website to monitor ${siteName} status updates.`;
     }
 
     /**
@@ -391,8 +587,8 @@ class StatuspageHTML {
      * @param {string} template 
      * @returns {StatuspageHTML}
      */
-    setTitle(template) {
-        this.site_title = template.replace(StatuspageDictionary.replaceableStringValue, this.getName());
+    setTitle(title) {
+        this.site_title = title;
         return this.setTitles();
     }
 
@@ -463,7 +659,7 @@ class StatuspageHTML {
             this.setNameDescriptionTheme(statusResult);
         }
 
-        this.setTitle(this.template_title_index)
+        this.setTitle(this.getTemplateTitleIndex(this.getName()))
             .renderElements(elements);
 
         return elements;
@@ -490,7 +686,7 @@ class StatuspageHTML {
         const result = await response.json();
 
         this.setNameDescriptionTheme(result)
-            .setTitle(this.template_title_components)
+            .setTitle(this.getTemplateTitleComponents())
             .renderElements(StatuspageHTMLElements.ComponentsHTMLElement(result));
     }
 
@@ -515,7 +711,7 @@ class StatuspageHTML {
         const result = await response.json();
 
         this.setNameDescriptionTheme(result)
-            .setTitle(this.template_title_status)
+            .setTitle(this.getTemplateTitleStatus())
             .renderElement(StatuspageHTMLElements.StatusHTMLElement(result, true));
     }
 
@@ -524,11 +720,11 @@ class StatuspageHTML {
      */
     ErrorHome() {
         console.log("ErrorHome");
+        
+        this.site_description = "An error has occured.";
 
-        this.site_description = this.template_descrisption_error;
-
-        this.setName(this.template_title_error)
-            .setTitle(this.template_title_error)
+        this.setName("Error")
+            .setTitle("Error - Invalid Route")
             .setDescriptions()
             .createMetaTag("robots", "noindex")
             .renderElement(StatuspageHTMLElements.ErrorHTMLElement);
