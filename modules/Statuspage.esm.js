@@ -81,6 +81,35 @@ class StatuspageDictionary {
             critical: StatuspageDictionary.StatusEnums.critical
         };
     }
+
+    static MetaTagValues(url, imgUrl, title, description, themeColor, author, keywords=[]) {
+        return {
+            "author": author,
+            "application-name": title,
+            "theme-color": themeColor,
+            "description": description,
+            "keywords": keywords.join(', '),
+
+            "og:site_name": title,
+            "og:title": title,
+            "og:description": description,
+            "og:type": "website",
+            "og:url": url,
+            "og:image": imgUrl,
+            
+            "twitter:card": "summary",
+            "twitter:title": title,
+            "twitter:description": description,
+            "twitter:image": imgUrl,
+
+            "mobile-web-app-capable": "yes",
+            "apple-mobile-web-app-capable": "yes",
+            "apple-mobile-web-app-status-bar-style": themeColor,
+            "apple-mobile-web-app-title": title,
+            "viewport": "width=device-width, initial-scale=1.0, user-scalable=0.0",
+            "HandheldFriendly": "true",
+        }
+    }
 }
 
 class StatuspageHTMLElements {
@@ -345,6 +374,72 @@ class StatuspageHTMLElements {
 
         return messagesList;
     }
+
+    static MetaTag(id, content, attr = "name"){
+        var meta = document.createElement('meta');
+        meta.setAttribute(attr, id);
+        meta.setAttribute("content", content);
+        return meta;
+    }
+
+    static LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
+        var canonical = document.createElement('meta');
+        canonical.setAttribute('rel', 'canonical');
+        canonical.setAttribute("href", canonicalUrl);
+
+        var icon = document.createElement('meta');
+        icon.setAttribute('rel', 'icon');
+        icon.setAttribute('type', 'image/x-icon');
+        icon.setAttribute("href", iconUrl);
+
+        var appleTouchIcon = document.createElement('meta');
+        appleTouchIcon.setAttribute('apple-touch-icon', 'icon');
+        appleTouchIcon.setAttribute('sizes', '144x144');
+        appleTouchIcon.setAttribute("href", imgUrl);
+
+        var prefetch = document.createElement('meta');
+        prefetch.setAttribute('rel', 'dns-prefetch');
+        prefetch.setAttribute("href", prefetchUrl);
+
+        var preconnect = document.createElement('meta');
+        preconnect.setAttribute('rel', 'preconnect');
+        preconnect.setAttribute("href", prefetchUrl);
+
+        return [ canonical, icon, appleTouchIcon, prefetch, preconnect ];
+    }
+
+    static MetaTagsHTMLElements(canonicalUrl, imgUrl, title, description, themeColor, author, keywords=[]){
+        var metaTagVals = StatuspageDictionary.MetaTagValues(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
+
+        var metaTagElements = [];
+
+        for(const [k, v] in Object.entries(metaTagVals)){
+            metaTagElements.push(MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+        }
+
+        return metaTagElements;
+    }
+
+    static GetHead(canonicalUrl, prefetchUrl, iconUrl, imgUrl, title, description, themeColor, author, keywords=[]) {
+        var head = document.createElement('head');
+
+        var linkElements = StatuspageHTMLElements.LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
+        var metaElements = StatuspageHTMLElements.MetaTagsHTMLElements(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
+
+        for(var link in linkElements){
+            head.appendChild(link);
+        }
+
+        for(var meta in metaElements){
+            head.appendChild(meta);
+        }
+
+        var titleElement = document.createElement('title');
+        titleElement.innerHTML = title;
+        head.appendChild(titleElement);
+
+        return head;
+    }
 }
 
 class StatuspageWebComponents {
@@ -514,8 +609,6 @@ class StatuspageWebComponents {
                     this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                     return;
                 }
-
-                console.log(json);
 
                 var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                 status.setAttribute('status', json.status.indicator);
