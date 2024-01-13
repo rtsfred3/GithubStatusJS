@@ -78,4 +78,4 @@ class StatuspageDictionary {
     }
 }
 
-export { StatuspageDictionary };
+export default StatuspageDictionary;

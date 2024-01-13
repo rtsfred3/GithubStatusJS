@@ -85,16 +85,18 @@
 
         <!-- <statuspage-components data-url="https://www.cloudflarestatus.com/"></statuspage-components> -->
         
-        <statuspage-summary data-url="https://www.cloudflarestatus.com"></statuspage-summary>
+        <!-- <statuspage-summary data-url="https://www.cloudflarestatus.com"></statuspage-summary> -->
 
         <script type="module">
-            // import { StatuspageDictionary } from '../modules/StatuspageDictionary.esm.js';
+            import StatuspageDictionary  from '../modules/StatuspageDictionary.esm.js';
+            import { StatuspageWebComponents, StatuspageHTMLElements, StatuspageHTML } from '../modules/StatuspageHTML.esm.js';
 
-            
+            // import { StatuspageDictionary } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.5/modules/StatuspageDictionary.esm.js';
+            // import { StatuspageWebComponents, StatuspageHTMLElements, StatuspageHTML } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.5/modules/StatuspageDictionary.esm.js';
 
-            import { StatuspageDictionary } from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@0.1.4/modules/StatuspageDictionary.esm.js';
-
-            console.log(StatuspageDictionary.IndicatorVals);
+            customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
         </script>
+
+        <statuspage-app></statuspage-app>
     </body>
 </html>
