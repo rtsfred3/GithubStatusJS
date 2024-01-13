@@ -10,14 +10,16 @@ export async function onRequestGet({ params, env }) {
     const themeColor = StatuspageDictionary.MetaColors.good;
     const author = "rtsfred3";
 
-    var html = document.createElement('html');
-    var head = StatuspageHTMLElements.GetHead(canonicalUrl, statuspageUrl, iconUrl, imgUrl, title, description, themeColor, author);
-    var body = document.createElement('body');
+    const html = new HTMLElement();
 
-    body.appendChild(StatuspageHTMLElements.AppLoadingHTMLElement);
+    // var html = document.createElement('html');
+    // var head = StatuspageHTMLElements.GetHead(canonicalUrl, statuspageUrl, iconUrl, imgUrl, title, description, themeColor, author);
+    // var body = document.createElement('body');
 
-    html.appendChild(head);
-    html.appendChild(body);
+    // body.appendChild(StatuspageHTMLElements.AppLoadingHTMLElement);
+
+    // html.appendChild(head);
+    // html.appendChild(body);
 
 
     return new Response(html, {
