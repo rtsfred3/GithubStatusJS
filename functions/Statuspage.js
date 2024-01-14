@@ -1,3 +1,5 @@
+import { StatuspageHTMLElements } from '../modules/Statuspage.esm.js'
+
 export async function onRequestGet({ params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
@@ -105,6 +107,8 @@ export async function onRequestGet({ params, env }) {
         ' + body + '\
         </body> \
         </html>';
+
+    html = '<html><head></head><body>' + StatuspageHTMLElements.AppLoadingHTMLElement + '</body></html>'
 
     return new Response(html, {
         headers: {
