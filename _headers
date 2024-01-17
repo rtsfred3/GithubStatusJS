@@ -14,15 +14,15 @@ https://master.ghstatus.pages.dev/*
     Cloudflare-CDN-Cache-Control: max-age=2419200
 
 /*.css
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.js
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /manifest.json
-    Cache-Control: max-age=86400, s-maxage=86400, public, immutable
+    Cache-Control: max-age=86400, s-maxage=86400, public
     Cloudflare-CDN-Cache-Control: max-age=86400
     
 /img/status-main.png
@@ -34,19 +34,19 @@ https://master.ghstatus.pages.dev/*
     Cloudflare-CDN-Cache-Control: max-age=180
 
 /*.png
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.webp
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.svg
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.ico
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /amp/
