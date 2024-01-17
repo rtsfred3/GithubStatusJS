@@ -21,9 +21,9 @@ https://master.ghstatus.pages.dev/*
     Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
-/*.json
-    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
-    Cloudflare-CDN-Cache-Control: max-age=31536000
+/manifest.json
+    Cache-Control: max-age=86400, s-maxage=86400, public, immutable
+    Cloudflare-CDN-Cache-Control: max-age=86400
     
 /img/status-main.png
     Cache-Control: max-age=180, s-maxage=180, public
