@@ -1233,6 +1233,9 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
 
+        console.log(location.host.match(cloudflareDevRegex));
+        console.log(location.host.match(cloudflareProdRegex));
+
         if (!navigator.onLine) {
             r.ErrorHome();
         } else {
