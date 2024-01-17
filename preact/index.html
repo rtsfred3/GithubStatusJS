@@ -104,27 +104,24 @@
         <script type="importmap">
             {
               "imports": {
-                "statuspage": "../modules/Statuspage.esm.js",
-                "preact": "https://esm.sh/htm@3.1.1/preact/standalone"
+                "statuspage": "../modules/Statuspage.preact.js",
+                "preact": "https://esm.sh/stable/preact@10.19.3/es2022/preact.mjs"
               }
             }
         </script>
 
         <script type="module">
+            import { h, render } from 'preact';
             import { StatuspageDictionary, StatuspageWebComponents, StatuspageHTMLElements } from 'statuspage';
-            import { html, render, Component } from 'preact';
 
-            class Summary extends Component {
-                render(props, state) {
-                    return html`<statuspage-summary data-url="${props.url}"></statuspage-summary>`;
-                }
-            }
+            // var app = h(StatuspageWebComponents.StatusPreact, { 'status': 'good' });
+            // render(app, document.body);
 
-            function App(props) {
-                return html`<statuspage-summary data-url="${props.url}/"></statuspage-summary>`;
-            }
+            render(StatuspageHTMLElements.AppLoadingHTMLElement, document.body);
+            var app = document.getElementById('app');
+            render(h(StatuspageWebComponents.StatusPreact, { 'status': 'good' }), app);
 
-            render(html`${StatuspageHTMLElements.AppLoadingHTMLElement.outerHTML}`, document.body);
+            app.appendChild(StatuspageHTMLElements.NoIncidentsElement('Cloudflare'));
         </script>
     </body>
 </html>

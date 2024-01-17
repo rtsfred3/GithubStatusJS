@@ -1,6 +1,32 @@
+/**
+ * @typedef {object} StatuspageStatusResponse
+ * @property {object} status
+ * @property {string} status.indicator
+ * @property {string} status.description
+ * @property {object} page
+ * @property {string} page.id
+ * @property {string} page.name
+ * @property {string} page.url
+ * @property {string} page.updated_at
+ */
+
 class StatuspageDictionary {
+    /**
+     * @static
+     * @readonly
+     */
     static get replaceableStringValue() { return '{}'; }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} template_title_index
+     * @property {string} template_title_status
+     * @property {string} template_title_components
+     * @property {string} template_descrisption
+     */
     static get StatuspageHTMLTemplates() {
         return {
             template_title_index: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`,
@@ -10,8 +36,29 @@ class StatuspageDictionary {
         };
     }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} good
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} unavailable
+     * @property {string} loading
+     * @property {string} none
+     * @property {string} resolved
+     * @property {string} operational
+     * @property {string} degraded_performance
+     * @property {string} partial_outage
+     * @property {string} major_outage
+     * @property {string} under_maintenance
+     */
     static get StatusEnums() {
-        return {
+        return Object.freeze({
             good: "good",
             minor: "minor",
             major:'major',
@@ -27,11 +74,31 @@ class StatuspageDictionary {
             partial_outage: 'partial_outage',
             major_outage: 'major_outage',
             under_maintenance: 'under_maintenance'
-        };
+        });
     }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} none
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} unavailable
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} psa
+     * @property {string} good
+     * @property {string} under_maintenance
+     * @property {string} loading
+     * @property {string} operational
+     * @property {string} degraded_performance
+     * @property {string} partial_outage
+     */
     static get MetaColors() {
-        return {
+        return Object.freeze({
             none: '#339966',
             minor: '#DBAB09',
             major: '#E25D10',
@@ -48,11 +115,11 @@ class StatuspageDictionary {
             get operational(){ return this.none; },
             get degraded_performance(){ return this.minor; },
             get partial_outage(){ return this.major; }
-        };
+        });
     }
 
     static get IndicatorVals() {
-        return {
+        return Object.freeze({
             good: StatuspageDictionary.StatusEnums.good,
             minor: StatuspageDictionary.StatusEnums.minor,
             major: StatuspageDictionary.StatusEnums.major,
@@ -70,45 +137,26 @@ class StatuspageDictionary {
             get partial_outage() { return this.major; },
             get major_outage() { return this.critical; },
             get under_maintenance() { return this.maintenance; }
-        };
+        });
     }
-
+    
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} resolved
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     */
     static get IndicatorMessages() {
-        return {
+        return Object.freeze({
             resolved: StatuspageDictionary.StatusEnums.good,
             minor: StatuspageDictionary.StatusEnums.minor,
             major: StatuspageDictionary.StatusEnums.major,
             critical: StatuspageDictionary.StatusEnums.critical
-        };
-    }
-
-    static MetaTagValues(url, imgUrl, title, description, themeColor, author, keywords=[]) {
-        return {
-            "author": author,
-            "application-name": title,
-            "theme-color": themeColor,
-            "description": description,
-            "keywords": keywords.join(', '),
-
-            "og:site_name": title,
-            "og:title": title,
-            "og:description": description,
-            "og:type": "website",
-            "og:url": url,
-            "og:image": imgUrl,
-            
-            "twitter:card": "summary",
-            "twitter:title": title,
-            "twitter:description": description,
-            "twitter:image": imgUrl,
-
-            "mobile-web-app-capable": "yes",
-            "apple-mobile-web-app-capable": "yes",
-            "apple-mobile-web-app-status-bar-style": themeColor,
-            "apple-mobile-web-app-title": title,
-            "viewport": "width=device-width, initial-scale=1.0, user-scalable=0.0",
-            "HandheldFriendly": "true",
-        }
+        });
     }
 }
 
@@ -119,7 +167,7 @@ class StatuspageHTMLElements {
      * @type {HTMLDivElement}
      */
     static get ErrorHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('error'), true);
+        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.error, true);
     }
 
     /**
@@ -187,14 +235,16 @@ class StatuspageHTMLElements {
      * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output that only contains `status.indicator`
      */
     static GetStatusJson(indicator) {
-        return { 'status': { 'indicator': indicator } };
+        return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
     }
 
-    /**
+    /**`
      * Creates a Status HTML Elemnent
      * 
      * @param {string|StatuspageStatusResponse} status The status of the page
      * @param {!boolean} [fullStatus=false] this will determine if the status page will fill the current view of the screen
+     * @param {string} [_id=status]
+     * @param {string} [message=null]
      * @returns {HTMLDivElement}
      */
     static StatusHTMLElement(status, fullStatus=false, _id="status", message=null){
@@ -250,7 +300,7 @@ class StatuspageHTMLElements {
     /**
      * Creates array of Component elements
      * 
-     * @param {Object} componentsJson 
+     * @param {object} componentsJson
      * @returns {HTMLDivElement[]}
      */
     static ComponentsHTMLElement(componentsJson){
@@ -375,6 +425,53 @@ class StatuspageHTMLElements {
         return messagesList;
     }
 
+    /**
+     * 
+     * @param {string} url 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @returns {object}
+     */
+    static MetaTagValues(url, imgUrl, title, description, themeColor, author, keywords=[]) {
+        return {
+            "author": author,
+            "application-name": title,
+            "theme-color": themeColor,
+            "description": description,
+            "keywords": keywords.join(', '),
+
+            "og:site_name": title,
+            "og:title": title,
+            "og:description": description,
+            "og:type": "website",
+            "og:url": url,
+            "og:image": imgUrl,
+            
+            "twitter:card": "summary",
+            "twitter:title": title,
+            "twitter:description": description,
+            "twitter:image": imgUrl,
+
+            "mobile-web-app-capable": "yes",
+            "apple-mobile-web-app-capable": "yes",
+            "apple-mobile-web-app-status-bar-style": themeColor,
+            "apple-mobile-web-app-title": title,
+            "viewport": "width=device-width, initial-scale=1.0, user-scalable=0.0",
+            "HandheldFriendly": "true",
+        }
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} content 
+     * @param {string} attr 
+     * @returns {HTMLMetaElement}
+     */
     static MetaTag(id, content, attr = "name"){
         var meta = document.createElement('meta');
         meta.setAttribute(attr, id);
@@ -382,61 +479,99 @@ class StatuspageHTMLElements {
         return meta;
     }
 
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} prefetchUrl 
+     * @param {string} iconUrl 
+     * @param {string} imgUrl 
+     * @returns {HTMLLinkElement[]}
+     */
     static LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
-        var canonical = document.createElement('meta');
+        var canonical = document.createElement('link');
         canonical.setAttribute('rel', 'canonical');
         canonical.setAttribute("href", canonicalUrl);
 
-        var icon = document.createElement('meta');
+        var icon = document.createElement('link');
         icon.setAttribute('rel', 'icon');
         icon.setAttribute('type', 'image/x-icon');
         icon.setAttribute("href", iconUrl);
 
-        var appleTouchIcon = document.createElement('meta');
+        var appleTouchIcon = document.createElement('link');
         appleTouchIcon.setAttribute('apple-touch-icon', 'icon');
         appleTouchIcon.setAttribute('sizes', '144x144');
         appleTouchIcon.setAttribute("href", imgUrl);
 
-        var prefetch = document.createElement('meta');
+        var prefetch = document.createElement('link');
         prefetch.setAttribute('rel', 'dns-prefetch');
         prefetch.setAttribute("href", prefetchUrl);
 
-        var preconnect = document.createElement('meta');
+        var preconnect = document.createElement('link');
         preconnect.setAttribute('rel', 'preconnect');
         preconnect.setAttribute("href", prefetchUrl);
 
         return [ canonical, icon, appleTouchIcon, prefetch, preconnect ];
     }
 
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @returns {HTMLMetaElement[]}
+     */
     static MetaTagsHTMLElements(canonicalUrl, imgUrl, title, description, themeColor, author, keywords=[]){
-        var metaTagVals = StatuspageDictionary.MetaTagValues(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
+        var metaTagVals = StatuspageHTMLElements.MetaTagValues(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
 
         var metaTagElements = [];
 
-        for(const [k, v] in Object.entries(metaTagVals)){
-            metaTagElements.push(MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+        for(const [k, v] of Object.entries(metaTagVals)){
+            metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
         }
 
         return metaTagElements;
     }
 
-    static GetHead(canonicalUrl, prefetchUrl, iconUrl, imgUrl, title, description, themeColor, author, keywords=[]) {
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} prefetchUrl 
+     * @param {string} iconUrl 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @returns {HTMLHeadElement}
+     */
+    static HeadElement(canonicalUrl, prefetchUrl, iconUrl, imgUrl, title, description, themeColor, author, keywords=[]) {
         var head = document.createElement('head');
 
         var linkElements = StatuspageHTMLElements.LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
         var metaElements = StatuspageHTMLElements.MetaTagsHTMLElements(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
 
-        for(var link in linkElements){
+        for(let link of linkElements){
             head.appendChild(link);
         }
 
-        for(var meta in metaElements){
+        for(let meta of metaElements){
             head.appendChild(meta);
         }
 
         var titleElement = document.createElement('title');
         titleElement.innerHTML = title;
-        head.appendChild(titleElement);
+        head.append(titleElement);
+
+        var cssTag = document.createElement('link');
+        cssTag.setAttribute('rel', 'stylesheet');
+        cssTag.setAttribute("href", '../styling/main.min.css');
+
+        head.append(cssTag);
 
         return head;
     }
@@ -627,7 +762,7 @@ class StatuspageWebComponents {
 
 class StatuspageHTML {
     /**
-     * @constructs
+     * @constructor
      * @param {string} baseURL Atlassian Statuspage URL - Required
      * @param {number} [previousDays=7] Shows previous upto the N days of incidents (if set to 0, all incidents shown)
      * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
@@ -647,11 +782,11 @@ class StatuspageHTML {
             this.settings_baseUrl = this.settings_baseUrl.substring(0, this.settings_baseUrl.length - 1);
         }
 
-        this.template_title_index = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`;
-        this.template_title_status = `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`;
-        this.template_title_components = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`;
+        // this.template_title_index = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`;
+        // this.template_title_status = `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`;
+        // this.template_title_components = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`;
         // this.template_title_error = `Error - Invalid Route`;
-        this.template_descrisption = `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`;
+        // this.template_descrisption = `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`;
         // this.template_descrisption_error = `An error has occured.`;
         // this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StatuspageDictionary.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
 
@@ -665,19 +800,19 @@ class StatuspageHTML {
     }
 
     getTemplateTitleIndex() {
-        return `(Unofficial) ${this.getName()} Status`;
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_title_index.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
     }
 
     getTemplateTitleStatus() {
-        return `(Unofficial) Mini ${this.getName()} Status`
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_title_status.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
     }
 
     getTemplateTitleComponents() {
-        return `(Unofficial) ${this.getName()} Status Components`;
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_title_components.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
     }
 
-    getTemplateDescription(siteName) {
-        return `An unofficial website to monitor ${siteName} status updates.`;
+    getTemplateDescription() {
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_descrisption.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
     }
 
     /**
@@ -704,7 +839,7 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setDescription(descript = null) {
-        this.site_description = this.template_descrisption.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName()) + (descript != null ? " | " + descript : "");
+        this.site_description = this.getTemplateDescription() + (descript != null ? " | " + descript : "");
         return this.setDescriptions();
     }
 
@@ -718,7 +853,7 @@ class StatuspageHTML {
 
     /**
      * 
-     * @param {string} template 
+     * @param {string} title 
      * @returns {StatuspageHTML}
      */
     setTitle(title) {
@@ -736,7 +871,9 @@ class StatuspageHTML {
 
     /**
      * 
-     * @param {StatuspageStatusResponse} statuspageJson 
+     * @param {object} statuspageJson
+     * @param {object} statuspageJson.status
+     * @param {object} statuspageJson.components
      * @returns {StatuspageHTML}
      */
     setNameDescriptionTheme(statuspageJson) {
@@ -756,7 +893,7 @@ class StatuspageHTML {
     IndexHome() {
         console.log("IndexHome");
 
-        this.IndexHomeAsync().then();
+        this.IndexHomeAsync().then((t) => console.log(t));
     }
 
     /**
@@ -793,10 +930,10 @@ class StatuspageHTML {
             this.setNameDescriptionTheme(statusResult);
         }
 
-        this.setTitle(this.getTemplateTitleIndex(this.getName()))
+        this.setTitle(this.getTemplateTitleIndex())
             .renderElements(elements);
 
-        return elements;
+        return this;
     }
 
     /**
@@ -901,6 +1038,7 @@ class StatuspageHTML {
     /**
      * 
      * @param {Element} htmlElement 
+     * @param {boolean} [clearApp=true] 
      * @returns {StatuspageHTML} 
      */
     renderElement(htmlElement, clearApp = true) {
@@ -923,7 +1061,7 @@ class StatuspageHTML {
     /**
      * Sets a meta tag
      * 
-     * @param {string|Array} id 
+     * @param {string|string[]} id 
      * @param {string} value 
      * @returns {StatuspageHTML} 
      */
@@ -993,8 +1131,9 @@ class StatuspageHTML {
 
     /**
      * Updates value in rich results test
+     * 
      * @param {string} id 
-     * @param {*} value 
+     * @param {string} value 
      * @param {string} [_type="WebApplication"] if more than one structured data element, can set values in any element
      * @returns {StatuspageHTML} 
      */
@@ -1064,7 +1203,7 @@ class StatuspageHTML {
     /**
      * Sets meta tag themes
      * 
-     * @param {string} status 
+     * @param {string} [status='loading']
      * @returns {StatuspageHTML}
      */
     setTheme(status = 'loading') {
