@@ -14,11 +14,11 @@ https://master.ghstatus.pages.dev/*
     Cloudflare-CDN-Cache-Control: max-age=2419200
 
 /*.css
-    Cache-Control: max-age=31536000, s-maxage=31536000, public
+    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.js
-    Cache-Control: max-age=31536000, s-maxage=31536000, public
+    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
     Cloudflare-CDN-Cache-Control: max-age=31536000
     
 /img/status-main.png
@@ -42,7 +42,7 @@ https://master.ghstatus.pages.dev/*
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.ico
-    Cache-Control: max-age=31536000, s-maxage=31536000, public
+    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /amp/
