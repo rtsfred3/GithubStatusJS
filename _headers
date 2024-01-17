@@ -41,6 +41,10 @@ https://master.ghstatus.pages.dev/*
     Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
+/*.ico
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
+    Cloudflare-CDN-Cache-Control: max-age=31536000
+
 /amp/
     Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
