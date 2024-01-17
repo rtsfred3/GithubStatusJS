@@ -1,42 +1,164 @@
 /**
- * @typedef {Object} StatuspageComponentObject
- * @prop {string[]} components
- * @prop {string} created_at 
- * @prop {?string} description 
- * @prop {boolean} group 
- * @prop {?string} group_id 
- * @prop {string} id 
- * @prop {string} name
- * @prop {boolean} only_show_if_degraded
- * @prop {string} page_id
- * @prop {number} position
- * @prop {boolean} showcase
- * @prop {?string} start_date
- * @prop {string} status
- * @prop {string} updated_at
+ * @typedef {object} StatuspageStatusResponse
+ * @property {object} status
+ * @property {string} status.indicator
+ * @property {string} status.description
+ * @property {object} page
+ * @property {string} page.id
+ * @property {string} page.name
+ * @property {string} page.url
+ * @property {string} page.updated_at
  */
 
-/**
- * @typedef {Object} StatuspagePageObject
- * @prop {string} id 
- * @prop {string} name 
- * @prop {string} url 
- * @prop {string} name 
- * @prop {string} updated_at 
- */
+class StatuspageDictionary {
+    /**
+     * @static
+     * @readonly
+     */
+    static get replaceableStringValue() { return '{}'; }
 
-/**
- * @typedef {Object} StatuspageStatusObject
- * @prop {object} status 
- * @prop {string} status.indicator 
- * @prop {string} status.description 
- */
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} template_title_index
+     * @property {string} template_title_status
+     * @property {string} template_title_components
+     * @property {string} template_descrisption
+     */
+    static get StatuspageHTMLTemplates() {
+        return {
+            template_title_index: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`,
+            template_title_status: `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`,
+            template_title_components: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`,
+            template_descrisption: `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`,
+        };
+    }
 
-/**
- * @typedef {Object} StatuspageStatusResponse
- * @prop {StatuspagePageObject} page 
- * @prop {StatuspageStatusObject} status 
- */
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} good
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} unavailable
+     * @property {string} loading
+     * @property {string} none
+     * @property {string} resolved
+     * @property {string} operational
+     * @property {string} degraded_performance
+     * @property {string} partial_outage
+     * @property {string} major_outage
+     * @property {string} under_maintenance
+     */
+    static get StatusEnums() {
+        return Object.freeze({
+            good: "good",
+            minor: "minor",
+            major:'major',
+            critical: 'critical',
+            error: 'error',
+            maintenance: 'maintenance',
+            unavailable: 'unavailable',
+            loading: 'loading',
+            none: 'none',
+            resolved: 'resolved',
+            operational: 'operational',
+            degraded_performance: 'degraded_performance',
+            partial_outage: 'partial_outage',
+            major_outage: 'major_outage',
+            under_maintenance: 'under_maintenance'
+        });
+    }
+
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} none
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} unavailable
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} psa
+     * @property {string} good
+     * @property {string} under_maintenance
+     * @property {string} loading
+     * @property {string} operational
+     * @property {string} degraded_performance
+     * @property {string} partial_outage
+     */
+    static get MetaColors() {
+        return Object.freeze({
+            none: '#339966',
+            minor: '#DBAB09',
+            major: '#E25D10',
+            critical: '#DC3545',
+            unavailable: '#4F93BD',
+            error: '#646464',
+            maintenance: '#0366D6',
+            psa: '#D83D42',
+
+            get good() { return this.none; },
+            get under_maintenance() { return this.maintenance; },
+            get loading() { return this.unavailable; },
+
+            get operational(){ return this.none; },
+            get degraded_performance(){ return this.minor; },
+            get partial_outage(){ return this.major; }
+        });
+    }
+
+    static get IndicatorVals() {
+        return Object.freeze({
+            good: StatuspageDictionary.StatusEnums.good,
+            minor: StatuspageDictionary.StatusEnums.minor,
+            major: StatuspageDictionary.StatusEnums.major,
+            critical: StatuspageDictionary.StatusEnums.critical,
+            error: StatuspageDictionary.StatusEnums.error,
+            maintenance: StatuspageDictionary.StatusEnums.maintenance,
+            unavailable: StatuspageDictionary.StatusEnums.unavailable,
+            loading: StatuspageDictionary.StatusEnums.loading,
+
+            get resolved() { return this.good; },
+            get none() { return this.good; },
+            get operational() { return this.good; },
+
+            get degraded_performance() { return this.minor; },
+            get partial_outage() { return this.major; },
+            get major_outage() { return this.critical; },
+            get under_maintenance() { return this.maintenance; }
+        });
+    }
+    
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} resolved
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     */
+    static get IndicatorMessages() {
+        return Object.freeze({
+            resolved: StatuspageDictionary.StatusEnums.good,
+            minor: StatuspageDictionary.StatusEnums.minor,
+            major: StatuspageDictionary.StatusEnums.major,
+            critical: StatuspageDictionary.StatusEnums.critical
+        });
+    }
+}
 
 class StatuspageHTMLElements {
     /**
@@ -45,17 +167,66 @@ class StatuspageHTMLElements {
      * @type {HTMLDivElement}
      */
     static get ErrorHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('error'), true);
+        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.error, true);
     }
 
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
     static get LoadingHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageHTMLElements.GetStatusJson('loading'), true);
+        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.loading, true);
     }
 
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
     static get AppHTMLElement(){
         const appElement = document.createElement("div");
         appElement.setAttribute('id', 'app');
         return appElement;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
+    static get AppLoadingHTMLElement() {
+        var app = StatuspageHTMLElements.AppHTMLElement;
+        app.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
+        return app;
+    }
+
+    /**
+     * 
+     * @param {string} siteName 
+     * @returns {HTMLDivElement}
+     */
+    static NoIncidentsElement(siteName) {
+        const emptyIncidents = document.createElement("div");
+        emptyIncidents.classList.add("empty", "padding-none");
+    
+        const emptyIncidentsFirstChild = document.createElement("div");
+        const emptyIncidentsSecondChild = document.createElement("div");
+        
+        emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
+        emptyIncidentsSecondChild.classList.add('font-12');
+        
+        emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
+    
+        emptyIncidentsSecondChild.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${siteName} is up and running and has been stable for quite some time.`));
+        emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+        emptyIncidentsSecondChild.appendChild(document.createElement("br"));
+        emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
+    
+        emptyIncidents.appendChild(emptyIncidentsFirstChild);
+        emptyIncidents.appendChild(emptyIncidentsSecondChild);
+
+        return emptyIncidents;
     }
 
     /**
@@ -64,14 +235,16 @@ class StatuspageHTMLElements {
      * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output that only contains `status.indicator`
      */
     static GetStatusJson(indicator) {
-        return { 'status': { 'indicator': indicator } };
+        return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
     }
 
-    /**
+    /**`
      * Creates a Status HTML Elemnent
      * 
      * @param {string|StatuspageStatusResponse} status The status of the page
      * @param {!boolean} [fullStatus=false] this will determine if the status page will fill the current view of the screen
+     * @param {string} [_id=status]
+     * @param {string} [message=null]
      * @returns {HTMLDivElement}
      */
     static StatusHTMLElement(status, fullStatus=false, _id="status", message=null){
@@ -86,6 +259,15 @@ class StatuspageHTMLElements {
 
         if(typeof(status) == "object" && 'status' in status && 'indicator' in status.status){
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
+        }
+
+        if (Object.keys(status).includes('val')) {
+            return StatuspageHTMLElements.StatusHTMLElement(status['val'], fullStatus);
+        }
+
+        if (typeof status != 'string') {
+            console.error(typeof status != 'string');
+            return document.createElement("div");
         }
 
         const statusElement = document.createElement("div");
@@ -118,7 +300,7 @@ class StatuspageHTMLElements {
     /**
      * Creates array of Component elements
      * 
-     * @param {Object} componentsJson 
+     * @param {object} componentsJson
      * @returns {HTMLDivElement[]}
      */
     static ComponentsHTMLElement(componentsJson){
@@ -150,7 +332,9 @@ class StatuspageHTMLElements {
      */
     static MessageHTMLElement(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus, _displayUTCTime){
         var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        var currImpact = (status == "resolved" ? "good" : impact);
+        var currImpact = (status == StatuspageDictionary.StatusEnums.resolved
+            ? StatuspageDictionary.StatusEnums.good
+            : impact);
         if (currImpact == undefined) { currImpact = StatuspageDictionary.IndicatorMessages[status]; }
 
         var date = new Date(created_at).toLocaleDateString("en-US", options);
@@ -210,28 +394,7 @@ class StatuspageHTMLElements {
         messagesList.classList.add('messages');
 
         if (incidents.length == 0) {
-            const emptyIncidents = document.createElement("div");
-            emptyIncidents.classList.add("empty", "padding-none");
-        
-            const emptyIncidentsFirstChild = document.createElement("div");
-            const emptyIncidentsSecondChild = document.createElement("div");
-            
-            emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
-            emptyIncidentsSecondChild.classList.add('font-12');
-            
-            emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
-        
-            emptyIncidentsSecondChild.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${incidentsJson.page.name} is up and running and has been stable for quite some time.`));
-            emptyIncidentsSecondChild.appendChild(document.createElement("br"));
-            emptyIncidentsSecondChild.appendChild(document.createElement("br"));
-            emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
-        
-            emptyIncidents.appendChild(emptyIncidentsFirstChild);
-            emptyIncidents.appendChild(emptyIncidentsSecondChild);
-
-            messagesList.appendChild(emptyIncidents);
-
-            // messagesList.appendChild(StatuspageHTMLElements.NoIncidentsHTMLElement(incidentsJson.page.name));
+            messagesList.appendChild(StatuspageHTMLElements.NoIncidentsElement(incidentsJson.page.name));
         } else {
             for (var i = 0; i < incidents.length; i++) {
                 if (incidents[i]["incident_updates"].length > 0) {
@@ -261,11 +424,345 @@ class StatuspageHTMLElements {
 
         return messagesList;
     }
+
+    /**
+     * 
+     * @param {string} url 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @returns {object}
+     */
+    static MetaTagValues(url, imgUrl, title, description, themeColor, author, keywords=[]) {
+        return {
+            "author": author,
+            "application-name": title,
+            "theme-color": themeColor,
+            "description": description,
+            "keywords": keywords.join(', '),
+
+            "og:site_name": title,
+            "og:title": title,
+            "og:description": description,
+            "og:type": "website",
+            "og:url": url,
+            "og:image": imgUrl,
+            
+            "twitter:card": "summary",
+            "twitter:title": title,
+            "twitter:description": description,
+            "twitter:image": imgUrl,
+
+            "mobile-web-app-capable": "yes",
+            "apple-mobile-web-app-capable": "yes",
+            "apple-mobile-web-app-status-bar-style": themeColor,
+            "apple-mobile-web-app-title": title,
+            "viewport": "width=device-width, initial-scale=1.0, user-scalable=0.0",
+            "HandheldFriendly": "true",
+        }
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} content 
+     * @param {string} attr 
+     * @returns {HTMLMetaElement}
+     */
+    static MetaTag(id, content, attr = "name"){
+        var meta = document.createElement('meta');
+        meta.setAttribute(attr, id);
+        meta.setAttribute("content", content);
+        return meta;
+    }
+
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} prefetchUrl 
+     * @param {string} iconUrl 
+     * @param {string} imgUrl 
+     * @returns {HTMLLinkElement[]}
+     */
+    static LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
+        var canonical = document.createElement('link');
+        canonical.setAttribute('rel', 'canonical');
+        canonical.setAttribute("href", canonicalUrl);
+
+        var icon = document.createElement('link');
+        icon.setAttribute('rel', 'icon');
+        icon.setAttribute('type', 'image/x-icon');
+        icon.setAttribute("href", iconUrl);
+
+        var appleTouchIcon = document.createElement('link');
+        appleTouchIcon.setAttribute('apple-touch-icon', 'icon');
+        appleTouchIcon.setAttribute('sizes', '144x144');
+        appleTouchIcon.setAttribute("href", imgUrl);
+
+        var prefetch = document.createElement('link');
+        prefetch.setAttribute('rel', 'dns-prefetch');
+        prefetch.setAttribute("href", prefetchUrl);
+
+        var preconnect = document.createElement('link');
+        preconnect.setAttribute('rel', 'preconnect');
+        preconnect.setAttribute("href", prefetchUrl);
+
+        return [ canonical, icon, appleTouchIcon, prefetch, preconnect ];
+    }
+
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @returns {HTMLMetaElement[]}
+     */
+    static MetaTagsHTMLElements(canonicalUrl, imgUrl, title, description, themeColor, author, keywords=[]){
+        var metaTagVals = StatuspageHTMLElements.MetaTagValues(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
+
+        var metaTagElements = [];
+
+        for(const [k, v] of Object.entries(metaTagVals)){
+            metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+        }
+
+        return metaTagElements;
+    }
+
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} prefetchUrl 
+     * @param {string} iconUrl 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @returns {HTMLHeadElement}
+     */
+    static HeadElement(canonicalUrl, prefetchUrl, iconUrl, imgUrl, title, description, themeColor, author, keywords=[]) {
+        var head = document.createElement('head');
+
+        var linkElements = StatuspageHTMLElements.LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
+        var metaElements = StatuspageHTMLElements.MetaTagsHTMLElements(canonicalUrl, imgUrl, title, description, themeColor, author, keywords);
+
+        for(let link of linkElements){
+            head.appendChild(link);
+        }
+
+        for(let meta of metaElements){
+            head.appendChild(meta);
+        }
+
+        var titleElement = document.createElement('title');
+        titleElement.innerHTML = title;
+        head.append(titleElement);
+
+        var cssTag = document.createElement('link');
+        cssTag.setAttribute('rel', 'stylesheet');
+        cssTag.setAttribute("href", '../styling/main.min.css');
+
+        head.append(cssTag);
+
+        return head;
+    }
+}
+
+class StatuspageWebComponents {
+    static get AppLoading() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+    
+            connectedCallback() { this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement); }
+            
+            static get is() { return 'statuspage-app'; }
+        }
+    }
+
+    static get Status() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+        
+            connectedCallback() {
+                this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
+                    ? this.getAttribute('status')
+                    : StatuspageDictionary.StatusEnums.error;
+        
+                this.fullScreen = this.hasAttribute('status') || this.hasAttribute('data-url')
+                    ? this.hasAttribute('fullScreen')
+                    : true;
+
+                if (this.hasAttribute('data-url')) {
+                    this.fetchStatus(this.getAttribute('data-url'));
+                } else {
+                    this.parseStatus(this.status, this.fullScreen);
+                }
+            }
+
+            fetchStatus(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/status.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            if ('status' in json) {
+                                this.parseStatus(json.status.indicator, this.fullScreen);
+                            } else {
+                                this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                            }
+                            
+                            res();
+                        }).catch((error) => {
+                            this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                            rej(error);
+                        });
+                })
+            }
+
+            parseStatus(status, fullScreen) {
+                console.log(status, fullScreen);
+                this.replaceWith(StatuspageHTMLElements.StatusHTMLElement(status, fullScreen));
+            }
+        
+            static get is() { return 'statuspage-status'; }
+        }
+    }
+
+    static get Components() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+        
+            connectedCallback() {
+                if (this.hasAttribute('data-json')) {
+                    this.parseJson(JSON.parse(this.getAttribute('data-json')));
+                } else if (this.hasAttribute('data-url')) {
+                    this.fetchComponents(this.getAttribute('data-url'));
+                }
+            }
+        
+            fetchComponents(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/components.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            this.parseJson(json);
+                            res();
+                        }).catch((error) => rej(error));
+                })
+            }
+        
+            parseJson(json) {
+                var componentsArr = StatuspageHTMLElements.ComponentsHTMLElement(json);
+        
+                for(var i = 0; i < componentsArr.length; i++){ this.append(componentsArr[i]); }
+            }
+        
+            static get is(){ return 'statuspage-components'; }
+        }
+    }
+
+    static get Incidents() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+
+            connectedCallback() {
+                if (this.hasAttribute('data-json')) {
+                    this.parseJson(JSON.parse(this.getAttribute('data-json')));
+                } else if (this.hasAttribute('data-url')) {
+                    this.fetchIncidents(this.getAttribute('data-url'));
+                }
+            }
+
+            fetchIncidents(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/incidents/unresolved.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            this.parseJson(json);
+                            res();
+                        }).catch((error) => rej(error));
+                })
+            }
+
+            parseJson(json){
+                if ('incidents' in json) {
+                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(json));
+                }
+            }
+
+            static get is(){ return 'statuspage-incidents'; }
+        }
+    }
+
+    static get Summary() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+
+            connectedCallback() {
+                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+
+                this.app = document.getElementById('app');
+
+                if (this.hasAttribute('data-url')) {
+                    this.fetchSummary(this.getAttribute('data-url'));
+                } else {
+                    app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                }
+            }
+
+            fetchSummary(url) {
+                return new Promise((res, rej) => {
+                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+        
+                    fetch(baseUrl + '/api/v2/summary.json')
+                        .then(data => data.json())
+                        .then((json) => {
+                            this.parseJson(json);
+                            res();
+                        }).catch((error) => {
+                            rej(error)
+                        });
+                });
+            }
+
+            parseJson(json) {
+                if (!('status' in json)) {
+                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    return;
+                }
+
+                var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                status.setAttribute('status', json.status.indicator);
+
+                var summary = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
+                summary.setAttribute('data-json', JSON.stringify(json));
+
+                this.app.firstChild.replaceWith(status);
+                this.app.appendChild(summary);
+            }
+
+            static get is(){ return 'statuspage-summary'; }
+        }
+    }
 }
 
 class StatuspageHTML {
     /**
-     * @constructs
+     * @constructor
      * @param {string} baseURL Atlassian Statuspage URL - Required
      * @param {number} [previousDays=7] Shows previous upto the N days of incidents (if set to 0, all incidents shown)
      * @param {boolean} [indexHomeSingleRequest=true] If true, StatuspageHTML will show IndexHome() using the Statuspage summary. If false, StatuspageHTML will show IndexHome() using the Statuspage status and incidents.
@@ -285,19 +782,37 @@ class StatuspageHTML {
             this.settings_baseUrl = this.settings_baseUrl.substring(0, this.settings_baseUrl.length - 1);
         }
 
-        this.template_title_index = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`;
-        this.template_title_status = `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`;
-        this.template_title_components = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`;
-        this.template_title_error = `Error - Invalid Route`;
-        this.template_descrisption = `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`;
-        this.template_descrisption_error = `An error has occured.`;
-        this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StatuspageDictionary.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
+        // this.template_title_index = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`;
+        // this.template_title_status = `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`;
+        // this.template_title_components = `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`;
+        // this.template_title_error = `Error - Invalid Route`;
+        // this.template_descrisption = `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`;
+        // this.template_descrisption_error = `An error has occured.`;
+        // this.template_incidents_none = `<div class="empty padding-none"><div class="font-36 margin-bottom">All good.</div><div class="font-12">Nothing to see here folks. Looks like ${StatuspageDictionary.replaceableStringValue} is up and running and has been stable for quite some time.<br /><br />Now get back to work!</div></div>`;
 
         if (document.getElementById('app') == null) {
-            document.body.appendChild(StatuspageHTMLElements.AppHTMLElement);
+            document.body.appendChild(StatuspageHTMLElements.AppLoadingHTMLElement);
+        } else {
+            document.getElementById('app').replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
         }
 
         this.setTheme('loading').renderElement(StatuspageHTMLElements.LoadingHTMLElement);
+    }
+
+    getTemplateTitleIndex() {
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_title_index.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
+    }
+
+    getTemplateTitleStatus() {
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_title_status.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
+    }
+
+    getTemplateTitleComponents() {
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_title_components.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
+    }
+
+    getTemplateDescription() {
+        return StatuspageDictionary.StatuspageHTMLTemplates.template_descrisption.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName());
     }
 
     /**
@@ -324,7 +839,7 @@ class StatuspageHTML {
      * @returns {StatuspageHTML}
      */
     setDescription(descript = null) {
-        this.site_description = this.template_descrisption.replaceAll(StatuspageDictionary.replaceableStringValue, this.getName()) + (descript != null ? " | " + descript : "");
+        this.site_description = this.getTemplateDescription() + (descript != null ? " | " + descript : "");
         return this.setDescriptions();
     }
 
@@ -338,11 +853,11 @@ class StatuspageHTML {
 
     /**
      * 
-     * @param {string} template 
+     * @param {string} title 
      * @returns {StatuspageHTML}
      */
-    setTitle(template) {
-        this.site_title = template.replace(StatuspageDictionary.replaceableStringValue, this.getName());
+    setTitle(title) {
+        this.site_title = title;
         return this.setTitles();
     }
 
@@ -356,7 +871,9 @@ class StatuspageHTML {
 
     /**
      * 
-     * @param {StatuspageStatusResponse} statuspageJson 
+     * @param {object} statuspageJson
+     * @param {object} statuspageJson.status
+     * @param {object} statuspageJson.components
      * @returns {StatuspageHTML}
      */
     setNameDescriptionTheme(statuspageJson) {
@@ -376,7 +893,7 @@ class StatuspageHTML {
     IndexHome() {
         console.log("IndexHome");
 
-        this.IndexHomeAsync().then();
+        this.IndexHomeAsync().then((t) => console.log(t));
     }
 
     /**
@@ -386,14 +903,18 @@ class StatuspageHTML {
     async IndexHomeAsync() {
         this.setUrl();
 
-        // var elementsList = [];
+        var elements = [];
 
         if (this.settings_indexHomeSingleRequest) {
             const response = await fetch(this.settings_baseUrl + '/api/v2/summary.json');
             const result = await response.json();
 
+            elements = [
+                StatuspageHTMLElements.StatusHTMLElement(result),
+                StatuspageHTMLElements.IncidentsHTMLElements(result)
+            ];
+
             this.setNameDescriptionTheme(result)
-                .renderElements([ StatuspageHTMLElements.StatusHTMLElement(result), StatuspageHTMLElements.IncidentsHTMLElements(result) ]);
         } else {
             const statusResponse = await fetch(this.settings_baseUrl + '/api/v2/status.json');
             const statusResult = await statusResponse.json();
@@ -401,16 +922,18 @@ class StatuspageHTML {
             const messagesResponse = await fetch(this.settings_baseUrl + '/api/v2/incidents.json');
             const messagesResult = await messagesResponse.json();
 
-            var elements = [
+            elements = [
                 StatuspageHTMLElements.StatusHTMLElement(statusResult),
                 StatuspageHTMLElements.IncidentsHTMLElements(messagesResult, this.settings_previousDays)
             ];
 
-            this.setNameDescriptionTheme(statusResult)
-                .renderElements(elements);
+            this.setNameDescriptionTheme(statusResult);
         }
 
-        this.setTitle(this.template_title_index);
+        this.setTitle(this.getTemplateTitleIndex())
+            .renderElements(elements);
+
+        return this;
     }
 
     /**
@@ -434,7 +957,7 @@ class StatuspageHTML {
         const result = await response.json();
 
         this.setNameDescriptionTheme(result)
-            .setTitle(this.template_title_components)
+            .setTitle(this.getTemplateTitleComponents())
             .renderElements(StatuspageHTMLElements.ComponentsHTMLElement(result));
     }
 
@@ -459,7 +982,7 @@ class StatuspageHTML {
         const result = await response.json();
 
         this.setNameDescriptionTheme(result)
-            .setTitle(this.template_title_status)
+            .setTitle(this.getTemplateTitleStatus())
             .renderElement(StatuspageHTMLElements.StatusHTMLElement(result, true));
     }
 
@@ -468,11 +991,11 @@ class StatuspageHTML {
      */
     ErrorHome() {
         console.log("ErrorHome");
+        
+        this.site_description = "An error has occured.";
 
-        this.site_description = this.template_descrisption_error;
-
-        this.setName(this.template_title_error)
-            .setTitle(this.template_title_error)
+        this.setName("Error")
+            .setTitle("Error - Invalid Route")
             .setDescriptions()
             .createMetaTag("robots", "noindex")
             .renderElement(StatuspageHTMLElements.ErrorHTMLElement);
@@ -501,13 +1024,13 @@ class StatuspageHTML {
 
         if (Array.isArray(htmlElements)) {
             for(var element of htmlElements){
-                if (element instanceof Element) {
-                    document.getElementById("app").appendChild(element);
-                }
+                this.renderElement(element, false);
             }
-        }
 
-        console.log("Success: renderElements()");
+            console.log("renderElements(): Success");
+        } else {
+            console.log("renderElements(): htmlElements is an Array.");
+        }
 
         return this;
     }
@@ -515,17 +1038,22 @@ class StatuspageHTML {
     /**
      * 
      * @param {Element} htmlElement 
+     * @param {boolean} [clearApp=true] 
      * @returns {StatuspageHTML} 
      */
-    renderElement(htmlElement) {
+    renderElement(htmlElement, clearApp = true) {
         console.log("renderElement()");
 
         if (htmlElement instanceof Element) {
-            this.clearRender();
+            if (clearApp) { this.clearRender(); }
+            
             document.getElementById("app").appendChild(htmlElement);
-        }
+            // this.app.appendChild(htmlElement);
 
-        console.log("Success: renderElement()");
+            console.log("renderElement(): Success");
+        } else {
+            console.log("renderElement(): htmlElement is an Element.");
+        }
 
         return this;
     }
@@ -533,15 +1061,22 @@ class StatuspageHTML {
     /**
      * Sets a meta tag
      * 
-     * @param {string} id 
+     * @param {string|string[]} id 
      * @param {string} value 
      * @returns {StatuspageHTML} 
      */
     setMetaTag(id, value) {
-        let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
-        var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+        console.log(`setMetaTag(${id}, ${value})`);
 
-        metaTag.setAttribute("content", value);
+        if(typeof id == 'string'){
+            this.getMetaTag(id).setAttribute("content", value);
+        } else if(Array.isArray(id)) {
+            for(var i = 0; i < id.length; i++){
+                this.getMetaTag(id[i]).setAttribute("content", value);
+            }
+        }
+
+        console.log(`setMetaTag(${id}, ${value}) - Success`);
 
         return this;
     }
@@ -552,12 +1087,19 @@ class StatuspageHTML {
      * @param {string} id 
      * @returns {string}
      */
+    getMetaTagValue(id) {
+        return this.getMetaTag(id).getAttribute("content");
+    }
+
+    /**
+     * Gets a value from a meta tag
+     * 
+     * @param {string} id 
+     * @returns {Element}
+     */
     getMetaTag(id) {
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
-        return metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id).getAttribute("content");
-
-        // var metaTag = metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
-        // return metaTag.getAttribute("content");
+        return metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
     }
 
     /**
@@ -568,6 +1110,8 @@ class StatuspageHTML {
      * @returns {StatuspageHTML} 
      */
     createMetaTag(id, content, attr = "name") {
+        console.log(`createMetaTag(${id}, ${content}, ${attr})`);
+
         let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
         var metaTags = metaTagsArr.filter((mTag) => mTag.getAttribute(attr) == id);
 
@@ -587,12 +1131,15 @@ class StatuspageHTML {
 
     /**
      * Updates value in rich results test
+     * 
      * @param {string} id 
-     * @param {*} value 
+     * @param {string} value 
      * @param {string} [_type="WebApplication"] if more than one structured data element, can set values in any element
      * @returns {StatuspageHTML} 
      */
     updateRichTest(id, value, _type = "WebApplication") {
+        console.log(`updateRichTest(${id}, ${value}, ${_type})`);
+
         var ld = Array.from(document.getElementsByTagName("script")).find((t) => t.hasAttribute("type") && t.getAttribute("type") == "application/ld+json");
 
         if (ld == null) {
@@ -634,47 +1181,39 @@ class StatuspageHTML {
     /**
      * Sets title in HTML
      * 
-     * @param {string} title 
      * @returns {StatuspageHTML}
      */
     setTitles() {
         document.getElementsByTagName("title")[0].innerHTML = this.getTitle();
 
-        return this.setMetaTag("twitter:title", this.getTitle())
-            .setMetaTag("og:title", this.getTitle())
-            .setMetaTag("application-name", this.getTitle())
-            .setMetaTag("apple-mobile-web-app-title", this.getTitle())
+        return this.setMetaTag(["twitter:title", "og:title", "application-name", "apple-mobile-web-app-title"], this.getTitle())
             .updateRichTest("name", this.getTitle());
     }
 
     /**
      * Sets description in HTML
      * 
-     * @param {string} sitename 
-     * @param {string} descript 
      * @returns {StatuspageHTML}
      */
     setDescriptions() {
-        return this.setMetaTag("description", this.getDescription())
-            .setMetaTag("og:description", this.getDescription())
-            .setMetaTag("twitter:description", this.getDescription())
+        return this.setMetaTag(["description", "og:description", "twitter:description"], this.getDescription())
             .updateRichTest("description", this.getDescription());
     }
 
     /**
      * Sets meta tag themes
      * 
-     * @param {string} status 
+     * @param {string} [status='loading']
      * @returns {StatuspageHTML}
      */
     setTheme(status = 'loading') {
-        console.log(`setTheme()`);
+        console.log(`setTheme(status: ${status})`);
+
         var hexColor = StatuspageDictionary.MetaColors[status];
 
-        console.log(`status ${status}`);
-        console.log(`hexColor ${hexColor}`);
+        console.log(`setTheme(hexColor: ${hexColor}): Success`);
 
-        return this.setMetaTag("theme-color", hexColor).setMetaTag("apple-mobile-web-app-status-bar-style", hexColor);
+        return this.setMetaTag(["theme-color", "apple-mobile-web-app-status-bar-style"], hexColor);
     }
 }
 
@@ -688,11 +1227,14 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
     var r = new StatuspageHTML(url, previousDays, indexHomeSingleRequest, displayUTCTime);
 
     try {
-        var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+        var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev(\/StatuspageHTML\/)?/g;
         var cloudflareProdRegex = /(githubstat.us|ghstatuspagehtml.b-cdn.net|ghstat.us|spstat.us)/g;
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
+
+        console.log(location.host.match(cloudflareDevRegex));
+        console.log(location.host.match(cloudflareProdRegex));
 
         if (!navigator.onLine) {
             r.ErrorHome();
@@ -719,3 +1261,9 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
         r.ErrorHome();
     }
 }
+
+customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
+customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
+customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
+customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
