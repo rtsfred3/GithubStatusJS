@@ -20,6 +20,10 @@ https://master.ghstatus.pages.dev/*
 /*.js
     Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
     Cloudflare-CDN-Cache-Control: max-age=31536000
+
+/*.json
+    Cache-Control: max-age=31536000, s-maxage=31536000, public, immutable
+    Cloudflare-CDN-Cache-Control: max-age=31536000
     
 /img/status-main.png
     Cache-Control: max-age=180, s-maxage=180, public
