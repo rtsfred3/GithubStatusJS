@@ -1227,7 +1227,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
     var r = new StatuspageHTML(url, previousDays, indexHomeSingleRequest, displayUTCTime);
 
     try {
-        var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev/g;
+        var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev(\/StatuspageHTML\/)?/g;
         var cloudflareProdRegex = /(githubstat.us|ghstatuspagehtml.b-cdn.net|ghstat.us|spstat.us)/g;
         
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
