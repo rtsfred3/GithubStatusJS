@@ -93,19 +93,34 @@
             </style>
         </noscript>
         
-        <script async src="https://cdn.ampproject.org/v0.js"></script>
+        <!-- <script async src="https://cdn.ampproject.org/v0.js"></script>
         <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
-        <script async custom-template = "amp-mustache" src = "https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+        <script async custom-template = "amp-mustache" src = "https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script> -->
+
+        <script async src="https://cdn.ampproject.org/v0.js"></script>
+        <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+        <script async custom-element="amp-render" src="https://cdn.ampproject.org/v0/amp-render-1.0.js"></script>
 
         <title>(Unofficial) GitHub Status - AMP</title>
     </head>
     <body>
-        <amp-list width="auto" height="200" layout="fixed-height" src="https://apiv3.githubstat.us/api/amp/body.json">
+        <amp-render src="https://www.githubstatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
+            <template type="amp-mustache">
+                <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div>
+            </template>
+            <div placeholder>
+                <div id="status" class="min full-status-height status-width bold status-color loading">
+                    <span class="center-status"></span>
+                </div>
+            </div>
+        </amp-render>
+
+        <!-- <amp-list width="auto" height="200" layout="fixed-height" src="https://apiv3.githubstat.us/api/amp/body.json">
             <template type="amp-mustache">
                 {{{body}}}
             </template>
-        </amp-list>
-        
+        </amp-list> -->
+
         <!-- <amp-list width="auto" height="auto" layout="fixed-height" src="https://apiv3.githubstat.us/api/amp/status.json">
             <template type="amp-mustache">
                 <div id="status" class="status-height status-width status-shadow bold status-color {{{status}}}">
