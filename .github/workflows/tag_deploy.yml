@@ -16,6 +16,15 @@ jobs:
             - name: Echoing the tag name
               run: |
                 echo '${{ github.ref_name }}'
+            - name: Get next version
+              id: get_next_version
+              uses: thenativeweb/get-next-version@main
+              with:
+                prefix: 'v'
+            - name: Show the next version
+              run: |
+                echo ${{ steps.get_next_version.outputs.version }}
+                echo ${{ steps.get_next_version.outputs.hasNextVersion }}
             - name: Sync Index.html
               run: |
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.html
