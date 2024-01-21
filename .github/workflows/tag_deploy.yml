@@ -1,0 +1,18 @@
+name: BunnyCDNDeplo
+
+on:
+  create:
+    tags:
+      - 'v[0-9]+\.[0-9]+\.[0-9]+'
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        name: Deploy to BunnyCDN
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
+            - name: sync
+              run: curl https://google.com
+                
