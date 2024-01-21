@@ -14,5 +14,6 @@ jobs:
               with:
                 fetch-depth: 0
             - name: sync
-              run: curl https://google.com
-                
+              run: curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html \
+              --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' \
+              --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @index.html
