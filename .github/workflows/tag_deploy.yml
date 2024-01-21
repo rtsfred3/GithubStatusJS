@@ -13,6 +13,9 @@ jobs:
             - uses: actions/checkout@v2
               with:
                 fetch-depth: 0
-            - name: sync
+            - name: Echoing the tag name
+              run: |
+                echo '${{ github.ref_name }}'
+            - name: Sync Index.html
               run: |
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.html
