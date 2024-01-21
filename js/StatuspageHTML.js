@@ -202,6 +202,17 @@ class StatuspageHTMLElements {
     }
 
     /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @type {HTMLDivElement}
+     */
+    static get AppErrorHTMLElement() {
+        var app = StatuspageHTMLElements.AppHTMLElement;
+        app.appendChild(StatuspageHTMLElements.ErrorHTMLElement);
+        return app;
+    }
+
+    /**
      * 
      * @param {string} siteName 
      * @returns {HTMLDivElement}

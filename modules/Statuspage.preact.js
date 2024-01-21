@@ -1,22 +1,8 @@
 import { h, Component } from 'preact';
 
 class StatuspageDictionary {
-    /**
-     * @static
-     * @readonly
-     */
     static get replaceableStringValue() { return '{}'; }
 
-    /**
-     * @static
-     * @readonly
-     * @enum {string}
-     * 
-     * @property {string} template_title_index
-     * @property {string} template_title_status
-     * @property {string} template_title_components
-     * @property {string} template_descrisption
-     */
     static get StatuspageHTMLTemplates() {
         return {
             template_title_index: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`,
@@ -26,27 +12,6 @@ class StatuspageDictionary {
         };
     }
 
-    /**
-     * @static
-     * @readonly
-     * @enum {string}
-     * 
-     * @property {string} good
-     * @property {string} minor
-     * @property {string} major
-     * @property {string} critical
-     * @property {string} error
-     * @property {string} maintenance
-     * @property {string} unavailable
-     * @property {string} loading
-     * @property {string} none
-     * @property {string} resolved
-     * @property {string} operational
-     * @property {string} degraded_performance
-     * @property {string} partial_outage
-     * @property {string} major_outage
-     * @property {string} under_maintenance
-     */
     static get StatusEnums() {
         return Object.freeze({
             good: "good",
@@ -67,26 +32,6 @@ class StatuspageDictionary {
         });
     }
 
-    /**
-     * @static
-     * @readonly
-     * @enum {string}
-     * 
-     * @property {string} none
-     * @property {string} minor
-     * @property {string} major
-     * @property {string} critical
-     * @property {string} unavailable
-     * @property {string} error
-     * @property {string} maintenance
-     * @property {string} psa
-     * @property {string} good
-     * @property {string} under_maintenance
-     * @property {string} loading
-     * @property {string} operational
-     * @property {string} degraded_performance
-     * @property {string} partial_outage
-     */
     static get MetaColors() {
         return Object.freeze({
             none: '#339966',
@@ -130,16 +75,6 @@ class StatuspageDictionary {
         });
     }
     
-    /**
-     * @static
-     * @readonly
-     * @enum {string}
-     * 
-     * @property {string} resolved
-     * @property {string} minor
-     * @property {string} major
-     * @property {string} critical
-     */
     static get IndicatorMessages() {
         return Object.freeze({
             resolved: StatuspageDictionary.StatusEnums.good,
