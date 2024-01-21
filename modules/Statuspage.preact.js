@@ -1,4 +1,7 @@
-import { h, Component } from 'preact';
+import { h, useState, useCallback, Component } from 'preact';
+import htm from 'https://esm.sh/htm';
+
+// import { useState } from 'preact/hooks';
 
 class StatuspageDictionary {
     static get replaceableStringValue() { return '{}'; }
@@ -366,8 +369,67 @@ class StatuspageWebComponents {
 
     static get StatusPreact(){
         return class extends Component {
-            render(props) {
-                return StatuspageHTMLElements.StatusHTMLElement(props.status, 'fullScreen' in props);
+
+            constructor() {
+                super();
+                this.state = { status: StatuspageDictionary.StatusEnums.error, fullScreen: true };
+            }
+
+            // componentDidMount() {
+                // fetch(baseUrl + '/api/v2/status.json')
+                //     .then(data => data.json())
+                //     .then((json) => {
+                //         if ('status' in json) {
+                //             this.parseStatus(json.status.indicator, this.fullScreen);
+                //         } else {
+                //             this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                //         }
+                        
+                //         res();
+                //     }).catch((error) => {
+                //         this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                //         rej(error);
+                //     });
+            // }
+
+            shouldComponentUpdate(nextProps, nextState) {
+                console.log(nextProps);
+                if ('data-url' in nextProps) {
+                    var baseUrl = nextProps['data-url'].slice(-1) == '/' ? nextProps['data-url'].substring(0, nextProps['data-url'].length - 1) : nextProps['data-url'];
+
+                    fetch(baseUrl + '/api/v2/status.json')
+                    .then(data => data.json())
+                    .then((json) => {
+                        if ('status' in json) {
+                            this.setState({ status: json.status.indicator, fullScreen: false })
+                            // this.parseStatus(json.status.indicator, this.fullScreen);
+                        } else {
+                            // this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                        }
+                        
+                        res();
+                    }).catch((error) => {
+                        this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                        rej(error);
+                    });
+                }
+            }
+            
+            render(props, state) {
+                console.log(props);
+                // const { value, increment } = StatuspageWebComponents.useStatus();
+
+                // const [status, setStatus] = useState(StatuspageDictionary.StatusEnums.loading);
+
+                if ('data-url' in props) {
+                    console.log(props['data-url']);
+                } 
+                
+                if ('status' in props) {
+                    return htm`${StatuspageHTMLElements.StatusHTMLElement(this.state.status, 'fullScreen' in props)}`;
+                } else {
+                    return htm`${StatuspageHTMLElements.LoadingHTMLElement}`;
+                }
             }
         }
     }

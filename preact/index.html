@@ -92,36 +92,37 @@
 
         <!-- https://esm.sh/gh/rtsfred3/tslib@GithubStatusJS@0.1.7/modules/Statuspage.esm.js -->
 
-        <!-- <script type="importmap">
+        <script type="importmap">
             {
               "imports": {
-                "statuspage": "https://esm.sh/gh/rtsfred3/GithubStatusJS@v0.1.7/modules/Statuspage.esm.js",
+                "statuspage": "../modules/Statuspage.preact.js",
                 "preact": "https://esm.sh/htm@3.1.1/preact/standalone"
               }
             }
-        </script> -->
+        </script>
 
-        <script type="importmap">
+        <!-- <script type="importmap">
             {
               "imports": {
                 "statuspage": "../modules/Statuspage.preact.js",
                 "preact": "https://esm.sh/stable/preact@10.19.3/es2022/preact.mjs"
               }
             }
-        </script>
+        </script> -->
 
         <script type="module">
             import { h, render } from 'preact';
             import { StatuspageDictionary, StatuspageWebComponents, StatuspageHTMLElements } from 'statuspage';
+            import htm from 'https://esm.sh/htm';
 
             // var app = h(StatuspageWebComponents.StatusPreact, { 'status': 'good' });
             // render(app, document.body);
 
             render(StatuspageHTMLElements.AppLoadingHTMLElement, document.body);
             var app = document.getElementById('app');
-            render(h(StatuspageWebComponents.StatusPreact, { 'status': 'good' }), app);
+            render(h(StatuspageWebComponents.StatusPreact, { 'status': 'good', 'fullScreen': '', 'data-url': 'https://www.redditstatus.com' }), app);
 
-            app.appendChild(StatuspageHTMLElements.NoIncidentsElement('Cloudflare'));
+            // app.appendChild(StatuspageHTMLElements.NoIncidentsElement('Cloudflare'));
         </script>
     </body>
 </html>
