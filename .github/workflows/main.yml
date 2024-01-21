@@ -1,5 +1,9 @@
 name: GitlabSync
 
+# Gets and increments tag associated with latest release
+# Should be used when not in an [on->push-tags]
+# curl -s 'https://api.github.com/repos/rtsfred3/GithubStatusJS/releases/latest' | python3 -c "import sys, json; n = json.load(sys.stdin)['tag_name'][1:].split('.'); n = [int(i) for i in n]; n[-1] += 1; print('v' + '.'.join([str(s) for s in n]))"
+
 on:
   - push
   - delete
