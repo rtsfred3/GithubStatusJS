@@ -118,9 +118,11 @@
             // var app = h(StatuspageWebComponents.StatusPreact, { 'status': 'good' });
             // render(app, document.body);
 
+            // render(`${StatuspageHTMLElements.StatusHTMLElement('good')}`);
+
             render(StatuspageHTMLElements.AppLoadingHTMLElement, document.body);
             var app = document.getElementById('app');
-            render(h(StatuspageWebComponents.StatusPreact, { 'status': 'good', 'fullScreen': '', 'data-url': 'https://www.redditstatus.com' }), app);
+            render(h(StatuspageHTMLElements.StatusHTMLElement, { 'status': 'good', 'fullScreen': '', 'data-url': 'https://www.redditstatus.com' }), app);
 
             // app.appendChild(StatuspageHTMLElements.NoIncidentsElement('Cloudflare'));
         </script>

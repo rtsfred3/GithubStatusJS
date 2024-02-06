@@ -10,6 +10,14 @@
  * @property {string} page.updated_at
  */
 
+// const IsStringNullOrEmpty = ((str) => (str == "" || str.length == 0 || str == null || str == undefined));
+// const GetTrueFalse = ((str) => !IsStringNullOrEmpty(str.toString()) && (str.toString().match(/(true|false)/g) != null) ? str.toString() == "true" : null);
+// const IsBooleanOrEmpty = ((str) => IsStringNullOrEmpty(str.toString()) || (str.toString().match(/(true|false)/g) != null));
+
+// const Tabs = ((n = 1) => '\t'.repeat(n));
+// const EqualsLineDelimiter = ((n = 50) => '='.repeat(n));
+// const DashLineDelimiter = ((n = 50) => '-'.repeat(n));
+
 class StatuspageDictionary {
     /**
      * @static
@@ -158,6 +166,14 @@ class StatuspageDictionary {
             critical: StatuspageDictionary.StatusEnums.critical
         });
     }
+
+    static get Paths() {
+        return Object.freeze({
+            Index: '/',
+            Status: '/status/',
+            Components: '/components/'
+        });
+    }
 }
 
 class StatuspageHTMLElements {
@@ -249,7 +265,7 @@ class StatuspageHTMLElements {
         return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
     }
 
-    /**`
+    /**
      * Creates a Status HTML Elemnent
      * 
      * @param {string|StatuspageStatusResponse} status The status of the page
@@ -1240,22 +1256,19 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
     try {
         var cloudflareDevRegex = /(spa|master|staging|[1-9A-Za-z-_]+)\.ghstatus\.pages\.dev(\/StatuspageHTML\/)?/g;
         var cloudflareProdRegex = /(githubstat.us|ghstatuspagehtml.b-cdn.net|ghstat.us|spstat.us)/g;
-        
+
         var onCloudflareDev = location.host.match(cloudflareDevRegex) != null;
         var onCloudflareProd = location.host.match(cloudflareProdRegex) != null;
-
-        console.log(location.host.match(cloudflareDevRegex));
-        console.log(location.host.match(cloudflareProdRegex));
 
         if (!navigator.onLine) {
             r.ErrorHome();
         } else {
             if (onCloudflareProd || onCloudflareDev) {
-                if (location.pathname == '/') {
+                if (location.pathname == StatuspageDictionary.Paths.Index) {
                     r.IndexHome();
-                } else if (location.pathname == '/components/') {
+                } else if (location.pathname == StatuspageDictionary.Paths.Components) {
                     r.ComponentsHome();
-                } else if (location.pathname == '/status/') {
+                } else if (location.pathname == StatuspageDictionary.Paths.Status) {
                     r.StatusHome();
                 } else {
                     r.ErrorHome();
