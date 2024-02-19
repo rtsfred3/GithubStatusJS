@@ -126,21 +126,21 @@ class StatuspageHTMLElements {
     }
 
     static StatusHTMLElement(status, fullStatus=false, _id="status", message=null){
-        if(typeof(status) != "string" && typeof(status) != "object"){
+        if (typeof(status) != "string" && typeof(status) != "object") {
             console.error(`Invaid parameter - ${typeof(status)}`);
             return h("div");
         }
 
-        if(typeof(status) == "object" && 'id' in status && 'name' in status){
+        if (typeof(status) == "object" && 'id' in status && 'name' in status) {
             return StatuspageHTMLElements.StatusHTMLElement(status.status, false, status.id, status.name);
         }
 
-        if(typeof(status) == "object" && 'status' in status && 'indicator' in status.status){
+        if (typeof(status) == "object" && 'status' in status && 'indicator' in Object.keys(status.status)) {
             return StatuspageHTMLElements.StatusHTMLElement(status.status.indicator, fullStatus);
         }
 
-        if (typeof status != 'string') {
-            console.error(typeof status != 'string');
+        if (typeof(status) != 'string') {
+            // console.error(typeof status != 'string');
             return StatuspageHTMLElements.ErrorHTMLElement;
         }
 
