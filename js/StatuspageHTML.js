@@ -620,6 +620,10 @@ class StatuspageWebComponents {
             constructor() { super(); }
         
             connectedCallback() {
+                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+                this.app = document.getElementById('status');
+                this.replaceWith(this.app);
+
                 this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
                     ? this.getAttribute('status')
                     : StatuspageDictionary.StatusEnums.error;
@@ -658,7 +662,7 @@ class StatuspageWebComponents {
 
             parseStatus(status, fullScreen) {
                 console.log(status, fullScreen);
-                this.replaceWith(StatuspageHTMLElements.StatusHTMLElement(status, fullScreen));
+                this.app.replaceWith(StatuspageHTMLElements.StatusHTMLElement(status, fullScreen));
             }
         
             static get is() { return 'statuspage-status'; }
@@ -670,10 +674,15 @@ class StatuspageWebComponents {
             constructor() { super(); }
         
             connectedCallback() {
+                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+                this.app = document.getElementById('app');
+
                 if (this.hasAttribute('data-json')) {
                     this.parseJson(JSON.parse(this.getAttribute('data-json')));
                 } else if (this.hasAttribute('data-url')) {
                     this.fetchComponents(this.getAttribute('data-url'));
+                } else {
+                    this.app.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                 }
             }
         
@@ -692,8 +701,10 @@ class StatuspageWebComponents {
         
             parseJson(json) {
                 var componentsArr = StatuspageHTMLElements.ComponentsHTMLElement(json);
+
+                this.app.removeChild(document.getElementById('status'));
         
-                for(var i = 0; i < componentsArr.length; i++){ this.append(componentsArr[i]); }
+                for(var i = 0; i < componentsArr.length; i++){ this.app.append(componentsArr[i]); }
             }
         
             static get is(){ return 'statuspage-components'; }
