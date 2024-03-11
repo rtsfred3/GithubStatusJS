@@ -10,6 +10,10 @@
  * @property {string} page.updated_at
  */
 
+class StatuspageHead {
+
+}
+
 class StatuspageDictionary {
     /**
      * @static
@@ -442,6 +446,40 @@ class StatuspageHTMLElements {
         }
 
         return messagesList;
+    }
+    
+    /**
+     * 
+     * @param {string} id 
+     * @returns {HTMLMetaElement}
+     */
+    static GetMetaTag(id) {
+        let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+        return metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    }
+
+    /**
+     * 
+     * @param {string|Array} id 
+     * @param {string} value 
+     */
+    static SetMetaTag(id, value) {
+        if (typeof id == 'string') {
+            StatuspageHTMLElements.GetMetaTag(id).setAttribute("content", value);
+        } else if(Array.isArray(id)) {
+            for(var i = 0; i < id.length; i++){
+                StatuspageHTMLElements.GetMetaTag(id[i]).setAttribute("content", value);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param {string} status 
+     */
+    static SetThemeColor(status) {
+        var hexColor = StatuspageDictionary.MetaColors[status];
+        StatuspageHTMLElements.SetMetaTag(["theme-color", "apple-mobile-web-app-status-bar-style"], hexColor);
     }
 
     /**
