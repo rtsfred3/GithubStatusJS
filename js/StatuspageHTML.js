@@ -603,6 +603,7 @@ class StatuspageWebComponents {
     
             connectedCallback() {
                 this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+                this.app = document.getElementById('app');
 
                 if (this.hasAttribute('data-url')) {
                     this.url = this.getAttribute('data-url');
@@ -619,10 +620,11 @@ class StatuspageWebComponents {
                 } else if (location.pathname == StatuspageDictionary.Paths.Status) {
                     var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                     status.setAttribute('data-url', this.url);
+                    status.setAttribute('fullScreen', null);
 
                     this.app.replaceWith(status);
                 } else {
-                    // r.ErrorHome();
+                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                 }
             }
             
