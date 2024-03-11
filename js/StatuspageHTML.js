@@ -597,13 +597,46 @@ class StatuspageHTMLElements {
 }
 
 class StatuspageWebComponents {
+    static get App() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+    
+            connectedCallback() {
+                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+
+                if (this.hasAttribute('data-url')) {
+                    this.url = this.getAttribute('data-url');
+                }
+
+                if (location.pathname == StatuspageDictionary.Paths.Index) {
+                    var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
+                    summary.setAttribute('data-url', this.url);
+
+                    this.app.replaceWith(summary);
+                } else if (location.pathname == StatuspageDictionary.Paths.Components) {
+                    console.log(StatuspageDictionary.Paths.Components);
+                    // r.ComponentsHome();
+                } else if (location.pathname == StatuspageDictionary.Paths.Status) {
+                    var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                    status.setAttribute('data-url', this.url);
+
+                    this.app.replaceWith(status);
+                } else {
+                    // r.ErrorHome();
+                }
+            }
+            
+            static get is() { return 'statuspage-app'; }
+        }
+    }
+    
     static get AppLoading() {
         return class extends HTMLElement {
             constructor() { super(); }
     
             connectedCallback() { this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement); }
             
-            static get is() { return 'statuspage-app'; }
+            static get is() { return 'statuspage-app-loading'; }
         }
     }
 
@@ -1314,6 +1347,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
     }
 }
 
+customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
 customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
 customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
