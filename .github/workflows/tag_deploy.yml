@@ -16,7 +16,7 @@ jobs:
             - name: Echoing the tag name
               run: |
                 echo '${{ github.ref_name }}'
-            - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml
+            - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/index.html
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/amp/index.html
@@ -25,6 +25,12 @@ jobs:
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/manifest.json --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/manifest.json
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/robots.txt --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/robots.txt
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/sitemap.xml --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/sitemap.xml
+            - name: Sync index.html, robots.txt, & sitemap.xml for reddit.spstat.us
+              run: |
+                echo "<!-- ${{ github.ref_name }} -->" >> sites/reddit/index.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_REDDIT_SPTAT_US }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_REDDIT_SPSTAT_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sites/reddit/index.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_REDDIT_SPTAT_US }}/sitemap.xml --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_REDDIT_SPSTAT_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sites/reddit/sitemap.xml
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_REDDIT_SPTAT_US }}/robots.txt --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_REDDIT_SPSTAT_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sites/robots.txt
             - name: Purge spstat.us/, spstat.us/status/, spstat.us/components/, and spstat.us/amp/
               run: |
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
@@ -33,18 +39,13 @@ jobs:
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/amp/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/sitemap.xml' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/robots.txt' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
-            # - name: Sync /js/, /styling/, & /modules/ to ${{ github.ref_name }}/
-            #   run: |
-            #     for x in $(find (js|styling|modules) -maxdepth 1 -type f); do curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @$x; done;
+                curl --request GET --url 'https://api.bunny.net/purge?url=https://reddit.spstat.us/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
             - name: Sync /js/ to ${{ github.ref_name }}/js/
               run: |
-                # echo "/* ${{ github.ref_name }} */$(cat $x)" > $x
                 for x in $(ls -p js | grep -v /); do curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
             - name: Sync /styling/ to ${{ github.ref_name }}/styling/
               run: |
-                echo "TEST CSS"
                 for x in $(ls -p styling | grep -v /); do curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/styling/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @styling/$x; done
-                # for x in $(ls styling); do curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/styling/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @styling/$x; done
             - name: Sync /modules/ to ${{ github.ref_name }}/modules/
               run: |
                 echo "TEST Modules"
