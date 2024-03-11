@@ -1,8 +1,8 @@
 {
     "id": "us.spstat",
-    "name": "(Unofficial) Cloudflare Status",
-    "short_name": "Cloudflare Status",
-    "description": "An unofficial website to monitor Cloudflare status updates.",
+    "name": "(Unofficial) Atlassian Status",
+    "short_name": "Atlassian Status",
+    "description": "An unofficial website to monitor Atlassian status updates.",
     "start_url": "https://spstat.us/",
     "display_override": ["standalone"],
     "display": "standalone",
@@ -85,9 +85,9 @@
     
     "shortcuts": [
         {
-            "name": "Cloudflare Status",
-            "short_name": "CF",
-            "description": "Displays the summary status of the Cloudflare",
+            "name": "Atlassian Statuspage",
+            "short_name": "SP",
+            "description": "Displays the summary status using Atlassian",
             "url": "https://spstat.us/",
             "icons": [
                 {
@@ -104,9 +104,9 @@
             ]
         },
         {
-            "name": "Cloudflare Components Status",
-            "short_name": "CF Components",
-            "description": "Displays the status of the Cloudflare Components",
+            "name": "Atlassian Components Status",
+            "short_name": "SP Components",
+            "description": "Displays the status using Atlassian Components",
             "url": "https://spstat.us/components/",
             "icons": [
                 {
@@ -123,9 +123,9 @@
             ]
         },
         {
-            "name": "Cloudflare Mini Status",
-            "short_name": "CF Mini Status",
-            "description": "Displays the overall status of the Cloudflare",
+            "name": "Atlassian Mini Status",
+            "short_name": "SP Mini Status",
+            "description": "Displays the overall status using Atlassian",
             "url": "https://spstat.us/status/",
             "icons": [
                 {
