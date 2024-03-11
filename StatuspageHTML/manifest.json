@@ -85,9 +85,9 @@
     
     "shortcuts": [
         {
-            "name": "GitHub Status",
-            "short_name": "GH",
-            "description": "Displays the status of the GitHub",
+            "name": "Cloudflare Status",
+            "short_name": "CF",
+            "description": "Displays the summary status of the Cloudflare",
             "url": "https://spstat.us/",
             "icons": [
                 {
@@ -104,9 +104,9 @@
             ]
         },
         {
-            "name": "GitHub Components Status",
-            "short_name": "GH Components",
-            "description": "Displays the status of the GitHub Components",
+            "name": "Cloudflare Components Status",
+            "short_name": "CF Components",
+            "description": "Displays the status of the Cloudflare Components",
             "url": "https://spstat.us/components/",
             "icons": [
                 {
@@ -123,9 +123,9 @@
             ]
         },
         {
-            "name": "GitHub Mini Status",
-            "short_name": "GH Mini Status",
-            "description": "Displays the overall status of the GitHub",
+            "name": "Cloudflare Mini Status",
+            "short_name": "CF Mini Status",
+            "description": "Displays the overall status of the Cloudflare",
             "url": "https://spstat.us/status/",
             "icons": [
                 {
