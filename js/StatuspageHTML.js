@@ -10,14 +10,6 @@
  * @property {string} page.updated_at
  */
 
-// const IsStringNullOrEmpty = ((str) => (str == "" || str.length == 0 || str == null || str == undefined));
-// const GetTrueFalse = ((str) => !IsStringNullOrEmpty(str.toString()) && (str.toString().match(/(true|false)/g) != null) ? str.toString() == "true" : null);
-// const IsBooleanOrEmpty = ((str) => IsStringNullOrEmpty(str.toString()) || (str.toString().match(/(true|false)/g) != null));
-
-// const Tabs = ((n = 1) => '\t'.repeat(n));
-// const EqualsLineDelimiter = ((n = 50) => '='.repeat(n));
-// const DashLineDelimiter = ((n = 50) => '-'.repeat(n));
-
 class StatuspageDictionary {
     /**
      * @static
@@ -724,10 +716,12 @@ class StatuspageWebComponents {
             }
 
             fetchIncidents(url) {
+                console.log(url);
+
                 return new Promise((res, rej) => {
                     var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
         
-                    fetch(baseUrl + '/api/v2/incidents/unresolved.json')
+                    fetch(baseUrl + '/api/v2/incidents.json')
                         .then(data => data.json())
                         .then((json) => {
                             this.parseJson(json);
@@ -755,8 +749,31 @@ class StatuspageWebComponents {
 
                 this.app = document.getElementById('app');
 
+                this.singleRequest = true;
+
+                if (this.hasAttribute('data-single-request')) {
+                    if (this.getAttribute('data-single-request') == "true") {
+                        this.singleRequest = true;
+                    } else if (this.getAttribute('data-single-request') == "false") {
+                        this.singleRequest = false;
+                    }
+                }
+
                 if (this.hasAttribute('data-url')) {
-                    this.fetchSummary(this.getAttribute('data-url'));
+                    this.url = this.getAttribute('data-url');
+
+                    if (this.singleRequest) {
+                        this.fetchSummary(this.url);
+                    } else {
+                        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                        status.setAttribute('data-url', this.url);
+
+                        var incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
+                        incidents.setAttribute('data-url', this.url);
+
+                        this.app.firstChild.replaceWith(status);
+                        this.app.appendChild(incidents);
+                    }
                 } else {
                     app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                 }
