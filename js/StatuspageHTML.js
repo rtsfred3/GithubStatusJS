@@ -615,8 +615,10 @@ class StatuspageWebComponents {
 
                     this.app.replaceWith(summary);
                 } else if (location.pathname == StatuspageDictionary.Paths.Components) {
-                    console.log(StatuspageDictionary.Paths.Components);
-                    // r.ComponentsHome();
+                    var components = document.createElement(StatuspageWebComponents.Components.is, { is: StatuspageWebComponents.Components.is });
+                    components.setAttribute('data-url', this.url);
+
+                    this.app.replaceWith(components);
                 } else if (location.pathname == StatuspageDictionary.Paths.Status) {
                     var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                     status.setAttribute('data-url', this.url);
