@@ -39,6 +39,7 @@ jobs:
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/amp/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/sitemap.xml' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/robots.txt' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
+                curl --request GET --url 'https://api.bunny.net/purge?url=https://reddit.spstat.us/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
             - name: Sync /js/ to ${{ github.ref_name }}/js/
               run: |
                 for x in $(ls -p js | grep -v /); do curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
