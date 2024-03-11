@@ -1,0 +1,203 @@
+{
+    "id": "us.spstat",
+    "name": "(Unofficial) Atlassian Status",
+    "short_name": "Atlassian Status",
+    "description": "An unofficial website to monitor Atlassian status updates.",
+    "start_url": "https://spstat.us/",
+    "display_override": ["standalone"],
+    "display": "standalone",
+    "background_color": "#339966",
+    "theme_color": "#339966",
+    "lang": "en-US",
+    "author": "rtsfred3",
+    "dir": "ltr",
+    "scope": "https://spstat.us/",
+    "prefer_related_applications": false,
+
+    "categories": ["utilities", "productivity", "development", "developer", "developer tools"],
+    "orientation": "portrait-primary",
+
+    "icons": [
+        {
+            "src": "https://img.spstat.us/img/maskable/48px.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/72px.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/76px.png",
+            "sizes": "76x76",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/96px.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/120px.png",
+            "sizes": "120x120",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/128px.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/144px.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/152px.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/180px.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/192px.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/512px.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "https://img.spstat.us/img/maskable/1024px.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    
+    "shortcuts": [
+        {
+            "name": "Atlassian Statuspage",
+            "short_name": "SP",
+            "description": "Displays the summary status using Atlassian",
+            "url": "https://spstat.us/",
+            "icons": [
+                {
+                    "src": "https://img.spstat.us/img/maskable/96px.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://img.spstat.us/img/maskable/192px.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any"
+                }
+            ]
+        },
+        {
+            "name": "Atlassian Components Status",
+            "short_name": "SP Components",
+            "description": "Displays the status using Atlassian Components",
+            "url": "https://spstat.us/components/",
+            "icons": [
+                {
+                    "src": "https://img.spstat.us/img/maskable/96px.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://img.spstat.us/img/maskable/192px.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any"
+                }
+            ]
+        },
+        {
+            "name": "Atlassian Mini Status",
+            "short_name": "SP Mini Status",
+            "description": "Displays the overall status using Atlassian",
+            "url": "https://spstat.us/status/",
+            "icons": [
+                {
+                    "src": "https://img.spstat.us/img/maskable/96px.png",
+                    "sizes": "96x96",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://img.spstat.us/img/maskable/192px.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any"
+                }
+            ]
+        }
+    ],
+    
+    "screenshots" : [
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot1.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot2.png",
+            "sizes": "1280x720",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot3.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot4.png",
+            "sizes": "1280x720",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot5.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot6.png",
+            "sizes": "1280x720",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot7.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot8.png",
+            "sizes": "1280x720",
+            "type": "image/png"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot9.png",
+            "sizes": "720x1280",
+            "type": "image/png",
+            "form_factor": "narrow"
+        },
+        {
+            "src": "https://img.spstat.us/img/screenshots/original/screenshot10.png",
+            "sizes": "1280x720",
+            "type": "image/png"
+        }
+    ]
+}
