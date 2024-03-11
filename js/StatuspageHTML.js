@@ -645,26 +645,26 @@ class StatuspageWebComponents {
 
                 if (this.hasAttribute('data-url')) {
                     this.url = this.getAttribute('data-url');
-                }
 
-                if (location.pathname == StatuspageDictionary.Paths.Index) {
-                    var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
-                    summary.setAttribute('data-url', this.url);
-
-                    this.app.replaceWith(summary);
-                } else if (location.pathname == StatuspageDictionary.Paths.Components) {
-                    var components = document.createElement(StatuspageWebComponents.Components.is, { is: StatuspageWebComponents.Components.is });
-                    components.setAttribute('data-url', this.url);
-
-                    this.app.replaceWith(components);
-                } else if (location.pathname == StatuspageDictionary.Paths.Status) {
-                    var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                    status.setAttribute('data-url', this.url);
-                    status.setAttribute('fullScreen', null);
-
-                    this.app.replaceWith(status);
-                } else {
-                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    if (location.pathname == StatuspageDictionary.Paths.Index) {
+                        var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
+                        summary.setAttribute('data-url', this.url);
+    
+                        this.app.replaceWith(summary);
+                    } else if (location.pathname == StatuspageDictionary.Paths.Components) {
+                        var components = document.createElement(StatuspageWebComponents.Components.is, { is: StatuspageWebComponents.Components.is });
+                        components.setAttribute('data-url', this.url);
+    
+                        this.app.replaceWith(components);
+                    } else if (location.pathname == StatuspageDictionary.Paths.Status) {
+                        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                        status.setAttribute('data-url', this.url);
+                        status.setAttribute('fullScreen', null);
+    
+                        this.app.replaceWith(status);
+                    } else {
+                        this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    }
                 }
             }
             
