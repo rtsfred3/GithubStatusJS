@@ -10,6 +10,10 @@
  * @property {string} page.updated_at
  */
 
+class StatuspageHead {
+
+}
+
 class StatuspageDictionary {
     /**
      * @static
@@ -443,6 +447,40 @@ class StatuspageHTMLElements {
 
         return messagesList;
     }
+    
+    /**
+     * 
+     * @param {string} id 
+     * @returns {HTMLMetaElement}
+     */
+    static GetMetaTag(id) {
+        let metaTagsArr = Array.from(document.getElementsByTagName("meta"));
+        return metaTagsArr.find((mTag) => (mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")) == id);
+    }
+
+    /**
+     * 
+     * @param {string|Array} id 
+     * @param {string} value 
+     */
+    static SetMetaTag(id, value) {
+        if (typeof id == 'string') {
+            StatuspageHTMLElements.GetMetaTag(id).setAttribute("content", value);
+        } else if(Array.isArray(id)) {
+            for(var i = 0; i < id.length; i++){
+                StatuspageHTMLElements.GetMetaTag(id[i]).setAttribute("content", value);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param {string} status 
+     */
+    static SetThemeColor(status) {
+        var hexColor = StatuspageDictionary.MetaColors[status];
+        StatuspageHTMLElements.SetMetaTag(["theme-color", "apple-mobile-web-app-status-bar-style"], hexColor);
+    }
 
     /**
      * 
@@ -597,13 +635,50 @@ class StatuspageHTMLElements {
 }
 
 class StatuspageWebComponents {
+    static get App() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+    
+            connectedCallback() {
+                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
+                this.app = document.getElementById('app');
+
+                if (this.hasAttribute('data-url')) {
+                    this.url = this.getAttribute('data-url');
+                }
+
+                if (location.pathname == StatuspageDictionary.Paths.Index) {
+                    var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
+                    summary.setAttribute('data-url', this.url);
+
+                    this.app.replaceWith(summary);
+                } else if (location.pathname == StatuspageDictionary.Paths.Components) {
+                    var components = document.createElement(StatuspageWebComponents.Components.is, { is: StatuspageWebComponents.Components.is });
+                    components.setAttribute('data-url', this.url);
+
+                    this.app.replaceWith(components);
+                } else if (location.pathname == StatuspageDictionary.Paths.Status) {
+                    var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                    status.setAttribute('data-url', this.url);
+                    status.setAttribute('fullScreen', null);
+
+                    this.app.replaceWith(status);
+                } else {
+                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                }
+            }
+            
+            static get is() { return 'statuspage-app'; }
+        }
+    }
+    
     static get AppLoading() {
         return class extends HTMLElement {
             constructor() { super(); }
     
             connectedCallback() { this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement); }
             
-            static get is() { return 'statuspage-app'; }
+            static get is() { return 'statuspage-app-loading'; }
         }
     }
 
@@ -1314,6 +1389,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
     }
 }
 
+customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
 customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
 customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
