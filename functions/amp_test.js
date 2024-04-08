@@ -21,7 +21,7 @@ export async function onRequestGet({ request, params, env }) {
 
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl);
 
-    console.log(AmpHtml.matchAll(titleRegex));
+    console.log([...AmpHtml.match(titleRegex)]);
 
     for(const title of [...new Set(AmpHtml.match(titleRegex))]){
         html = html.replaceAll(title, `${title} | ${StatuspageStatus}`);
