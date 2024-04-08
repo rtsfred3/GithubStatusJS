@@ -20,7 +20,7 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
     var oldBaseUrl = _oldBaseUrl;
     var titleRegex = /([A-Za-z]*) Status/g;
     var descriptionRegex = /An unofficial website to monitor ([A-Za-z]*) status updates./g;
-    var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
+    var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/(([a-z]|\/)+)?)" \/>/g;
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var path = _path;
@@ -31,7 +31,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
     
     console.log(canonicalUrlList);
 
-    var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`https://${oldBaseUrl}/`);
+    // var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`https://${oldBaseUrl}/`);
+    var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
 
     console.log(canonicalUrl);
 
@@ -107,9 +108,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
 
     var bodyHtml = BodyHtml;
 
-    for(const url of [...new Set(bodyHtml.match(/http:\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
-        console
-        bodyHtml = bodyHtml.replaceAll(url, `http://${StatuspageUrl}/`);
+    for(const url of [...new Set(bodyHtml.match(/https:\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
+        bodyHtml = bodyHtml.replaceAll(url, `https://${StatuspageUrl}/`);
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
