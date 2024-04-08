@@ -15,7 +15,7 @@ function DeduplicateArrayOfArrays(arrInput){
 }
 
 function IsStatuspageNameSame(arrInput, statuspageName){
-    var arr = new Set(arrInput.map((a) => a[1]));
+    var arr = [...new Set(arrInput.map((a) => a[1]))];
     console.log('IsStatuspageNameSame() Test:', arr);
 
     var arrOutString = [];
@@ -24,6 +24,9 @@ function IsStatuspageNameSame(arrInput, statuspageName){
             arrOutString.push(element[1]);
         }
     }
+
+    console.log(arrOutString);
+    
     return arrOutString.includes(statuspageName);
 }
 
@@ -56,7 +59,7 @@ export async function onRequestGet({ request, params, env }) {
 
     // console.log([...html.matchAll(`${newBaseUrl.host}${newBaseUrl.pathname}`)]);
 
-    console.log("IsStatuspageNameSame():", IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)]));
+    console.log("IsStatuspageNameSame():", IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)], StatuspageName));
     
     console.log("DeduplicateArrayOfArrays():", DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)]));
 
@@ -70,7 +73,7 @@ export async function onRequestGet({ request, params, env }) {
         }
     }
 
-    for(const description of [...new Set(AmpHtml.matchAll(descriptionRegex))]){
+    for(const description of DeduplicateArrayOfArrays([...new Set(AmpHtml.matchAll(descriptionRegex))])){
         // console.log(description);
 
         if (description[1] == StatuspageName) {
