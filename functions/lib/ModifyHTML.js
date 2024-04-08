@@ -5,7 +5,7 @@ import BodyHtml from "../../partial_html/body.html";
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 
-export default async function ModifyHTML(env, _statuspageUrl, _oldBaseUrl, _path){
+export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseUrl, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
     const cache_age = env.AGE;
