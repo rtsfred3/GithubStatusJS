@@ -34,7 +34,7 @@ export default async function ModifyHTML(request, env, _path){
     if (age > db_age) { 
         console.log(`Age: ${age}`);
 
-        const statusRes = await fetch(`https://${StatuspageUrl}${route}`);
+        const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
         originalStatus = statusData.status.indicator;
@@ -85,7 +85,7 @@ export default async function ModifyHTML(request, env, _path){
     if (path == Path.Status) {
         bodyHtml = `<body> \
             <!-- <statuspage-status status="${originalStatus}" fullScreen></statuspage-status> --> \
-            <statuspage-status data-url="https://${StatuspageUrl}/" fullScreen></statuspage-status> \
+            <statuspage-status data-url="${StatuspageUrl}" fullScreen></statuspage-status> \
         </body>`
     }
 
@@ -94,16 +94,16 @@ export default async function ModifyHTML(request, env, _path){
         ${headHtml}${bodyHtml} \
     </html>`;
 
-    if (!StatuspageUrl.startsWith("https://")) {
-        html = html.replaceAll("{{StatuspageUrl}}", `https://${StatuspageUrl}/`);
+    if (StatuspageUrl.startsWith("https://")) {
+        html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
     return new Response(html, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            /* "Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}, s-maxage=${(path != Path.Status ? 31536000 : db_age)}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}` */
+            "Cache-Control": `max-age=${env.CACHE_AGE}, s-maxage=${env.CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${env.CACHE_AGE}`
         },
     });
 }
