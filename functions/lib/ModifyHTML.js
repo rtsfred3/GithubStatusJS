@@ -108,8 +108,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
 
     var bodyHtml = BodyHtml;
 
-    for(const url of [...new Set(bodyHtml.match(/https:\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
-        bodyHtml = bodyHtml.replaceAll(url, `https://${StatuspageUrl}/`);
+    for(const url of [...new Set(bodyHtml.matchAll(/https:\/\/(([a-z]|\.)+)\//g))].map((u) => u.substring(1))){
+        bodyHtml = bodyHtml.replaceAll(url[1], StatuspageUrl);
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
