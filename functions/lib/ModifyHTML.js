@@ -16,7 +16,6 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
-    
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = _oldBaseUrl;
     var titleRegex = /([A-Za-z]*) Status/g;
@@ -39,6 +38,7 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     var statusJson = JSON.parse(results[0].data);
 
+    var originalStatus = statusJson.status.indicator;
     var StatuspageStatus = CapitalizeFirstLetter(statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator);
     var StatuspageDescription = statusJson.status.description;
     var StatuspageName = statusJson.page.name;
@@ -52,6 +52,7 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         const statusRes = await fetch(`https://${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
+        originalStatus = statusData.status.indicator;
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
@@ -114,6 +115,10 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     for(const url of [...new Set(bodyHtml.matchAll(/https:\/\/(([a-z]|\.)+)\//g))]){
         bodyHtml = bodyHtml.replaceAll(url[1], StatuspageUrl);
+    }
+
+    if (path == Path.Status) {
+        bodyHtml = `<body><statuspage-status status-${originalStatus} fullScreen></statuspage-status></body>`
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
