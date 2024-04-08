@@ -7,34 +7,19 @@ import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
-export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
+export default async function ModifyHTML(request, env, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
     const db_age = env.AGE;
     const StatuspageUrl = env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
 
-    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
-
-    var newBaseUrl = new URL(request.url);
-    var oldBaseUrl = _oldBaseUrl;
-    var titleRegex = /([A-Za-z]*) Status/g;
-    var descriptionRegex = /An unofficial website to monitor ([A-Za-z]*) status updates./g;
-    var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/(([a-z]|\/)+)?)" \/>/g;
-    var imageUrlRegex = /status(-min)?-good\.png/g;
-
     var path = _path;
 
-    console.log(StatuspageUrl);
+    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
-    var canonicalUrlList = [...HeadStartHtml.matchAll(canonicalUrlRegex)];
-    
-    console.log(canonicalUrlList);
-
-    // var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`https://${oldBaseUrl}/`);
-    var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
-
-    console.log(canonicalUrl);
+    var CanonicalUrl = new URL(request.url);
+    var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var statusJson = JSON.parse(results[0].data);
 
@@ -60,16 +45,11 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
-    console.log(oldBaseUrl, newBaseUrl.host);
+    var headHtml = HeadStartHtml;
 
-    var headHtml = HeadStartHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
-
-    console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
-
-    headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
-
-    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}img`, '/img');
-    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}favicon.ico`, '/favicon.ico');
+    headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
+    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
+    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
     var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
@@ -79,35 +59,20 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         headHtml = headHtml.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
     }
 
-    for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
-        console.log('title:', title);
-
-        if (title[1] == "") { continue; }
-
-        if (path == Path.Component) {
-            headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status Components`);
-        }  
-        else if (path == Path.Status) {
-            headHtml = headHtml.replaceAll(title[0], `Mini ${StatuspageName} Status`);
-        }
-        else {
-            headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status`);
-        }
+    if (path == Path.Component) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status Components`);
+    }  
+    else if (path == Path.Status) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) Mini ${StatuspageName} Status`);
     }
-    
-    for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
-        console.log(description);
-
-        if (description[1] == StatuspageName || isStatuspageNameSame) {
-            headHtml = headHtml.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
-        } else {
-            headHtml = headHtml.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
-        }
+    else if (path == Path.Index) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status`);
+    }
+    else {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status - Error`);
     }
 
-    for (const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))) {
-        headHtml = headHtml.replaceAll(url, `//${StatuspageUrl}/`);
-    }
+    headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
 
     headHtml += HeadEndHtml;
 
@@ -118,17 +83,27 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     }
 
     if (path == Path.Status) {
-        bodyHtml = `<body><statuspage-status status="${originalStatus}" fullScreen></statuspage-status></body>`
+        bodyHtml = `<body> \
+            <!-- <statuspage-status status="${originalStatus}" fullScreen></statuspage-status> --> \
+            <statuspage-status data-url="https://${StatuspageUrl}/" fullScreen></statuspage-status> \
+        </body>`
     }
 
-    var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
+    var html = `<!DOCTYPE html> \
+    <html lang="en"> \
+        ${headHtml}${bodyHtml} \
+    </html>`;
+
+    if (!StatuspageUrl.startsWith("https://")) {
+        html = html.replaceAll("{{StatuspageUrl}}", `https://${StatuspageUrl}/`);
+    }
 
     return new Response(html, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}, s-maxage=${(path != Path.Status ? 31536000 : db_age)}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}`
+            /* "Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}, s-maxage=${(path != Path.Status ? 31536000 : db_age)}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}` */
         },
     });
 }
