@@ -51,7 +51,7 @@ export default async function ModifyHTML(request, env, _path){
     headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
     headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
-    var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
+    // var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
         console.log(img);
@@ -84,7 +84,6 @@ export default async function ModifyHTML(request, env, _path){
 
     if (path == Path.Status) {
         bodyHtml = `<body> \
-            <!-- <statuspage-status status="${originalStatus}" fullScreen></statuspage-status> --> \
             <statuspage-status data-url="${StatuspageUrl}" fullScreen></statuspage-status> \
         </body>`
     }

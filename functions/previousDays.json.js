@@ -9,7 +9,7 @@ export async function onRequestGet({ params, env }) {
         headers: {
             "Content-Type": "application/json",
             "access-control-allow-origin": "*",
-            "Cache-Control": "max-age=3600, public"
+            "Cache-Control": `max-age=${env.AGE}, public`
         },
     });
 }

@@ -22,15 +22,15 @@ export async function onRequestGet({ request, params, env }) {
         "/apps/status/french/",
     ]
 
-    var xmlElements = urls.map((url) => `<url><loc>${newBaseUrl.protocol}${newBaseUrl.host}${url}</loc><lastmod>${date}</lastmod><changefreq>hourly</changefreq></url>`);
+    var xmlElements = urls.map((url) => `<url><loc>${newBaseUrl.protocol}//${newBaseUrl.host}${url}</loc><lastmod>${date}</lastmod><changefreq>hourly</changefreq></url>`);
 
     return new Response(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> \
         ${xmlElements.join("")} \
     </urlset>`, {
         headers: {
             "Content-Type": "application/xml",
-            "Cache-Control": `max-age=60, s-maxage=60, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=60`
+            "Cache-Control": `max-age=${env.SHORT_CACHE_AGE}, s-maxage=${env.SHORT_CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${env.SHORT_CACHE_AGE}`
         },
     });
 }
