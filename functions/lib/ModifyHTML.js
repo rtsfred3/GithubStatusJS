@@ -57,8 +57,6 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
-    // console.log(oldBaseUrl, newBaseUrl.host);
-
     var headHtml = HeadStartHtml;//.replaceAll(oldBaseUrl, newBaseUrl.host);
 
     // console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
@@ -80,21 +78,24 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         headHtml = headHtml.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
     }
 
-    for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
-        console.log('title:', title);
-
-        if (title[1] == "") { continue; }
-
-        if (path == Path.Component) {
-            headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status Components`);
-        }  
-        else if (path == Path.Status) {
-            headHtml = headHtml.replaceAll(title[0], `Mini ${StatuspageName} Status`);
-        }
-        else {
-            headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status`);
-        }
+    if (path == Path.Component) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status Components`);
+    }  
+    else if (path == Path.Status) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) Mini ${StatuspageName} Status`);
     }
+    else if (path == Path.Index) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status`);
+    }
+    else {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status - Error`);
+    }
+
+    // for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
+    //     console.log('title:', title);
+
+    //     if (title[1] == "") { continue; }
+    // }
     
     for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
         console.log(description);
