@@ -23,10 +23,10 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
     var canonicalUrl = canonicalUrlList[0][1];
     
-    console.log(`Canonical Url: ${canonicalUrl}`);
-    console.log(`URL: ${newBaseUrl.host}${newBaseUrl.pathname}`);
+    // console.log(`Canonical Url: ${canonicalUrl}`);
+    // console.log(`URL: ${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    console.log([...AmpHtml.matchAll(canonicalUrl)]);
+    // console.log([...AmpHtml.matchAll(canonicalUrl)]);
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
@@ -39,10 +39,12 @@ export async function onRequestGet({ request, params, env }) {
 
     html = html.replaceAll(canonicalUrl, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    console.log([...html.matchAll(canonicalUrl)]);
+    // console.log([...html.matchAll(`${newBaseUrl.host}${newBaseUrl.pathname}`)]);
+    
+    console.log("DeduplicateArrayOfArrays: ", DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)]));
 
     for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
-        console.log(title);
+        // console.log(title);
 
         if (title[1] == StatuspageName) {
             html = html.replaceAll(title[0], `${title[0]} | ${StatuspageStatus}`);
@@ -52,7 +54,7 @@ export async function onRequestGet({ request, params, env }) {
     }
 
     for(const description of [...new Set(AmpHtml.matchAll(descriptionRegex))]){
-        console.log(description);
+        // console.log(description);
 
         if (description[1] == StatuspageName) {
             html = html.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
