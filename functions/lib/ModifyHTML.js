@@ -94,7 +94,7 @@ export default async function ModifyHTML(request, env, _path){
         ${headHtml}${bodyHtml} \
     </html>`;
 
-    if (!StatuspageUrl.startsWith("https://")) {
+    if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
