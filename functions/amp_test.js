@@ -21,8 +21,6 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageDescription = statusData.status.description;
 
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
-    // html = html.replaceAll(title, `${title} | ${status}`);
-    // html = html.replaceAll(description, `${description} | ${statusData.status.description}`);
 
     for(const title of [...new Set(AmpHtml.match(titleRegex))]){
         html = html.replaceAll(title, `${title} | ${StatuspageStatus}`);
@@ -32,13 +30,11 @@ export async function onRequestGet({ request, params, env }) {
         html = html.replaceAll(description, `${description} | ${StatuspageDescription}`);
     }
 
-    var StatuspageUrls = [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))];
-    // StatuspageUrls = StatuspageUrls.filter(u => u != `//${oldBaseUrl}/`);
-    var currentStatuspageUrl = StatuspageUrls[0].substring(1);
+    var StatuspageUrls = [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1));
 
-    console.log(StatuspageUrls);
-    console.log(StatuspageUrls[0]);
-    console.log(currentStatuspageUrl);
+    for(const url of StatuspageUrls){
+        html = html.replaceAll(url, `//${StatuspageUrl}/`);
+    }
 
     return new Response(html, {
         headers: {
