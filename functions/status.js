@@ -44,7 +44,7 @@ export async function onRequestGet({ request, params, env }) {
     
     console.log(canonicalUrlList);
 
-    var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : newBaseUrl;
+    var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`${newBaseUrl.protocol}${newBaseUrl.host}/`);
 
     console.log(canonicalUrl);
 
@@ -73,7 +73,6 @@ export async function onRequestGet({ request, params, env }) {
     console.log(oldBaseUrl, newBaseUrl.host);
 
     var headHtml = HeadStartHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
-    var bodyHtml = 
 
     console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
@@ -86,7 +85,7 @@ export async function onRequestGet({ request, params, env }) {
     } */
 
     for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
-        console.log(title);
+        console.log('title:', title);
 
         headHtml = headHtml.replaceAll(title[0], `(Unofficial) Mini ${title[1]} Status`);
 
