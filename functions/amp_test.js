@@ -11,7 +11,7 @@ export async function onRequestGet({ request, params, env }) {
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
     var titleRegex = /([A-Za-z]*) Status - AMP/g;
-    var descriptionRegex = /A minified AMP website to monitor [A-Za-z]* status updates./g;
+    var descriptionRegex = /A minified AMP website to monitor ([A-Za-z]*) status updates./g;
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
 
     console.log([...AmpHtml.matchAll(canonicalUrlRegex)]);
@@ -30,6 +30,7 @@ export async function onRequestGet({ request, params, env }) {
     }
 
     for(const description of [...new Set(AmpHtml.matchAll(descriptionRegex))]){
+        console.log(description);
         html = html.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
     }
 
