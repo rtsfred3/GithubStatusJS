@@ -1,17 +1,13 @@
-import html from "../amp/index.html";
+import AmpHtml from "../amp/index.html";
+
+import StatuspageAmpHtml from "../StatuspageHTML/amp/index.html";
 
 export async function onRequestGet({ params, env }) {
-    console.log(html);
+    StatuspageAmpHtml = StatuspageAmpHtml.replace('spstat.us', `${hostname}`);
 
-    const previousDays = env.PREVIOUS_DAYS;
-
-    var info = JSON.stringify({
-        "html": ""
-    }, null, 2);
-    
-    return new Response(info, {
+    return new Response(StatuspageAmpHtml, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/html",
             "access-control-allow-origin": "*",
             "Cache-Control": "max-age=3600, public"
         },
