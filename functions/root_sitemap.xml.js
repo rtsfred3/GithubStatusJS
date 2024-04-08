@@ -1,4 +1,4 @@
-export async function onRequestGet({ params, env }) {
+export async function onRequestGet({ request, params, env }) {
     var currDate = new Date();
     currDate.setHours(currDate.getHours(), 0, 0, 0);
 
