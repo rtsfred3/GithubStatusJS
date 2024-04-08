@@ -35,18 +35,33 @@ export async function onRequestGet({ request, params, env }) {
 
     html = html.replaceAll(canonicalUrl, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
+    console.log([...html.matchAll(canonicalUrl)]);
+
     for(const title of [...new Set(AmpHtml.matchAll(titleRegex))]){
-        html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)} | ${StatuspageStatus}`);
+        console.log(title);
+
+        if (title[1] == StatuspageName) {
+            html = html.replaceAll(title[0], `${title[0]} | ${StatuspageStatus}`);
+        } else {
+            html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)} | ${StatuspageStatus}`);
+        }
     }
 
     for(const description of [...new Set(AmpHtml.matchAll(descriptionRegex))]){
         console.log(description);
-        html = html.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
+
+        if (description[1] == StatuspageName) {
+            html = html.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
+        } else {
+            html = html.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
+        }
     }
 
     for(const url of [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
         html = html.replaceAll(url, `//${StatuspageUrl}/`);
     }
+
+    html += `<!-- ${canonicalUrl} -->`;
 
     return new Response(html, {
         headers: {
