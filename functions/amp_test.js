@@ -15,10 +15,12 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
+    var canonicalUrl = canonicalUrlList[0][1];
 
-    console.log(canonicalUrlList);
-    console.log(`Canonical Url: ${canonicalUrlList[1]}`);
+    console.log(`Canonical Url: ${canonicalUrl}`);
     console.log(`URL: ${newBaseUrl.host}${newBaseUrl.pathname}`);
+
+    console.log([...AmpHtml.matchAll(canonicalUrl)]);
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
@@ -28,6 +30,8 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageName = statusData.page.name;
 
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+
+    // html = html.replaceAll(canonicalUrl, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     for(const title of [...new Set(AmpHtml.matchAll(titleRegex))]){
         html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)} | ${StatuspageStatus}`);
