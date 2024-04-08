@@ -18,13 +18,12 @@ export async function onRequestGet({ request, params, env }) {
 
     var StatuspageStatus = capitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
     var StatuspageDescription = statusData.status.description;
+    var StatuspageName = statusData.page.name;
 
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl);
 
-    console.log([...AmpHtml.matchAll(titleRegex)]);
-
-    for(const title of [...new Set(AmpHtml.match(titleRegex))]){
-        html = html.replaceAll(title, `${title} | ${StatuspageStatus}`);
+    for(const title of [...new Set(AmpHtml.matchAll(titleRegex))]){
+        html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)} | ${StatuspageStatus}`);
     }
 
     for(const description of [...new Set(AmpHtml.match(descriptionRegex))]){
