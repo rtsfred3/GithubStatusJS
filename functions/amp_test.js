@@ -47,7 +47,7 @@ export async function onRequestGet({ request, params, env }) {
     for (const img of DeduplicateArrayOfArrays([...AmpHtml.matchAll(imageUrlRegex)])) {
         console.log(img);
 
-        html = hmlt.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
+        html = html.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
     }
 
     for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
