@@ -2,8 +2,8 @@ import HeadStartHtml from "../partial_html/head_start.html";
 import HeadEndHtml from "../partial_html/head_end.html";
 import BodyHtml from "../partial_html/body.html";
 
-import Path from './lib/Path.js';
-import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
+import Path from './Path.js';
+import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 
 export default async function ModifyHTML(env, _statuspageUrl, _oldBaseUrl, _path){
     const db = env.CACHE_DB;
