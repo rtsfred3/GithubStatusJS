@@ -22,8 +22,10 @@ function IsStatuspageNameSame(arrInput, statuspageName){
 export async function onRequestGet({ request, params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
+    const cache_age = env.AGE;
+    const route = `/api/v2/status.json`;
 
-    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
+    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
     var StatuspageUrl = 'www.cloudflarestatus.com';
     var newBaseUrl = new URL(request.url);
@@ -36,16 +38,27 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
     var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
 
-    console.log(Date.now() - results[0].updated_on);
+    var statusJson = JSON.parse(results[0].data);
 
-    // if (Date.now() - results[0].updated_on) { result = JSON.parse(results[0].data); }
+    var StatuspageStatus = CapitalizeFirstLetter(statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator);
+    var StatuspageDescription = statusJson.status.description;
+    var StatuspageName = statusJson.page.name;
+    
+    var updated_on = new Date(results[0].updated_on);
+    var age = parseInt(((new Date()) - updated_on) / 1000);
 
-    const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
-    const statusData = await statusRes.json();
+    if (age > cache_age) { 
+        console.log(`Age: ${age}`);
 
-    var StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
-    var StatuspageDescription = statusData.status.description;
-    var StatuspageName = statusData.page.name;
+        const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
+        const statusData = await statusRes.json();
+
+        StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
+        StatuspageDescription = statusData.status.description;
+        StatuspageName = statusData.page.name;
+
+        const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
+    }
 
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
 
@@ -89,7 +102,7 @@ export async function onRequestGet({ request, params, env }) {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": "max-age=30, public"
+            "Cache-Control": `max-age=${cache_age}, public`
         },
     });
 }
