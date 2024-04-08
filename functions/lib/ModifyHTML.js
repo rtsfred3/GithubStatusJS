@@ -102,8 +102,8 @@ export default async function ModifyHTML(request, env, _path){
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}, s-maxage=${(path != Path.Status ? 31536000 : db_age)}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}`
+            /* "Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}, s-maxage=${(path != Path.Status ? 31536000 : db_age)}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}` */
         },
     });
 }
