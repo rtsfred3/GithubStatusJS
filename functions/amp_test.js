@@ -16,18 +16,7 @@ function DeduplicateArrayOfArrays(arrInput){
 
 function IsStatuspageNameSame(arrInput, statuspageName){
     var arr = [...new Set(arrInput.map((a) => a[1]))];
-    console.log('IsStatuspageNameSame() Test:', arr);
-
-    var arrOutString = [];
-    for (const element of arrInput) {
-        if (!arrOutString.includes(element[1])) {
-            arrOutString.push(element[1]);
-        }
-    }
-
-    console.log(arrOutString);
-    
-    return arrOutString.includes(statuspageName);
+    return arr.includes(statuspageName);
 }
 
 export async function onRequestGet({ request, params, env }) {
@@ -53,20 +42,16 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageDescription = statusData.status.description;
     var StatuspageName = statusData.page.name;
 
-    var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+    var html = AmpHtml;//.replaceAll(oldBaseUrl, newBaseUrl.host);
 
     html = html.replaceAll(canonicalUrl, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    // console.log([...html.matchAll(`${newBaseUrl.host}${newBaseUrl.pathname}`)]);
-
-    console.log("IsStatuspageNameSame():", IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)], StatuspageName));
-    
-    console.log("DeduplicateArrayOfArrays():", DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)]));
+    var isStatuspageNameSame = IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)], StatuspageName);
 
     for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
-        // console.log(title);
+        console.log(title);
 
-        if (title[1] == StatuspageName) {
+        if (title[1] == StatuspageName || isStatuspageNameSame) {
             html = html.replaceAll(title[0], `${title[0]} | ${StatuspageStatus}`);
         } else {
             html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)} | ${StatuspageStatus}`);
@@ -74,9 +59,9 @@ export async function onRequestGet({ request, params, env }) {
     }
 
     for(const description of DeduplicateArrayOfArrays([...new Set(AmpHtml.matchAll(descriptionRegex))])){
-        // console.log(description);
+        console.log(description);
 
-        if (description[1] == StatuspageName) {
+        if (description[1] == StatuspageName || isStatuspageNameSame) {
             html = html.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
         } else {
             html = html.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
