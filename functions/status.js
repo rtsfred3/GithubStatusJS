@@ -39,7 +39,7 @@ export async function onRequestGet({ request, params, env }) {
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
     console.log(canonicalUrlList);
-    var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
+    var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : newBaseUrl;
 
     console.log(canonicalUrl);
 
