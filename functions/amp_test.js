@@ -20,7 +20,7 @@ function IsStatuspageNameSame(arrInput, statuspageName){
 }
 
 export async function onRequestGet({ request, params, env }) {
-    var StatuspageUrl = 'www.githubstatus.com';
+    var StatuspageUrl = 'www.cloudflarestatus.com';
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
     var titleRegex = /([A-Za-z]*) Status - AMP/g;
@@ -28,7 +28,6 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
-    // var canonicalUrl = canonicalUrlList[0][1];
     var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
@@ -41,8 +40,6 @@ export async function onRequestGet({ request, params, env }) {
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
 
     html = html.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
-    // html = html.replaceAll(`${canonicalUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
-    // html = html.replaceAll(`${canonicalUrl}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     var isStatuspageNameSame = IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)], StatuspageName);
 
@@ -76,7 +73,7 @@ export async function onRequestGet({ request, params, env }) {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": "max-age=3600, public"
+            "Cache-Control": "max-age=30, public"
         },
     });
 }
