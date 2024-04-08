@@ -1,14 +1,14 @@
-import AmpHtml from "../amp/index.html";
+// import AmpHtml from "../amp/index.html";
 
-// import StatuspageAmpHtml from "../StatuspageHTML/amp/index.html";
+import AmpHtml from "../StatuspageHTML/amp/index.html";
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export async function onRequestGet({ request, params, env }) {
-    var StatuspageUrl = 'www.cloudflarestatus.com';
-    var newBaseUrl = new URL(request.url);
+    var StatuspageUrl = 'www.githubstatus.com';
+    var newBaseUrl = new URL(request.url);//.host;
     var oldBaseUrl = "githubstat.us";
     var titleRegex = /[A-Za-z]* Status - AMP/g;
     var descriptionRegex = /A minified AMP website to monitor [A-Za-z]* status updates./g;
@@ -19,7 +19,7 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageStatus = capitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
     var StatuspageDescription = statusData.status.description;
 
-    var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+    var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl);
 
     for(const title of [...new Set(AmpHtml.match(titleRegex))]){
         html = html.replaceAll(title, `${title} | ${StatuspageStatus}`);
@@ -29,8 +29,7 @@ export async function onRequestGet({ request, params, env }) {
         html = html.replaceAll(description, `${description} | ${StatuspageDescription}`);
     }
 
-    var StatuspageUrls = [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1));
-    for(const url of StatuspageUrls){
+    for(const url of [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
         html = html.replaceAll(url, `//${StatuspageUrl}/`);
     }
 
