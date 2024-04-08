@@ -112,8 +112,10 @@ export async function onRequestGet({ request, params, env }) {
 
     headHtml += HeadEndHtml;
 
-    for(const url of [...new Set(BodyHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
-        bodyHtml = BodyHtml.replaceAll(url, `//${StatuspageUrl}/`);
+    var bodyHtml = BodyHtml;
+
+    for(const url of [...new Set(bodyHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
+        bodyHtml = bodyHtml.replaceAll(url, `//${StatuspageUrl}/`);
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
