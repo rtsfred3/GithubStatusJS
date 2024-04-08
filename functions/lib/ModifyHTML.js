@@ -66,7 +66,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
 
     headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}/img`, 'img');
+    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}img`, '/img');
+    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}favicon.ico`, '/favicon.ico');
 
     var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
