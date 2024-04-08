@@ -33,7 +33,7 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageUrl = 'www.githubstatus.com';
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
-    var titleRegex = /([A-Za-z]*) Status/g;
+    var titleRegex = /\(Unofficial\) ([A-Za-z]*) Status/g;
     var descriptionRegex = /A minified website to monitor ([A-Za-z]*) status updates./g;
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
     var imageUrlRegex = /status(-min)?-good\.png/g;
@@ -44,7 +44,7 @@ export async function onRequestGet({ request, params, env }) {
     
     console.log(canonicalUrlList);
 
-    var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`${newBaseUrl.protocol}${newBaseUrl.host}/`);
+    var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`https://${oldBaseUrl}/`);
 
     console.log(canonicalUrl);
 
