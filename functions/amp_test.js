@@ -2,8 +2,10 @@ import AmpHtml from "../amp/index.html";
 
 import StatuspageAmpHtml from "../StatuspageHTML/amp/index.html";
 
-export async function onRequestGet({ params, env }) {
-    var html = StatuspageAmpHtml.replace('spstat.us', `${window.location.hostname}`);
+export async function onRequestGet({ request, params, env }) {
+    console.log(request.url);
+
+    var html = StatuspageAmpHtml.replace('spstat.us', 'githubstat.us');
 
     return new Response(html, {
         headers: {
