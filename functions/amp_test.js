@@ -3,7 +3,7 @@ import AmpHtml from "../amp/index.html";
 import StatuspageAmpHtml from "../StatuspageHTML/amp/index.html";
 
 export async function onRequestGet({ params, env }) {
-    var html = StatuspageAmpHtml.replace('spstat.us', `${hostname}`);
+    var html = StatuspageAmpHtml.replace('spstat.us', `${window.location.hostname}`);
 
     return new Response(html, {
         headers: {
