@@ -16,7 +16,6 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
-
     var CanonicalUrl = new URL(request.url);
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = _oldBaseUrl;
@@ -27,16 +26,12 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     var path = _path;
 
-    console.log(StatuspageUrl);
-
-    var canonicalUrlList = [...HeadStartHtml.matchAll(canonicalUrlRegex)];
-    
-    console.log(canonicalUrlList);
-
+    // console.log(StatuspageUrl);
+    // var canonicalUrlList = [...HeadStartHtml.matchAll(canonicalUrlRegex)];
+    // console.log(canonicalUrlList);
     // var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`https://${oldBaseUrl}/`);
-    var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
-
-    console.log(canonicalUrl);
+    // var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
+    // console.log(canonicalUrl);
 
     var statusJson = JSON.parse(results[0].data);
 
@@ -73,6 +68,10 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     // headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}img`, '/img');
     // headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}favicon.ico`, '/favicon.ico');
 
+    headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
+    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
+    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}${CanonicalUrl.hostname}`);
+
     var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
@@ -80,10 +79,6 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
         headHtml = headHtml.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
     }
-
-    headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
-    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
-    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}${CanonicalUrl.hostname}`);
 
     for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
         console.log('title:', title);
