@@ -1,8 +1,8 @@
+import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
+
 import AmpHtml from "../amp/index.html";
 
 // import AmpHtml from "../StatuspageHTML/amp/index.html";
-
-import CapitalizeFirstLetter from "/lib/CapitalizeFirstLetter.js";
 
 /* function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -27,7 +27,7 @@ export async function onRequestGet({ request, params, env }) {
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
 
-    var StatuspageStatus = CapitalizeFirstLetter.capitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
+    var StatuspageStatus = CapitalizeFirstLetter.CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
     var StatuspageDescription = statusData.status.description;
     var StatuspageName = statusData.page.name;
 
