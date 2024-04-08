@@ -84,7 +84,7 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
         }
     }
     
-    /* for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
+    for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
         console.log(description);
 
         if (description[1] == StatuspageName || isStatuspageNameSame) {
@@ -92,9 +92,9 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
         } else {
             headHtml = headHtml.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
         }
-    } */
+    }
 
-    for(const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
+    for (const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))) {
         headHtml = headHtml.replaceAll(url, `//${StatuspageUrl}/`);
     }
 
@@ -102,8 +102,9 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
 
     var bodyHtml = BodyHtml;
 
-    for(const url of [...new Set(bodyHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
-        bodyHtml = bodyHtml.replaceAll(url, `//${StatuspageUrl}/`);
+    for(const url of [...new Set(bodyHtml.match(/http:\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
+        console
+        bodyHtml = bodyHtml.replaceAll(url, `http://${StatuspageUrl}/`);
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
