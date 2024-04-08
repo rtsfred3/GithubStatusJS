@@ -7,31 +7,19 @@ import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
-export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
+export default async function ModifyHTML(request, env, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
     const db_age = env.AGE;
     const StatuspageUrl = env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
 
+    var path = _path;
+
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
     var CanonicalUrl = new URL(request.url);
-    var newBaseUrl = new URL(request.url);
-    var oldBaseUrl = _oldBaseUrl;
-    var titleRegex = /([A-Za-z]*) Status/g;
-    var descriptionRegex = /An unofficial website to monitor ([A-Za-z]*) status updates./g;
-    var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/(([a-z]|\/)+)?)" \/>/g;
     var imageUrlRegex = /status(-min)?-good\.png/g;
-
-    var path = _path;
-
-    // console.log(StatuspageUrl);
-    // var canonicalUrlList = [...HeadStartHtml.matchAll(canonicalUrlRegex)];
-    // console.log(canonicalUrlList);
-    // var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : new URL(`https://${oldBaseUrl}/`);
-    // var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
-    // console.log(canonicalUrl);
 
     var statusJson = JSON.parse(results[0].data);
 
@@ -85,20 +73,6 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     }
 
     headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
-    
-    // for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
-    //     console.log(description);
-
-    //     if (description[1] == StatuspageName || isStatuspageNameSame) {
-    //         headHtml = headHtml.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
-    //     } else {
-    //         headHtml = headHtml.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
-    //     }
-    // }
-
-    // for (const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))) {
-    //     headHtml = headHtml.replaceAll(url, `//${StatuspageUrl}/`);
-    // }
 
     headHtml += HeadEndHtml;
 
@@ -110,14 +84,19 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     if (path == Path.Status) {
         bodyHtml = `<body> \
-            <statuspage-status status="${originalStatus}" fullScreen></statuspage-status> \
+            <!-- <statuspage-status status="${originalStatus}" fullScreen></statuspage-status> --> \
+            <statuspage-status data-url="https://${StatuspageUrl}/" fullScreen></statuspage-status> \
         </body>`
     }
 
     var html = `<!DOCTYPE html> \
     <html lang="en"> \
         ${headHtml}${bodyHtml} \
-    </html>`
+    </html>`;
+
+    if (!StatuspageUrl.startsWith("https://")) {
+        html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
+    }
 
     return new Response(html, {
         headers: {
