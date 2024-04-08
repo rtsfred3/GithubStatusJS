@@ -21,7 +21,7 @@ export async function onRequestGet({ request, params, env }) {
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
 
-    var StatuspageStatus = CapitalizeFirstLetter.CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
+    var StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
     var StatuspageDescription = statusData.status.description;
     var StatuspageName = statusData.page.name;
 
