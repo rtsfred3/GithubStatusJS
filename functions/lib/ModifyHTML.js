@@ -1,6 +1,6 @@
-import HeadStartHtml from "../partial_html/head_start.html";
-import HeadEndHtml from "../partial_html/head_end.html";
-import BodyHtml from "../partial_html/body.html";
+import HeadStartHtml from "../../partial_html/head_start.html";
+import HeadEndHtml from "../../partial_html/head_end.html";
+import BodyHtml from "../../partial_html/body.html";
 
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
