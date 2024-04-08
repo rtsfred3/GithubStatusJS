@@ -7,15 +7,16 @@ import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
-export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseUrl, _path){
+export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
-    const cache_age = env.AGE;
+    const db_age = env.AGE;
+    const StatuspageUrl = env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
-    var StatuspageUrl = _statuspageUrl;
+    
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = _oldBaseUrl;
     var titleRegex = /([A-Za-z]*) Status/g;
@@ -45,10 +46,10 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
     var updated_on = new Date(results[0].updated_on);
     var age = parseInt(((new Date()) - updated_on) / 1000);
 
-    if (age > cache_age) { 
+    if (age > db_age) { 
         console.log(`Age: ${age}`);
 
-        const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
+        const statusRes = await fetch(`https://${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
@@ -121,8 +122,6 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${cache_age}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${cache_age}`
         },
     });
 }
