@@ -1,6 +1,8 @@
 import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
 
-import AmpHtml from "../index.html";
+import HeadStartHtml from "../partial_html/head_start.html";
+import HeadEndHtml from "../partial_html/head_end.html";
+import BodyHtml from "../partial_html/body.html";
 
 function DeduplicateArrayOfArrays(arrInput){
     var arrOut = [];
@@ -37,8 +39,10 @@ export async function onRequestGet({ request, params, env }) {
 
     console.log(StatuspageUrl);
 
-    var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
+    var canonicalUrlList = [...HeadStartHtml.matchAll(canonicalUrlRegex)];
+    
     console.log(canonicalUrlList);
+
     var canonicalUrl = canonicalUrlList.length > 0 ? new URL(`https://${canonicalUrlList[0][1]}`) : newBaseUrl;
 
     console.log(canonicalUrl);
@@ -67,11 +71,12 @@ export async function onRequestGet({ request, params, env }) {
 
     console.log(oldBaseUrl, newBaseUrl.host);
 
-    var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+    var headHtml = HeadStartHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+    var bodyHtml = 
 
     console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    html = html.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+    headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     /* for (const img of DeduplicateArrayOfArrays([...AmpHtml.matchAll(imageUrlRegex)])) {
         console.log(img);
@@ -79,10 +84,10 @@ export async function onRequestGet({ request, params, env }) {
         html = html.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
     } */
 
-    for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
+    for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
         console.log(title);
 
-        html = html.replaceAll(title[0], `(Unofficial) Mini ${title[1]} Status`);
+        headHtml = headHtml.replaceAll(title[0], `(Unofficial) Mini ${title[1]} Status`);
 
         // if (title[1] == StatuspageName || isStatuspageNameSame) {
         // } else {
@@ -100,9 +105,17 @@ export async function onRequestGet({ request, params, env }) {
         }
     } */
 
-    for(const url of [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
-        html = html.replaceAll(url, `//${StatuspageUrl}/`);
+    for(const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
+        headHtml = headHtml.replaceAll(url, `//${StatuspageUrl}/`);
     }
+
+    headHtml += HeadEndHtml;
+
+    for(const url of [...new Set(BodyHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
+        bodyHtml = bodyHtml.replaceAll(url, `//${StatuspageUrl}/`);
+    }
+
+    var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
 
     return new Response(html, {
         headers: {
