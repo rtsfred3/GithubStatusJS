@@ -7,12 +7,11 @@ function capitalizeFirstLetter(string) {
 }
 
 export async function onRequestGet({ request, params, env }) {
-    var StatuspageUrl = 'www.githubstatus.com';
+    var StatuspageUrl = 'www.cloudflarestatus.com';
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
     var titleRegex = /[A-Za-z]* Status - AMP/g;
     var descriptionRegex = /A minified AMP website to monitor [A-Za-z]* status updates./g;
-    // var description = 'A minified AMP website to monitor GitHub status updates.';
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
@@ -31,7 +30,6 @@ export async function onRequestGet({ request, params, env }) {
     }
 
     var StatuspageUrls = [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1));
-
     for(const url of StatuspageUrls){
         html = html.replaceAll(url, `//${StatuspageUrl}/`);
     }
