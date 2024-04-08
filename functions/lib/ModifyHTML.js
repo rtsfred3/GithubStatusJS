@@ -16,6 +16,8 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
+
+    var CanonicalUrl = new URL(request.url);
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = _oldBaseUrl;
     var titleRegex = /([A-Za-z]*) Status/g;
@@ -60,16 +62,16 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
-    console.log(oldBaseUrl, newBaseUrl.host);
+    // console.log(oldBaseUrl, newBaseUrl.host);
 
-    var headHtml = HeadStartHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+    var headHtml = HeadStartHtml;//.replaceAll(oldBaseUrl, newBaseUrl.host);
 
-    console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+    // console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+    // headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
-    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}img`, '/img');
-    headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}favicon.ico`, '/favicon.ico');
+    // headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}img`, '/img');
+    // headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}favicon.ico`, '/favicon.ico');
 
     var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
@@ -78,6 +80,10 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
         headHtml = headHtml.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
     }
+
+    headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
+    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
+    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}${CanonicalUrl.hostname}`);
 
     for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
         console.log('title:', title);
