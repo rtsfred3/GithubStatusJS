@@ -1,12 +1,6 @@
-import AmpHtml from "../amp/index.html";
-
-// import AmpHtml from "../StatuspageHTML/amp/index.html";
-
 import CapitalizeFirstLetter from "lib/CapitalizeFirstLetter.js";
 
-/* function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-} */
+import HeadHtml from "../partial_html/head.html";
 
 export async function onRequestGet({ request, params, env }) {
     var StatuspageUrl = 'www.githubstatus.com';
