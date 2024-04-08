@@ -29,8 +29,8 @@ export async function onRequestGet({ request, params, env }) {
     </urlset>`, {
         headers: {
             "Content-Type": "application/xml",
-            "Cache-Control": `max-age=60, s-maxage=60, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=60`
+            "Cache-Control": `max-age=${env.SHORT_CACHE_AGE}, s-maxage=${env.SHORT_CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${env.SHORT_CACHE_AGE}`
         },
     });
 }

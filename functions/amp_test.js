@@ -105,8 +105,8 @@ export async function onRequestGet({ request, params, env }) {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${cache_age}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${cache_age}`
+            "Cache-Control": `max-age=${env.CACHE_AGE}, s-maxage=${env.CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${env.CACHE_AGE}`
         },
     });
 }
