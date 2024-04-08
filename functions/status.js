@@ -3,6 +3,7 @@ import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
 import HeadStartHtml from "../partial_html/head_start.html";
 import HeadEndHtml from "../partial_html/head_end.html";
 import BodyHtml from "../partial_html/body.html";
+// import BodyHtml from "../partial_html/body_test.html";
 
 function DeduplicateArrayOfArrays(arrInput){
     var arrOut = [];
@@ -112,7 +113,7 @@ export async function onRequestGet({ request, params, env }) {
     headHtml += HeadEndHtml;
 
     for(const url of [...new Set(BodyHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))){
-        bodyHtml = bodyHtml.replaceAll(url, `//${StatuspageUrl}/`);
+        bodyHtml = BodyHtml.replaceAll(url, `//${StatuspageUrl}/`);
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
