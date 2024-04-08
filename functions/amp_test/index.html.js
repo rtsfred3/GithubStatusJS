@@ -19,9 +19,11 @@ export async function onRequestGet({ request, params, env }) {
     var status = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
     status = capitalizeFirstLetter(status);
 
-    var html = AmpHtml.replace(oldBaseUrl, newBaseUrl);
-    html = html.replace(title, `${title} | ${statusData.status.description}`);
-    html = html.replace(description, `${description} | ${statusData.status.description}`);
+    var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+    html = html.replaceAll(title, `${title} | ${status}`);
+    html = html.replaceAll(description, `${description} | ${statusData.status.description}`);
+
+    console.log(html);
 
     return new Response(html, {
         headers: {
