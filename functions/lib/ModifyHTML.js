@@ -70,7 +70,7 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
 
     headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
     headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
-    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}${CanonicalUrl.hostname}`);
+    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
     var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
@@ -119,10 +119,15 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     }
 
     if (path == Path.Status) {
-        bodyHtml = `<body><statuspage-status status="${originalStatus}" fullScreen></statuspage-status></body>`
+        bodyHtml = `<body> \
+            <statuspage-status status="${originalStatus}" fullScreen></statuspage-status> \
+        </body>`
     }
 
-    var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
+    var html = `<!DOCTYPE html> \
+    <html lang="en"> \
+        ${headHtml}${bodyHtml} \
+    </html>`
 
     return new Response(html, {
         headers: {
