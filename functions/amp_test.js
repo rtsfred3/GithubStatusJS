@@ -96,8 +96,6 @@ export async function onRequestGet({ request, params, env }) {
         html = html.replaceAll(url, `//${StatuspageUrl}/`);
     }
 
-    html += `<!-- ${canonicalUrl} -->`;
-
     return new Response(html, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
