@@ -5,6 +5,7 @@ import BodyHtml from "./partial_html/body.html";
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
+import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
 export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseUrl, _path){
     const db = env.CACHE_DB;
@@ -63,6 +64,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
     console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+
+    var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
         console.log(img);
