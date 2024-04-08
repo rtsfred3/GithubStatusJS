@@ -1,4 +1,4 @@
-import CapitalizeFirstLetter from "lib/CapitalizeFirstLetter.js";
+import CapitalizeFirstLetter from "/lib/CapitalizeFirstLetter.js";
 
 import HeadHtml from "../partial_html/head.html";
 
