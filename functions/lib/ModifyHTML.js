@@ -34,7 +34,7 @@ export default async function ModifyHTML(request, env, _path){
     if (age > db_age) { 
         console.log(`Age: ${age}`);
 
-        const statusRes = await fetch(`https://${StatuspageUrl}${route}`);
+        const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
         originalStatus = statusData.status.indicator;
