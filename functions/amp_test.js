@@ -20,16 +20,25 @@ function IsStatuspageNameSame(arrInput, statuspageName){
 }
 
 export async function onRequestGet({ request, params, env }) {
+    const db = env.CACHE_DB;
+    const table = env.TABLE;
+
+    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(`/api/v2/status.json`).all();
+
     var StatuspageUrl = 'www.cloudflarestatus.com';
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
     var titleRegex = /([A-Za-z]*) Status - AMP/g;
     var descriptionRegex = /A minified AMP website to monitor ([A-Za-z]*) status updates./g;
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
-    var imageUrlRegex = /status-good\.png/g;
+    var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
     var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
+
+    console.log(Date.now() - results[0].updated_on);
+
+    // if (Date.now() - results[0].updated_on) { result = JSON.parse(results[0].data); }
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
