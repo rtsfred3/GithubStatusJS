@@ -11,7 +11,6 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
     const db_age = env.AGE;
-    const cache_age = path != Path.Status ? 31536000 : db_age;
     const StatuspageUrl = env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
 
@@ -128,8 +127,8 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${cache_age}, s-maxage=${cache_age}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${cache_age}`
+            "Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}, s-maxage=${(path != Path.Status ? 31536000 : db_age)}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${(path != Path.Status ? 31536000 : db_age)}`
         },
     });
 }
