@@ -24,6 +24,7 @@ export async function onRequestGet({ request, params, env }) {
     const table = env.TABLE;
     const cache_age = env.AGE;
     const route = `/api/v2/status.json`;
+    var showDetails = false;
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
@@ -75,20 +76,24 @@ export async function onRequestGet({ request, params, env }) {
     for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
         console.log(title);
 
+        var statusString = showDetails ? ` | ${StatuspageStatus}` : '';
+
         if (title[1] == StatuspageName || isStatuspageNameSame) {
-            html = html.replaceAll(title[0], `${title[0]} | ${StatuspageStatus}`);
+            html = html.replaceAll(title[0], `${title[0]}${statusString}`);
         } else {
-            html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)} | ${StatuspageStatus}`);
+            html = html.replaceAll(title[0], `${title[0].replace(title[1], StatuspageName)}${statusString}`);
         }
     }
 
     for(const description of DeduplicateArrayOfArrays([...new Set(AmpHtml.matchAll(descriptionRegex))])){
         console.log(description);
 
+        var statusString = showDetails ? ` | ${StatuspageDescription}` : '';
+
         if (description[1] == StatuspageName || isStatuspageNameSame) {
-            html = html.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
+            html = html.replaceAll(description[0], `${description[0]}${statusString}`);
         } else {
-            html = html.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
+            html = html.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)}${statusString}`);
         }
     }
 
@@ -100,7 +105,8 @@ export async function onRequestGet({ request, params, env }) {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${cache_age}, public`
+            "Cache-Control": `max-age=${cache_age}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${cache_age}`
         },
     });
 }

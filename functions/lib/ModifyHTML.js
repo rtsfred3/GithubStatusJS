@@ -121,7 +121,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${cache_age}, public`
+            "Cache-Control": `max-age=${cache_age}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${cache_age}`
         },
     });
 }
