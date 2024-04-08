@@ -28,12 +28,7 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
-    var canonicalUrl = canonicalUrlList[0][1];
-    
-    // console.log(`Canonical Url: ${canonicalUrl}`);
-    // console.log(`URL: ${newBaseUrl.host}${newBaseUrl.pathname}`);
-
-    // console.log([...AmpHtml.matchAll(canonicalUrl)]);
+    var canonicalUrl = new URL(canonicalUrlList[0][1]);
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
@@ -42,9 +37,11 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageDescription = statusData.status.description;
     var StatuspageName = statusData.page.name;
 
-    var html = AmpHtml;//.replaceAll(oldBaseUrl, newBaseUrl.host);
+    var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
 
-    html = html.replaceAll(canonicalUrl, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+    html = html.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+    // html = html.replaceAll(`${canonicalUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
+    // html = html.replaceAll(`${canonicalUrl}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     var isStatuspageNameSame = IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)], StatuspageName);
 
