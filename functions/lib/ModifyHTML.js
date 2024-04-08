@@ -4,6 +4,8 @@ import BodyHtml from "../../partial_html/body.html";
 
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
+import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
+import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
 export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseUrl, _path){
     const db = env.CACHE_DB;

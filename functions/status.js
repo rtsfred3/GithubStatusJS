@@ -1,26 +1,10 @@
 import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
+import DeduplicateArrayOfArrays from './lib/DeduplicateArrayOfArrays.js';
 
 import HeadStartHtml from "../partial_html/head_start.html";
 import HeadEndHtml from "../partial_html/head_end.html";
 import BodyHtml from "../partial_html/body.html";
 // import BodyHtml from "../partial_html/body_test.html";
-
-function DeduplicateArrayOfArrays(arrInput){
-    var arrOut = [];
-    var arrOutString = [];
-    for (const element of arrInput) {
-        if (!arrOutString.includes(element[0])) {
-            arrOut.push(element);
-            arrOutString.push(element[0]);
-        }
-    }
-    return arrOut;
-}
-
-function IsStatuspageNameSame(arrInput, statuspageName){
-    var arr = [...new Set(arrInput.map((a) => a[1]))];
-    return arr.includes(statuspageName);
-}
 
 export async function onRequestGet({ request, params, env }) {
     // const db = env.CACHE_DB;
