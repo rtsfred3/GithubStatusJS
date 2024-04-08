@@ -32,7 +32,9 @@ export async function onRequestGet({ request, params, env }) {
         html = html.replaceAll(description, `${description} | ${StatuspageDescription}`);
     }
 
-    var StatuspageUrls = [...new Set(AmpHtml.match(/[^:]\/\/([a-z]|\.)+\//g))];
+    var StatuspageUrls = [...new Set(AmpHtml.match(/\/\/([a-z]|\.)+\//g))];
+    StatuspageUrls = StatuspageUrls.filter(u => u != oldBaseUrl);
+    // var currentStatuspageUrl = StatuspageUrls[0].splice(1);
 
     console.log(StatuspageUrls);
 
