@@ -13,7 +13,7 @@ export async function onRequestGet({ request, params, env }) {
         "https://githubstat.us/components/",
         "https://githubstat.us/status/",
         "https://githubstat.us/amp/",
-        "https://githubstat.us/amp_test",
+        "https://githubstat.us/amp_test/",
         "https://githubstat.us/StatuspageHTML/",
         "https://githubstat.us/Statuspage/",
         "https://githubstat.us/apps/app/",

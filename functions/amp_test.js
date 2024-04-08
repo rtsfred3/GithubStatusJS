@@ -32,7 +32,7 @@ export async function onRequestGet({ request, params, env }) {
         html = html.replaceAll(description, `${description} | ${StatuspageDescription}`);
     }
 
-    console.log(AmpHtml.matchAll(/"\/\/([a-z]|\.)+\/"/g));
+    console.log([...AmpHtml.matchAll(/"\/\/([a-z]|\.)+\/"/g)]);
 
     return new Response(html, {
         headers: {
