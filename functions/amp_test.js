@@ -2,11 +2,15 @@ import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
 
 import AmpHtml from "../amp/index.html";
 
-// import AmpHtml from "../StatuspageHTML/amp/index.html";
-
-/* function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-} */
+function DeduplicateArrayOfArrays(arrInput){
+    var arrOut = [];
+    for (const element of arrInput) {
+        if (!(element[0] in arrOut.map((a) => a[0]))) {
+            arrOut.push(element);
+        }
+    }
+    return arrOut;
+}
 
 export async function onRequestGet({ request, params, env }) {
     var StatuspageUrl = 'www.githubstatus.com';
@@ -37,7 +41,7 @@ export async function onRequestGet({ request, params, env }) {
 
     console.log([...html.matchAll(canonicalUrl)]);
 
-    for(const title of [...new Set(AmpHtml.matchAll(titleRegex))]){
+    for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
         console.log(title);
 
         if (title[1] == StatuspageName) {
