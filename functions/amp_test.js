@@ -14,7 +14,9 @@ export async function onRequestGet({ request, params, env }) {
     var descriptionRegex = /A minified AMP website to monitor ([A-Za-z]*) status updates./g;
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
 
-    console.log([...AmpHtml.matchAll(canonicalUrlRegex)]);
+    var canonicalUrl = [...AmpHtml.matchAll(canonicalUrlRegex)][1];
+    console.log(`Canonical Url: ${canonicalUrl}`);
+    console.log(`URL: ${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
