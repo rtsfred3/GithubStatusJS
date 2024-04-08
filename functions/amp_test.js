@@ -26,6 +26,7 @@ export async function onRequestGet({ request, params, env }) {
     var titleRegex = /([A-Za-z]*) Status - AMP/g;
     var descriptionRegex = /A minified AMP website to monitor ([A-Za-z]*) status updates./g;
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
+    var imageUrlRegex = /status-good\.png/g;
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
     var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
@@ -42,6 +43,12 @@ export async function onRequestGet({ request, params, env }) {
     html = html.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     var isStatuspageNameSame = IsStatuspageNameSame([...AmpHtml.matchAll(titleRegex)], StatuspageName);
+
+    for (const img of DeduplicateArrayOfArrays([...AmpHtml.matchAll(imageUrlRegex)])) {
+        console.log(img);
+
+        html = hmlt.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
+    }
 
     for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
         console.log(title);
