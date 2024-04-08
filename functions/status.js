@@ -22,7 +22,7 @@ function IsStatuspageNameSame(arrInput, statuspageName){
 export async function onRequestGet({ request, params, env }) {
     // const db = env.CACHE_DB;
     // const table = env.TABLE;
-    // const cache_age = env.AGE;
+    const cache_age = env.AGE;
     // const route = `/api/v2/status.json`;
 
     // const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
