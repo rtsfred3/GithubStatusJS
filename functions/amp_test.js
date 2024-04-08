@@ -28,7 +28,7 @@ export async function onRequestGet({ request, params, env }) {
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
 
-    var StatuspageUrl = 'www.cloudflarestatus.com';
+    var StatuspageUrl = 'www.githubstatus.com';
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
     var titleRegex = /([A-Za-z]*) Status - AMP/g;
