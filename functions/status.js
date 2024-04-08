@@ -35,8 +35,12 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
+    console.log(StatuspageUrl);
+
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
     var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
+
+    console.log(canonicalUrl);
 
     // var statusJson = JSON.parse(results[0].data);
 
@@ -60,7 +64,11 @@ export async function onRequestGet({ request, params, env }) {
     //     const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     // }
 
+    console.log(oldBaseUrl, newBaseUrl.host);
+
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
+
+    console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
     html = html.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
 
