@@ -1,11 +1,10 @@
-import HeadStartHtml from "../../partial_html/head_start.html";
-import HeadEndHtml from "../../partial_html/head_end.html";
-import BodyHtml from "../../partial_html/body.html";
+import HeadStartHtml from "./partial_html/head_start.html";
+import HeadEndHtml from "./partial_html/head_end.html";
+import BodyHtml from "./partial_html/body.html";
 
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
-import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
 export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseUrl, _path){
     const db = env.CACHE_DB;
@@ -75,13 +74,13 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
         console.log('title:', title);
 
         if (path == Path.Component) {
-            headHtml = headHtml.replaceAll(title[0], `${title[1]} Status Components`);
+            headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status Components`);
         }  
         else if (path == Path.Status) {
-            headHtml = headHtml.replaceAll(title[0], `Mini ${title[1]} Status`);
+            headHtml = headHtml.replaceAll(title[0], `Mini ${StatuspageName} Status`);
         }
         else {
-            headHtml = headHtml.replaceAll(title[0], `${title[1]} Status`);
+            headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status`);
         }
     }
     
