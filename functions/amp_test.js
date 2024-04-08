@@ -34,10 +34,11 @@ export async function onRequestGet({ request, params, env }) {
 
     var StatuspageUrls = [...new Set(AmpHtml.match(/"\/\/([a-z]|\.)+\//g))];
     // StatuspageUrls = StatuspageUrls.filter(u => u != `//${oldBaseUrl}/`);
-    // var currentStatuspageUrl = StatuspageUrls[0].splice(1);
+    var currentStatuspageUrl = StatuspageUrls[0].substring(1);
 
     console.log(StatuspageUrls);
-    // console.log(currentStatuspageUrl);
+    console.log(StatuspageUrls[0]);
+    console.log(currentStatuspageUrl);
 
     return new Response(html, {
         headers: {
