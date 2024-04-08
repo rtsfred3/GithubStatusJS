@@ -76,6 +76,8 @@ export default async function ModifyHTML(request, env, _statuspageUrl, _oldBaseU
     for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
         console.log('title:', title);
 
+        if (title[1] == "") { continue; }
+
         if (path == Path.Component) {
             headHtml = headHtml.replaceAll(title[0], `${StatuspageName} Status Components`);
         }  
