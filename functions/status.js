@@ -82,7 +82,7 @@ export async function onRequestGet({ request, params, env }) {
     for(const title of DeduplicateArrayOfArrays([...AmpHtml.matchAll(titleRegex)])){
         console.log(title);
 
-        html = html.replaceAll(title[0], `(Unofficial) Mini ${StatuspageName} Status`);
+        html = html.replaceAll(title[0], `(Unofficial) Mini ${title[1]} Status`);
 
         // if (title[1] == StatuspageName || isStatuspageNameSame) {
         // } else {
