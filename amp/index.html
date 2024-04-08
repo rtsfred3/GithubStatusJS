@@ -12,7 +12,7 @@
         <meta property="og:site_name" content="GitHub Status">
         <meta property="og:title" content="(Unofficial) GitHub Status - AMP">
         <meta property="og:description" content="A minified AMP website to monitor GitHub status updates.">
-        <meta property="og:image" content="https://githubstat.us/img/status/lowres/min/status-min-good.png">
+        <meta property="og:image" content="https://githubstat.us/img/status/lowres/status-good.png">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
         <meta property="og:url" content="https://githubstat.us/amp/">
@@ -20,7 +20,7 @@
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="(Unofficial) GitHub Status - AMP">
         <meta name="twitter:description" content="A minified AMP website to monitor GitHub status updates.">
-        <meta name="twitter:image:src" content="https://githubstat.us/img/status/lowres/min/status-min-good.png">
+        <meta name="twitter:image:src" content="https://githubstat.us/img/status/lowres/status-good.png">
 
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="(Unofficial) GitHub Status - AMP">
@@ -87,15 +87,15 @@
     </head>
 
     <body>
-        <amp-render src="https://www.githubstatus.com/api/v2/status.json" binding="never" height="0" width="0"
-            layout="responsive" key="status">
+        <amp-render src="https://www.githubstatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
             <template type="amp-mustache">
                 <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div>
             </template>
             <div placeholder>
-                <div id="status" class="min full-status-height status-width bold status-color loading">
-                    <span class="center-status"></span>
-                </div>
+                <div id="status" data-status="loading" data-background="loading" class="min full-status-height status-width bold status-color center-status"></div>
+            </div>
+            <div fallback>
+                <div id="status" data-status="error" data-background="error" class="min full-status-height status-width bold status-color center-status"></div>
             </div>
         </amp-render>
     </body>
