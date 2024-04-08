@@ -118,7 +118,7 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
     }
 
     if (path == Path.Status) {
-        bodyHtml = `<body><statuspage-status status-${originalStatus} fullScreen></statuspage-status></body>`
+        bodyHtml = `<body><statuspage-status status="${originalStatus}" fullScreen></statuspage-status></body>`
     }
 
     var html = `<!DOCTYPE html><html lang="en">${headHtml}${bodyHtml}</html>`
