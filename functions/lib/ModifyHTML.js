@@ -57,14 +57,7 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
-    var headHtml = HeadStartHtml;//.replaceAll(oldBaseUrl, newBaseUrl.host);
-
-    // console.log(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
-
-    // headHtml = headHtml.replaceAll(`${newBaseUrl.host}${canonicalUrl.pathname}`, `${newBaseUrl.host}${newBaseUrl.pathname}`);
-
-    // headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}img`, '/img');
-    // headHtml = headHtml.replaceAll(`${newBaseUrl.pathname}favicon.ico`, '/favicon.ico');
+    var headHtml = HeadStartHtml;
 
     headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
     headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
@@ -91,25 +84,21 @@ export default async function ModifyHTML(request, env, _oldBaseUrl, _path){
         headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status - Error`);
     }
 
-    // for(const title of DeduplicateArrayOfArrays([...HeadStartHtml.matchAll(titleRegex)])){
-    //     console.log('title:', title);
-
-    //     if (title[1] == "") { continue; }
-    // }
+    headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
     
-    for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
-        console.log(description);
+    // for(const description of DeduplicateArrayOfArrays([...new Set(headHtml.matchAll(descriptionRegex))])){
+    //     console.log(description);
 
-        if (description[1] == StatuspageName || isStatuspageNameSame) {
-            headHtml = headHtml.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
-        } else {
-            headHtml = headHtml.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
-        }
-    }
+    //     if (description[1] == StatuspageName || isStatuspageNameSame) {
+    //         headHtml = headHtml.replaceAll(description[0], `${description[0]} | ${StatuspageDescription}`);
+    //     } else {
+    //         headHtml = headHtml.replaceAll(description[0], `${description[0].replace(description[1], StatuspageName)} | ${StatuspageDescription}`);
+    //     }
+    // }
 
-    for (const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))) {
-        headHtml = headHtml.replaceAll(url, `//${StatuspageUrl}/`);
-    }
+    // for (const url of [...new Set(HeadStartHtml.match(/"\/\/([a-z]|\.)+\//g))].map((u) => u.substring(1))) {
+    //     headHtml = headHtml.replaceAll(url, `//${StatuspageUrl}/`);
+    // }
 
     headHtml += HeadEndHtml;
 
