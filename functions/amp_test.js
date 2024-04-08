@@ -3,9 +3,9 @@ import AmpHtml from "../amp/index.html";
 import StatuspageAmpHtml from "../StatuspageHTML/amp/index.html";
 
 export async function onRequestGet({ params, env }) {
-    StatuspageAmpHtml = StatuspageAmpHtml.replace('spstat.us', `${hostname}`);
+    var html = StatuspageAmpHtml.replace('spstat.us', `${hostname}`);
 
-    return new Response(StatuspageAmpHtml, {
+    return new Response(html, {
         headers: {
             "Content-Type": "application/html",
             "access-control-allow-origin": "*",
