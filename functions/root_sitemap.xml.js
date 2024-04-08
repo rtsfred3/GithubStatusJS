@@ -2,6 +2,8 @@ export async function onRequestGet({ params, env }) {
     var currDate = new Date();
     currDate.setHours(currDate.getHours(), 0, 0, 0);
 
+    var newBaseUrl = new URL(request.url);
+
     console.log(currDate);
 
     var date = currDate.toJSON();
@@ -11,6 +13,7 @@ export async function onRequestGet({ params, env }) {
         "https://githubstat.us/components/",
         "https://githubstat.us/status/",
         "https://githubstat.us/amp/",
+        "https://githubstat.us/amp_test",
         "https://githubstat.us/StatuspageHTML/",
         "https://githubstat.us/Statuspage/",
         "https://githubstat.us/apps/app/",
@@ -25,7 +28,7 @@ export async function onRequestGet({ params, env }) {
     
     for (const url of urls) {
         newXml += `<url> \
-        <loc>${url}</loc> \
+        <loc>${url.replace('githubstat.us', `${newBaseUrl.host}`)}</loc> \
         <lastmod>${date}</lastmod> \
         <changefreq>hourly</changefreq> \
     </url>`;
