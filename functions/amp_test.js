@@ -28,11 +28,8 @@ export async function onRequestGet({ request, params, env }) {
     var canonicalUrlRegex = /<link rel="canonical" href="https:\/\/(([a-z]|\.)+\/([a-z]|\/)+)" \/>/g;
 
     var canonicalUrlList = [...AmpHtml.matchAll(canonicalUrlRegex)];
-    var canonicalUrl = canonicalUrlList[0][1];
-    // var canonicalUrl = new URL(canonicalUrlList[0][1]);
-
-    console.log("canonicalUrlList:", canonicalUrlList);
-    console.log("canonicalUrl:", canonicalUrl);
+    // var canonicalUrl = canonicalUrlList[0][1];
+    var canonicalUrl = new URL(`https://${canonicalUrlList[0][1]}`);
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
     const statusData = await statusRes.json();
