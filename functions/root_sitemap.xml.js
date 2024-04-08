@@ -28,7 +28,7 @@ export async function onRequestGet({ params, env }) {
     
     for (const url of urls) {
         newXml += `<url> \
-        <loc>${url.replace('githubstat.us', `${newBaseUrl.host}`)}</loc> \
+        <loc>${url}</loc> \
         <lastmod>${date}</lastmod> \
         <changefreq>hourly</changefreq> \
     </url>`;

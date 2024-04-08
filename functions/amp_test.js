@@ -10,7 +10,7 @@ export async function onRequestGet({ request, params, env }) {
     var StatuspageUrl = 'www.githubstatus.com';
     var newBaseUrl = new URL(request.url);
     var oldBaseUrl = "githubstat.us";
-    var title = 'GitHub Status - AMP';
+    // var title = 'GitHub Status - AMP';
     var description = 'A minified AMP website to monitor GitHub status updates.';
 
     const statusRes = await fetch(`https://${StatuspageUrl}/api/v2/status.json`);
@@ -20,12 +20,14 @@ export async function onRequestGet({ request, params, env }) {
     status = capitalizeFirstLetter(status);
 
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
-    html = html.replaceAll(title, `${title} | ${status}`);
+    // html = html.replaceAll(title, `${title} | ${status}`);
     html = html.replaceAll(description, `${description} | ${statusData.status.description}`);
 
-    console.log(AmpHtml.match(/[A-Za-z]* Status - AMP/g));
+    let titles = [...new Set(AmpHtml.match(/[A-Za-z]* Status - AMP/g))];
 
-    console.log(html);
+    for(const tTitle of titles){
+        html = html.replaceAll(tTitle, `${tTitle} | ${status}`);
+    }
 
     return new Response(html, {
         headers: {
