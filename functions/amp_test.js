@@ -1,4 +1,4 @@
-import AmpHtml from "../../amp/index.html";
+import AmpHtml from "../amp/index.html";
 
 // import StatuspageAmpHtml from "../StatuspageHTML/amp/index.html";
 
@@ -22,6 +22,8 @@ export async function onRequestGet({ request, params, env }) {
     var html = AmpHtml.replaceAll(oldBaseUrl, newBaseUrl.host);
     html = html.replaceAll(title, `${title} | ${status}`);
     html = html.replaceAll(description, `${description} | ${statusData.status.description}`);
+
+    console.log(AmpHtml.match(/[A-Za-z]* Status - AMP/g));
 
     console.log(html);
 
