@@ -2,61 +2,75 @@ import HeadStartHtml from "./partial_html/head_start.html";
 import HeadEndHtml from "./partial_html/head_end.html";
 import BodyHtml from "./partial_html/body.html";
 
+import AmpHtml from "./partial_html/amp_template.html";
+
 import Path from './Path.js';
+import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
-import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
 
-export default async function ModifyHTML(request, env, _path){
-    const db = env.CACHE_DB;
-    const table = env.TABLE;
-    const db_age = env.AGE;
-    const StatuspageUrl = env.StatuspageBaseUrl;
+import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+
+export default async function ModifyHTML(context, _path){
+    const db = context.env.CACHE_DB;
+    const table = context.env.TABLE;
+    const StatuspageStatusKV = context.env.StatuspageStatus;
+    const db_age = context.env.AGE;
+    const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
+    const path = _path;
 
-    var path = _path;
+    const url = new URL(context.request.url);
+    const cacheKey = new Request(url.toString(), context.request);
+    const cache = caches.default;
+    let response = await cache.match(cacheKey);
 
-    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
+    if (response) {
+        // response.headers.append("X-Cache-Control", "HIT");
+        return response;
+    }
 
-    var CanonicalUrl = new URL(request.url);
+    var CanonicalUrl = new URL(context.request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    var statusJson = JSON.parse(results[0].data);
+    var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
+    var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
+    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
-    var originalStatus = statusJson.status.indicator;
-    var StatuspageStatus = CapitalizeFirstLetter(statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator);
-    var StatuspageDescription = statusJson.status.description;
-    var StatuspageName = statusJson.page.name;
-    
-    var updated_on = new Date(results[0].updated_on);
-    var age = parseInt(((new Date()) - updated_on) / 1000);
+    var age = parseInt((Date.now() - LastUpdated) / 1000);
+
+    console.log(`Age: ${age}`);
 
     if (age > db_age) { 
-        console.log(`Age: ${age}`);
+        console.log(`Data in KV is outdated`);
 
         const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
-        originalStatus = statusData.status.indicator;
+        OriginalStatus = statusData.status.indicator;
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
 
-        const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
+        StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus);
+        StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
+        StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
+        StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
+        StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
     }
 
-    var headHtml = HeadStartHtml;
+    var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
 
     headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
-    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
+    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", context.request.url);
     headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
-    // var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
+    headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[OriginalStatus]);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
-        console.log(img);
-
-        headHtml = headHtml.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
+        headHtml = headHtml.replaceAll(img[0], img[0].replace('good', OriginalStatus));
     }
 
     if (path == Path.Component) {
@@ -68,11 +82,19 @@ export default async function ModifyHTML(request, env, _path){
     else if (path == Path.Index) {
         headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status`);
     }
+    else if (path == Path.Amp) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status AMP`);
+    }
     else {
         headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status - Error`);
     }
 
-    headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
+    if (path == Path.Amp) {
+        headHtml = headHtml.replaceAll("{{Description}}", `A minified AMP website to monitor ${StatuspageName} status updates.| ${StatuspageDescription}`);
+    }
+    else {
+        headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
+    }
 
     headHtml += HeadEndHtml;
 
@@ -93,16 +115,24 @@ export default async function ModifyHTML(request, env, _path){
         ${headHtml}${bodyHtml} \
     </html>`;
 
+    if (path == Path.Amp) {
+        html = headHtml;
+    }
+
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    return new Response(html, {
+    response = new Response(html, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${env.CACHE_AGE}, s-maxage=${env.CACHE_AGE}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${env.CACHE_AGE}`
+            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
         },
     });
+
+    context.waitUntil(cache.put(cacheKey, response.clone()));
+
+    return response;
 }

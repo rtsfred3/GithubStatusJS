@@ -1,6 +1,6 @@
-import CapitalizeFirstLetter from "./lib/CapitalizeFirstLetter.js";
+import CapitalizeFirstLetter from "../lib/CapitalizeFirstLetter.js";
 
-import AmpHtml from "../amp/index.html";
+import AmpHtml from "../../amp/index.html";
 
 function DeduplicateArrayOfArrays(arrInput){
     var arrOut = [];
