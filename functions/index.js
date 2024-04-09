@@ -1,7 +1,4 @@
-import Path from './lib/Path.js';
-import ModifyHTML from './lib/ModifyHTML.js';
-
-import Html from "./partial_html/amp_template.html";
+import Html from "../n_index.html";
 
 export async function onRequestGet(context) {
     const url = new URL(context.request.url);
