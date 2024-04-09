@@ -25,17 +25,7 @@ export default async function ModifyHTML(context, _path){
     const cache = caches.default;
     let response = await cache.match(cacheKey);
 
-    var _headers = {
-        "Content-Type": "text/html; charset=utf-8",
-        "access-control-allow-origin": "*",
-        "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
-        "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
-    };
-
     if (response) {
-        // _headers["X-Cache-Status"] = "HIT";
-        // _headers["Cf-Cache-Status"] = response.headers["response"];
-        // return new Response(response.body, { headers: _headers });
         return response;
     }
 
@@ -131,13 +121,20 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
+    context.waitUntil(StatuspageStatusKV.put(context.request.url, html));
+
     response = new Response(html, {
-        headers: _headers,
+        headers: {
+            "Content-Type": "text/html; charset=utf-8",
+            "access-control-allow-origin": "*",
+            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
+        },
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
 
-    _headers["X-Age"] = `${age}`;
+    response.headers.set("X-Age", age);
 
     return response;
 }
