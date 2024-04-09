@@ -23,22 +23,24 @@ export default async function ModifyHTML(request, env, _path){
     var CanonicalUrl = new URL(request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
+    const start = performance.now();
+
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
-    console.log(`Last Updated 1: ${LastUpdated}`);
+    const end = performance.now();
+    const timing = end - start;
+
+    console.log("Performance:", timing);
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
-    console.log(`Last Updated 2: ${LastUpdated}`);
-    console.log(`Currently: ${Date.now()}`);
+    console.log(`Age: ${age}`);
 
     if (age > db_age) { 
-        console.log(`Age: ${age}`);
-
         const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
