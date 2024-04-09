@@ -25,9 +25,16 @@ export default async function ModifyHTML(context, _path){
     const cache = caches.default;
     let response = await cache.match(cacheKey);
 
+    var _headers = {
+        "Content-Type": "text/html; charset=utf-8",
+        "access-control-allow-origin": "*",
+        "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
+        "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
+    };
+
     if (response) {
-        // response.headers.append("X-Cache-Control", "HIT");
-        return response;
+        _headers["X-Cache-Status"] = "HIT";
+        return new Response(response.body, { headers: _headers });
     }
 
     var CanonicalUrl = new URL(context.request.url);
@@ -124,12 +131,7 @@ export default async function ModifyHTML(context, _path){
     }
 
     response = new Response(html, {
-        headers: {
-            "Content-Type": "text/html; charset=utf-8",
-            "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
-        },
+        headers: _headers,
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
