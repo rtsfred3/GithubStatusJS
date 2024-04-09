@@ -2,6 +2,8 @@ import HeadStartHtml from "./partial_html/head_start.html";
 import HeadEndHtml from "./partial_html/head_end.html";
 import BodyHtml from "./partial_html/body.html";
 
+import AmpHtml from "./partial_html/amp_template.html";
+
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
@@ -45,7 +47,7 @@ export default async function ModifyHTML(request, env, _path){
         const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
-    var headHtml = HeadStartHtml;
+    var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
 
     headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
     headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
@@ -68,11 +70,19 @@ export default async function ModifyHTML(request, env, _path){
     else if (path == Path.Index) {
         headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status`);
     }
+    else if (path == Path.Amp) {
+        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status AMP`);
+    }
     else {
         headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status - Error`);
     }
 
-    headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
+    if (path == Path.Amp) {
+        headHtml = headHtml.replaceAll("{{Description}}", `A minified AMP website to monitor ${StatuspageName} status updates.| ${StatuspageDescription}`);
+    }
+    else {
+        headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
+    }
 
     headHtml += HeadEndHtml;
 
@@ -92,6 +102,10 @@ export default async function ModifyHTML(request, env, _path){
     <html lang="en"> \
         ${headHtml}${bodyHtml} \
     </html>`;
+
+    if (path == Path.Amp) {
+        html = headHtml;
+    }
 
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
