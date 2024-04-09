@@ -27,11 +27,13 @@ export default async function ModifyHTML(request, env, _path){
     var StatuspageStatus = StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var StatuspageName = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    var LastUpdated = parseInt(StatuspageStatusKV.get(StatuspageKV.LastUpdated));
+    var LastUpdated = StatuspageStatusKV.get(StatuspageKV.LastUpdated);
+
+    console.log(`Last Updated 1: ${LastUpdated}`);
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
-    console.log(`Last Updated: ${LastUpdated}`);
+    console.log(`Last Updated 2: ${LastUpdated}`);
     console.log(`Currently: ${Date.now()}`);
 
     if (age > db_age) { 
