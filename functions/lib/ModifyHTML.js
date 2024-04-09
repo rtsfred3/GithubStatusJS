@@ -36,7 +36,7 @@ export default async function ModifyHTML(request, env, _path){
     var StatuspageName = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var LastUpdated = StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
-    var age = parseInt(((new Date()) - (new Date(LastUpdated))) / 1000);
+    var age = parseInt((Date().now() - new Date(LastUpdated)) / 1000);
 
     console.log(`Last Updated: ${new Date(LastUpdated)}`);
     console.log(`Currently: ${new Date()}`);
