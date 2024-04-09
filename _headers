@@ -1,6 +1,9 @@
 https://master.ghstatus.pages.dev/*
     X-Robots-Tag: nofollow
 
+https://staging.ghstatus.pages.dev/*
+    X-Robots-Tag: nofollow
+
 /
     Cache-Control: max-age=2419200, s-maxage=2419200, public
     Cloudflare-CDN-Cache-Control: max-age=2419200
