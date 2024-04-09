@@ -23,11 +23,11 @@ export default async function ModifyHTML(request, env, _path){
     var CanonicalUrl = new URL(request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    var OriginalStatus = StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
-    var StatuspageStatus = StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    var StatuspageDescription = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    var StatuspageName = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    var LastUpdated = StatuspageStatusKV.get(StatuspageKV.LastUpdated);
+    var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
+    var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
+    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
     console.log(`Last Updated 1: ${LastUpdated}`);
 
