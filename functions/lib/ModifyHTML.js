@@ -26,7 +26,6 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
 
     if (response) {
-        // response.headers.append("X-Cache-Control", "HIT");
         return response;
     }
 
@@ -35,13 +34,11 @@ export default async function ModifyHTML(context, _path){
 
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
     var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
-
-    console.log(`Age: ${age}`);
 
     if (age > db_age) { 
         console.log(`Data in KV is outdated`);
@@ -53,12 +50,13 @@ export default async function ModifyHTML(context, _path){
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
+        age = 0;
 
-        StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
-        StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
@@ -123,6 +121,8 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
+    context.waitUntil(StatuspageStatusKV.put(context.request.url, html));
+
     response = new Response(html, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
@@ -133,6 +133,8 @@ export default async function ModifyHTML(context, _path){
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
+
+    response.headers.set("X-Age", age);
 
     return response;
 }
