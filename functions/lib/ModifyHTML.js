@@ -23,18 +23,11 @@ export default async function ModifyHTML(request, env, _path){
     var CanonicalUrl = new URL(request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    const start = performance.now();
-
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
-
-    const end = performance.now();
-    const timing = end - start;
-
-    console.log("Performance:", timing);
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
@@ -52,9 +45,9 @@ export default async function ModifyHTML(request, env, _path){
         StatuspageName = statusData.page.name;
 
         StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
         StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
         StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
+        StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
         StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
     }
 
