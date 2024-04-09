@@ -7,7 +7,8 @@ import AmpHtml from "./partial_html/amp_template.html";
 import Path from './Path.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
-import IsStatuspageNameSame from "./IsStatuspageNameSame.js";
+
+import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 
 export default async function ModifyHTML(request, env, _path){
     const db = env.CACHE_DB;
@@ -53,7 +54,7 @@ export default async function ModifyHTML(request, env, _path){
     headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
     headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
-    // var isStatuspageNameSame = IsStatuspageNameSame(DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)]), StatuspageName);
+    headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[StatuspageStatus.toLowerCase()]);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
         console.log(img);
