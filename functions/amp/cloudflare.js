@@ -8,7 +8,7 @@ export async function onRequestGet(context) {
     let response = await cache.match(cacheKey);
     
     if (response) {
-        console.log(`Cache hit for: ${request.url}.`);
+        console.log(`Cache hit for: ${context.request.url}.`);
         return response;
     }
 
