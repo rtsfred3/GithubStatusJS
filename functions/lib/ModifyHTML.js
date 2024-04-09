@@ -30,7 +30,7 @@ export default async function ModifyHTML(request, env, _path){
     // var StatuspageDescription = statusJson.status.description;
     // var StatuspageName = statusJson.page.name;
 
-    // var originalStatus = StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
+    var OriginalStatus = StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var StatuspageName = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
@@ -44,11 +44,12 @@ export default async function ModifyHTML(request, env, _path){
         const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
-        // originalStatus = statusData.status.indicator;
+        OriginalStatus = statusData.status.indicator;
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
 
+        StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus);
         StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
         StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
         StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
@@ -63,12 +64,12 @@ export default async function ModifyHTML(request, env, _path){
     headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
     headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
-    headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[StatuspageStatus.toLowerCase()]);
+    headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[OriginalStatus]);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
         console.log(img);
 
-        headHtml = headHtml.replaceAll(img[0], img[0].replace('good', StatuspageStatus.toLowerCase()));
+        headHtml = headHtml.replaceAll(img[0], img[0].replace('good', OriginalStatus));
     }
 
     if (path == Path.Component) {
