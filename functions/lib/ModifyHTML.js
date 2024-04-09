@@ -38,6 +38,9 @@ export default async function ModifyHTML(request, env, _path){
 
     var age = parseInt(((new Date()) - (new Date(LastUpdated))) / 1000);
 
+    console.log(`Last Updated: ${new Date(LastUpdated)}`);
+    console.log(`Currently: ${new Date()}`);
+
     if (age > db_age) { 
         console.log(`Age: ${age}`);
 
@@ -67,8 +70,6 @@ export default async function ModifyHTML(request, env, _path){
     headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[OriginalStatus]);
 
     for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
-        console.log(img);
-
         headHtml = headHtml.replaceAll(img[0], img[0].replace('good', OriginalStatus));
     }
 
