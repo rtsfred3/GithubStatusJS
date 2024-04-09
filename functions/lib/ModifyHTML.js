@@ -26,7 +26,7 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
 
     if (response) {
-        console.log(`Cache Hit - ${context.request.url}`);
+        response.headers.append("X-Cache-Control", "HIT");
         return response;
     }
 
