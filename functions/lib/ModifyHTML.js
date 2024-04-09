@@ -27,7 +27,7 @@ export default async function ModifyHTML(request, env, _path){
     var StatuspageStatus = StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var StatuspageName = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    var LastUpdated = StatuspageStatusKV.get(StatuspageKV.LastUpdated);
+    var LastUpdated = parseInt(StatuspageStatusKV.get(StatuspageKV.LastUpdated));
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
@@ -49,7 +49,7 @@ export default async function ModifyHTML(request, env, _path){
         StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
         StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
         StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
-        StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
+        StatuspageStatusKV.put(StatuspageKV.LastUpdated, `${parseInt(Date.now())}`);
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
