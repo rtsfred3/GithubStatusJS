@@ -14,8 +14,8 @@ export async function onRequestGet(context) {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${context.env.CACHE_AGE_SHORT}, s-maxage=${context.env.CACHE_AGE_SHORT}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE_SHORT}`
+            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
         },
     });
 
