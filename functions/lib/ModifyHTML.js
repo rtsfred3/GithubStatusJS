@@ -13,6 +13,7 @@ import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 export default async function ModifyHTML(request, env, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
+    const StatuspageStatusKV = env.StatuspageStatus;
     const db_age = env.AGE;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
@@ -44,6 +45,11 @@ export default async function ModifyHTML(request, env, _path){
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
+
+        StatuspageStatusKV.put("StatuspageName", StatuspageName);
+        StatuspageStatusKV.put("StatuspageStatus", StatuspageStatus);
+        StatuspageStatusKV.put("StatuspageDescription", StatuspageDescription);
+        StatuspageStatusKV.put("LastUpdated", Date.now());
 
         const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
