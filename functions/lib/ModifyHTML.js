@@ -13,7 +13,7 @@ export default async function ModifyHTML(request, env, _path){
     const db = env.CACHE_DB;
     const table = env.TABLE;
     const db_age = env.AGE;
-    const StatuspageUrl = _path == Path.Amp && !env.ShowFirstStatuspageBaseUrl ? env.StatuspageBaseUrl2 : env.StatuspageBaseUrl;
+    const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
 
     var path = _path;
