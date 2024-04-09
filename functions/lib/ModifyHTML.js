@@ -23,13 +23,6 @@ export default async function ModifyHTML(request, env, _path){
     var CanonicalUrl = new URL(request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    // const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
-    // var statusJson = JSON.parse(results[0].data);
-    // var originalStatus = statusJson.status.indicator;
-    // var StatuspageStatus = CapitalizeFirstLetter(statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator);
-    // var StatuspageDescription = statusJson.status.description;
-    // var StatuspageName = statusJson.page.name;
-
     var OriginalStatus = StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
@@ -38,8 +31,8 @@ export default async function ModifyHTML(request, env, _path){
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
-    console.log(`Last Updated: ${new Date(LastUpdated)}`);
-    console.log(`Currently: ${new Date()}`);
+    console.log(`Last Updated: ${LastUpdated}`);
+    console.log(`Currently: ${Date.now()}`);
 
     if (age > db_age) { 
         console.log(`Age: ${age}`);
@@ -57,8 +50,6 @@ export default async function ModifyHTML(request, env, _path){
         StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
         StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
         StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
-
-        // const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
