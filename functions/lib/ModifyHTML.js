@@ -11,16 +11,26 @@ import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 
-export default async function ModifyHTML(request, env, _path){
-    const db = env.CACHE_DB;
-    const table = env.TABLE;
-    const StatuspageStatusKV = env.StatuspageStatus;
-    const db_age = env.AGE;
-    const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : env.StatuspageBaseUrl;
+export default async function ModifyHTML(context, _path){
+    const db = context.env.CACHE_DB;
+    const table = context.env.TABLE;
+    const StatuspageStatusKV = context.env.StatuspageStatus;
+    const db_age = context.env.AGE;
+    const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    var CanonicalUrl = new URL(request.url);
+    const url = new URL(context.request.url);
+    const cacheKey = new Request(url.toString(), context.request);
+    const cache = caches.default;
+    let response = await cache.match(cacheKey);
+
+    if (response) {
+        console.log(`Cache Hit - ${context.request.url}`);
+        return response;
+    }
+
+    var CanonicalUrl = new URL(context.request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
@@ -54,7 +64,7 @@ export default async function ModifyHTML(request, env, _path){
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
 
     headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
-    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", request.url);
+    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", context.request.url);
     headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
     headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[OriginalStatus]);
@@ -113,12 +123,16 @@ export default async function ModifyHTML(request, env, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    return new Response(html, {
+    response = new Response(html, {
         headers: {
             "Content-Type": "text/html; charset=utf-8",
             "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${env.CACHE_AGE}, s-maxage=${env.CACHE_AGE}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${env.CACHE_AGE}`
+            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
+            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
         },
     });
+
+    context.waitUntil(cache.put(cacheKey, response.clone()));
+    
+    return response;
 }
