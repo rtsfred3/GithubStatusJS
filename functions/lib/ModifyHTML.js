@@ -33,8 +33,10 @@ export default async function ModifyHTML(context, _path){
     };
 
     if (response) {
-        _headers["X-Cache-Status"] = "HIT";
-        return new Response(response.body, { headers: _headers });
+        // _headers["X-Cache-Status"] = "HIT";
+        // _headers["Cf-Cache-Status"] = response.headers["response"];
+        // return new Response(response.body, { headers: _headers });
+        return response;
     }
 
     var CanonicalUrl = new URL(context.request.url);
