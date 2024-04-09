@@ -5,6 +5,7 @@ import BodyHtml from "./partial_html/body.html";
 import AmpHtml from "./partial_html/amp_template.html";
 
 import Path from './Path.js';
+import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
@@ -17,23 +18,25 @@ export default async function ModifyHTML(request, env, _path){
     const db_age = env.AGE;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
-
-    var path = _path;
-
-    const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
+    const path = _path;
 
     var CanonicalUrl = new URL(request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    var statusJson = JSON.parse(results[0].data);
+    // const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ?`).bind(route).all();
+    // var statusJson = JSON.parse(results[0].data);
+    // var originalStatus = statusJson.status.indicator;
+    // var StatuspageStatus = CapitalizeFirstLetter(statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator);
+    // var StatuspageDescription = statusJson.status.description;
+    // var StatuspageName = statusJson.page.name;
 
-    var originalStatus = statusJson.status.indicator;
-    var StatuspageStatus = CapitalizeFirstLetter(statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator);
-    var StatuspageDescription = statusJson.status.description;
-    var StatuspageName = statusJson.page.name;
-    
-    var updated_on = new Date(results[0].updated_on);
-    var age = parseInt(((new Date()) - updated_on) / 1000);
+    // var originalStatus = StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
+    var StatuspageStatus = StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
+    var StatuspageDescription = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var StatuspageName = StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var LastUpdated = StatuspageStatusKV.get(StatuspageKV.LastUpdated);
+
+    var age = parseInt(((new Date()) - (new Date(LastUpdated))) / 1000);
 
     if (age > db_age) { 
         console.log(`Age: ${age}`);
@@ -41,17 +44,17 @@ export default async function ModifyHTML(request, env, _path){
         const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
-        originalStatus = statusData.status.indicator;
+        // originalStatus = statusData.status.indicator;
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
 
-        StatuspageStatusKV.put("StatuspageName", StatuspageName);
-        StatuspageStatusKV.put("StatuspageStatus", StatuspageStatus);
-        StatuspageStatusKV.put("StatuspageDescription", StatuspageDescription);
-        StatuspageStatusKV.put("LastUpdated", Date.now());
+        StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
+        StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
+        StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
+        StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
 
-        const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
+        // const { success } = await db.prepare(`UPDATE ${table} SET data = ? WHERE route = ?;`).bind(JSON.stringify(statusData), route).run();
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
