@@ -26,7 +26,7 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
 
     if (response) {
-        response.headers.append("X-Cache-Control", "HIT");
+        // response.headers.append("X-Cache-Control", "HIT");
         return response;
     }
 
@@ -133,6 +133,6 @@ export default async function ModifyHTML(context, _path){
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
-    
+
     return response;
 }
