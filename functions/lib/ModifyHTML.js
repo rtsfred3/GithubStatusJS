@@ -42,7 +42,7 @@ export default async function ModifyHTML(context, _path){
 
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
     var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
@@ -61,11 +61,11 @@ export default async function ModifyHTML(context, _path){
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
 
-        StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
-        StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
-        StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
