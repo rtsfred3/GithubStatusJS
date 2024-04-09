@@ -41,6 +41,8 @@ export default async function ModifyHTML(request, env, _path){
     console.log(`Age: ${age}`);
 
     if (age > db_age) { 
+        console.log(`Data in KV is outdated`);
+
         const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
@@ -53,7 +55,7 @@ export default async function ModifyHTML(request, env, _path){
         StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName);
         StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus);
         StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription);
-        StatuspageStatusKV.put(StatuspageKV.LastUpdated, `${Date.now()}`);
+        StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now());
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
