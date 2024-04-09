@@ -48,8 +48,6 @@ export default async function ModifyHTML(context, _path){
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
-    console.log(`Age: ${age}`);
-
     if (age > db_age) { 
         console.log(`Data in KV is outdated`);
 
@@ -60,6 +58,7 @@ export default async function ModifyHTML(context, _path){
         StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
+        age = 0;
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
@@ -135,6 +134,8 @@ export default async function ModifyHTML(context, _path){
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
+
+    _headers["X-Age"] = `${age}`;
 
     return response;
 }
