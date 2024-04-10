@@ -42,7 +42,13 @@ export default async function ModifyHTML(context, _path){
 
     if (response) {
         console.log("Cache Hit");
-        return response;
+
+        _headers.updateCacheControl(0);
+        _headers.set("Age", response.headers.get("Age"))
+
+        return new Response(IndexHtml, { headers: _headers });
+
+        // return response;
     }
 
     if (!isBot) {
