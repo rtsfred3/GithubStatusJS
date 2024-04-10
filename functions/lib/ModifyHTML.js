@@ -20,7 +20,7 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    var ua = request.headers.get('user-agent');
+    // var ua = context.request.headers.get('user-agent');
 
     const url = new URL(context.request.url);
     const cacheKey = new Request(url.toString(), context.request);
