@@ -6,7 +6,7 @@ import Html from "../n_index.html";
 import UserAgents from './lib/UserAgents.js';
 
 export async function onRequestGet(context) {
-    isBot = UserAgents.IsBot(request.headers.get('user-agent'));
+    isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
     if (isBot) {
         return await ModifyHTML(context, Path.Status);
