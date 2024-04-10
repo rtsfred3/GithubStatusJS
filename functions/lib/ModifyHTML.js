@@ -152,7 +152,7 @@ export default async function ModifyHTML(context, _path){
     }
 
     // _headers.set(HeaderTypes.XBot, true);
-    _headers.updateCacheControl(0);
+    // _headers.updateCacheControl(0);
 
     response = new Response(html, {
         headers: _headers
