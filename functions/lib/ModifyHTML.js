@@ -143,6 +143,7 @@ export default async function ModifyHTML(context, _path){
     context.waitUntil(cache.put(cacheKey, response.clone()));
 
     response.headers.set("X-Age", age);
+    response.headers.set("X-Bot", true);
 
     return response;
 }
