@@ -25,10 +25,13 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
+    var _headers = CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE);
+
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
     if (!isBot) {
-        return new Response(IndexHtml, { headers: CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE), });
+        _headers.set("X-Bot", false);
+        return new Response(IndexHtml, { headers: _headers });
     }
 
     const url = new URL(context.request.url);
@@ -37,7 +40,8 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
 
     if (response) {
-        return response;
+        _headers.set("X-In-Cache", "Yes");
+        // return response;
     }
 
     var CanonicalUrl = new URL(context.request.url);
@@ -136,14 +140,13 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
+    _headers.set("X-Bot", true);
+
     response = new Response(html, {
-        headers: CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE),
+        headers: _headers
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
-
-    response.headers.set("X-Age", age);
-    response.headers.set("X-Bot", true);
 
     return response;
 }
