@@ -41,11 +41,12 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
 
     if (response) {
-        _headers.set("X-In-Cache", "Yes");
+        console.log("Cache Hit");
         return response;
     }
 
     if (!isBot) {
+        console.log("Non-Bot Hit");
         _headers.set("X-Bot", false);
         _headers.updateCacheControl(context.env.CACHE_AGE_SHORT);
         return new Response(IndexHtml, { headers: _headers });
