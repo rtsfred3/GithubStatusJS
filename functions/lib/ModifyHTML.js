@@ -43,10 +43,10 @@ export default async function ModifyHTML(context, _path){
         _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
         _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
-        console.log(`Age: ${parseInt(response.headers.get(HeaderTypes.Age))}`, `Max Age: ${TimeSpans.Day}`);
-        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) > TimeSpans.Day}`);
+        console.log(`Age: ${parseInt(response.headers.get(HeaderTypes.Age))}`, `Max Age: ${TimeSpans.Hour * 6}`);
+        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) > (TimeSpans.Hour * 6)}`);
 
-        if (parseInt(response.headers.get(HeaderTypes.Age)) > TimeSpans.Day) {
+        if (parseInt(response.headers.get(HeaderTypes.Age)) > (TimeSpans.Hour * 6)) {
             context.waitUntil(cache.delete(cacheKey, response.clone()));
         }
 
