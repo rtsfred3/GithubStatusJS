@@ -4,7 +4,7 @@ import BodyHtml from "./partial_html/body.html";
 
 import AmpHtml from "./partial_html/amp_template.html";
 
-import IndexHtml from "../../n_index.html";
+// import IndexHtml from "../../index.html";
 
 import Path from './Path.js';
 import TimeSpans from './TimeSpans.js';
@@ -23,6 +23,7 @@ export default async function ModifyHTML(context, _path){
     const table = context.env.TABLE;
     const StatuspageStatusKV = context.env.StatuspageStatus;
     const db_age = context.env.AGE;
+    const SixHours = TimeSpans.Hour * 6;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
     const path = _path;
@@ -43,14 +44,14 @@ export default async function ModifyHTML(context, _path){
         _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
         _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
-        console.log(`Age: ${parseInt(response.headers.get(HeaderTypes.Age))}`, `Max Age: ${TimeSpans.Hour * 6}`);
-        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) > (TimeSpans.Hour * 6)}`);
+        console.log(`Age: ${parseInt(response.headers.get(HeaderTypes.Age))}`, `Max Age: ${db_age}`);
+        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) > (db_age)}`);
 
-        if (parseInt(response.headers.get(HeaderTypes.Age)) > (TimeSpans.Hour * 6)) {
-            context.waitUntil(cache.delete(cacheKey, response.clone()));
+        if (parseInt(response.headers.get(HeaderTypes.Age)) < db_age) {
+            return response;
         }
 
-        return response;
+        // context.waitUntil(cache.delete(cacheKey, response.clone()));
     }
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
@@ -153,6 +154,7 @@ export default async function ModifyHTML(context, _path){
     response = new Response(html, { headers: _headers });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
+    // context.waitUntil(cache.put(cacheKey, response.clone()));
 
     return response;
 }
