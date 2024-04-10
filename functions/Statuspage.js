@@ -1,12 +1,8 @@
 import { StatuspageWebComponents } from '../modules/Statuspage.esm.js'
 
-import UserAgents from './lib/UserAgents.js';
-
 export async function onRequestGet({ request, params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;
-
-    console.log(UserAgents.IsBot(request.headers.get('user-agent')));
 
     const { results } = await db.prepare(`SELECT * FROM ${table} WHERE route = ? OR route = ?`).bind(`/api/amp/body.json`, `/api/v2/status.json`).all();
     
