@@ -4,10 +4,15 @@ import BodyHtml from "./partial_html/body.html";
 
 import AmpHtml from "./partial_html/amp_template.html";
 
+import IndexHtml from "../n_index.html";
+
 import Path from './Path.js';
 import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
+
+import UserAgents from './lib/UserAgents.js';
+import CustomHeaders from './lib/CustomHeaders.js';
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 
@@ -20,7 +25,11 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    // var ua = context.request.headers.get('user-agent');
+    var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
+
+    if (!isBot) {
+        return new Response(Html, { headers: CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE), });
+    }
 
     const url = new URL(context.request.url);
     const cacheKey = new Request(url.toString(), context.request);
@@ -45,14 +54,18 @@ export default async function ModifyHTML(context, _path){
     if (age > db_age) { 
         console.log(`Data in KV is outdated`);
 
-        const statusRes = await fetch(`${StatuspageUrl}${route}`);
+        var urlToFetch = `${StatuspageUrl}${route}`;
+
+        const statusRes = await fetch(urlToFetch);
         const statusData = await statusRes.json();
 
-        OriginalStatus = statusData.status.indicator;
-        StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
+        OriginalStatus = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
+        StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
         age = 0;
+
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, statusData));
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
@@ -123,15 +136,8 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    context.waitUntil(StatuspageStatusKV.put(context.request.url, html));
-
     response = new Response(html, {
-        headers: {
-            "Content-Type": "text/html; charset=utf-8",
-            "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
-        },
+        headers: CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE),
     });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
