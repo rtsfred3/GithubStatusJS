@@ -62,6 +62,13 @@ export default async function ModifyHTML(context, _path){
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
+    var statusJson = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageUrl));
+    
+    // var OriginalStatus = statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator;
+    // var StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
+    // var StatuspageDescription = statusJson.status.description;
+    // var StatuspageName = statusJson.page.name;
+    
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
     var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
     var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
@@ -84,7 +91,7 @@ export default async function ModifyHTML(context, _path){
         StatuspageName = statusData.page.name;
         age = 0;
 
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, statusData));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, JSON.stringify(statusData)));
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
@@ -160,7 +167,6 @@ export default async function ModifyHTML(context, _path){
     response = new Response(html, { headers: _headers });
 
     context.waitUntil(cache.put(cacheKey, response.clone()));
-    // context.waitUntil(cache.put(cacheKey, response.clone()));
 
     return response;
 }
