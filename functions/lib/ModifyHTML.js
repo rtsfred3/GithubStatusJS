@@ -7,6 +7,7 @@ import AmpHtml from "./partial_html/amp_template.html";
 import IndexHtml from "../../n_index.html";
 
 import Path from './Path.js';
+import TimeSpans from './TimeSpans.js';
 import HeaderTypes from './HeaderTypes.js';
 import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
@@ -26,15 +27,11 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    var _headers = CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE);
+    var _headers = CustomHeaders("text/html; charset=utf-8", TimeSpans.Week);
 
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
-    /* if (!isBot) {
-        console.log("Non-Bot Hit");
-
-        return new Response(IndexHtml, { headers: _headers });
-    } */
+    // if (!isBot) { return new Response(IndexHtml, { headers: _headers }); }
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
@@ -44,16 +41,15 @@ export default async function ModifyHTML(context, _path){
     if (response) {
         console.log("Cache Hit");
 
-        _headers.updateCacheControl(0);
         _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
         _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
-        if (parseInt(response.headers.get(HeaderTypes.Age)) < db_age) { return response; }
-        
-        _headers.set(HeaderTypes.XCacheStatus, "Deleted");
-        context.waitUntil(cache.delete(cacheKey, response.clone()));
+        // if (parseInt(response.headers.get(HeaderTypes.Age)) < TimeSpans.Day) { return response; }
+        if (parseInt(response.headers.get(HeaderTypes.Age)) > TimeSpans.Day) {
+            context.waitUntil(cache.delete(cacheKey, response.clone()));
+        }
 
-        // return new Response(IndexHtml, { headers: _headers });
+        return response;
     }
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
@@ -87,6 +83,8 @@ export default async function ModifyHTML(context, _path){
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
+    } else {
+        _headers.set(HeaderTypes.XAge, `${age}`);
     }
 
     var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
@@ -151,16 +149,9 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    // _headers.set(HeaderTypes.XBot, true);
-    // _headers.updateCacheControl(0);
+    response = new Response(html, { headers: _headers });
 
-    response = new Response(html, {
-        headers: _headers
-    });
-
-    if (!(_headers.has(HeaderTypes.XCacheStatus) && _headers.get(HeaderTypes.XCacheStatus) == "Deleted")) {
-        context.waitUntil(cache.put(cacheKey, response.clone()));
-    }
+    context.waitUntil(cache.put(cacheKey, response.clone()));
 
     return response;
 }
