@@ -158,7 +158,7 @@ export default async function ModifyHTML(context, _path){
         headers: _headers
     });
 
-    if (!(_headers.keys().includes(HeaderTypes.XCacheStatus) && _headers.get(HeaderTypes.XCacheStatus) == "Deleted")) {
+    if (!(_headers.has(HeaderTypes.XCacheStatus) && _headers.get(HeaderTypes.XCacheStatus) == "Deleted")) {
         context.waitUntil(cache.put(cacheKey, response.clone()));
     }
 
