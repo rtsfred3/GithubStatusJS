@@ -30,11 +30,11 @@ export default async function ModifyHTML(context, _path){
 
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
-    if (!isBot) {
+    /* if (!isBot) {
         console.log("Non-Bot Hit");
 
         return new Response(IndexHtml, { headers: _headers });
-    }
+    } */
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
