@@ -49,9 +49,15 @@ export default async function ModifyHTML(context, _path){
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
             return response;
-        }
+        } else {
+            if (_headers.has(HeaderTypes.Age)) {
+                _headers.delete(HeaderTypes.Age)
+            }
 
-        // context.waitUntil(cache.delete(cacheKey, response.clone()));
+            if (_headers.has(HeaderTypes.CfCacheStatus)) {
+                _headers.delete(HeaderTypes.CfCacheStatus)
+            }
+        }
     }
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
