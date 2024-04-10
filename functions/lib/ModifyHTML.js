@@ -29,8 +29,7 @@ export default async function ModifyHTML(context, _path){
 
     var _headers = CustomHeaders("text/html; charset=utf-8", TimeSpans.Week);
 
-    var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
-
+    // var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
     // if (!isBot) { return new Response(IndexHtml, { headers: _headers }); }
 
     var CanonicalUrl = new URL(context.request.url);
@@ -44,7 +43,8 @@ export default async function ModifyHTML(context, _path){
         _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
         _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
-        // if (parseInt(response.headers.get(HeaderTypes.Age)) < TimeSpans.Day) { return response; }
+        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) > TimeSpans.Day}`);
+
         if (parseInt(response.headers.get(HeaderTypes.Age)) > TimeSpans.Day) {
             context.waitUntil(cache.delete(cacheKey, response.clone()));
         }
