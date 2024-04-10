@@ -31,6 +31,7 @@ export default async function ModifyHTML(context, _path){
 
     if (!isBot) {
         _headers.set("X-Bot", false);
+        _headers.updateCacheControl(context.env.CACHE_AGE_SHORT);
         return new Response(IndexHtml, { headers: _headers });
     }
 
@@ -141,6 +142,7 @@ export default async function ModifyHTML(context, _path){
     }
 
     _headers.set("X-Bot", true);
+    _headers.updateCacheControl(0);
 
     response = new Response(html, {
         headers: _headers
