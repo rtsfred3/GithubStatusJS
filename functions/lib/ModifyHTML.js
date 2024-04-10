@@ -7,6 +7,7 @@ import AmpHtml from "./partial_html/amp_template.html";
 import IndexHtml from "../../n_index.html";
 
 import Path from './Path.js';
+import HeaderTypes from './HeaderTypes.js';
 import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
@@ -29,11 +30,11 @@ export default async function ModifyHTML(context, _path){
 
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
-    // if (!isBot) {
-    //     _headers.set("X-Bot", false);
-    //     _headers.updateCacheControl(context.env.CACHE_AGE_SHORT);
-    //     return new Response(IndexHtml, { headers: _headers });
-    // }
+    if (!isBot) {
+        console.log("Non-Bot Hit");
+
+        return new Response(IndexHtml, { headers: _headers });
+    }
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
@@ -44,18 +45,15 @@ export default async function ModifyHTML(context, _path){
         console.log("Cache Hit");
 
         _headers.updateCacheControl(0);
-        _headers.set("Age", response.headers.get("Age"))
+        _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
+        _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
-        return new Response(IndexHtml, { headers: _headers });
+        if (parseInt(response.headers.get(HeaderTypes.Age)) < db_age) { return response; }
+        
+        _headers.set(HeaderTypes.XCacheStatus, "Deleted");
+        context.waitUntil(cache.delete(cacheKey, response.clone()));
 
-        // return response;
-    }
-
-    if (!isBot) {
-        console.log("Non-Bot Hit");
-        _headers.set("X-Bot", false);
-        _headers.updateCacheControl(context.env.CACHE_AGE_SHORT);
-        return new Response(IndexHtml, { headers: _headers });
+        // return new Response(IndexHtml, { headers: _headers });
     }
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
@@ -153,14 +151,16 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    _headers.set("X-Bot", true);
+    // _headers.set(HeaderTypes.XBot, true);
     _headers.updateCacheControl(0);
 
     response = new Response(html, {
         headers: _headers
     });
 
-    context.waitUntil(cache.put(cacheKey, response.clone()));
+    if (!(_headers.keys().includes(HeaderTypes.XCacheStatus) && _headers.get(HeaderTypes.XCacheStatus) == "Deleted")) {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+    }
 
     return response;
 }
