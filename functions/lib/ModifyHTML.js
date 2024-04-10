@@ -28,7 +28,7 @@ export default async function ModifyHTML(context, _path){
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
     if (!isBot) {
-        return new Response(Html, { headers: CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE), });
+        return new Response(IndexHtml, { headers: CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE), });
     }
 
     const url = new URL(context.request.url);
