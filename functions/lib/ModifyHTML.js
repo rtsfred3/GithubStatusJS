@@ -63,17 +63,19 @@ export default async function ModifyHTML(context, _path){
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var statusJson = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageData));
+
+    console.log(statusJson);
     
-    var OriginalStatus = statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator;
-    var StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
-    var StatuspageDescription = statusJson.status.description;
-    var StatuspageName = statusJson.page.name;
+    // var OriginalStatus = statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator;
+    // var StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
+    // var StatuspageDescription = statusJson.status.description;
+    // var StatuspageName = statusJson.page.name;
     
-    // var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
-    // var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    // var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
-    // var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    // var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
+    var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
+    var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
+    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
+    var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
+    var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
     var age = parseInt((Date.now() - LastUpdated) / 1000);
 
@@ -93,11 +95,11 @@ export default async function ModifyHTML(context, _path){
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, JSON.stringify(statusData)));
 
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
     } else {
         _headers.set(HeaderTypes.XAge, `${age}`);
     }
