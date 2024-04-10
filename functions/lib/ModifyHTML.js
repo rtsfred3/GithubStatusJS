@@ -42,7 +42,7 @@ export default async function ModifyHTML(context, _path){
         console.log("Cache Hit");
 
         console.log(`Age: ${parseInt(response.headers.get(HeaderTypes.Age))}`, `Max Age: ${context.env.CACHE_AGE_SHORT}`);
-        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) > (context.env.CACHE_AGE_SHORT)}`);
+        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) < (context.env.CACHE_AGE_SHORT)}`);
 
         if (parseInt(response.headers.get(HeaderTypes.Age)) < context.env.CACHE_AGE_SHORT) {
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
