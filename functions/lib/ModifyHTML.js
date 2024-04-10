@@ -4,10 +4,16 @@ import BodyHtml from "./partial_html/body.html";
 
 import AmpHtml from "./partial_html/amp_template.html";
 
+import IndexHtml from "../../n_index.html";
+
 import Path from './Path.js';
+import HeaderTypes from './HeaderTypes.js';
 import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
+
+import UserAgents from './UserAgents.js';
+import CustomHeaders from './CustomHeaders.js';
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 
@@ -20,16 +26,36 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    const url = new URL(context.request.url);
-    const cacheKey = new Request(url.toString(), context.request);
+    var _headers = CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE);
+
+    var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
+
+    /* if (!isBot) {
+        console.log("Non-Bot Hit");
+
+        return new Response(IndexHtml, { headers: _headers });
+    } */
+
+    var CanonicalUrl = new URL(context.request.url);
+    const cacheKey = new Request(CanonicalUrl.toString(), context.request);
     const cache = caches.default;
     let response = await cache.match(cacheKey);
 
     if (response) {
-        return response;
+        console.log("Cache Hit");
+
+        _headers.updateCacheControl(0);
+        _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
+        _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
+
+        if (parseInt(response.headers.get(HeaderTypes.Age)) < db_age) { return response; }
+        
+        _headers.set(HeaderTypes.XCacheStatus, "Deleted");
+        context.waitUntil(cache.delete(cacheKey, response.clone()));
+
+        // return new Response(IndexHtml, { headers: _headers });
     }
 
-    var CanonicalUrl = new URL(context.request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
@@ -43,14 +69,18 @@ export default async function ModifyHTML(context, _path){
     if (age > db_age) { 
         console.log(`Data in KV is outdated`);
 
-        const statusRes = await fetch(`${StatuspageUrl}${route}`);
+        var urlToFetch = `${StatuspageUrl}${route}`;
+
+        const statusRes = await fetch(urlToFetch);
         const statusData = await statusRes.json();
 
-        OriginalStatus = statusData.status.indicator;
-        StatuspageStatus = CapitalizeFirstLetter(statusData.status.indicator == "none" ? "good" : statusData.status.indicator);
+        OriginalStatus = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
+        StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
         StatuspageDescription = statusData.status.description;
         StatuspageName = statusData.page.name;
         age = 0;
+
+        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, statusData));
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
@@ -121,20 +151,16 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    context.waitUntil(StatuspageStatusKV.put(context.request.url, html));
+    // _headers.set(HeaderTypes.XBot, true);
+    // _headers.updateCacheControl(0);
 
     response = new Response(html, {
-        headers: {
-            "Content-Type": "text/html; charset=utf-8",
-            "access-control-allow-origin": "*",
-            "Cache-Control": `max-age=${context.env.CACHE_AGE}, s-maxage=${context.env.CACHE_AGE}, public`,
-            "Cloudflare-CDN-Cache-Control": `max-age=${context.env.CACHE_AGE}`
-        },
+        headers: _headers
     });
 
-    context.waitUntil(cache.put(cacheKey, response.clone()));
-
-    response.headers.set("X-Age", age);
+    if (!(_headers.has(HeaderTypes.XCacheStatus) && _headers.get(HeaderTypes.XCacheStatus) == "Deleted")) {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+    }
 
     return response;
 }
