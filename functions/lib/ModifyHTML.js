@@ -29,23 +29,28 @@ export default async function ModifyHTML(context, _path){
 
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
 
+    // if (!isBot) {
+    //     _headers.set("X-Bot", false);
+    //     _headers.updateCacheControl(context.env.CACHE_AGE_SHORT);
+    //     return new Response(IndexHtml, { headers: _headers });
+    // }
+
+    var CanonicalUrl = new URL(context.request.url);
+    const cacheKey = new Request(CanonicalUrl.toString(), context.request);
+    const cache = caches.default;
+    let response = await cache.match(cacheKey);
+
+    if (response) {
+        _headers.set("X-In-Cache", "Yes");
+        return response;
+    }
+
     if (!isBot) {
         _headers.set("X-Bot", false);
         _headers.updateCacheControl(context.env.CACHE_AGE_SHORT);
         return new Response(IndexHtml, { headers: _headers });
     }
 
-    const url = new URL(context.request.url);
-    const cacheKey = new Request(url.toString(), context.request);
-    const cache = caches.default;
-    let response = await cache.match(cacheKey);
-
-    if (response) {
-        _headers.set("X-In-Cache", "Yes");
-        // return response;
-    }
-
-    var CanonicalUrl = new URL(context.request.url);
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
