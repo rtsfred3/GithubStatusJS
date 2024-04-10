@@ -41,25 +41,19 @@ export default class UserAgents {
         ];
     }
     
-    static get OtherUserAgents() {
-        return UserAgents.Twitter.concat(UserAgents.Bing.concat(Discord));
+    static get SearchUserAgents() {
+        return UserAgents.Google.concat(UserAgents.Bing.concat(UserAgents.DuckDuckGo));
+    }
+
+    static get SocialUserAgents() {
+        return UserAgents.Facebook.concat(UserAgents.Twitter.concat(UserAgents.Discord));
     }
 
     static get BotUserAgents() {
-        return UserAgents.Google.concat(UserAgents.Facebook.concat(UserAgents.DuckDuckGo.concat(OtherUserAgents)));
+        return UserAgents.SearchUserAgents.concat(UserAgents.SocialUserAgents);
     }
 
     static IsBot(userAgent) {
-        var userAgents = UserAgents.BotUserAgents;
-
-        return userAgents.map((x) => userAgent.toLowerCase().includes(x.toLowerCase())).includes(true);
-
-        // for (var i = 0; i < userAgents.length; i++) {
-        //     if (userAgent.includes(userAgents[i])) {
-        //         return false;
-        //     }
-        // }
-
-        // return true;
+        return UserAgents.BotUserAgents.map((x) => userAgent.toLowerCase().includes(x.toLowerCase())).includes(true);
     }
 }
