@@ -4,6 +4,7 @@ import ModifyHTML from './lib/ModifyHTML.js';
 import Html from "../n_index.html";
 
 import UserAgents from './lib/UserAgents.js';
+import CustomHeaders from './lib/CustomHeaders.js';
 
 export async function onRequestGet(context) {
     var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
