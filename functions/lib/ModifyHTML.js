@@ -80,7 +80,7 @@ export default async function ModifyHTML(context, _path){
         StatuspageName = statusData.page.name;
         age = 0;
 
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, statusData));
+        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, statusData));
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
