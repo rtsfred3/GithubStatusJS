@@ -4,15 +4,15 @@ import BodyHtml from "./partial_html/body.html";
 
 import AmpHtml from "./partial_html/amp_template.html";
 
-import IndexHtml from "../n_index.html";
+import IndexHtml from "../../n_index.html";
 
 import Path from './Path.js';
 import StatuspageKV from './StatuspageKV.js';
 import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
-import UserAgents from './lib/UserAgents.js';
-import CustomHeaders from './lib/CustomHeaders.js';
+import UserAgents from './UserAgents.js';
+import CustomHeaders from './CustomHeaders.js';
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 
