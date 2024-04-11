@@ -96,7 +96,7 @@ export default async function ModifyHTML(context, _path){
         const statusData = await statusRes.json();
 
         statuspageKvMetadata[StatuspageKV.OriginalStatus] = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
-        StatuspageStatus = CapitalizeFirstLetter(statuspageKvMetadata[StatuspageKV.OriginalStatus]);
+        // StatuspageStatus = CapitalizeFirstLetter(statuspageKvMetadata[StatuspageKV.OriginalStatus]);
         statuspageKvMetadata[StatuspageKV.StatuspageDescription] = statusData.status.description;
         statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
         statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
