@@ -17,9 +17,6 @@ export default async function ModifyHTML(context, _path){
     const ClouldflareCache = TimeSpans.Hour;
     const KvCache = context.env.CACHE_AGE_SHORT;
 
-    console.log(`Clouldflare Cache: ${ClouldflareCache}`);
-    console.log(`KV Cache: ${KvCache}`);
-
     const StatuspageStatusKV = context.env.StatuspageStatus;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
@@ -33,6 +30,8 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
     let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
 
+    console.log(`Clouldflare Cache: ${ClouldflareCache}`);
+    console.log(`KV Cache: ${KvCache}`);
     console.log(`Cache Bypass: ${bypassCache}`);
 
     if (response) {
@@ -69,10 +68,11 @@ export default async function ModifyHTML(context, _path){
         statuspageKvMetadata[StatuspageKV.StatuspageDescription] = statusData.status.description;
         statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
         statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
-        age = 0;
-        
+
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
     }
+
+    _headers.set(HeaderTypes.XKvStatusAge, new Date(statuspageKvMetadata[StatuspageKV.LastUpdated]).toISOString());
 
     var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
