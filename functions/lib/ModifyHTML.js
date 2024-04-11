@@ -14,7 +14,7 @@ import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 export default async function ModifyHTML(context, _path){
     const db = context.env.CACHE_DB;
     const table = context.env.TABLE;
-    const ClouldflareCache = TimeSpans.Hour;
+    const ClouldflareCache = TimeSpans.Week * 2;
     const KvCache = context.env.CACHE_AGE_SHORT;
 
     const StatuspageStatusKV = context.env.StatuspageStatus;
