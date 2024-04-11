@@ -9,5 +9,6 @@ export default class StatuspageKV {
     static get StatuspageJsonData() { return 'StatuspageJsonData'; }
     static get StatuspageData() { return 'StatuspageData'; }
 
+    static get BypassCache() { return 'BypassCache'; }
     static get StatuspageMetadata() { return 'StatuspageMetadata'; }
 };

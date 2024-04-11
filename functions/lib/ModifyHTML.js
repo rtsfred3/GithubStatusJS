@@ -37,14 +37,11 @@ export default async function ModifyHTML(context, _path){
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
     const cache = caches.default;
     let response = await cache.match(cacheKey);
+    let bypassCache = Boolean(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
 
     if (response) {
-        console.log("Cache Hit");
-
-        console.log(`Age: ${parseInt(response.headers.get(HeaderTypes.Age))}`, `Max Age: ${context.env.CACHE_AGE_SHORT}`);
-        console.log(`${parseInt(response.headers.get(HeaderTypes.Age)) < (context.env.CACHE_AGE_SHORT)}`);
-
-        if (parseInt(response.headers.get(HeaderTypes.Age)) < context.env.CACHE_AGE_SHORT) {
+        if (parseInt(response.headers.get(HeaderTypes.Age)) < TimeSpans.Hour && !bypassCache) {
+            console.log("Cache Hit");
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
@@ -84,17 +81,12 @@ export default async function ModifyHTML(context, _path){
         statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
         age = 0;
 
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageJsonData, JSON.stringify(statusData)));
+        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageJsonData, JSON.stringify(statusData)));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
-    } else {
-        _headers.set(HeaderTypes.XAge, `${age}`);
     }
-
-    // var templateHtml = TemplateHtml;
 
     var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
-    // headHtml = headHtml.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
     html = html.replaceAll("{{CanonicalUrl}}", context.request.url);
     html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
@@ -129,32 +121,11 @@ export default async function ModifyHTML(context, _path){
 
     html = html.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
 
-    var bodyHtml = BodyHtml;
-
-    console.log(bodyHtml);
-    for(const url of [...new Set(bodyHtml.matchAll(/https:\/\/(([a-z]|\.)+)\//g))]){
-        bodyHtml = bodyHtml.replaceAll(url[1], StatuspageUrl);
-    }
-    console.log(bodyHtml);
-
-    // if (path == Path.Status) {
-    //     bodyHtml = `<body> \
-    //         <statuspage-status data-url="${StatuspageUrl}" fullScreen></statuspage-status> \
-    //     </body>`
-    // }
-
-    // var html = `<!DOCTYPE html> \
-    // <html lang="en"> \
-    //     ${headHtml}${bodyHtml} \
-    // </html>`;
-
-    if (path == Path.Amp) {
-        html = html;
-    }
-
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
+
+    context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
     response = new Response(html, { headers: _headers });
 
