@@ -31,7 +31,9 @@ export default async function ModifyHTML(context, _path){
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
     const cache = caches.default;
     let response = await cache.match(cacheKey);
-    let bypassCache = Boolean(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
+    let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
+
+    console.log(`Cache Bypass: ${bypassCache}`);
 
     if (response) {
         if (parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache && !bypassCache) {
