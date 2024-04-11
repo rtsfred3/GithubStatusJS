@@ -85,7 +85,7 @@ export default async function ModifyHTML(context, _path){
     // var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
     // var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
 
-    var age = parseInt((Date.now() - LastUpdated) / 1000);
+    var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
 
     if (age > context.env.CACHE_AGE_SHORT) { 
         console.log(`Data in KV is outdated`);
@@ -99,7 +99,7 @@ export default async function ModifyHTML(context, _path){
         StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
         statuspageKvMetadata[StatuspageKV.StatuspageDescription] = statusData.status.description;
         statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
-        statuspageKvMetadata[StatuspageKV.LastUpdated] = 0;
+        statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
         age = 0;
 
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, JSON.stringify(statusData)));
