@@ -1,20 +1,12 @@
-import HeadStartHtml from "./partial_html/head_start.html";
-import HeadEndHtml from "./partial_html/head_end.html";
-import BodyHtml from "./partial_html/body.html";
-
 import AmpHtml from "./partial_html/amp_template.html";
 import TemplateHtml from "./partial_html/template.html";
-
-// import IndexHtml from "../../index.html";
 
 import Path from './Path.js';
 import TimeSpans from './TimeSpans.js';
 import HeaderTypes from './HeaderTypes.js';
 import StatuspageKV from './StatuspageKV.js';
-import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
-import UserAgents from './UserAgents.js';
 import CustomHeaders from './CustomHeaders.js';
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
@@ -22,16 +14,18 @@ import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 export default async function ModifyHTML(context, _path){
     const db = context.env.CACHE_DB;
     const table = context.env.TABLE;
+    const ClouldflareCache = TimeSpans.Hour;
+    const KvCache = context.env.TABLE;
+
+    console.log(`Clouldflare Cache: ${ClouldflareCache}`);
+    console.log(`KV Cache: ${KvCache}`);
+
     const StatuspageStatusKV = context.env.StatuspageStatus;
-    const SixHours = TimeSpans.Hour * 6;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    var _headers = CustomHeaders("text/html; charset=utf-8", TimeSpans.Week);
-
-    // var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
-    // if (!isBot) { return new Response(IndexHtml, { headers: _headers }); }
+    var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
@@ -40,7 +34,7 @@ export default async function ModifyHTML(context, _path){
     let bypassCache = Boolean(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
 
     if (response) {
-        if (parseInt(response.headers.get(HeaderTypes.Age)) < TimeSpans.Hour && !bypassCache) {
+        if (parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache && !bypassCache) {
             console.log("Cache Hit");
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
@@ -67,12 +61,10 @@ export default async function ModifyHTML(context, _path){
 
     var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
 
-    if (age > context.env.CACHE_AGE_SHORT) { 
-        console.log(`Data in KV is outdated`);
+    if (age > KvCache) { 
+        console.log(`Updating Data in KV`);
 
-        var urlToFetch = `${StatuspageUrl}${route}`;
-
-        const statusRes = await fetch(urlToFetch);
+        const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
         statuspageKvMetadata[StatuspageKV.OriginalStatus] = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
@@ -129,7 +121,9 @@ export default async function ModifyHTML(context, _path){
 
     response = new Response(html, { headers: _headers });
 
-    context.waitUntil(cache.put(cacheKey, response.clone()));
+    if (!BypassCache) {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+    }
 
     return response;
 }
