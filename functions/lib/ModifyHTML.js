@@ -68,23 +68,6 @@ export default async function ModifyHTML(context, _path){
 
     var statuspageKvMetadata = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageMetadata));
 
-    // statuspageKvMetadata[StatuspageKV.OriginalStatus] = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
-    // statuspageKvMetadata[StatuspageKV.StatuspageStatus] = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    // statuspageKvMetadata[StatuspageKV.StatuspageDescription] = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
-    // statuspageKvMetadata[StatuspageKV.StatuspageName] = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    // statuspageKvMetadata[StatuspageKV.LastUpdated] = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
-    
-    // var OriginalStatus = statusJson.status.indicator == "none" ? "good" : statusJson.status.indicator;
-    // var StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
-    // var StatuspageDescription = statusJson.status.description;
-    // var StatuspageName = statusJson.page.name;
-    
-    // var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
-    // var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    // var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
-    // var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    // var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
-
     var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
 
     if (age > context.env.CACHE_AGE_SHORT) { 
@@ -96,82 +79,77 @@ export default async function ModifyHTML(context, _path){
         const statusData = await statusRes.json();
 
         statuspageKvMetadata[StatuspageKV.OriginalStatus] = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
-        // StatuspageStatus = CapitalizeFirstLetter(statuspageKvMetadata[StatuspageKV.OriginalStatus]);
         statuspageKvMetadata[StatuspageKV.StatuspageDescription] = statusData.status.description;
         statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
         statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
         age = 0;
 
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, JSON.stringify(statusData)));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageJsonData, JSON.stringify(statusData)));
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
-
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
     } else {
         _headers.set(HeaderTypes.XAge, `${age}`);
     }
 
     // var templateHtml = TemplateHtml;
 
-    var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
+    var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
-    headHtml = headHtml.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
-    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", context.request.url);
-    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
+    // headHtml = headHtml.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
+    html = html.replaceAll("{{CanonicalUrl}}", context.request.url);
+    html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
 
-    headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[statuspageKvMetadata[StatuspageKV.OriginalStatus]]);
+    html = html.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[statuspageKvMetadata[StatuspageKV.OriginalStatus]]);
 
-    for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
-        headHtml = headHtml.replaceAll(img[0], img[0].replace('good', statuspageKvMetadata[StatuspageKV.OriginalStatus]));
+    for (const img of DeduplicateArrayOfArrays([...html.matchAll(imageUrlRegex)])) {
+        html = html.replaceAll(img[0], img[0].replace('good', statuspageKvMetadata[StatuspageKV.OriginalStatus]));
     }
 
     if (path == Path.Component) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${statuspageKvMetadata[StatuspageKV.StatuspageName]} Status Components`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status Components`);
     }  
     else if (path == Path.Status) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) Mini ${statuspageKvMetadata[StatuspageKV.StatuspageName]} Status`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) Mini {{SiteName}} Status`);
     }
     else if (path == Path.Index) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${statuspageKvMetadata[StatuspageKV.StatuspageName]} Status`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status`);
     }
     else if (path == Path.Amp) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${statuspageKvMetadata[StatuspageKV.StatuspageName]} Status AMP`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status AMP`);
     }
     else {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${statuspageKvMetadata[StatuspageKV.StatuspageName]} Status - Error`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status - Error`);
     }
 
     if (path == Path.Amp) {
-        headHtml = headHtml.replaceAll("{{Description}}", `A minified AMP website to monitor ${statuspageKvMetadata[StatuspageKV.StatuspageName]} status updates.| ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
+        html = html.replaceAll("{{Description}}", `A minified AMP website to monitor {{SiteName}} status updates.| ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
     }
     else {
-        headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${statuspageKvMetadata[StatuspageKV.StatuspageName]} status updates. | ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
+        html = html.replaceAll("{{Description}}", `An unofficial website to monitor {{SiteName}} status updates. | ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
     }
 
-    headHtml += HeadEndHtml;
+    html = html.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
 
     var bodyHtml = BodyHtml;
 
+    console.log(bodyHtml);
     for(const url of [...new Set(bodyHtml.matchAll(/https:\/\/(([a-z]|\.)+)\//g))]){
         bodyHtml = bodyHtml.replaceAll(url[1], StatuspageUrl);
     }
+    console.log(bodyHtml);
 
-    if (path == Path.Status) {
-        bodyHtml = `<body> \
-            <statuspage-status data-url="${StatuspageUrl}" fullScreen></statuspage-status> \
-        </body>`
-    }
+    // if (path == Path.Status) {
+    //     bodyHtml = `<body> \
+    //         <statuspage-status data-url="${StatuspageUrl}" fullScreen></statuspage-status> \
+    //     </body>`
+    // }
 
-    var html = `<!DOCTYPE html> \
-    <html lang="en"> \
-        ${headHtml}${bodyHtml} \
-    </html>`;
+    // var html = `<!DOCTYPE html> \
+    // <html lang="en"> \
+    //     ${headHtml}${bodyHtml} \
+    // </html>`;
 
     if (path == Path.Amp) {
-        html = headHtml;
+        html = html;
     }
 
     if (StatuspageUrl.startsWith("https://")) {
