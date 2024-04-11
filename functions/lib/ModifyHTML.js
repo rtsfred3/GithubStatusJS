@@ -15,7 +15,7 @@ export default async function ModifyHTML(context, _path){
     const db = context.env.CACHE_DB;
     const table = context.env.TABLE;
     const ClouldflareCache = TimeSpans.Hour;
-    const KvCache = context.env.TABLE;
+    const KvCache = context.env.CACHE_AGE_SHORT;
 
     console.log(`Clouldflare Cache: ${ClouldflareCache}`);
     console.log(`KV Cache: ${KvCache}`);
@@ -53,10 +53,6 @@ export default async function ModifyHTML(context, _path){
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    var statusJson = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageData));
-
-    console.log(statusJson);
-
     var statuspageKvMetadata = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageMetadata));
 
     var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
@@ -72,8 +68,7 @@ export default async function ModifyHTML(context, _path){
         statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
         statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
         age = 0;
-
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageJsonData, JSON.stringify(statusData)));
+        
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
     }
 
