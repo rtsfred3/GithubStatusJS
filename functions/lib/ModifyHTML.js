@@ -72,7 +72,9 @@ export default async function ModifyHTML(context, _path){
         context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
     }
 
-    _headers.set(HeaderTypes.XKvStatusAge, new Date(statuspageKvMetadata[StatuspageKV.LastUpdated]).toISOString());
+    var formattedDateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', hour12: false, minute: '2-digit', second:'2-digit' };
+
+    _headers.set(HeaderTypes.XKvStatusLastModified, new Date(statuspageKvMetadata[StatuspageKV.LastUpdated]).toLocaleDateString('en-US', formattedDateOptions));
 
     var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
