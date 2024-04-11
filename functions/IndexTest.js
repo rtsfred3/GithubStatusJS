@@ -1,4 +1,4 @@
-import Html from "../n_index.html";
+import Html from "../index.html";
 
 import CustomHeaders from './lib/CustomHeaders.js';
 

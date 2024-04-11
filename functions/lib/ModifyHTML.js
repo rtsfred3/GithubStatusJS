@@ -1,18 +1,12 @@
-import HeadStartHtml from "./partial_html/head_start.html";
-import HeadEndHtml from "./partial_html/head_end.html";
-import BodyHtml from "./partial_html/body.html";
-
 import AmpHtml from "./partial_html/amp_template.html";
-
-import IndexHtml from "../../n_index.html";
+import TemplateHtml from "./partial_html/template.html";
 
 import Path from './Path.js';
+import TimeSpans from './TimeSpans.js';
 import HeaderTypes from './HeaderTypes.js';
 import StatuspageKV from './StatuspageKV.js';
-import CapitalizeFirstLetter from "./CapitalizeFirstLetter.js";
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
-import UserAgents from './UserAgents.js';
 import CustomHeaders from './CustomHeaders.js';
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
@@ -20,145 +14,113 @@ import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 export default async function ModifyHTML(context, _path){
     const db = context.env.CACHE_DB;
     const table = context.env.TABLE;
+    const ClouldflareCache = TimeSpans.Hour;
+    const KvCache = context.env.CACHE_AGE_SHORT;
+
     const StatuspageStatusKV = context.env.StatuspageStatus;
-    const db_age = context.env.AGE;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    var _headers = CustomHeaders("text/html; charset=utf-8", context.env.CACHE_AGE);
-
-    var isBot = UserAgents.IsBot(context.request.headers.get('user-agent'));
-
-    /* if (!isBot) {
-        console.log("Non-Bot Hit");
-
-        return new Response(IndexHtml, { headers: _headers });
-    } */
+    var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
     const cache = caches.default;
     let response = await cache.match(cacheKey);
+    let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
+
+    console.log(`Clouldflare Cache: ${ClouldflareCache}`);
+    console.log(`KV Cache: ${KvCache}`);
+    console.log(`Cache Bypass: ${bypassCache}`);
 
     if (response) {
-        console.log("Cache Hit");
+        if (parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache && !bypassCache) {
+            console.log("Cache Hit");
+            _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
+            _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
 
-        _headers.updateCacheControl(0);
-        _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
-        _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
+            return response;
+        } else {
+            if (_headers.has(HeaderTypes.Age)) {
+                _headers.delete(HeaderTypes.Age)
+            }
 
-        if (parseInt(response.headers.get(HeaderTypes.Age)) < db_age) { return response; }
-        
-        _headers.set(HeaderTypes.XCacheStatus, "Deleted");
-        context.waitUntil(cache.delete(cacheKey, response.clone()));
-
-        // return new Response(IndexHtml, { headers: _headers });
+            if (_headers.has(HeaderTypes.CfCacheStatus)) {
+                _headers.delete(HeaderTypes.CfCacheStatus)
+            }
+        }
     }
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
-    var OriginalStatus = await StatuspageStatusKV.get(StatuspageKV.OriginalStatus);
-    var StatuspageStatus = await StatuspageStatusKV.get(StatuspageKV.StatuspageStatus);
-    var StatuspageDescription = await StatuspageStatusKV.get(StatuspageKV.StatuspageDescription);
-    var StatuspageName = await StatuspageStatusKV.get(StatuspageKV.StatuspageName);
-    var LastUpdated = await StatuspageStatusKV.get(StatuspageKV.LastUpdated);
+    var statuspageKvMetadata = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageMetadata));
 
-    var age = parseInt((Date.now() - LastUpdated) / 1000);
+    var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
 
-    if (age > db_age) { 
-        console.log(`Data in KV is outdated`);
+    if (age > KvCache) { 
+        console.log(`Updating Data in KV`);
 
-        var urlToFetch = `${StatuspageUrl}${route}`;
-
-        const statusRes = await fetch(urlToFetch);
+        const statusRes = await fetch(`${StatuspageUrl}${route}`);
         const statusData = await statusRes.json();
 
-        OriginalStatus = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
-        StatuspageStatus = CapitalizeFirstLetter(OriginalStatus);
-        StatuspageDescription = statusData.status.description;
-        StatuspageName = statusData.page.name;
-        age = 0;
+        statuspageKvMetadata[StatuspageKV.OriginalStatus] = statusData.status.indicator == "none" ? "good" : statusData.status.indicator;
+        statuspageKvMetadata[StatuspageKV.StatuspageDescription] = statusData.status.description;
+        statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
+        statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
 
-        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageUrl, statusData));
-
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.OriginalStatus, OriginalStatus));
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageStatus, StatuspageStatus));
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageDescription, StatuspageDescription));
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageName, StatuspageName));
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.LastUpdated, Date.now()));
+        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
     }
 
-    var headHtml = path == Path.Amp ? AmpHtml : HeadStartHtml;
+    var formattedDateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', hour12: false, minute: '2-digit', second:'2-digit' };
 
-    headHtml = headHtml.replaceAll("{{SiteName}}", StatuspageName);
-    headHtml = headHtml.replaceAll("{{CanonicalUrl}}", context.request.url);
-    headHtml = headHtml.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
+    _headers.set(HeaderTypes.XKvStatusLastModified, new Date(statuspageKvMetadata[StatuspageKV.LastUpdated]).toLocaleDateString('en-US', formattedDateOptions));
 
-    headHtml = headHtml.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[OriginalStatus]);
+    var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
-    for (const img of DeduplicateArrayOfArrays([...headHtml.matchAll(imageUrlRegex)])) {
-        headHtml = headHtml.replaceAll(img[0], img[0].replace('good', OriginalStatus));
+    html = html.replaceAll("{{CanonicalUrl}}", context.request.url);
+    html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
+
+    html = html.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[statuspageKvMetadata[StatuspageKV.OriginalStatus]]);
+
+    for (const img of DeduplicateArrayOfArrays([...html.matchAll(imageUrlRegex)])) {
+        html = html.replaceAll(img[0], img[0].replace('good', statuspageKvMetadata[StatuspageKV.OriginalStatus]));
     }
 
     if (path == Path.Component) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status Components`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status Components`);
     }  
     else if (path == Path.Status) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) Mini ${StatuspageName} Status`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) Mini {{SiteName}} Status`);
     }
     else if (path == Path.Index) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status`);
     }
     else if (path == Path.Amp) {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status AMP`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status AMP`);
     }
     else {
-        headHtml = headHtml.replaceAll("{{Title}}", `(Unofficial) ${StatuspageName} Status - Error`);
+        html = html.replaceAll("{{Title}}", `(Unofficial) {{SiteName}} Status - Error`);
     }
 
     if (path == Path.Amp) {
-        headHtml = headHtml.replaceAll("{{Description}}", `A minified AMP website to monitor ${StatuspageName} status updates.| ${StatuspageDescription}`);
+        html = html.replaceAll("{{Description}}", `A minified AMP website to monitor {{SiteName}} status updates.| ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
     }
     else {
-        headHtml = headHtml.replaceAll("{{Description}}", `An unofficial website to monitor ${StatuspageName} status updates. | ${StatuspageDescription}`);
+        html = html.replaceAll("{{Description}}", `An unofficial website to monitor {{SiteName}} status updates. | ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
     }
 
-    headHtml += HeadEndHtml;
-
-    var bodyHtml = BodyHtml;
-
-    for(const url of [...new Set(bodyHtml.matchAll(/https:\/\/(([a-z]|\.)+)\//g))]){
-        bodyHtml = bodyHtml.replaceAll(url[1], StatuspageUrl);
-    }
-
-    if (path == Path.Status) {
-        bodyHtml = `<body> \
-            <statuspage-status data-url="${StatuspageUrl}" fullScreen></statuspage-status> \
-        </body>`
-    }
-
-    var html = `<!DOCTYPE html> \
-    <html lang="en"> \
-        ${headHtml}${bodyHtml} \
-    </html>`;
-
-    if (path == Path.Amp) {
-        html = headHtml;
-    }
+    html = html.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
 
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    // _headers.set(HeaderTypes.XBot, true);
-    // _headers.updateCacheControl(0);
+    context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
-    response = new Response(html, {
-        headers: _headers
-    });
+    response = new Response(html, { headers: _headers });
 
-    if (!(_headers.has(HeaderTypes.XCacheStatus) && _headers.get(HeaderTypes.XCacheStatus) == "Deleted")) {
+    if (!bypassCache) {
         context.waitUntil(cache.put(cacheKey, response.clone()));
     }
 
