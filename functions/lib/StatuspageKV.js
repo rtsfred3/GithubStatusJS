@@ -7,4 +7,6 @@ export default class StatuspageKV {
     
     static get StatuspageUrl() { return 'StatuspageUrl'; }
     static get StatuspageData() { return 'StatuspageData'; }
+
+    static get StatuspageMetadata() { return 'StatuspageMetadata'; }
 };
