@@ -35,7 +35,9 @@ export default async function CacheHTML(context, _html, _path) {
 
     response = new Response(_html, { headers: _headers });
 
-    context.waitUntil(cache.put(cacheKey, response.clone()));
+    if (!bypassCache) {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+    }
 
     return response;
 }
