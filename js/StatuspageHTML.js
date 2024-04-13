@@ -293,9 +293,9 @@ class StatuspageHTMLElements {
 
         statusElement.setAttribute("id", _id);
         statusElement.classList.add('min', 'status-width');
-        statusElement.style.fontWeight = "bold";
-        statusElement.style.color = "white";
-        statusElement.style.backgroundColor = StatuspageDictionary.MetaColors[status];
+        // statusElement.style.fontWeight = "bold";
+        // statusElement.style.color = "white";
+        // statusElement.style.backgroundColor = StatuspageDictionary.MetaColors[status];
 
         if (message == null) {
             var heightArray = fullStatus ? [ 'full-status-height' ] : [ 'status-height', 'status-shadow' ];
@@ -663,7 +663,11 @@ class StatuspageWebComponents {
     
                         this.app.replaceWith(status);
                     } else {
-                        this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                        var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
+                        summary.setAttribute('data-url', this.url);
+    
+                        this.app.replaceWith(summary);
+                        // this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                     }
                 }
                 
@@ -677,8 +681,13 @@ class StatuspageWebComponents {
     static get AppLoading() {
         return class extends HTMLElement {
             constructor() { super(); }
-    
-            connectedCallback() { this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement); }
+
+            connectedCallback() {
+                this.app = document.createElement('statuspage-status');
+                this.app.setAttribute("data-status", StatuspageDictionary.StatusEnums.loading);
+                this.app.setAttribute("fullScreen", "");
+                this.replaceWith(this.app);
+            }
             
             static get is() { return 'statuspage-app-loading'; }
         }
@@ -691,16 +700,17 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
-                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
-                this.app = document.getElementById('status');
-                this.replaceWith(this.app);
+                var isFullScreen = this.hasAttribute('fullScreen');
+
+                this.setAttribute('data-status', 'loading');
+                this.setAttribute('fullScreen', '');
 
                 this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
                     ? this.getAttribute('status')
                     : StatuspageDictionary.StatusEnums.error;
         
                 this.fullScreen = this.hasAttribute('status') || this.hasAttribute('data-url')
-                    ? this.hasAttribute('fullScreen')
+                    ? isFullScreen
                     : true;
 
                 if (this.hasAttribute('data-url')) {
@@ -735,7 +745,16 @@ class StatuspageWebComponents {
 
             parseStatus(status, fullScreen) {
                 console.log(status, fullScreen);
-                this.app.replaceWith(StatuspageHTMLElements.StatusHTMLElement(status, fullScreen));
+
+                this.setAttribute('data-status', status);
+                
+                if (fullScreen) {
+                    this.setAttribute('fullScreen', '');
+                } else {
+                    this.removeAttribute('fullScreen');
+                }
+                
+                this.removeAttribute('status');
             }
         
             static get is() { return 'statuspage-status'; }
