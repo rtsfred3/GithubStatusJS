@@ -11,7 +11,7 @@ export async function onRequestGet({ request, params, env }) {
         "/components/",
         "/status/",
         "/amp/",
-        "/amp_test/",
+        "/amp/test/",
         "/StatuspageHTML/",
         "/Statuspage/",
         "/apps/app/",
