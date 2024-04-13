@@ -53,15 +53,21 @@
     </head>
 
     <body>
+        <statuspage-status data-status="loading" fullScreen></statuspage-status>
+        
         <amp-render src="https://www.cloudflarestatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
             <template type="amp-mustache">
+                {{indicator}}
                 <statuspage-status data-status="{{indicator}}" fullScreen></statuspage-status>
+                <!-- <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div> -->
             </template>
             <div placeholder>
                 <statuspage-status data-status="loading" fullScreen></statuspage-status>
+                <!-- <div id="status" data-status="loading" data-background="loading" class="min full-status-height status-width bold status-color center-status"></div> -->
             </div>
             <div fallback>
                 <statuspage-status data-status="error" fullScreen></statuspage-status>
+                <!-- <div id="status" data-status="error" data-background="error" class="min full-status-height status-width bold status-color center-status"></div> -->
             </div>
         </amp-render>
     </body>
