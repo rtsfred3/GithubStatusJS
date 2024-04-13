@@ -16,6 +16,14 @@ https://staging.ghstatus.pages.dev/*
     Cache-Control: max-age=2419200, s-maxage=2419200, public
     Cloudflare-CDN-Cache-Control: max-age=2419200
 
+/amp/
+    Cache-Control: max-age=60, s-maxage=60, public
+    Cloudflare-CDN-Cache-Control: max-age=31536000
+
+/StatuspageHTML/
+    Cache-Control: max-age=31536000, s-maxage=31536000, public
+    Cloudflare-CDN-Cache-Control: max-age=31536000
+
 /*.css
     Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
@@ -49,13 +57,5 @@ https://staging.ghstatus.pages.dev/*
     Cloudflare-CDN-Cache-Control: max-age=31536000
 
 /*.ico
-    Cache-Control: max-age=31536000, s-maxage=31536000, public
-    Cloudflare-CDN-Cache-Control: max-age=31536000
-
-/amp/
-    Cache-Control: max-age=31536000, s-maxage=31536000, public
-    Cloudflare-CDN-Cache-Control: max-age=31536000
-
-/StatuspageHTML/
     Cache-Control: max-age=31536000, s-maxage=31536000, public
     Cloudflare-CDN-Cache-Control: max-age=31536000
