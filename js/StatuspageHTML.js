@@ -725,7 +725,8 @@ class StatuspageWebComponents {
             fetchStatus(url) {
                 return new Promise((res, rej) => {
                     var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
-        
+    
+                    this.removeAttribute('data-url');
                     fetch(baseUrl + '/api/v2/status.json')
                         .then(data => data.json())
                         .then((json) => {
