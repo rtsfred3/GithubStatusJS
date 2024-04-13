@@ -918,10 +918,10 @@ class StatuspageWebComponents {
     }
 }
 
-customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
-customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
-customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
-customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
-customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
+// customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+// customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
+// customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
+// customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
+// customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
 export { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents };
