@@ -659,7 +659,7 @@ class StatuspageWebComponents {
                     } else if (location.pathname == StatuspageDictionary.Paths.Status) {
                         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                         status.setAttribute('data-url', this.url);
-                        status.setAttribute('fullScreen', null);
+                        status.setAttribute('fullScreen', '');
     
                         this.app.replaceWith(status);
                     } else {
@@ -754,7 +754,9 @@ class StatuspageWebComponents {
                     this.removeAttribute('fullScreen');
                 }
                 
-                this.removeAttribute('status');
+                if (this.hasAttribute('status')) {
+                    this.removeAttribute('status');
+                }
             }
         
             static get is() { return 'statuspage-status'; }
