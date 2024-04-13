@@ -57,9 +57,9 @@
         
         <amp-render src="https://www.cloudflarestatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
             <template type="amp-mustache">
-                {{indicator}}
-                <statuspage-status data-status="{{indicator}}" fullScreen></statuspage-status>
-                <!-- <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div> -->
+                <!-- {{indicator}} -->
+                <!-- <statuspage-status data-status="{{indicator}}" fullScreen></statuspage-status> -->
+                <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div>
             </template>
             <div placeholder>
                 <statuspage-status data-status="loading" fullScreen></statuspage-status>
