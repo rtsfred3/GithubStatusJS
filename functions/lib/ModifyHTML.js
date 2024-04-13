@@ -112,11 +112,16 @@ export default async function ModifyHTML(context, _path){
 
     html = html.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
 
+    if (path == Path.Status) {
+        var body = [...html.matchAll(/<body>((\s|\S)*)<\/body>/g)][0][1];
+         html = html.replace(body, '<statuspage-status data-url="{{StatuspageUrl}}" fullScreen />');
+    }
+
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
+    // context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
     response = new Response(html, { headers: _headers });
 
