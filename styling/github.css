@@ -72,7 +72,7 @@ hr {
     height: 20vh; /* !important; */
 }
 
-.full-status-height {
+.full-status-height, [fullScreen] {
     height: 100vh; /* !important; */
 }
 
@@ -80,12 +80,33 @@ hr {
     height: calc(100vh - 1.15em + 0.275em);
 }
 
-.status-height {
-    height: 240px; /* !important; */
+statuspage-status {
+    height: 240px;
+    width: 100vw;
+    text-align: center;
+    display: table;
+    font-size: 48pt;
+    vertical-align: middle;
+    display: table-cell;
 }
 
+statuspage-status[data-status]::before {
+    content: attr(data-status);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+}
+
+statuspage-status[data-status="none"]::before, statuspage-status[data-status="good"]::before {
+    content: "good";
+}
+
+/* .status-height, statuspage-status {
+    height: 240px;
+} */
+
 @media only screen and (max-height: 400px) {
-    .status-height {
+    .status-height, statuspage-status {
         height: 45vh;
     }
 
@@ -95,25 +116,25 @@ hr {
 }
 
 @media only screen and (max-width: 320px) and (max-height: 320px) {
-    .status-height { height: 100vh; }
+    .status-height, statuspage-status { height: 100vh; }
 }
 
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
-    .status-height { height: 30vh; }
+    .status-height, statuspage-status { height: 30vh; }
 
     .status-width { font-size: 12em; }
 }
 
 @media only screen and (min-width: 2100px) and (min-height: 1100px) {
-    .status-height { height: 40vh; }
+    .status-height, statuspage-status { height: 40vh; }
 
     .status-width { font-size: 16em; }
 }
 
 @media only screen and (min-width: 3000px) and (min-height: 2000px) {
-    .status-height { height: 40vh; }
+    .status-height, statuspage-status { height: 40vh; }
 
-    .status-width { font-size: 16em; }
+    .status-width, statuspage-status { font-size: 16em; }
 }
 
 @media only screen and (max-width: 450px){
@@ -199,38 +220,41 @@ svg {
 .min[data-status]::before {
     content: attr(data-status);
     text-transform: uppercase;
+    font-weight: bold;
+    color: white;
 }
 
 .min[data-status="none"]::before, .min[data-status="good"]::before {
     content: "good";
     text-transform: uppercase;
-}
-
-.good, .none, .min[data-background="none"], .min[data-background="good"] {
     background-color: var(--none);
 }
 
-.minor, .min[data-background="minor"] {
+.good, .none, .min[data-background="none"], .min[data-background="good"], [data-status="none"], [data-status="good"] {
+    background-color: var(--none);
+}
+
+.minor, .min[data-background="minor"], [data-status="minor"] {
     background-color: var(--minor);
 }
 
-.major, .min[data-background="major"] {
+.major, .min[data-background="major"], [data-status="major"] {
     background-color: var(--major);
 }
 
-.critical, .min[data-background="critical"] {
+.critical, .min[data-background="critical"], [data-status="critical"] {
     background-color: var(--critical);
 }
 
-.maintenance, .min[data-background="maintenance"] {
+.maintenance, .min[data-background="maintenance"], [data-status="maintenance"] {
     background-color: var(--maintenance);
 }
 
-.unavailable, .loading, .min[data-background="unavailable"], .min[data-background="loading"] {
+.unavailable, .loading, .min[data-background="unavailable"], .min[data-background="loading"], [data-status="unavailable"], [data-status="loading"] {
     background-color: var(--loading);
 }
 
-.error, .min[data-background="error"] {
+.error, .min[data-background="error"], [data-status="error"] {
     background-color: var(--error);
 }
 
