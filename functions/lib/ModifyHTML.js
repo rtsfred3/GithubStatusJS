@@ -18,9 +18,6 @@ export default async function ModifyHTML(context, _path){
     const ClouldflareCache = TimeSpans.Week * 2;
     const KvCache = context.env.CACHE_AGE_SHORT;
 
-    const css = await GetFileFromAssets(context, "/styling/main.min.css");
-    const js = await GetFileFromAssets(context, "/js/StatuspageHTML.min.js");
-
     const StatuspageStatusKV = context.env.StatuspageStatus;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
@@ -55,6 +52,9 @@ export default async function ModifyHTML(context, _path){
             }
         }
     }
+
+    const css = await GetFileFromAssets(context, "/styling/main.min.css");
+    const js = await GetFileFromAssets(context, "/js/StatuspageHTML.min.js");
 
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
