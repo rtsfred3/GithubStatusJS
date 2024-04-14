@@ -8,6 +8,7 @@ import StatuspageKV from './StatuspageKV.js';
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
 import CustomHeaders from './CustomHeaders.js';
+import GetFileFromAssets from './GetFileFromAssets.js';
 
 import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 
@@ -16,6 +17,9 @@ export default async function ModifyHTML(context, _path){
     const table = context.env.TABLE;
     const ClouldflareCache = TimeSpans.Week * 2;
     const KvCache = context.env.CACHE_AGE_SHORT;
+
+    const css = await GetFileFromAssets(context, "/styling/main.min.css");
+    const js = await GetFileFromAssets(context, "/js/StatuspageHTML.min.js");
 
     const StatuspageStatusKV = context.env.StatuspageStatus;
     const StatuspageUrl = _path == Path.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
@@ -56,6 +60,11 @@ export default async function ModifyHTML(context, _path){
 
     var statuspageKvMetadata = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageMetadata));
 
+    if (statuspageKvMetadata == null) {
+        statuspageKvMetadata = {};
+        statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
+    }
+
     var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
 
     if (age > KvCache) { 
@@ -79,7 +88,7 @@ export default async function ModifyHTML(context, _path){
     var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
     html = html.replaceAll("{{CanonicalUrl}}", context.request.url);
-    html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
+    html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.host}`);
 
     html = html.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[statuspageKvMetadata[StatuspageKV.OriginalStatus]]);
 
@@ -123,6 +132,9 @@ export default async function ModifyHTML(context, _path){
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
+
+    html = html.replace("{{CSS}}", `<style>\n\t\t\t${css.split("\n").join("\n\t\t\t")}\n\t\t</style>`);
+    html = html.replace("{{JS}}", `<script>\n\t\t\t${js}\n\t\t</script>`);
 
     // context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
