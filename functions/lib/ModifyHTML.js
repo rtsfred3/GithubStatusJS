@@ -114,8 +114,7 @@ export default async function ModifyHTML(context, _path){
 
     if (path == Path.Amp) {
         html = html.replaceAll("{{Description}}", `A minified AMP website to monitor {{SiteName}} status updates.| ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
-    }
-    else {
+    } else {
         html = html.replaceAll("{{Description}}", `An unofficial website to monitor {{SiteName}} status updates. | ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
     }
 
@@ -123,10 +122,13 @@ export default async function ModifyHTML(context, _path){
 
     if (path == Path.Status) {
         html = html.replace("{{Body}}", "<statuspage-status data-url=\"{{StatuspageUrl}}\" fullScreen />");
-        // var body = [...html.matchAll(/<body>((\s|\S)*)<\/body>/g)][0][1];
-        //  html = html.replace(body, '<statuspage-status data-url="{{StatuspageUrl}}" fullScreen />');
-    } else if (path == Path.Component) {
+    } else
+    
+
+    if (path == Path.Path) {
         html = html.replace("{{Body}}", "<statuspage-status data-url=\"{{StatuspageUrl}}\" fullScreen />");
+    } else {
+        html = html.replace("{{Body}}", "<statuspage-app></statuspage-app><script>Router('{{StatuspageUrl}}', 7);</script>");
     }
 
     if (StatuspageUrl.startsWith("https://")) {
