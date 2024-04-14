@@ -36,19 +36,26 @@ export default async function ModifyHTML(context, _path){
     console.log(`Cache Bypass: ${bypassCache}`);
 
     if (response) {
-        if (parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache && !bypassCache) {
+        var isCacheValid = parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache;
+        
+        console.log(`Is Cache Valid? ${isCacheValid}`);
+
+        if (isCacheValid && !bypassCache) {
             console.log("Cache Hit");
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
+            _headers.set(HeaderTypes.LastModified, response.headers.get(HeaderTypes.LastModified));
 
             return response;
         } else {
-            if (_headers.has(HeaderTypes.Age)) {
-                _headers.delete(HeaderTypes.Age)
-            }
+            var headersToRemove = [HeaderTypes.Age, HeaderTypes.CfCacheStatus, HeaderTypes.CfCacheStatus];
 
-            if (_headers.has(HeaderTypes.CfCacheStatus)) {
-                _headers.delete(HeaderTypes.CfCacheStatus)
+            for(const header in headersToRemove) {
+                console.log(`Removed Header: ${header}`);
+
+                if (_headers.has(header)) {
+                    _headers.delete(header)
+                }
             }
         }
     }
