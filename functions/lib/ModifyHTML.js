@@ -10,7 +10,9 @@ import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 import CustomHeaders from './CustomHeaders.js';
 import GetFileFromAssets from './GetFileFromAssets.js';
 
-import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+// import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+
+import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
 
 export default async function ModifyHTML(context, _path){
     const db = context.env.CACHE_DB;
@@ -31,6 +33,9 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
     let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
 
+    // cache.delete(cacheKey);
+    // bypassCache = true;
+
     console.log(`Clouldflare Cache: ${ClouldflareCache}`);
     console.log(`KV Cache: ${KvCache}`);
     console.log(`Cache Bypass: ${bypassCache}`);
@@ -39,18 +44,22 @@ export default async function ModifyHTML(context, _path){
         var isCacheValid = parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache;
         
         console.log(`Is Cache Valid? ${isCacheValid}`);
+        console.log(`Cache Age: ${response.headers.get(HeaderTypes.Age)}`);
 
         if (isCacheValid && !bypassCache) {
             console.log("Cache Hit");
+
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
             _headers.set(HeaderTypes.LastModified, response.headers.get(HeaderTypes.LastModified));
 
             return response;
         } else {
-            var headersToRemove = [HeaderTypes.Age, HeaderTypes.CfCacheStatus, HeaderTypes.CfCacheStatus];
+            console.log("Cache Bypassed");
 
-            for(const header in headersToRemove) {
+            var headersToRemove = [ HeaderTypes.Age, HeaderTypes.CfCacheStatus, HeaderTypes.LastModified ];
+
+            for(const header of headersToRemove) {
                 console.log(`Removed Header: ${header}`);
 
                 if (_headers.has(header)) {
@@ -68,8 +77,7 @@ export default async function ModifyHTML(context, _path){
     var statuspageKvMetadata = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageMetadata));
 
     if (statuspageKvMetadata == null) {
-        statuspageKvMetadata = {};
-        statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
+        statuspageKvMetadata = { [StatuspageKV.LastUpdated]: 0 };
     }
 
     var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
@@ -127,13 +135,13 @@ export default async function ModifyHTML(context, _path){
 
     html = html.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
 
-    if (path == Path.Status) {
+    if (path == Path.Index) {
+        html = html.replace("{{Body}}", "<statuspage-status status=\"maintenance\" fullScreen />");
+    } else if (path == Path.Status) {
         html = html.replace("{{Body}}", "<statuspage-status data-url=\"{{StatuspageUrl}}\" fullScreen />");
-    } else
-    
-
-    if (path == Path.Path) {
-        html = html.replace("{{Body}}", "<statuspage-status data-url=\"{{StatuspageUrl}}\" fullScreen />");
+    } else if (path == Path.Component) {
+        console.log("TEST");
+        html = html.replace("{{Body}}", "<statuspage-status status=\"maintenance\" fullScreen />");
     } else {
         html = html.replace("{{Body}}", "<statuspage-app></statuspage-app><script>Router('{{StatuspageUrl}}', 7);</script>");
     }

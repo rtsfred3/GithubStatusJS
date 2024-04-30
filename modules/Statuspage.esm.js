@@ -148,11 +148,36 @@ class StatuspageDictionary {
     }
 
     static get Paths() {
+        var paths = {
+            [this.PathNames.Index]: '/',
+            [this.PathNames.Status]: '/status/',
+            [this.PathNames.Component]: '/components/',
+            [this.PathNames.Amp]: '/amp/'
+        };
+
+        return Object.freeze(paths);
+    }
+
+    static get PathNames() {
         return Object.freeze({
-            Index: '/',
-            Status: '/status/',
-            Components: '/components/'
+            Index: 'Index',
+            Status: 'Status',
+            Component: 'Component',
+            Amp: 'Amp',
+            Error: 'Error'
         });
+    }
+
+    static get Titles() {
+        var titles = {
+            [this.PathNames.Index]: `(Unofficial) {{SiteName}} Status`,
+            [this.PathNames.Status]: `(Unofficial) Mini {{SiteName}} Status`,
+            [this.PathNames.Component]: `(Unofficial) {{SiteName}} Status Components`,
+            [this.PathNames.Amp]: `(Unofficial) {{SiteName}} Status AMP`,
+            [this.PathNames.Error]: `(Unofficial) {{SiteName}} Status - Error`,
+        };
+
+        return Object.freeze(titles);
     }
 }
 
