@@ -8,8 +8,11 @@ import StatuspageKV from './StatuspageKV.js';
 import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 
 import CustomHeaders from './CustomHeaders.js';
+import GetFileFromAssets from './GetFileFromAssets.js';
 
-import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+// import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+
+import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
 
 export default async function ModifyHTML(context, _path){
     const db = context.env.CACHE_DB;
@@ -30,31 +33,52 @@ export default async function ModifyHTML(context, _path){
     let response = await cache.match(cacheKey);
     let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
 
+    // cache.delete(cacheKey);
+    // bypassCache = true;
+
     console.log(`Clouldflare Cache: ${ClouldflareCache}`);
     console.log(`KV Cache: ${KvCache}`);
     console.log(`Cache Bypass: ${bypassCache}`);
 
     if (response) {
-        if (parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache && !bypassCache) {
+        var isCacheValid = parseInt(response.headers.get(HeaderTypes.Age)) < ClouldflareCache;
+        
+        console.log(`Is Cache Valid? ${isCacheValid}`);
+        console.log(`Cache Age: ${response.headers.get(HeaderTypes.Age)}`);
+
+        if (isCacheValid && !bypassCache) {
             console.log("Cache Hit");
+
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
+            _headers.set(HeaderTypes.LastModified, response.headers.get(HeaderTypes.LastModified));
 
             return response;
         } else {
-            if (_headers.has(HeaderTypes.Age)) {
-                _headers.delete(HeaderTypes.Age)
-            }
+            console.log("Cache Bypassed");
 
-            if (_headers.has(HeaderTypes.CfCacheStatus)) {
-                _headers.delete(HeaderTypes.CfCacheStatus)
+            var headersToRemove = [ HeaderTypes.Age, HeaderTypes.CfCacheStatus, HeaderTypes.LastModified ];
+
+            for(const header of headersToRemove) {
+                console.log(`Removed Header: ${header}`);
+
+                if (_headers.has(header)) {
+                    _headers.delete(header)
+                }
             }
         }
     }
 
+    const css = await GetFileFromAssets(context, "/styling/main.min.css");
+    const js = await GetFileFromAssets(context, "/js/StatuspageHTML.min.js");
+
     var imageUrlRegex = /status(-min)?-good\.png/g;
 
     var statuspageKvMetadata = JSON.parse(await StatuspageStatusKV.get(StatuspageKV.StatuspageMetadata));
+
+    if (statuspageKvMetadata == null) {
+        statuspageKvMetadata = { [StatuspageKV.LastUpdated]: 0 };
+    }
 
     var age = parseInt((Date.now() - statuspageKvMetadata[StatuspageKV.LastUpdated]) / 1000);
 
@@ -79,7 +103,7 @@ export default async function ModifyHTML(context, _path){
     var html = path == Path.Amp ? AmpHtml : TemplateHtml;
 
     html = html.replaceAll("{{CanonicalUrl}}", context.request.url);
-    html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.hostname}`);
+    html = html.replaceAll("{{BaseUrl}}", `${CanonicalUrl.protocol}//${CanonicalUrl.host}`);
 
     html = html.replaceAll("{{MetaColor}}", StatuspageDictionary.MetaColors[statuspageKvMetadata[StatuspageKV.OriginalStatus]]);
 
@@ -105,21 +129,29 @@ export default async function ModifyHTML(context, _path){
 
     if (path == Path.Amp) {
         html = html.replaceAll("{{Description}}", `A minified AMP website to monitor {{SiteName}} status updates.| ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
-    }
-    else {
+    } else {
         html = html.replaceAll("{{Description}}", `An unofficial website to monitor {{SiteName}} status updates. | ${statuspageKvMetadata[StatuspageKV.StatuspageDescription]}`);
     }
 
     html = html.replaceAll("{{SiteName}}", statuspageKvMetadata[StatuspageKV.StatuspageName]);
 
-    if (path == Path.Status) {
-        var body = [...html.matchAll(/<body>((\s|\S)*)<\/body>/g)][0][1];
-         html = html.replace(body, '<statuspage-status data-url="{{StatuspageUrl}}" fullScreen />');
+    if (path == Path.Index) {
+        html = html.replace("{{Body}}", "<statuspage-status status=\"maintenance\" fullScreen />");
+    } else if (path == Path.Status) {
+        html = html.replace("{{Body}}", "<statuspage-status data-url=\"{{StatuspageUrl}}\" fullScreen />");
+    } else if (path == Path.Component) {
+        console.log("TEST");
+        html = html.replace("{{Body}}", "<statuspage-status status=\"maintenance\" fullScreen />");
+    } else {
+        html = html.replace("{{Body}}", "<statuspage-app></statuspage-app><script>Router('{{StatuspageUrl}}', 7);</script>");
     }
 
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
+
+    html = html.replace("{{CSS}}", `<style>\n\t\t\t${css.split("\n").join("\n\t\t\t")}\n\t\t</style>`);
+    html = html.replace("{{JS}}", `<script>\n\t\t\t${js}\n\t\t</script>`);
 
     // context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
