@@ -28,6 +28,10 @@ export default async function ModifyHTML(context, _path){
     console.log(`CF Bot Management Score: ${context.request.cf.botManagement.score}`);
     console.log(`CF Bot Management verifiedBot: ${context.request.cf.botManagement.verifiedBot}`);
     console.log(`CF verified Bot Category: ${context.request.cf.verifiedBotCategory}`);
+    
+    for (const [key, value] of Object.entries(context.request.cf.botManagement.detectionIds)) {
+        console.log(`CF Bot Management Detection IDs: ${key}: ${value}`);
+    }
 
     if (isVerifiedBot) {
         console.log(context.request.cf.botManagement.detectionIds);
