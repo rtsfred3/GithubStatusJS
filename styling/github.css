@@ -80,7 +80,7 @@ hr {
     height: calc(100vh - 1.15em + 0.275em);
 }
 
-statuspage-status {
+statuspage-status, statuspage-component {
     height: 240px;
     width: 100vw;
     text-align: center;
@@ -90,9 +90,20 @@ statuspage-status {
     display: table-cell;
 }
 
+statuspage-component {
+    height: 20vh;
+}
+
 statuspage-status[data-status]::before {
     content: attr(data-status);
     text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+}
+
+statuspage-component[data-message]::before {
+    content: attr(data-message);
+    /* text-transform: uppercase; */
     font-weight: bold;
     color: white;
 }

@@ -187,7 +187,7 @@ class StatuspageDictionary {
             [this.PathNames.Status]: `(Unofficial) Mini {{SiteName}} Status`,
             [this.PathNames.Component]: `(Unofficial) {{SiteName}} Status Components`,
             [this.PathNames.Amp]: `(Unofficial) {{SiteName}} Status AMP`,
-            [this.PathNames.Maintenance]: `Page Under Maintenance`,
+            [this.PathNames.Maintenance]: `Under Maintenance`,
             [this.PathNames.Error]: `(Unofficial) {{SiteName}} Status - Error`,
         };
 
@@ -356,7 +356,18 @@ class StatuspageHTMLElements {
 
         for (var i = 0; i < componentsJson.components.length; i++) {
             if (componentsJson.components[i].name.substring(0, 5) == 'Visit') { continue; }
-            componentsArr.push(StatuspageHTMLElements.StatusHTMLElement(componentsJson.components[i]));
+
+            const component = document.createElement("statuspage-component");
+            component.setAttribute('data-message', componentsJson.components[i].name);
+            component.setAttribute('data-status', StatuspageDictionary.IndicatorVals[componentsJson.components[i].status]);
+
+            const componentDiv = document.createElement("div");
+            componentDiv.setAttribute("id", componentsJson.components[i].id)
+            componentDiv.appendChild(component);
+
+            componentsArr.push(componentDiv);
+
+            // componentsArr.push(StatuspageHTMLElements.StatusHTMLElement(componentsJson.components[i]));
         }
 
         return componentsArr;

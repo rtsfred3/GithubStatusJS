@@ -175,7 +175,7 @@ class StatuspageDictionary {
             [this.PathNames.Status]: `(Unofficial) Mini {{SiteName}} Status`,
             [this.PathNames.Component]: `(Unofficial) {{SiteName}} Status Components`,
             [this.PathNames.Amp]: `(Unofficial) {{SiteName}} Status AMP`,
-            [this.PathNames.Maintenance]: `Page Under Maintenance`,
+            [this.PathNames.Maintenance]: `Under Maintenance`,
             [this.PathNames.Error]: `(Unofficial) {{SiteName}} Status - Error`,
         };
 
