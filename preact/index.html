@@ -4,26 +4,26 @@
         <meta charset="utf-8">
 
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="Web Component Page">
+        <meta name="application-name" content="(Unofficial) Cloudflare Status | Preact">
         <meta name="theme-color" content="#339966">
-        <meta name="description" content="Testing page for new features or ideas in GitHub Status.">
-        <!-- <meta name="keywords" content="GitHubStatus, GitHub Status, GitHub, Status, Mini Version"> -->
+        <meta name="description" content="Testing page for new features or ideas in Cloudflare Status.">
+        <meta name="keywords" content="CloudflareStatus, Cloudflare Status, Cloudflare, Status, Mini Version">
 
-        <meta property="og:site_name" content="GitHub Status">
-        <meta property="og:title" content="Web Component Page">
-        <meta property="og:description" content="Testing page for new features or ideas in GitHub Status.">
-        <meta property="og:image" content="https://githubstat.us/img/status-min.png">
+        <meta property="og:site_name" content="(Unofficial) Cloudflare Status">
+        <meta property="og:title" content="(Unofficial) Cloudflare Status | Preact">
+        <meta property="og:description" content="Testing page for new features or ideas in Cloudflare Status.">
+        <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
         <meta property="og:url" content="https://spstat.us/preact/">
 
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="Web Component Page">
-        <meta name="twitter:description" content="Testing page for new features or ideas in GitHub Status.">
-        <meta name="twitter:image:src" content="https://githubstat.us/img/status-min.png">
+        <meta name="twitter:title" content="(Unofficial) Cloudflare Status | Preact">
+        <meta name="twitter:description" content="Testing page for new features or ideas in Cloudflare Status.">
+        <meta name="twitter:image:src" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
 
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="Web Component Page">
+        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status | Preact">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -31,35 +31,28 @@
 
         <link rel="canonical" href="https://spstat.us/preact/" />
 
-        <!-- <link rel="stylesheet" type="text/css" href="../styling/main.min.css"> -->
+        <!-- <link rel="stylesheet" href="../styling/main.min.css"> -->
 
-        <!-- <link rel="stylesheet" href="../styling/github.css">
-        <link rel="stylesheet" href="../styling/messages.css"> -->
+        <link rel="modulepreload" href="https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs">
+        <link rel="modulepreload" href="../modules/Statuspage.esm.min.js">
 
-        <link rel="stylesheet" href="../styling/main.min.css">
-        
-        <!-- <script src="../js/StatuspageDictionary.js"></script>    
-        <script src="../js/StatuspageWebComponents.js"></script> -->
+        <link rel="preload" href="../styling/main.min.css" as="style" onload="this.rel='stylesheet'">
 
-        <!-- <script src="../js/StatuspageWebComponents.min.js"></script> -->
-
-        <title>Web Component Page</title>
+        <title>(Unofficial) Cloudflare Status | Preact</title>
     </head>
     <body>
-        <script type="importmap">
-            {
-              "imports": {
-                "StatuspageHTML": "../modules/Statuspage.esm.min.js",
-                "preact": "https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs"
-              }
-            }
-        </script>
-
         <script type="module">
-            import { h, render } from 'preact';
-            import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from 'StatuspageHTML';
+            import { h, render } from 'https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs';
+            import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from '../modules/Statuspage.esm.min.js';
 
-            const app = h(StatuspageWebComponents.Status.is, { "data-url": "https://www.cloudflarestatus.com/", "fullScreen": '' });
+            customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
+            customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+            customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
+            customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
+            customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
+            customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
+
+            const app = h(StatuspageWebComponents.Status.is, { "data-url": "https://www.cloudflarestatus.com", "fullScreen": '' });
 
             render(app, document.body);
         </script>
