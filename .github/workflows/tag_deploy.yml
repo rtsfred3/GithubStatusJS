@@ -39,6 +39,7 @@ jobs:
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/status/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/components/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/amp/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
+                curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/preact/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/sitemap.xml' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://spstat.us/robots.txt' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
                 curl --request GET --url 'https://api.bunny.net/purge?url=https://reddit.spstat.us/' --header 'AccessKey: ${{ secrets.BUNNY_API_KEY }}' --header 'accept: application/json'
