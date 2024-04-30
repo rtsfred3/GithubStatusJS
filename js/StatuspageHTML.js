@@ -160,11 +160,38 @@ class StatuspageDictionary {
     }
 
     static get Paths() {
+        var paths = {
+            [this.PathNames.Index]: '/',
+            [this.PathNames.Status]: '/status/',
+            [this.PathNames.Component]: '/components/',
+            [this.PathNames.Amp]: '/amp/'
+        };
+
+        return Object.freeze(paths);
+    }
+
+    static get PathNames() {
         return Object.freeze({
-            Index: '/',
-            Status: '/status/',
-            Components: '/components/'
+            Index: 'Index',
+            Status: 'Status',
+            Component: 'Component',
+            Amp: 'Amp',
+            Maintenance: 'Maintenance',
+            Error: 'Error'
         });
+    }
+
+    static get Titles() {
+        var titles = {
+            [this.PathNames.Index]: `(Unofficial) {{SiteName}} Status`,
+            [this.PathNames.Status]: `(Unofficial) Mini {{SiteName}} Status`,
+            [this.PathNames.Component]: `(Unofficial) {{SiteName}} Status Components`,
+            [this.PathNames.Amp]: `(Unofficial) {{SiteName}} Status AMP`,
+            [this.PathNames.Maintenance]: `Under Maintenance`,
+            [this.PathNames.Error]: `(Unofficial) {{SiteName}} Status - Error`,
+        };
+
+        return Object.freeze(titles);
     }
 }
 
@@ -329,7 +356,18 @@ class StatuspageHTMLElements {
 
         for (var i = 0; i < componentsJson.components.length; i++) {
             if (componentsJson.components[i].name.substring(0, 5) == 'Visit') { continue; }
-            componentsArr.push(StatuspageHTMLElements.StatusHTMLElement(componentsJson.components[i]));
+
+            const component = document.createElement("statuspage-component");
+            component.setAttribute('data-message', componentsJson.components[i].name);
+            component.setAttribute('data-status', StatuspageDictionary.IndicatorVals[componentsJson.components[i].status]);
+
+            const componentDiv = document.createElement("div");
+            componentDiv.setAttribute("id", componentsJson.components[i].id)
+            componentDiv.appendChild(component);
+
+            componentsArr.push(componentDiv);
+
+            // componentsArr.push(StatuspageHTMLElements.StatusHTMLElement(componentsJson.components[i]));
         }
 
         return componentsArr;
@@ -725,7 +763,8 @@ class StatuspageWebComponents {
             fetchStatus(url) {
                 return new Promise((res, rej) => {
                     var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
-        
+    
+                    this.removeAttribute('data-url');
                     fetch(baseUrl + '/api/v2/status.json')
                         .then(data => data.json())
                         .then((json) => {

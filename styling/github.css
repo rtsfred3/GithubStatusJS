@@ -80,7 +80,7 @@ hr {
     height: calc(100vh - 1.15em + 0.275em);
 }
 
-statuspage-status {
+statuspage-status, statuspage-component {
     height: 240px;
     width: 100vw;
     text-align: center;
@@ -90,9 +90,20 @@ statuspage-status {
     display: table-cell;
 }
 
+statuspage-component {
+    height: 20vh;
+}
+
 statuspage-status[data-status]::before {
     content: attr(data-status);
     text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+}
+
+statuspage-component[data-message]::before {
+    content: attr(data-message);
+    /* text-transform: uppercase; */
     font-weight: bold;
     color: white;
 }
@@ -101,9 +112,9 @@ statuspage-status[data-status="none"]::before, statuspage-status[data-status="go
     content: "good";
 }
 
-/* .status-height, statuspage-status {
+.status-height, statuspage-status {
     height: 240px;
-} */
+}
 
 @media only screen and (max-height: 400px) {
     .status-height, statuspage-status {

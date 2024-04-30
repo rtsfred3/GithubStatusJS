@@ -3,4 +3,5 @@ export default class Path {
     static get Status() { return 'Status'; }
     static get Component() { return 'Component'; }
     static get Amp() { return 'Amp'; }
+    static get Error() { return 'Error'; }
 };
