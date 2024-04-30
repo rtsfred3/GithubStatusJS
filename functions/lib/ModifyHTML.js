@@ -16,6 +16,7 @@ export default async function ModifyHTML(context, _path){
     const table = context.env.TABLE;
     const ClouldflareCache = TimeSpans.Week * 2;
     const KvCache = context.env.CACHE_AGE_SHORT;
+    const isVerifiedBot = context.request.cf.botManagement.verifiedBot;
 
     const StatuspageStatusKV = context.env.StatuspageStatus;
     const StatuspageUrl = _path == StatuspageDictionary.PathNames.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
@@ -23,6 +24,18 @@ export default async function ModifyHTML(context, _path){
     const path = _path;
 
     var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
+
+    console.log(`CF Bot Management Score: ${context.request.cf.botManagement.score}`);
+    console.log(`CF Bot Management verifiedBot: ${context.request.cf.botManagement.verifiedBot}`);
+    console.log(`CF verified Bot Category: ${context.request.cf.verifiedBotCategory}`);
+    
+    for (const [key, value] of Object.entries(context.request.cf.botManagement.detectionIds)) {
+        console.log(`CF Bot Management Detection IDs: ${key}: ${value}`);
+    }
+
+    if (isVerifiedBot) {
+        console.log(context.request.cf.botManagement.detectionIds);
+    }
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
@@ -158,9 +171,9 @@ export default async function ModifyHTML(context, _path){
 
     response = new Response(html, { headers: _headers });
 
-    // if (!bypassCache) {
-    //     context.waitUntil(cache.put(cacheKey, response.clone()));
-    // }
+    if (!bypassCache) {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+    }
 
     return response;
 }
