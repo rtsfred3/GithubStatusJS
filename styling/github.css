@@ -101,9 +101,9 @@ statuspage-status[data-status="none"]::before, statuspage-status[data-status="go
     content: "good";
 }
 
-/* .status-height, statuspage-status {
+.status-height, statuspage-status {
     height: 240px;
-} */
+}
 
 @media only screen and (max-height: 400px) {
     .status-height, statuspage-status {
