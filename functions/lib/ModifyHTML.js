@@ -171,9 +171,9 @@ export default async function ModifyHTML(context, _path){
 
     response = new Response(html, { headers: _headers });
 
-    // if (!bypassCache) {
-    //     context.waitUntil(cache.put(cacheKey, response.clone()));
-    // }
+    if (!bypassCache) {
+        context.waitUntil(cache.put(cacheKey, response.clone()));
+    }
 
     return response;
 }
