@@ -25,8 +25,13 @@ export default async function ModifyHTML(context, _path){
 
     var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
 
+    // console.log(context.request.cf.botManagement);
+
+    console.log(`CF Bot Management Corporate Proxy: ${context.request.cf.botManagement.corporateProxy}`);
+    console.log(`CF Bot Management Verified Bot: ${context.request.cf.botManagement.verifiedBot}`);
+    console.log(`CF Bot Management JS Detection: ${context.request.cf.botManagement.jsDetection.passed}`);
+    console.log(`CF verified Management Static Resource: ${context.request.cf.botManagement.staticResource}`);
     console.log(`CF Bot Management Score: ${context.request.cf.botManagement.score}`);
-    console.log(`CF Bot Management verifiedBot: ${context.request.cf.botManagement.verifiedBot}`);
     console.log(`CF verified Bot Category: ${context.request.cf.verifiedBotCategory}`);
     
     for (const [key, value] of Object.entries(context.request.cf.botManagement.detectionIds)) {
