@@ -1,21 +1,22 @@
+import UserAgents from './UserAgents.js';
+
 class BotChecker {
     constructor(_context) {
         this.context = _context;
         this.asOrg = this.context.request.cf.asOrganization;
         this.userAgent = this.context.request.headers.get('User-Agent');
 
-        this.botUserAgents = [ 
-            "facebookexternalhit/1.1",
-            "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
-            "Googlebot/2.1",
-            "Googlebot/2.1 (+http://www.google.com/bot.html)",
-            "Google-InspectionTool/1.0",
-            "Discordbot/2.0; +https://discordapp.com"
-        ];
+        this.botUserAgents = UserAgents.Google;
+        UserAgents.Bing.forEach((x) => this.botUserAgents.push(x));
+        UserAgents.DuckDuckGo.forEach((x) => this.botUserAgents.push(x));
+        UserAgents.Facebook.forEach((x) => this.botUserAgents.push(x));
+        UserAgents.Twitter.forEach((x) => this.botUserAgents.push(x));
+        UserAgents.Discord.forEach((x) => this.botUserAgents.push(x));
     
         this.botAsOrgs = [
             "Googlebot",
-            "Facebook"
+            "Facebook",
+            "Twitter"
         ];
     }
 
@@ -27,10 +28,13 @@ class BotChecker {
     }
 
     get IsBot() {
-        const userAgentMap = this.botUserAgents.map((x) => this.userAgent.includes(x));
-        const botAsOrgMap = this.botAsOrgs.map((x) => this.asOrg.includes(x));
+        const userAgentMap = this.botUserAgents.filter((x) => this.userAgent.includes(x));
+        const botAsOrgMap = this.botAsOrgs.filter((x) => this.asOrg.includes(x));
 
-        return userAgentMap.includes(true) || botAsOrgMap.includes(true);
+        console.log(userAgentMap.length > 0);
+        console.log(botAsOrgMap.length > 0);
+
+        return userAgentMap.length > 0 || botAsOrgMap.length > 0;
     }
 }
 
