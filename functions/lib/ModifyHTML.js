@@ -21,7 +21,7 @@ export default async function ModifyHTML(context, _path){
     const isVerifiedBot = context.request.cf.botManagement.verifiedBot;
 
     const StatuspageStatusKV = context.env.StatuspageStatus;
-    const StatuspageUrl = _path == StatuspageDictionary.PathNames.Amp ? "https://www.cloudflarestatus.com" : context.env.StatuspageBaseUrl;
+    const StatuspageUrl = context.env.StatuspageBaseUrl;
     const route = `/api/v2/status.json`;
     const path = _path;
 
