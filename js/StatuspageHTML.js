@@ -167,6 +167,8 @@ class StatuspageDictionary {
             [this.PathNames.Amp]: '/amp/'
         };
 
+        paths[this.PathNames.Components] = paths[this.PathNames.Component];
+
         return Object.freeze(paths);
     }
 
@@ -175,6 +177,7 @@ class StatuspageDictionary {
             Index: 'Index',
             Status: 'Status',
             Component: 'Component',
+            Components: 'Components',
             Amp: 'Amp',
             Maintenance: 'Maintenance',
             Error: 'Error'
