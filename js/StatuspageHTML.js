@@ -202,7 +202,10 @@ class StatuspageHTMLElements {
      * @type {HTMLDivElement}
      */
     static get ErrorHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.error, true);
+        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+        status.setAttribute('status', StatuspageDictionary.StatusEnums.error);
+        status.setAttribute('fullScreen', '');
+        return status;
     }
 
     /**
@@ -211,7 +214,10 @@ class StatuspageHTMLElements {
      * @type {HTMLDivElement}
      */
     static get LoadingHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.loading, true);
+        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+        status.setAttribute('status', StatuspageDictionary.StatusEnums.loading);
+        status.setAttribute('fullScreen', '');
+        return status;
     }
 
     /**
@@ -716,18 +722,15 @@ class StatuspageWebComponents {
         }
     }
     
-    static get AppLoading() {
+    static get Loading() {
         return class extends HTMLElement {
             constructor() { super(); }
 
             connectedCallback() {
-                this.app = document.createElement('statuspage-status');
-                this.app.setAttribute("data-status", StatuspageDictionary.StatusEnums.loading);
-                this.app.setAttribute("fullScreen", "");
-                this.replaceWith(this.app);
+                this.replaceWith(StatuspageHTMLElements.LoadingHTMLElement);
             }
             
-            static get is() { return 'statuspage-app-loading'; }
+            static get is() { return 'statuspage-loading'; }
         }
     }
 
@@ -740,7 +743,7 @@ class StatuspageWebComponents {
 
                 var isFullScreen = this.hasAttribute('fullScreen');
 
-                this.setAttribute('data-status', 'loading');
+                this.setAttribute('data-status', StatuspageDictionary.StatusEnums.loading);
                 this.setAttribute('fullScreen', '');
                 this.setThemeMetaTags(StatuspageDictionary.StatusEnums.loading);
 
@@ -1480,7 +1483,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
 }
 
 customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
-customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+customElements.define(StatuspageWebComponents.Loading.is, StatuspageWebComponents.Loading);
 customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
