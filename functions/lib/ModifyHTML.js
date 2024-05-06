@@ -29,8 +29,7 @@ export default async function ModifyHTML(context, _path){
 
     const botChecker = new BotChecker(context);
 
-    console.log(context.request);
-    console.log(`isBot ${botChecker.IsBot}`);
+    console.log(`isBot: ${botChecker.IsBot}`);
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
@@ -169,6 +168,9 @@ export default async function ModifyHTML(context, _path){
         html = html.replace("{{JS}}", `<script>\n\t\t\t${js}\n\t\t</script>`);
     }
     else {
+        html = html.replace("{{CSS}}", "");
+        html = html.replace("{{JS}}", "");
+        
         _headers.SetPrivateCacheControl();
     }
 
