@@ -94,7 +94,7 @@ export default async function ModifyHTML(context, _path){
 
     console.log(`StatuspageKV.LastUpdated: ${age}`);
 
-    if (age > KvCache || bypassCache) { 
+    if (age > KvCache) { 
         console.log(`Updating Data in KV`);
 
         const statusRes = await fetch(`${StatuspageUrl}${route}`);
@@ -161,6 +161,7 @@ export default async function ModifyHTML(context, _path){
 
     if (StatuspageUrl.startsWith("https://")) {
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
+        html = html.replaceAll("{{DnsStatuspageUrl}}", StatuspageUrl.replace('https://', '//'));
     }
 
     if (!botChecker.IsFacebookBot) {

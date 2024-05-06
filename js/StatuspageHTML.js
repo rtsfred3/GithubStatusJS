@@ -796,6 +796,10 @@ class StatuspageWebComponents {
                 if (this.hasAttribute('status')) {
                     this.removeAttribute('status');
                 }
+                
+                Array.from(document.getElementsByTagName("meta")).filter((mTag) => {
+                    return ["theme-color", "apple-mobile-web-app-status-bar-style"].includes((mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")));
+                }).forEach((e) => e.setAttribute('content', StatuspageDictionary.MetaColors[status]));
             }
         
             static get is() { return 'statuspage-status'; }
