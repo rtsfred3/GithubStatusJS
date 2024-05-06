@@ -9,6 +9,8 @@ import DeduplicateArrayOfArrays from "./DeduplicateArrayOfArrays.js";
 import CustomHeaders from './CustomHeaders.js';
 import GetFileFromAssets from './GetFileFromAssets.js';
 
+import { BotChecker } from './BotChecker.js';
+
 import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
 
 export default async function ModifyHTML(context, _path){
@@ -25,28 +27,17 @@ export default async function ModifyHTML(context, _path){
 
     var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
 
-    // console.log(context.request.cf.botManagement);
+    const botChecker = new BotChecker(context);
 
-    console.log(`CF Bot Management Corporate Proxy: ${context.request.cf.botManagement.corporateProxy}`);
-    console.log(`CF Bot Management Verified Bot: ${context.request.cf.botManagement.verifiedBot}`);
-    console.log(`CF Bot Management JS Detection: ${context.request.cf.botManagement.jsDetection.passed}`);
-    console.log(`CF verified Management Static Resource: ${context.request.cf.botManagement.staticResource}`);
-    console.log(`CF Bot Management Score: ${context.request.cf.botManagement.score}`);
-    console.log(`CF verified Bot Category: ${context.request.cf.verifiedBotCategory}`);
-    
-    for (const [key, value] of Object.entries(context.request.cf.botManagement.detectionIds)) {
-        console.log(`CF Bot Management Detection IDs: ${key}: ${value}`);
-    }
-
-    if (isVerifiedBot) {
-        console.log(context.request.cf.botManagement.detectionIds);
-    }
+    console.log(context.request);
+    console.log(`isBot ${botChecker.IsBot}`);
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
     const cache = caches.default;
     let response = await cache.match(cacheKey);
     let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
+    bypassCache = botChecker.IsBot ? true : bypassCache;
 
     if (path == StatuspageDictionary.PathNames.Maintenance) {
         bypassCache = true;
@@ -133,6 +124,10 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll(img[0], img[0].replace('good', statuspageKvMetadata[StatuspageKV.OriginalStatus]));
     }
 
+    if (botChecker.IsBot) {
+        html = html.replace("{{Body}}", "");
+    }
+
     if (path == StatuspageDictionary.PathNames.Index) {
         html = html.replaceAll("{{Title}}", StatuspageDictionary.Titles.Index);
         html = html.replace("{{Body}}", "<statuspage-app data-url=\"{{StatuspageUrl}}\"></statuspage-app>");
@@ -169,12 +164,20 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll("{{StatuspageUrl}}", StatuspageUrl);
     }
 
-    html = html.replace("{{CSS}}", `<style>\n\t\t\t${css.split("\n").join("\n\t\t\t")}\n\t\t</style>`);
-    html = html.replace("{{JS}}", `<script>\n\t\t\t${js}\n\t\t</script>`);
+    if (!botChecker.IsFacebookBot) {
+        html = html.replace("{{CSS}}", `<style>\n\t\t\t${css.split("\n").join("\n\t\t\t")}\n\t\t</style>`);
+        html = html.replace("{{JS}}", `<script>\n\t\t\t${js}\n\t\t</script>`);
+    }
+    else {
+        _headers.SetPrivateCacheControl();
+    }
 
-    // context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
+    context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
-    response = new Response(html, { headers: _headers });
+    response = new Response(html, {
+        headers: _headers,
+        status: !botChecker.IsFacebookBot ? 200 : 206
+    });
 
     if (!bypassCache) {
         context.waitUntil(cache.put(cacheKey, response.clone()));
