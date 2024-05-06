@@ -105,7 +105,7 @@ export default async function ModifyHTML(context, _path){
         statuspageKvMetadata[StatuspageKV.StatuspageName] = statusData.page.name;
         statuspageKvMetadata[StatuspageKV.LastUpdated] = Date.now();
 
-        context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
+        // context.waitUntil(StatuspageStatusKV.put(StatuspageKV.StatuspageMetadata, JSON.stringify(statuspageKvMetadata)));
     }
 
     var formattedDateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', hour12: false, minute: '2-digit', second:'2-digit' };
