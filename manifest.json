@@ -199,5 +199,9 @@
             "sizes": "1280x720",
             "type": "image/png"
         }
+    ],
+
+    "scope_extensions": [
+        { "origin": "githubstat.us" }
     ]
 }

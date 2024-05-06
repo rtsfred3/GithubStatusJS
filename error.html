@@ -2,24 +2,22 @@
 <html lang="en">
     <head>
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="GitHub Status">
+        <meta name="application-name" content="(Unofficial) Github Status">
         <meta name="theme-color" content="#646464">
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="GitHub Status">
+        <meta name="apple-mobile-web-app-title" content="(Unofficial) Github Status">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#646464">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
         <style>
-            *{margin:0;padding:0;}body{font-family:arial;}#mainStatus{height:100vh;width:100%;text-align:center;display:table;font-size:48pt;font-weight:700;background-color:#646464;color:#fff;}.center-status{vertical-align:middle;display:table-cell;}
+            *{margin:0;padding:0}body{font-family:arial}statuspage-component,statuspage-status{height:240px;width:100vw;text-align:center;font-size:48pt;vertical-align:middle;display:table-cell}:root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464}statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}[fullScreen]{height:100vh}[data-status=error]{background-color:var(--error)}
         </style>
 
-        <title>Github Status</title>
+        <title>(Unofficial) Github Status</title>
     </head>
     <body>
-        <div id="mainStatus">
-            <span class="center-status">ERROR</span>
-        </div>
+        <statuspage-status data-status="error" fullScreen></statuspage-status>
     </body>
 </html>

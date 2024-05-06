@@ -5,6 +5,11 @@ Headers.prototype.updateCacheControl = function(contentControlAge) {
     this.set(HeaderTypes.CloudflareCDNCacheControl, `max-age=${contentControlAge}`);
 }
 
+Headers.prototype.SetPrivateCacheControl = function() {
+    this.set(HeaderTypes.CacheControl, `no-cache`);
+    this.set(HeaderTypes.CloudflareCDNCacheControl, `max-age=0`);
+}
+
 export default function CustomHeaders(contentType, contentControlAge){
     let headers = new Headers();
 
