@@ -170,16 +170,13 @@ export default async function ModifyHTML(context, _path){
     else {
         html = html.replace("{{CSS}}", "");
         html = html.replace("{{JS}}", "");
-        
+
         _headers.SetPrivateCacheControl();
     }
 
     context.waitUntil(StatuspageStatusKV.put(CanonicalUrl, html));
 
-    response = new Response(html, {
-        headers: _headers,
-        status: !botChecker.IsFacebookBot ? 200 : 206
-    });
+    response = new Response(html, { headers: _headers });
 
     if (!bypassCache) {
         context.waitUntil(cache.put(cacheKey, response.clone()));
