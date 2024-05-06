@@ -742,6 +742,7 @@ class StatuspageWebComponents {
 
                 this.setAttribute('data-status', 'loading');
                 this.setAttribute('fullScreen', '');
+                this.setThemeMetaTags(StatuspageDictionary.StatusEnums.loading);
 
                 this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
                     ? this.getAttribute('status')
@@ -779,6 +780,7 @@ class StatuspageWebComponents {
                             
                             res();
                         }).catch((error) => {
+                            this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
                             this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
                             rej(error);
                         });
