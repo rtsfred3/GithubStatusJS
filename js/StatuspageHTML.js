@@ -202,7 +202,10 @@ class StatuspageHTMLElements {
      * @type {HTMLDivElement}
      */
     static get ErrorHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.error, true);
+        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+        status.setAttribute('status', StatuspageDictionary.StatusEnums.error);
+        status.setAttribute('fullScreen', '');
+        return status;
     }
 
     /**
@@ -211,7 +214,10 @@ class StatuspageHTMLElements {
      * @type {HTMLDivElement}
      */
     static get LoadingHTMLElement(){
-        return StatuspageHTMLElements.StatusHTMLElement(StatuspageDictionary.StatusEnums.loading, true);
+        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+        status.setAttribute('status', StatuspageDictionary.StatusEnums.loading);
+        status.setAttribute('fullScreen', '');
+        return status;
     }
 
     /**
@@ -716,18 +722,15 @@ class StatuspageWebComponents {
         }
     }
     
-    static get AppLoading() {
+    static get Loading() {
         return class extends HTMLElement {
             constructor() { super(); }
 
             connectedCallback() {
-                this.app = document.createElement('statuspage-status');
-                this.app.setAttribute("data-status", StatuspageDictionary.StatusEnums.loading);
-                this.app.setAttribute("fullScreen", "");
-                this.replaceWith(this.app);
+                this.replaceWith(StatuspageHTMLElements.LoadingHTMLElement);
             }
             
-            static get is() { return 'statuspage-app-loading'; }
+            static get is() { return 'statuspage-loading'; }
         }
     }
 
@@ -740,8 +743,9 @@ class StatuspageWebComponents {
 
                 var isFullScreen = this.hasAttribute('fullScreen');
 
-                this.setAttribute('data-status', 'loading');
+                this.setAttribute('data-status', StatuspageDictionary.StatusEnums.loading);
                 this.setAttribute('fullScreen', '');
+                this.setThemeMetaTags(StatuspageDictionary.StatusEnums.loading);
 
                 this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
                     ? this.getAttribute('status')
@@ -754,6 +758,7 @@ class StatuspageWebComponents {
                 if (this.hasAttribute('data-url')) {
                     this.fetchStatus(this.getAttribute('data-url'));
                 } else {
+                    this.setThemeMetaTags(status);
                     this.parseStatus(this.status, this.fullScreen);
                 }
 
@@ -769,22 +774,32 @@ class StatuspageWebComponents {
                         .then(data => data.json())
                         .then((json) => {
                             if ('status' in json) {
+                                this.setThemeMetaTags(json.status.indicator);
                                 this.parseStatus(json.status.indicator, this.fullScreen);
                             } else {
+                                this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
                                 this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
                             }
                             
                             res();
                         }).catch((error) => {
+                            this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
                             this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
                             rej(error);
                         });
                 })
             }
 
+            setThemeMetaTags(status) {
+                Array.from(document.getElementsByTagName("meta")).filter((mTag) => {
+                    return ["theme-color", "apple-mobile-web-app-status-bar-style"].includes((mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")));
+                }).forEach((e) => e.setAttribute('content', StatuspageDictionary.MetaColors[status]));
+            }
+
             parseStatus(status, fullScreen) {
                 console.log(status, fullScreen);
-
+                
+                this.setThemeMetaTags(status);
                 this.setAttribute('data-status', status);
                 
                 if (fullScreen) {
@@ -1468,7 +1483,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
 }
 
 customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
-customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+customElements.define(StatuspageWebComponents.Loading.is, StatuspageWebComponents.Loading);
 customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
