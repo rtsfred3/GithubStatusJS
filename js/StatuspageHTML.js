@@ -242,6 +242,7 @@ class StatuspageHTMLElements {
     static get AppLoadingHTMLElement() {
         var app = StatuspageHTMLElements.AppHTMLElement;
         app.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
+        app.firstElementChild.setAttribute('id', 'status');
         return app;
     }
 

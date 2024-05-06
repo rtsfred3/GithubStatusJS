@@ -25,18 +25,20 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
+    console.log(context.env.StatuspageStatus);
+    console.log(await StatuspageStatusKV.list());
+
     var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
 
     const botChecker = new BotChecker(context);
-
-    console.log(`isBot: ${botChecker.IsBot}`);
+    const isBot = botChecker.IsBot;
 
     var CanonicalUrl = new URL(context.request.url);
     const cacheKey = new Request(CanonicalUrl.toString(), context.request);
     const cache = caches.default;
     let response = await cache.match(cacheKey);
     let bypassCache = /^true$/i.test(await StatuspageStatusKV.get(StatuspageKV.BypassCache));
-    bypassCache = botChecker.IsBot ? true : bypassCache;
+    bypassCache = isBot ? true : bypassCache;
 
     if (path == StatuspageDictionary.PathNames.Maintenance) {
         bypassCache = true;
@@ -123,8 +125,10 @@ export default async function ModifyHTML(context, _path){
         html = html.replaceAll(img[0], img[0].replace('good', statuspageKvMetadata[StatuspageKV.OriginalStatus]));
     }
 
-    if (botChecker.IsBot) {
-        html = html.replace("{{Body}}", "");
+    if (isBot) {
+        html = html.replace(`>
+        {{Body}}
+    <`, "><");
     }
 
     if (path == StatuspageDictionary.PathNames.Index) {
@@ -169,8 +173,11 @@ export default async function ModifyHTML(context, _path){
         html = html.replace("{{JS}}", `<script>\n\t\t\t${js}\n\t\t</script>`);
     }
     else {
-        html = html.replace("{{CSS}}", "");
-        html = html.replace("{{JS}}", "");
+        html = html.replace(`>
+
+        {{CSS}}
+
+        {{JS}}`, ">");
 
         _headers.SetPrivateCacheControl();
     }
