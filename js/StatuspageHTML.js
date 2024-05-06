@@ -754,6 +754,7 @@ class StatuspageWebComponents {
                 if (this.hasAttribute('data-url')) {
                     this.fetchStatus(this.getAttribute('data-url'));
                 } else {
+                    this.setThemeMetaTags(status);
                     this.parseStatus(this.status, this.fullScreen);
                 }
 
@@ -769,8 +770,10 @@ class StatuspageWebComponents {
                         .then(data => data.json())
                         .then((json) => {
                             if ('status' in json) {
+                                this.setThemeMetaTags(json.status.indicator);
                                 this.parseStatus(json.status.indicator, this.fullScreen);
                             } else {
+                                this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
                                 this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
                             }
                             
@@ -782,9 +785,16 @@ class StatuspageWebComponents {
                 })
             }
 
+            setThemeMetaTags(status) {
+                Array.from(document.getElementsByTagName("meta")).filter((mTag) => {
+                    return ["theme-color", "apple-mobile-web-app-status-bar-style"].includes((mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")));
+                }).forEach((e) => e.setAttribute('content', StatuspageDictionary.MetaColors[status]));
+            }
+
             parseStatus(status, fullScreen) {
                 console.log(status, fullScreen);
-
+                
+                this.setThemeMetaTags(status);
                 this.setAttribute('data-status', status);
                 
                 if (fullScreen) {
@@ -796,10 +806,6 @@ class StatuspageWebComponents {
                 if (this.hasAttribute('status')) {
                     this.removeAttribute('status');
                 }
-                
-                Array.from(document.getElementsByTagName("meta")).filter((mTag) => {
-                    return ["theme-color", "apple-mobile-web-app-status-bar-style"].includes((mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")));
-                }).forEach((e) => e.setAttribute('content', StatuspageDictionary.MetaColors[status]));
             }
         
             static get is() { return 'statuspage-status'; }
