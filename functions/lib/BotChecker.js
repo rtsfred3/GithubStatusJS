@@ -31,9 +31,6 @@ class BotChecker {
         const userAgentMap = this.botUserAgents.filter((x) => this.userAgent.includes(x));
         const botAsOrgMap = this.botAsOrgs.filter((x) => this.asOrg.includes(x));
 
-        console.log(userAgentMap.length > 0);
-        console.log(botAsOrgMap.length > 0);
-
         return userAgentMap.length > 0 || botAsOrgMap.length > 0;
     }
 }
