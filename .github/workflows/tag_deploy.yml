@@ -114,7 +114,9 @@ jobs:
               run: npm install
 
             - name: Test Build
-              run: npm run tauri build
+              run: |
+                cd tauri
+                npm run tauri build
             
             - name: Uploading Artifacts
               uses: actions/upload-artifact@v3
