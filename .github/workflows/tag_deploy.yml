@@ -71,8 +71,8 @@ jobs:
                   args: '--target aarch64-apple-darwin'
                 - platform: 'macos-latest' # for Intel based macs.
                   args: '--target x86_64-apple-darwin'
-                # - platform: 'ubuntu-22.04'
-                #   args: ''
+                - platform: 'ubuntu-22.04'
+                  args: ''
                 # - platform: 'windows-latest'
                 #   args: ''
         
@@ -107,9 +107,20 @@ jobs:
             - name: Install Frontend Dependencies
               run: |
                 cd tauri/ && npm install
+            
+            - name: Set Version Number
+              id: version
+              run: echo "::set-output name=version::$(echo ${{ github.ref_name }} | sed -e 's/v//g')"
 
-            # - name: Test Build
-            #   run: cd tauri/ && npm run tauri build
+            - name: Update Version Number
+              run: |
+                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package.json
+                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package-lock.json
+                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' src-tauri/Cargo.toml
+                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' src-tauri/tauri.conf.json
+            
+            - name: Test Build
+              run: cd tauri/ && npm run tauri build
             
             - name: Uploading Artifacts
               uses: actions/upload-artifact@v3
@@ -119,15 +130,11 @@ jobs:
                       tauri/src-tauri/target/release/bundle/dmg/*.dmg
                       tauri/src-tauri/target/release/bundle/appimage/*.AppImage
             
-            - name: Get Version Number
-              id: version
-              run: echo "::set-output name=version::$(echo ${{ github.ref_name }} | sed -e 's/v//g')"
             - uses: tauri-apps/tauri-action@v0
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                 projectPath: tauri/
-                appVersion: ${{ steps.version.outputs.version }}
                 tagName: ${{ github.ref_name }}
                 releaseName: '${{ github.ref_name }}'
                 releaseBody: 'See the assets to download this version and install.'
