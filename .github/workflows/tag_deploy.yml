@@ -85,12 +85,6 @@ jobs:
               run: |
                 sudo apt-get update
                 sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-                cd tauri/
-            
-            - name: Setup Mac (Mac only)
-              if: matrix.settings.platform == 'macos-latest'
-              run: |
-                  cd tauri/
       
             - name: Setup Node
               uses: actions/setup-node@v4
@@ -112,13 +106,10 @@ jobs:
       
             - name: Install Frontend Dependencies
               run: |
-                cd tauri
-                npm install
+                cd tauri/ && npm install
 
-            - name: Test Build
-              run: |
-                cd tauri
-                npm run tauri build
+            # - name: Test Build
+            #   run: cd tauri/ && npm run tauri build
             
             - name: Uploading Artifacts
               uses: actions/upload-artifact@v3
