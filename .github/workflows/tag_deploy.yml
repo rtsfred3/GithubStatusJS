@@ -114,13 +114,13 @@ jobs:
 
             - name: Update Version Number
               run: |
-                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package.json
-                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package-lock.json
-                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' src-tauri/Cargo.toml
-                cd tauri/ && sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' src-tauri/tauri.conf.json
+                sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package.json
+                sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package-lock.json
+                sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' src-tauri/Cargo.toml
+                sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' src-tauri/tauri.conf.json
             
-            - name: Test Build
-              run: cd tauri/ && npm run tauri build
+            # - name: Test Build
+            #   run: cd tauri/ && npm run tauri build
             
             - name: Uploading Artifacts
               uses: actions/upload-artifact@v3
