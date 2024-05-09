@@ -106,7 +106,7 @@ jobs:
       
             - name: Install Frontend Dependencies
               run: |
-                cd tauri/ && npm install
+                cd tauri/ && npm install && cd ..
             
             - name: Set Version Number
               id: version
@@ -114,6 +114,9 @@ jobs:
 
             - name: Update Version Number
               run: |
+                pwd
+                cd tauri/
+                pwd
                 sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package.json
                 # sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package-lock.json
                 sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' ./src-tauri/Cargo.toml
