@@ -1,4 +1,4 @@
-name: BunnyCDNDeploy
+name: BuildAndWebDeploy
 
 on:
     push:
@@ -118,7 +118,6 @@ jobs:
                 cd tauri/
                 pwd
                 sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package.json
-                # sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' package-lock.json
                 sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' ./src-tauri/Cargo.toml
                 sed -i -e 's/0.0.0/${{ steps.version.outputs.version }}/g' ./src-tauri/tauri.conf.json
             
