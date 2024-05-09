@@ -118,14 +118,18 @@ jobs:
                 path: |
                       tauri/src-tauri/target/release/bundle/dmg/*.dmg
                       tauri/src-tauri/target/release/bundle/appimage/*.AppImage
-             
+            
+            - name: Get Version Number
+              id: version
+              run: echo "::set-output name=version::$(echo ${{ github.ref_name }} | sed -e 's/v//g')"
             - uses: tauri-apps/tauri-action@v0
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                 projectPath: tauri/
+                appVersion: ${{ steps.version.outputs.version }}
                 tagName: ${{ github.ref_name }}
-                releaseName: 'Latest Tauri ${{ github.ref_name }}'
+                releaseName: '${{ github.ref_name }}'
                 releaseBody: 'See the assets to download this version and install.'
                 releaseDraft: false
                 prerelease: false
