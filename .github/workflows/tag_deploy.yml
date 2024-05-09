@@ -71,8 +71,8 @@ jobs:
                   args: '--target aarch64-apple-darwin'
                 - platform: 'macos-latest' # for Intel based macs.
                   args: '--target x86_64-apple-darwin'
-                - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
-                  args: ''
+                # - platform: 'ubuntu-22.04'
+                #   args: ''
                 # - platform: 'windows-latest'
                 #   args: ''
         
@@ -112,19 +112,23 @@ jobs:
       
             - name: Install Frontend Dependencies
               run: npm install
+
+            - name: Test Build
+              run: npm run tauri build
             
             - name: Uploading Artifacts
               uses: actions/upload-artifact@v3
               with:
                 name: release-artifacts
                 path: |
-                      src-tauri/target/release/bundle/dmg/*.dmg
-                      src-tauri/target/release/bundle/appimage/*.AppImage
+                      tauri/src-tauri/target/release/bundle/dmg/*.dmg
+                      tauri/src-tauri/target/release/bundle/appimage/*.AppImage
              
             - uses: tauri-apps/tauri-action@v0
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
+                projectPath: tauri/
                 tagName: ${{ github.ref_name }}
                 releaseName: 'Latest Tauri ${{ github.ref_name }}'
                 releaseBody: 'See the assets to download this version and install.'
