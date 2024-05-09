@@ -25,9 +25,6 @@ export default async function ModifyHTML(context, _path){
     const route = `/api/v2/status.json`;
     const path = _path;
 
-    console.log(context.env.StatuspageStatus);
-    console.log(await StatuspageStatusKV.list());
-
     var _headers = CustomHeaders("text/html; charset=utf-8", ClouldflareCache);
 
     const botChecker = new BotChecker(context);

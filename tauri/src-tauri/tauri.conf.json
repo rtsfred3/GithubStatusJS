@@ -1,0 +1,47 @@
+{
+  "build": {
+    "beforeBuildCommand": "cp ../StatuspageHTML/index.html src/index.html",
+    "beforeDevCommand": "cp ../StatuspageHTML/index.html src/index.html",
+    "devPath": "../src",
+    "distDir": "../src",
+    "withGlobalTauri": true
+  },
+  "package": {
+    "productName": "CF Status",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "window": {
+        "all": true
+      }
+    },
+    "windows": [
+      {
+        "title": "(Unofficial) Cloudflare Status",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "us.spstat",
+      "icon": [
+        "../../img/cf/maskable/48px.png",
+        "../../img/cf/maskable/128px.png",
+        "../../img/cf/maskable/512px.png",
+        "../../img/cf/favicon.ico",
+        "../../img/cf/icon.icns"
+      ]
+    }
+  }
+}
