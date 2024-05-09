@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "CF Status",
+    "productName": "CFStatus",
     "version": "0.0.0"
   },
   "tauri": {
