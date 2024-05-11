@@ -5,8 +5,7 @@ on:
         tags:
             - 'v[0-9]+\.[0-9]+\.[0-9]+'
 
-
-            jobs:
+jobs:
     deploy:
         runs-on: ubuntu-latest
         name: Deploy to BunnyCDN
