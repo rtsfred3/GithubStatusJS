@@ -19,7 +19,7 @@ jobs:
             - name: Set Version Number
               id: version
               run: |
-                echo "version=$(echo ${{ github.ref_name }} | sed -e 's/v//g' | | tr "." "\." )" >> $GITHUB_OUTPUT
+                echo "version=$(echo '${{ github.ref_name }}' | sed -e 's/v//g' | tr '.' '\.' )" >> $GITHUB_OUTPUT
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
                 echo "${{ steps.version.outputs.version }}"
