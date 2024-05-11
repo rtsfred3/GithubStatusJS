@@ -23,8 +23,8 @@ jobs:
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
                 echo "${{ steps.version.outputs.version }}"
-                sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/index.html
-                sed -ure 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/index.html > StatuspageHTML/index.html
+                sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/index.html > StatuspageHTML/index.tmp.html
+                sed -ure 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/index.tmp.html > StatuspageHTML/index.html
                 # while read -r line; do if [[ ${#line} -gt 0 ]]; then echo "$line"; fi; done < StatuspageHTML/index.html > StatuspageHTML/index.html
                 sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e  's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.shell.html
                 while read -r line; do if [[ ${#line} -gt 0 ]]; then echo "$line"; fi; done < StatuspageHTML/static/index.shell.html > StatuspageHTML/static/index.shell.html
@@ -33,9 +33,6 @@ jobs:
                 sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/components\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/components.shell.html
                 sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/error/g' -e 's/{{ThemeColor}}/#646464/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.error.html
                 sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/maintenance/g' -e 's/{{ThemeColor}}/#0366D6/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.maintenance.html
-                # sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/static/index.shell.html
-                # sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/static/index.error.html
-                # sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/static/index.maintenance.html
                 sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/amp/index.html
                 sed -i -e 's/{{version}}/${{ steps.version.outputs.version }}/g' preact/index.html
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.html
