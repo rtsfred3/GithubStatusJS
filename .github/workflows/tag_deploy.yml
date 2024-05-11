@@ -18,12 +18,6 @@ jobs:
                 echo '${{ github.ref_name }}'
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
-                # echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/index.html
-                # echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.shell.html
-                # echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.error.html
-                # echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.maintenance.html
-                # echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/amp/index.html
-                # echo "<!-- ${{ github.ref_name }} -->" >> preact/index.html
                 sed -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.html > StatuspageHTML/index.html
                 sed -ure 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/index.html > StatuspageHTML/index.html
                 # while read -r line; do if [[ ${#line} -gt 0 ]]; then echo "$line"; fi; done < StatuspageHTML/index.html > StatuspageHTML/index.html
