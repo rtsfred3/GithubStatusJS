@@ -19,16 +19,22 @@ jobs:
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/index.html
-                echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/index.shell.html
+                echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.shell.html
+                echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.error.html
+                echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.maintenance.html
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/error.html
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/amp/index.html
                 echo "<!-- ${{ github.ref_name }} -->" >> preact/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.shell.html
+                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.error.html
+                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.maintenance.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/amp/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' preact/index.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.html
-                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.shell.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.shell.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/index.shell.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.shell.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/index.error.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.error.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/index.maintenance.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.maintenance.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/error.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/error.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/amp/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/amp/index.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/preact/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @preact/index.html
