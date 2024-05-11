@@ -5,15 +5,15 @@
 
         <meta name="author" content="rtsfred3">
         <meta name="application-name" content="(Unofficial) Cloudflare Statuspage">
-        <meta name="theme-color" content="#53C68C">
+        <meta name="theme-color" content="{{ThemeColor}}">
         <meta name="description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
         <meta name="keywords" content="Cloudflare Statuspage, Cloudflare Status Page, Cloudflare Status, Statuspage, Status">
         
         <meta property="og:site_name" content="(Unofficial) Cloudflare Statuspage">
-        <meta property="og:title" content="Unofficial Statuspage">
+        <meta property="og:title" content="(Unofficial) Cloudflare Statuspage">
         <meta property="og:description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://spstat.us/">
+        <meta property="og:url" content="https://spstat.us/{{path}}">
         <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="300" />
@@ -27,19 +27,14 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Statuspage">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
+        <meta name="apple-mobile-web-app-status-bar-style" content="{{ThemeColor}}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://spstat.us/" />
+        <link rel="canonical" href="https://spstat.us/{{path}}" />
         
         <link rel="icon" type="image/x-icon" href="https://spstat.us/favicon.ico">
         <link rel="apple-touch-icon" sizes="144x144" href="https://spstat.us/img/maskable/144px.png">
-
-        <link rel="dns-prefetch" href="//www.cloudflarestatus.com/" />
-        <link rel="preconnect" href="//www.cloudflarestatus.com/">
-
-        <link rel="manifest" href="/manifest.json">
 
         <title>(Unofficial) Cloudflare Status</title>
 
@@ -55,7 +50,7 @@
                 "browserRequirements": "Required HTML5 Support",
                 "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
                 "softwareRequirements": "Modern Web Browser",
-                "url": "https://spstat.us/",
+                "url": "https://spstat.us/{{path}}",
                 "screenshot": "https://img.spstat.us/img/screenshots/screenshot1.webp",
                 "image": "https://img.spstat.us/img/status/highres/min/status-min-good.png",
                 "thumbnailUrl": "https://img.spstat.us/img/status/lowres/min/status-min-good.png",
@@ -79,13 +74,15 @@
             }
         </script>
 
-        <!-- <link rel="stylesheet" href="../styling/github.base.css"> -->
+        <!-- -->
+
+        <!-- <link rel="stylesheet" href="../../styling/github.base.css"> -->
 
         <style>
-            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464}*{margin:0;padding:0}body{font-family:arial}[fullScreen]{height:100vh}statuspage-component,statuspage-status{height:240px;width:100vw;text-align:center;font-size:48pt;vertical-align:middle;display:table-cell}.min[data-status]::before,statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}statuspage-status[data-status=good]::before,statuspage-status[data-status=none]::before{content:"good"}statuspage-status{height:240px}@media only screen and (max-height:400px){statuspage-status{height:45vh}}[data-message]::before{content:attr(data-message)}.min[data-status=good]::before,.min[data-status=none]::before{content:"good";text-transform:uppercase;background-color:var(--none)}.good,.min[data-background=good],.min[data-background=none],.none,[data-status=good],[data-status=none]{background-color:var(--none)}.min[data-background=minor],.minor,[data-status=minor]{background-color:var(--minor)}.major,.min[data-background=major],[data-status=major]{background-color:var(--major)}.critical,.min[data-background=critical],[data-status=critical]{background-color:var(--critical)}.maintenance,.min[data-background=maintenance],[data-status=maintenance]{background-color:var(--maintenance)}.loading,.min[data-background=loading],.min[data-background=unavailable],.unavailable,[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}.error,.min[data-background=error],[data-status=error]{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){.maintenance,[data-status=maintenance]{font-size:36pt;font-weight:500}}@media only screen and (min-width:251px) and (max-width:350px){.maintenance,[data-status=maintenance]{font-size:30pt;font-weight:500}}@media only screen and (min-width:151px) and (max-width:250px){.maintenance,[data-status=maintenance]{font-size:20pt;font-weight:500}}
+            .center-status,statuspage-component,statuspage-status{vertical-align:middle;display:table-cell}:root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464}*{margin:0;padding:0}body{font-family:arial}.full-status-height,[fullScreen]{height:100vh}statuspage-component,statuspage-status{height:240px;width:100vw;text-align:center;font-size:48pt}.min[data-status]::before,statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}statuspage-status[data-status=good]::before,statuspage-status[data-status=none]::before{content:"good"}statuspage-status{height:240px}@media only screen and (max-height:400px){.status-height,statuspage-status{height:45vh}}@media only screen and (max-width:320px) and (max-height:320px){.status-height,statuspage-status{height:100vh}}@media only screen and (min-width:2048px) and (min-height:1080px){.status-height,statuspage-status{height:30vh}.status-width{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.status-height,statuspage-status{height:40vh}.status-width{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.status-height,statuspage-status{height:40vh}.status-width,statuspage-status{font-size:16em}}@media only screen and (max-width:450px){.unavailable-font{font-size:28pt}}[data-message]::before{content:attr(data-message)}.min[data-status=good]::before,.min[data-status=none]::before{content:"good";text-transform:uppercase;background-color:var(--none)}.good,.min[data-background=good],.min[data-background=none],.none,[data-status=good],[data-status=none]{background-color:var(--none)}.min[data-background=minor],.minor,[data-status=minor]{background-color:var(--minor)}.major,.min[data-background=major],[data-status=major]{background-color:var(--major)}.critical,.min[data-background=critical],[data-status=critical]{background-color:var(--critical)}.maintenance,.min[data-background=maintenance],[data-status=maintenance]{background-color:var(--maintenance)}.loading,.min[data-background=loading],.min[data-background=unavailable],.unavailable,[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}.error,.min[data-background=error],[data-status=error]{background-color:var(--error)}.status-width{width:100vw;text-align:center;display:table-cell;font-size:48pt}@media only screen and (min-width:351px) and (max-width:450px){.maintenance,[data-status=maintenance]{font-size:36pt;font-weight:500}}@media only screen and (min-width:251px) and (max-width:350px){.maintenance,[data-status=maintenance]{font-size:30pt;font-weight:500}}@media only screen and (min-width:151px) and (max-width:250px){.maintenance,[data-status=maintenance]{font-size:20pt;font-weight:500}}
         </style>
     </head>
     <body>
-        <statuspage-status data-status="error" fullScreen></statuspage-status>
+        <statuspage-status data-status="{{status}}" fullScreen />
     </body>
 </html>
