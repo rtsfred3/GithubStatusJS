@@ -25,13 +25,20 @@ jobs:
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/amp/index.html
                 echo "<!-- ${{ github.ref_name }} -->" >> preact/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.shell.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.error.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.maintenance.html
+                sed -e 's/{{status}}/loading/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.shell.html
+                sed -e 's/{{status}}/loading/g' -e 's/{{path}}/status\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/status.shell.html
+                sed -e 's/{{status}}/loading/g' -e 's/{{path}}/components\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/components.shell.html
+                sed -e 's/{{status}}/error/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.error.html
+                sed -e 's/{{status}}/maintenance/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.maintenance.html
+                # sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.shell.html
+                # sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.error.html
+                # sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.maintenance.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/amp/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' preact/index.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/index.shell.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.shell.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/status.shell.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/status.shell.html
+                curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/components.shell.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/components.shell.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/index.error.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.error.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/static/index.maintenance.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.maintenance.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/error.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/static/index.error.html

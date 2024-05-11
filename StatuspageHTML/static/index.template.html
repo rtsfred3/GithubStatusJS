@@ -10,10 +10,10 @@
         <meta name="keywords" content="Cloudflare Statuspage, Cloudflare Status Page, Cloudflare Status, Statuspage, Status">
         
         <meta property="og:site_name" content="(Unofficial) Cloudflare Statuspage">
-        <meta property="og:title" content="Unofficial Statuspage">
+        <meta property="og:title" content="(Unofficial) Cloudflare Statuspage">
         <meta property="og:description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://spstat.us/">
+        <meta property="og:url" content="https://spstat.us/{{path}}">
         <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="300" />
@@ -31,15 +31,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://spstat.us/" />
+        <link rel="canonical" href="https://spstat.us/{{path}}" />
         
         <link rel="icon" type="image/x-icon" href="https://spstat.us/favicon.ico">
         <link rel="apple-touch-icon" sizes="144x144" href="https://spstat.us/img/maskable/144px.png">
-
-        <link rel="dns-prefetch" href="//www.cloudflarestatus.com/" />
-        <link rel="preconnect" href="//www.cloudflarestatus.com/">
-
-        <link rel="manifest" href="/manifest.json">
 
         <title>(Unofficial) Cloudflare Status</title>
 
@@ -55,7 +50,7 @@
                 "browserRequirements": "Required HTML5 Support",
                 "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
                 "softwareRequirements": "Modern Web Browser",
-                "url": "https://spstat.us/",
+                "url": "https://spstat.us/{{path}}",
                 "screenshot": "https://img.spstat.us/img/screenshots/screenshot1.webp",
                 "image": "https://img.spstat.us/img/status/highres/min/status-min-good.png",
                 "thumbnailUrl": "https://img.spstat.us/img/status/lowres/min/status-min-good.png",
@@ -86,6 +81,6 @@
         </style>
     </head>
     <body>
-        <statuspage-status data-status="error" fullScreen></statuspage-status>
+        <statuspage-status data-status="{{status}}" fullScreen />
     </body>
 </html>
