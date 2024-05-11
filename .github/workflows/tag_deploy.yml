@@ -26,9 +26,9 @@ jobs:
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/amp/index.html
                 echo "<!-- ${{ github.ref_name }} -->" >> preact/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.shell.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.error.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.maintenance.html
+                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.shell.html
+                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.error.html
+                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.maintenance.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/amp/index.html
                 sed -i -e 's/{{version}}/${{ github.ref_name }}/g' preact/index.html
                 curl --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/index.html
