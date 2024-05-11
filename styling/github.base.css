@@ -78,7 +78,7 @@ statuspage-status {
 
 @media only screen and (max-width: 450px){
     .unavailable-font{
-        font-size: 28pt !important;
+        font-size: 28pt;
     }
 }
 
