@@ -1,0 +1,121 @@
+:root {
+    --good: #339966;
+    --none: var(--good);
+    --minor: #DBAB09;
+    --major: #E25D10;
+    --critical: #DC3545;
+    --maintenance: #0366D6;
+    --loading: #4F93BD;
+    --unavailable: var(--loading);
+    --error: #646464;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    font-family: arial;
+}
+
+[fullScreen] {
+    height: 100vh;
+}
+
+statuspage-status, statuspage-component {
+    height: 240px;
+    width: 100vw;
+    text-align: center;
+    display: table;
+    font-size: 48pt;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+statuspage-status[data-status]::before {
+    content: attr(data-status);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+}
+
+statuspage-status[data-status="none"]::before, statuspage-status[data-status="good"]::before {
+    content: "good";
+}
+
+statuspage-status {
+    height: 240px;
+}
+
+@media only screen and (max-height: 400px) {
+    statuspage-status {
+        height: 45vh;
+    }
+}
+
+[data-message]::before {
+    content: attr(data-message);
+}
+
+.min[data-status]::before {
+    content: attr(data-status);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+}
+
+.min[data-status="none"]::before, .min[data-status="good"]::before {
+    content: "good";
+    text-transform: uppercase;
+    background-color: var(--none);
+}
+
+.good, .none, .min[data-background="none"], .min[data-background="good"], [data-status="none"], [data-status="good"] {
+    background-color: var(--none);
+}
+
+.minor, .min[data-background="minor"], [data-status="minor"] {
+    background-color: var(--minor);
+}
+
+.major, .min[data-background="major"], [data-status="major"] {
+    background-color: var(--major);
+}
+
+.critical, .min[data-background="critical"], [data-status="critical"] {
+    background-color: var(--critical);
+}
+
+.maintenance, .min[data-background="maintenance"], [data-status="maintenance"] {
+    background-color: var(--maintenance);
+}
+
+.unavailable, .loading, .min[data-background="unavailable"], .min[data-background="loading"], [data-status="unavailable"], [data-status="loading"] {
+    background-color: var(--loading);
+}
+
+.error, .min[data-background="error"], [data-status="error"] {
+    background-color: var(--error);
+}
+
+@media only screen and (min-width: 351px) and (max-width: 450px) {
+    .maintenance, [data-status="maintenance"] {
+        font-size: 36pt;
+        font-weight: 500;
+    }
+}
+
+@media only screen and (min-width: 251px) and (max-width: 350px) {
+    .maintenance, [data-status="maintenance"] {
+        font-size: 30pt;
+        font-weight: 500;
+    }
+}
+
+@media only screen and (min-width: 151px) and (max-width: 250px) {
+    .maintenance, [data-status="maintenance"] {
+        font-size: 20pt;
+        font-weight: 500;
+    }
+}

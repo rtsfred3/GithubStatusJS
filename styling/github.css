@@ -270,21 +270,21 @@ svg {
 }
 
 @media only screen and (min-width: 351px) and (max-width: 450px) {
-    .maintenance {
+    .maintenance, [data-status="maintenance"] {
         font-size: 36pt;
         font-weight: 500;
     }
 }
 
 @media only screen and (min-width: 251px) and (max-width: 350px) {
-    .maintenance {
+    .maintenance, [data-status="maintenance"] {
         font-size: 30pt;
         font-weight: 500;
     }
 }
 
 @media only screen and (min-width: 151px) and (max-width: 250px) {
-    .maintenance {
+    .maintenance, [data-status="maintenance"] {
         font-size: 20pt;
         font-weight: 500;
     }
