@@ -24,12 +24,12 @@ jobs:
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/static/index.maintenance.html
                 echo "<!-- ${{ github.ref_name }} -->" >> StatuspageHTML/amp/index.html
                 echo "<!-- ${{ github.ref_name }} -->" >> preact/index.html
-                sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.html
-                sed -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.shell.html
-                sed -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/status\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/status.shell.html
-                sed -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/components\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/components.shell.html
-                sed -e 's/{{status}}/error/g' -e 's/{{ThemeColor}}/#646464/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.error.html
-                sed -e 's/{{status}}/maintenance/g' -e 's/{{ThemeColor}}/#0366D6/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.maintenance.html
+                sed -i -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/index.html
+                sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e  's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.shell.html
+                sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/status\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/status.shell.html
+                sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/components\//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/components.shell.html
+                sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/error/g' -e 's/{{ThemeColor}}/#646464/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.error.html
+                sed -u -r -e 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/{{status}}/maintenance/g' -e 's/{{ThemeColor}}/#0366D6/g' -e 's/{{path}}//g' -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.template.html > StatuspageHTML/static/index.maintenance.html
                 # sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.shell.html
                 # sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.error.html
                 # sed -i -e 's/{{version}}/${{ github.ref_name }}/g' StatuspageHTML/static/index.maintenance.html
