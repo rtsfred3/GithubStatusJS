@@ -22,7 +22,7 @@ jobs:
                 echo "version=$(echo '${{ github.ref_name }}' | sed -re 's/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/v\1-\2-\3/g')" >> $GITHUB_OUTPUT
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
-                sed -e 's/{{version}}/${{ github.ref_name }}/g' -re 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/index.tmp.html
+                sed -e 's/{{version}}/${{ steps.version.outputs.version }}/g' -re 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/index.tmp.html
                 # sed -e 's/{{version}}/${{ steps.version.outputs.version }}/g' StatuspageHTML/index.html > StatuspageHTML/index.tmp.html
                 # sed -ure 's/( )*<!--([[:space:]]|[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/index.tmp.html > StatuspageHTML/index.html
                 # sed -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/index.html
