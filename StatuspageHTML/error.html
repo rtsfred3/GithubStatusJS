@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="(Unofficial) Cloudflare Status">
+        <meta name="theme-color" content="#646464">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#646464">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+
+        <style>
+            *{margin:0;padding:0}body{font-family:arial}statuspage-component,statuspage-status{height:240px;width:100vw;text-align:center;font-size:48pt;vertical-align:middle;display:table-cell}:root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464}statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}[fullScreen]{height:100vh}[data-status=error]{background-color:var(--error)}
+        </style>
+
+        <title>(Unofficial) Cloudflare Status</title>
+    </head>
+    <body>
+        <statuspage-status data-status="error" fullScreen></statuspage-status>
+    </body>
+</html>

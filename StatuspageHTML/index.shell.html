@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="(Unofficial) Cloudflare Statuspage">
+        <meta name="theme-color" content="#53C68C">
+        <meta name="description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
+        <meta name="keywords" content="Cloudflare Statuspage, Cloudflare Status Page, Cloudflare Status, Statuspage, Status">
+        
+        <meta property="og:site_name" content="(Unofficial) Cloudflare Statuspage">
+        <meta property="og:title" content="Unofficial Statuspage">
+        <meta property="og:description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://spstat.us/">
+        <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="300" />
+        
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="(Unofficial) Cloudflare Statuspage">
+        <meta name="twitter:description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
+        <meta name="twitter:image" content="https://spstat.us/img/status/lowres/min/status-min-good.webp">
+        
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Statuspage">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
+        <meta name="HandheldFriendly" content="true" />
+
+        <link rel="canonical" href="https://spstat.us/" />
+        
+        <link rel="icon" type="image/x-icon" href="https://spstat.us/favicon.ico">
+        <link rel="apple-touch-icon" sizes="144x144" href="https://spstat.us/img/maskable/144px.png">
+
+        <link rel="dns-prefetch" href="//www.cloudflarestatus.com/" />
+        <link rel="preconnect" href="//www.cloudflarestatus.com/">
+
+        <link rel="manifest" href="/manifest.json">
+
+        <title>(Unofficial) Cloudflare Status</title>
+
+        <script type="application/ld+json">
+            {
+                "@context": "http://schema.org/",
+                "@type": "WebApplication",
+                "name": "(Unofficial) Cloudflare Status",
+                "alternateName": "CloudflareStatus",
+                "description": "An unofficial website to monitor Cloudflare status updates.",
+                "softwareVersion", "{{version}}",
+                "applicationCategory": "DeveloperApplication, BrowserApplication",
+                "browserRequirements": "Required HTML5 Support",
+                "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
+                "softwareRequirements": "Modern Web Browser",
+                "url": "https://spstat.us/",
+                "screenshot": "https://img.spstat.us/img/screenshots/screenshot1.webp",
+                "image": "https://img.spstat.us/img/status/highres/min/status-min-good.png",
+                "thumbnailUrl": "https://img.spstat.us/img/status/lowres/min/status-min-good.png",
+                "author": [{
+                    "@type": "Person",
+                    "name": "Ryan Fredrickson",
+                    "jobTitle": "Software Developer",
+                    "url": "https://github.com/rtsfred3"
+                }],
+                "maintainer": {
+                    "@type": "Person",
+                    "name": "Ryan Fredrickson",
+                    "jobTitle": "Software Developer",
+                    "url": "https://github.com/rtsfred3"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0.00",
+                    "priceCurrency": "USD"
+                }
+            }
+        </script>
+
+        <style>
+            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464}*{margin:0;padding:0}body{font-family:arial}statuspage-component,statuspage-status{height:240px;width:100vw;text-align:center;font-size:48pt;vertical-align:middle;display:table-cell}statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}.full-status-height,[fullScreen]{height:100vh}[data-status=loading]{background-color:var(--loading)}
+        </style>
+    </head>
+    <body>
+        <statuspage-status data-status="loading" fullScreen></statuspage-status>
+    </body>
+</html>
