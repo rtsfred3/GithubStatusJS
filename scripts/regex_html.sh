@@ -19,8 +19,16 @@ sed -i -re "s/{{version}}/$1/g" StatuspageHTML/tmp/index.html
 sed -i -re 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/tmp/index.html
 # sed -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e "s/{{version}}/$1/g" -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
 
+sed -i -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/static/index.template.html
+sed -i -re "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html
+
 echo "StatuspageHTML/tmp/static/index.shell.html";
-sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -re 's/-good\.(png|webp)/-unavailable\.\1/g' -re 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.shell.html
+# sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.shell.html
+sed -re 's/-good\.(png|webp)/-unavailable\.\1/g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.shell.html
+sed -i -re 's/{{status}}/loading/g' StatuspageHTML/tmp/static/index.shell.html
+sed -i -e 's/{{ThemeColor}}/#4F93BD/g' StatuspageHTML/tmp/static/index.shell.html
+sed -i -e 's/{{path}}//g' StatuspageHTML/tmp/static/index.shell.html
+# sed -i -e "s/{{version}}/$1/g" StatuspageHTML/tmp/static/index.shell.html
 
 echo "StatuspageHTML/tmp/static/status.shell.html";
 sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-unavailable\.\1/g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/status\//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/status.shell.html
@@ -29,7 +37,13 @@ echo "StatuspageHTML/tmp/static/components.shell.html";
 sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-unavailable\.\1/g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/components\//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/components.shell.html
 
 echo "StatuspageHTML/tmp/static/index.error.html";
-sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-error\.\1/g' -e 's/{{status}}/error/g' -e 's/{{ThemeColor}}/#646464/g' -e 's/{{path}}//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
+# sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
+sed -i -re 's/-good\.(png|webp)/-error\.\1/g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
+sed -i -re 's/{{status}}/loading/g' StatuspageHTML/tmp/static/index.error.html
+sed -i -e 's/{{ThemeColor}}/#4F93BD/g' StatuspageHTML/tmp/static/index.error.html
+sed -i -e 's/{{path}}//g' StatuspageHTML/tmp/static/index.error.html
+# sed -i -e "s/{{version}}/$1/g" StatuspageHTML/tmp/static/index.error.html
+# sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-error\.\1/g' -e 's/{{status}}/error/g' -e 's/{{ThemeColor}}/#646464/g' -e 's/{{path}}//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
 
 echo "StatuspageHTML/tmp/static/index.maintenance.html";
 sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-maintenance\.\1/g' -e 's/{{status}}/maintenance/g' -e 's/{{ThemeColor}}/#0366D6/g' -e 's/{{path}}//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.maintenance.html
