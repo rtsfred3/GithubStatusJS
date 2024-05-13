@@ -36,7 +36,7 @@ createTemplatedFile() {
 
 echo "StatuspageHTML/index.html";
 setVersionAndRemoveCommentsInline StatuspageHTML/index.html
-sed -f scripts/dedup.sed StatuspageHTML/index.html
+sed -i '' -f scripts/dedup.sed StatuspageHTML/index.html
 
 setVersionAndRemoveCommentsInline StatuspageHTML/static/index.template.html
 
