@@ -7,7 +7,7 @@ on:
 
 jobs:
     deploy:
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         name: Deploy to BunnyCDN
         steps:
             - uses: actions/checkout@v2
