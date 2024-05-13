@@ -1,5 +1,8 @@
 echo "Version $1";
 
+COMMENTREGEX='^( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$'
+VERSION=$1
+
 if [ ! -d StatuspageHTML/tmp/ ]; then mkdir StatuspageHTML/tmp/; fi;
 if [ ! -d StatuspageHTML/tmp/amp/ ]; then mkdir StatuspageHTML/tmp/amp/; fi;
 if [ ! -d StatuspageHTML/tmp/preact/ ]; then mkdir StatuspageHTML/tmp/preact/; fi;
@@ -10,51 +13,45 @@ if [ ! -d StatuspageHTML/output/amp/ ]; then mkdir StatuspageHTML/output/amp/; f
 if [ ! -d StatuspageHTML/output/preact/ ]; then mkdir StatuspageHTML/output/preact/; fi;
 if [ ! -d StatuspageHTML/output/static/ ]; then mkdir StatuspageHTML/output/static/; fi;
 
-echo $1;
+setVersionInline() {
+    sed -i '' -re "s/{{_?version}}/$VERSION/g" $1
+}
 
-echo "StatuspageHTML/tmp/index.html";
-cat StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
-sed -i -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/tmp/index.html 
-sed -i -re "s/{{version}}/$1/g" StatuspageHTML/tmp/index.html
-sed -i -re 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/tmp/index.html
-# sed -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e "s/{{version}}/$1/g" -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
+removeCommentsInline() {
+    sed -i '' -re "/$COMMENTREGEX/d" $1
+}
 
-sed -i -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/static/index.template.html
-sed -i -re "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html
+setVersionAndRemoveCommentsInline() {
+    removeCommentsInline $1
+    setVersionInline $1
+}
 
-echo "StatuspageHTML/tmp/static/index.shell.html";
-# sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.shell.html
-sed -re 's/-good\.(png|webp)/-unavailable\.\1/g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.shell.html
-sed -i -re 's/{{status}}/loading/g' StatuspageHTML/tmp/static/index.shell.html
-sed -i -e 's/{{ThemeColor}}/#4F93BD/g' StatuspageHTML/tmp/static/index.shell.html
-sed -i -e 's/{{path}}//g' StatuspageHTML/tmp/static/index.shell.html
-# sed -i -e "s/{{version}}/$1/g" StatuspageHTML/tmp/static/index.shell.html
+createTemplatedFile() {
+    echo $1
+    sed -re "s/-good\.(png|webp)/-$2\.\1/g" StatuspageHTML/static/index.template.html > $1
+    sed -i '' -re "s/{{status}}/$2/g" $1
+    sed -i '' -re "s/{{ThemeColor}}/$3/g" $1
+    sed -i '' -re "s/{{path}}/$4/g" $1
+}
 
-echo "StatuspageHTML/tmp/static/status.shell.html";
-sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-unavailable\.\1/g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/status\//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/status.shell.html
+echo "StatuspageHTML/index.html";
+setVersionAndRemoveCommentsInline StatuspageHTML/index.html
 
-echo "StatuspageHTML/tmp/static/components.shell.html";
-sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-unavailable\.\1/g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}/components\//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/components.shell.html
+setVersionAndRemoveCommentsInline StatuspageHTML/static/index.template.html
 
-echo "StatuspageHTML/tmp/static/index.error.html";
-# sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
-sed -i -re 's/-good\.(png|webp)/-error\.\1/g' StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
-sed -i -re 's/{{status}}/loading/g' StatuspageHTML/tmp/static/index.error.html
-sed -i -e 's/{{ThemeColor}}/#4F93BD/g' StatuspageHTML/tmp/static/index.error.html
-sed -i -e 's/{{path}}//g' StatuspageHTML/tmp/static/index.error.html
-# sed -i -e "s/{{version}}/$1/g" StatuspageHTML/tmp/static/index.error.html
-# sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-error\.\1/g' -e 's/{{status}}/error/g' -e 's/{{ThemeColor}}/#646464/g' -e 's/{{path}}//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.error.html
+createTemplatedFile StatuspageHTML/tmp/static/index.shell.html unavailable "#4F93BD" ""
+createTemplatedFile StatuspageHTML/tmp/static/status.shell.html unavailable "#4F93BD" "status\/"
+createTemplatedFile StatuspageHTML/tmp/static/components.shell.html unavailable "#4F93BD" "components\/"
+createTemplatedFile StatuspageHTML/tmp/static/index.error.html error "#646464" ""
+createTemplatedFile StatuspageHTML/tmp/static/index.maintenance.html maintenance "#0366D6" ""
 
-echo "StatuspageHTML/tmp/static/index.maintenance.html";
-sed -u -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-maintenance\.\1/g' -e 's/{{status}}/maintenance/g' -e 's/{{ThemeColor}}/#0366D6/g' -e 's/{{path}}//g' -e "s/{{version}}/$1/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.maintenance.html
+echo "StatuspageHTML/amp/index.html";
+setVersionAndRemoveCommentsInline StatuspageHTML/amp/index.html
 
-echo "StatuspageHTML/tmp/amp/index.html";
-sed -e "s/{{version}}/$1/g" StatuspageHTML/amp/index.html > StatuspageHTML/tmp/amp/index.html
+echo "preact/index.html";
+setVersionAndRemoveCommentsInline preact/index.html
 
-echo "StatuspageHTML/tmp/preact/index.html";
-sed -e "s/{{version}}/$1/g" preact/index.html > StatuspageHTML/tmp/preact/index.html
-
-if [ -f StatuspageHTML/tmp/index.html ]; then cat StatuspageHTML/tmp/index.html > StatuspageHTML/output/index.html; fi;
+if [ -f StatuspageHTML/index.html ]; then cat StatuspageHTML/index.html > StatuspageHTML/output/index.html; fi;
 
 if [ -f StatuspageHTML/tmp/static/index.shell.html ]; then cat StatuspageHTML/tmp/static/index.shell.html > StatuspageHTML/output/static/index.shell.html; fi;
 if [ -f StatuspageHTML/tmp/static/status.shell.html ]; then cat StatuspageHTML/tmp/static/status.shell.html > StatuspageHTML/output/static/status.shell.html; fi;
@@ -62,8 +59,8 @@ if [ -f StatuspageHTML/tmp/static/status.shell.html ]; then cat StatuspageHTML/t
 if [ -f StatuspageHTML/tmp/static/index.error.html ]; then cat StatuspageHTML/tmp/static/index.error.html > StatuspageHTML/output/static/index.error.html; fi;
 if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageHTML/tmp/static/index.maintenance.html > StatuspageHTML/output/static/index.maintenance.html; fi;
 
-if [ -f StatuspageHTML/tmp/amp/index.html ]; then cat StatuspageHTML/tmp/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
-if [ -f StatuspageHTML/tmp/preact/index.html ]; then cat StatuspageHTML/tmp/preact/index.html > StatuspageHTML/output/preact/index.html; fi;
+if [ -f StatuspageHTML/amp/index.html ]; then cat StatuspageHTML/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
+if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
 
 # IFS=''; while read -r line; do  if [[ ${#line} -gt 0 ]]; then  echo "$line"; fi; done < StatuspageHTML/index.html > StatuspageHTML/index.html
 
