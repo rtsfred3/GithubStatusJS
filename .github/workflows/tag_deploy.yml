@@ -19,10 +19,10 @@ jobs:
             - name: Set Version Number
               id: version
               run: |
-                echo "version=$(echo '${{ github.ref_name }}' | sed -re 's/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/v\1-\2-\3/g')" >> $GITHUB_OUTPUT
+                echo "version=$(echo '${{ github.ref_name }}' | sed -re 's/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/v\1\.\2\.\3/g')" >> $GITHUB_OUTPUT
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
-                bash ./scripts/regex_html.sh ${{ github.ref_name }}
+                bash ./scripts/regex_html.sh ${{ steps.version.outputs.version }}
 
                 cat StatuspageHTML/output/index.html;
 
