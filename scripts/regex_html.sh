@@ -36,7 +36,7 @@ createTemplatedFile() {
 
 echo "StatuspageHTML/index.html";
 setVersionAndRemoveCommentsInline StatuspageHTML/index.html
-sed -i '' -f scripts/dedup.sed StatuspageHTML/index.html
+sed -f scripts/dedup.sed  < StatuspageHTML/index.html
 
 setVersionAndRemoveCommentsInline StatuspageHTML/static/index.template.html
 sed -i '' -f scripts/dedup.sed StatuspageHTML/static/index.template.html
@@ -63,6 +63,8 @@ if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageH
 
 if [ -f StatuspageHTML/amp/index.html ]; then cat StatuspageHTML/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
 if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
+
+open StatuspageHTML/output/
 
 # IFS=''; while read -r line; do  if [[ ${#line} -gt 0 ]]; then  echo "$line"; fi; done < StatuspageHTML/index.html > StatuspageHTML/index.html
 

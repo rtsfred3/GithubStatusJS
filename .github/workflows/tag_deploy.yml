@@ -22,7 +22,7 @@ jobs:
                 echo "version=$(echo '${{ github.ref_name }}' | sed -re 's/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/v\1\.\2\.\3/g')" >> $GITHUB_OUTPUT
             - name: Sync index.html, manifest.json, robots.txt, & sitemap.xml for spstat.us
               run: |
-                bash ./scripts/regex_html.sh ${{ steps.version.outputs.version }}
+                bash scripts/regex_html.sh ${{ github.ref_name }}
 
                 if [ -f StatuspageHTML/output/index.html ]; then curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @StatuspageHTML/output/index.html; fi;
 
