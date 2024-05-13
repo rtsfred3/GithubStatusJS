@@ -11,7 +11,7 @@ if [ ! -d StatuspageHTML/output/preact/ ]; then mkdir StatuspageHTML/output/prea
 if [ ! -d StatuspageHTML/output/static/ ]; then mkdir StatuspageHTML/output/static/; fi;
 
 echo "StatuspageHTML/tmp/index.html";
-sed -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e "s/{{version}}/${1}/g" -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
+sed -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e "s/{{version}}/$(echo ${1})/g" -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
 
 echo "StatuspageHTML/tmp/static/index.shell.html";
 sed -u -r -e 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e 's/-good\.(png|webp)/-unavailable\.\1/g' -e 's/{{status}}/loading/g' -e 's/{{ThemeColor}}/#4F93BD/g' -e 's/{{path}}//g' -e "s/{{version}}/${1}/g" StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.shell.html
