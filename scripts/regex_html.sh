@@ -13,7 +13,8 @@ if [ ! -d StatuspageHTML/output/static/ ]; then mkdir StatuspageHTML/output/stat
 echo $1;
 
 echo "StatuspageHTML/tmp/index.html";
-sed -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
+cat StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
+sed -i -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' StatuspageHTML/tmp/index.html 
 sed -i -re "s/{{version}}/$1/g" StatuspageHTML/tmp/index.html
 sed -i -re 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/tmp/index.html
 # sed -re 's/( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$//g' -e "s/{{version}}/$1/g" -e 's/v([0-9]{1,2})-([0-9]{1,2})-.([0-9]{1,2})/v([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/g' StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
