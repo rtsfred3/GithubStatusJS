@@ -69,19 +69,22 @@ hr {
 }
 
 .component-height {
-    height: 20vh; /* !important; */
+    height: 20vh;
 }
 
-.full-status-height, [fullScreen] {
-    height: 100vh; /* !important; */
+.full-status-height, .statuspage-status:has(.fullScreen), [fullScreen] {
+    height: 100vh;
 }
 
 .psa-full-status-height {
     height: calc(100vh - 1.15em + 0.275em);
 }
 
-statuspage-status, statuspage-component {
+.statuspage-status:not(.fullScreen), statuspage-status, statuspage-component {
     height: 240px;
+}
+
+.statuspage-status, statuspage-status, statuspage-component {
     width: 100vw;
     text-align: center;
     display: table;
@@ -94,7 +97,7 @@ statuspage-component {
     height: 20vh;
 }
 
-statuspage-status[data-status]::before {
+.statuspage-status[data-status]::before, statuspage-status[data-status]::before {
     content: attr(data-status);
     text-transform: uppercase;
     font-weight: bold;
@@ -108,16 +111,16 @@ statuspage-component[data-message]::before {
     color: white;
 }
 
-statuspage-status[data-status="none"]::before, statuspage-status[data-status="good"]::before {
+.statuspage-status[data-status="none"]::before, .statuspage-status[data-status="good"]::before, statuspage-status[data-status="none"]::before, statuspage-status[data-status="good"]::before {
     content: "good";
 }
 
-.status-height, statuspage-status {
+.status-height, .statuspage-status:not(.fullScreen), statuspage-status {
     height: 240px;
 }
 
 @media only screen and (max-height: 400px) {
-    .status-height, statuspage-status {
+    .status-height, .statuspage-status:not(.fullScreen), statuspage-status {
         height: 45vh;
     }
 
@@ -127,38 +130,38 @@ statuspage-status[data-status="none"]::before, statuspage-status[data-status="go
 }
 
 @media only screen and (max-width: 320px) and (max-height: 320px) {
-    .status-height, statuspage-status { height: 100vh; }
+    .status-height, .statuspage-status:not(.fullScreen), statuspage-status { height: 100vh; }
 }
 
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
-    .status-height, statuspage-status { height: 30vh; }
+    .status-height, .statuspage-status:not(.fullScreen), statuspage-status { height: 30vh; }
 
-    .status-width { font-size: 12em; }
+    .status-width, .statuspage-status, statuspage-status { font-size: 12em; }
 }
 
 @media only screen and (min-width: 2100px) and (min-height: 1100px) {
-    .status-height, statuspage-status { height: 40vh; }
+    .status-height, .statuspage-status:not(.fullScreen), statuspage-status { height: 40vh; }
 
-    .status-width { font-size: 16em; }
+    .status-width, .statuspage-status, statuspage-status { font-size: 16em; }
 }
 
 @media only screen and (min-width: 3000px) and (min-height: 2000px) {
-    .status-height, statuspage-status { height: 40vh; }
+    .status-height, .statuspage-status:not(.fullScreen), statuspage-status { height: 40vh; }
 
-    .status-width, statuspage-status { font-size: 16em; }
+    .status-width, .statuspage-status, statuspage-status { font-size: 16em; }
 }
 
 @media only screen and (max-width: 450px){
-    .unavailable-font{
-        font-size: 28pt !important;
+    .unavailable-font {
+        font-size: 28pt;
     }
 }
 
 .size-zero, .hidden {
     height: 0;
     width: 0;
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
 }
 
 .hide, .hidden {
@@ -180,7 +183,7 @@ statuspage-status[data-status="none"]::before, statuspage-status[data-status="go
 
 .center {
     width: auto;
-    text-align: center !important;
+    text-align: center;
 }
 
 .center-status {
@@ -189,7 +192,7 @@ statuspage-status[data-status="none"]::before, statuspage-status[data-status="go
 }
 
 .empty {
-    color: #646464 !important;
+    color: #646464;
 }
 
 .font-36 {
@@ -295,5 +298,5 @@ svg {
 }
 
 .black {
-    color: black !important;
+    color: black;
 }
