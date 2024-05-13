@@ -39,6 +39,7 @@ setVersionAndRemoveCommentsInline StatuspageHTML/index.html
 sed -i '' -f scripts/dedup.sed StatuspageHTML/index.html
 
 setVersionAndRemoveCommentsInline StatuspageHTML/static/index.template.html
+sed -i '' -f scripts/dedup.sed StatuspageHTML/static/index.template.html
 
 createTemplatedFile StatuspageHTML/tmp/static/index.shell.html unavailable "#4F93BD" ""
 createTemplatedFile StatuspageHTML/tmp/static/status.shell.html unavailable "#4F93BD" "status\/"
