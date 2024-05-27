@@ -3,6 +3,11 @@ echo "Version $1";
 COMMENTREGEX='^( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$'
 VERSION=$1
 
+if [ ! -d autogen/ ]; then mkdir autogen/; fi;
+if [ ! -d autogen/amp/ ]; then mkdir autogen/amp/; fi;
+if [ ! -d autogen/preact/ ]; then mkdir autogen/preact/; fi;
+if [ ! -d autogen/static/ ]; then mkdir autogen/static/; fi;
+
 if [ ! -d StatuspageHTML/tmp/ ]; then mkdir StatuspageHTML/tmp/; fi;
 if [ ! -d StatuspageHTML/tmp/amp/ ]; then mkdir StatuspageHTML/tmp/amp/; fi;
 if [ ! -d StatuspageHTML/tmp/preact/ ]; then mkdir StatuspageHTML/tmp/preact/; fi;
@@ -26,21 +31,42 @@ setVersionAndRemoveCommentsInline() {
     setVersionInline $1
 }
 
+setUrlAndTitleGitHub() {
+    sed -i '' -re "s/spstat\.us/githubstat\.us/g" $1
+    sed -i '' -re "s/Cloudflare/GitHub/g" $1
+}
+
 createTemplatedFile() {
     echo $1
-    sed -re "s/-good\.(png|webp)/-$2\.\1/g" StatuspageHTML/static/index.template.html > $1
+    sed -re "s/-good\.(png|webp)/-$2\.\1/g" StatuspageHTML/tmp/static/index.template.html > $1
     sed -i '' -re "s/{{status}}/$2/g" $1
     sed -i '' -re "s/{{ThemeColor}}/$3/g" $1
     sed -i '' -re "s/{{path}}/$4/g" $1
 }
 
-echo "StatuspageHTML/index.html";
-setVersionAndRemoveCommentsInline StatuspageHTML/index.html
-cat StatuspageHTML/index.html > StatuspageHTML/tmp/index.html
-sed -f scripts/dedup.sed  < StatuspageHTML/tmp/index.html > StatuspageHTML/index.html
+createTemplatedFileGithubStatus() {
+    echo "githubstat.us"
+    createTemplatedFile $1 $2 $3 $4
+    setUrlAndTitleGitHub $1
+}
 
-setVersionAndRemoveCommentsInline StatuspageHTML/static/index.template.html
-sed -i '' -f scripts/dedup.sed StatuspageHTML/static/index.template.html
+echo "StatuspageHTML/index.html";
+cat StatuspageHTML/index.html > StatuspageHTML/tmp/index.tmp.html
+setVersionAndRemoveCommentsInline StatuspageHTML/tmp/index.tmp.html
+sed -f scripts/dedup.sed < StatuspageHTML/tmp/index.tmp.html > StatuspageHTML/tmp/index.html
+
+cat StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.template.html
+setVersionAndRemoveCommentsInline StatuspageHTML/tmp/static/index.template.html
+sed -i '' -f scripts/dedup.sed StatuspageHTML/tmp/static/index.template.html
+
+createTemplatedFileGithubStatus autogen/static/index.good.html good "#339966" ""
+createTemplatedFileGithubStatus autogen/static/index.none.html good "#339966" ""
+createTemplatedFileGithubStatus autogen/static/index.minor.html minor "#DBAB09" ""
+createTemplatedFileGithubStatus autogen/static/index.major.html major "#E25D10" ""
+createTemplatedFileGithubStatus autogen/static/index.critical.html critical "#DC3545" ""
+createTemplatedFileGithubStatus autogen/static/index.unavailable.html unavailable "#4F93BD" ""
+createTemplatedFileGithubStatus autogen/static/index.error.html error "#646464" ""
+createTemplatedFileGithubStatus autogen/static/index.maintenance.html maintenance "#0366D6" ""
 
 createTemplatedFile StatuspageHTML/tmp/static/index.shell.html unavailable "#4F93BD" ""
 createTemplatedFile StatuspageHTML/tmp/static/status.shell.html unavailable "#4F93BD" "status\/"
@@ -49,12 +75,14 @@ createTemplatedFile StatuspageHTML/tmp/static/index.error.html error "#646464" "
 createTemplatedFile StatuspageHTML/tmp/static/index.maintenance.html maintenance "#0366D6" ""
 
 echo "StatuspageHTML/amp/index.html";
-setVersionAndRemoveCommentsInline StatuspageHTML/amp/index.html
+cat StatuspageHTML/index.html > StatuspageHTML/tmp/amp/index.tmp.html
+setVersionAndRemoveCommentsInline StatuspageHTML/tmp/amp/index.tmp.html
 
 echo "preact/index.html";
-setVersionAndRemoveCommentsInline preact/index.html
+cat preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
+setVersionAndRemoveCommentsInline StatuspageHTML/tmp/preact/index.tmp.html
 
-if [ -f StatuspageHTML/index.html ]; then cat StatuspageHTML/index.html > StatuspageHTML/output/index.html; fi;
+if [ -f StatuspageHTML/tmp/index.html ]; then cat StatuspageHTML/tmp/index.html > StatuspageHTML/output/index.html; fi;
 
 if [ -f StatuspageHTML/tmp/static/index.shell.html ]; then cat StatuspageHTML/tmp/static/index.shell.html > StatuspageHTML/output/static/index.shell.html; fi;
 if [ -f StatuspageHTML/tmp/static/status.shell.html ]; then cat StatuspageHTML/tmp/static/status.shell.html > StatuspageHTML/output/static/status.shell.html; fi;
@@ -64,6 +92,9 @@ if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageH
 
 if [ -f StatuspageHTML/amp/index.html ]; then cat StatuspageHTML/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
 if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
+
+# rm -r StatuspageHTML/tmp/
+# rm -r StatuspageHTML/output/
 
 # IFS=''; while read -r line; do  if [[ ${#line} -gt 0 ]]; then  echo "$line"; fi; done < StatuspageHTML/index.html > StatuspageHTML/index.html
 

@@ -21,3 +21,5 @@ node_modules
 /tauri/.vscode
 /StatuspageHTML/output
 /StatuspageHTML/tmp
+/tmp
+/autogen
