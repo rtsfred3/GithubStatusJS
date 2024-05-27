@@ -72,7 +72,7 @@ hr {
     height: 20vh;
 }
 
-.full-status-height, .statuspage-status:has(.fullScreen), [fullScreen] {
+.full-status-height, .statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {
     height: 100vh;
 }
 
