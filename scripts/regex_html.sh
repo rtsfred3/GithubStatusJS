@@ -75,8 +75,8 @@ createTemplatedFile StatuspageHTML/tmp/static/index.error.html error "#646464" "
 createTemplatedFile StatuspageHTML/tmp/static/index.maintenance.html maintenance "#0366D6" ""
 
 echo "StatuspageHTML/amp/index.html";
-cat StatuspageHTML/index.html > StatuspageHTML/tmp/amp/index.tmp.html
-setVersionAndRemoveCommentsInline StatuspageHTML/tmp/amp/index.tmp.html
+cat StatuspageHTML/index.html > StatuspageHTML/tmp/amp/index.html
+setVersionAndRemoveCommentsInline StatuspageHTML/tmp/amp/index.html
 
 echo "preact/index.html";
 cat preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
@@ -90,7 +90,7 @@ if [ -f StatuspageHTML/tmp/static/status.shell.html ]; then cat StatuspageHTML/t
 if [ -f StatuspageHTML/tmp/static/index.error.html ]; then cat StatuspageHTML/tmp/static/index.error.html > StatuspageHTML/output/static/index.error.html; fi;
 if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageHTML/tmp/static/index.maintenance.html > StatuspageHTML/output/static/index.maintenance.html; fi;
 
-if [ -f StatuspageHTML/amp/index.html ]; then cat StatuspageHTML/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
+if [ -f StatuspageHTML/tmp/amp/index.html ]; then cat StatuspageHTML/tmp/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
 if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
 
 # rm -r StatuspageHTML/tmp/
