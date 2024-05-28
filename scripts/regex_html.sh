@@ -2,6 +2,7 @@ echo "Version $1";
 
 COMMENTREGEX='^( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$'
 VERSION=$1
+CURRDATE="$(date +%F)"
 
 if [ ! -d autogen/ ]; then mkdir autogen/; fi;
 if [ ! -d autogen/amp/ ]; then mkdir autogen/amp/; fi;
@@ -82,6 +83,12 @@ echo "preact/index.html";
 cat preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/preact/index.tmp.html
 
+echo "StatuspageHTML/sitemap.xml";
+sed -i '' -re "s/[0-9]{4}(-[0-9]{2}){2}/$CURRDATE/g" StatuspageHTML/sitemap.xml
+
+echo "sites/reddit/sitemap.xml";
+sed -i '' -re "s/[0-9]{4}(-[0-9]{2}){2}/$CURRDATE/g" sites/reddit/sitemap.xml
+
 if [ -f StatuspageHTML/tmp/index.html ]; then cat StatuspageHTML/tmp/index.html > StatuspageHTML/output/index.html; fi;
 
 if [ -f StatuspageHTML/tmp/static/index.shell.html ]; then cat StatuspageHTML/tmp/static/index.shell.html > StatuspageHTML/output/static/index.shell.html; fi;
@@ -92,6 +99,8 @@ if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageH
 
 if [ -f StatuspageHTML/tmp/amp/index.html ]; then cat StatuspageHTML/tmp/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
 if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
+
+# --------------------------------------------------------------------------------------------------------------------------
 
 # rm -r StatuspageHTML/tmp/
 # rm -r StatuspageHTML/output/
