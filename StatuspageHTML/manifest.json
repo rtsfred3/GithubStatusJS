@@ -81,9 +81,22 @@
             "purpose": "maskable"
         },
         {
+            "src": "https://spstat.us/img/maskable/512px.webp",
+            "sizes": "512x512",
+            "type": "image/webp",
+            "purpose": "maskable"
+        },
+        {
             "src": "https://spstat.us/img/maskable/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png",
+            "purpose": "maskable"
+        }
+        ,
+        {
+            "src": "https://spstat.us/img/maskable/1024px.webp",
+            "sizes": "1024x1024",
+            "type": "image/webp",
             "purpose": "maskable"
         }
     ],

@@ -264,15 +264,15 @@ class StatuspageHTMLElements {
      */
     static NoIncidentsElement(siteName) {
         const emptyIncidents = document.createElement("div");
-        emptyIncidents.classList.add("empty", "padding-none");
+        emptyIncidents.classList.add("messages-empty");
     
         const emptyIncidentsFirstChild = document.createElement("div");
         const emptyIncidentsSecondChild = document.createElement("div");
         
-        emptyIncidentsFirstChild.classList.add('font-36', 'margin-bottom');
-        emptyIncidentsSecondChild.classList.add('font-12');
+        emptyIncidentsFirstChild.classList.add('messages-empty-all-good');
+        emptyIncidentsSecondChild.classList.add('messages-empty-body');
         
-        emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
+        // emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
     
         emptyIncidentsSecondChild.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${siteName} is up and running and has been stable for quite some time.`));
         emptyIncidentsSecondChild.appendChild(document.createElement("br"));
@@ -760,9 +760,14 @@ class StatuspageWebComponents {
                     : true;
 
                 if (this.hasAttribute('data-url')) {
-                    this.fetchStatus(this.getAttribute('data-url'));
+                    if (navigator.onLine) {
+                        this.fetchStatus(this.getAttribute('data-url'));
+                    } else {
+                        this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
+                        this.parseStatus(StatuspageDictionary.StatusEnums.error, this.fullScreen);
+                    }
                 } else {
-                    this.setThemeMetaTags(status);
+                    this.setThemeMetaTags(this.status);
                     this.parseStatus(this.status, this.fullScreen);
                 }
 
@@ -932,17 +937,21 @@ class StatuspageWebComponents {
                 if (this.hasAttribute('data-url')) {
                     this.url = this.getAttribute('data-url');
 
-                    if (this.singleRequest) {
-                        this.fetchSummary(this.url);
+                    if (navigator.onLine) {
+                        if (this.singleRequest) {
+                            this.fetchSummary(this.url);
+                        } else {
+                            var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                            status.setAttribute('data-url', this.url);
+    
+                            var incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
+                            incidents.setAttribute('data-url', this.url);
+    
+                            this.app.firstChild.replaceWith(status);
+                            this.app.appendChild(incidents);
+                        }
                     } else {
-                        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                        status.setAttribute('data-url', this.url);
-
-                        var incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
-                        incidents.setAttribute('data-url', this.url);
-
-                        this.app.firstChild.replaceWith(status);
-                        this.app.appendChild(incidents);
+                        app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                     }
                 } else {
                     app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
