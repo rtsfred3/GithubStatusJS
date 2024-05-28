@@ -1,8 +1,10 @@
-echo "Version $1";
-
 COMMENTREGEX='^( )*<!--( |[a-zA-Z0-9]|[=\.\/"<>:-])+-->$'
 VERSION=$1
+REGEXVERSION=$(echo $VERSION | sed -re 's/v?([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{1,2})/\1\.\2\.\3/g')
 CURRDATE="$(date +%F)"
+
+echo "Version $1";
+echo "Version $REGEXVERSION";
 
 if [ ! -d autogen/ ]; then mkdir autogen/; fi;
 if [ ! -d autogen/amp/ ]; then mkdir autogen/amp/; fi;
@@ -20,7 +22,7 @@ if [ ! -d StatuspageHTML/output/preact/ ]; then mkdir StatuspageHTML/output/prea
 if [ ! -d StatuspageHTML/output/static/ ]; then mkdir StatuspageHTML/output/static/; fi;
 
 setVersionInline() {
-    sed -i '' -re "s/{{_?version}}/$VERSION/g" $1
+    sed -i '' -re "s/{{_?version}}/$REGEXVERSION/g" $1
 }
 
 removeCommentsInline() {
