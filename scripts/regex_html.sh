@@ -76,7 +76,7 @@ createTemplatedFile StatuspageHTML/tmp/static/index.error.html error "#646464" "
 createTemplatedFile StatuspageHTML/tmp/static/index.maintenance.html maintenance "#0366D6" ""
 
 echo "StatuspageHTML/amp/index.html";
-cat StatuspageHTML/index.html > StatuspageHTML/tmp/amp/index.html
+cat StatuspageHTML/amp/index.html > StatuspageHTML/tmp/amp/index.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/amp/index.html
 
 echo "preact/index.html";
