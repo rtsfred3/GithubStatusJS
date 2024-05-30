@@ -20,9 +20,13 @@
         <lastmod>2024-05-27</lastmod>
         <changefreq>hourly</changefreq>
     </url>
-
     <url>
         <loc>https://spstat.us/preact/</loc>
+        <lastmod>2024-05-27</lastmod>
+        <changefreq>hourly</changefreq>
+    </url>
+    <url>
+        <loc>https://spstat.us/refresh/</loc>
         <lastmod>2024-05-27</lastmod>
         <changefreq>hourly</changefreq>
     </url>

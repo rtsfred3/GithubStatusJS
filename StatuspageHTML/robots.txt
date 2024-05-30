@@ -4,5 +4,6 @@ Allow: /components/
 Allow: /status/
 Allow: /amp/
 Allow: /preact/
+Allow: /refresh/
 # Disallow: /components/
 # Disallow: /status/
