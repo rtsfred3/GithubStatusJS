@@ -4,34 +4,34 @@
         <meta charset="UTF-8">
 
         <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="(Unofficial) Cloudflare Status">
+        <meta name="application-name" content="(Unofficial) Cloudflare Statuspage">
         <meta name="theme-color" content="#53C68C">
-        <meta name="description" content="A website to monitor a website monitored by Cloudflare Status.">
+        <meta name="description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
         <meta name="keywords" content="Cloudflare Statuspage, Cloudflare Status Page, Cloudflare Status, Statuspage, Status">
         
         <meta property="og:site_name" content="(Unofficial) Cloudflare Statuspage">
-        <meta property="og:title" content="(Unofficial) Cloudflare Status">
-        <meta property="og:description" content="A website to monitor a website monitored by Cloudflare Status.">
+        <meta property="og:title" content="(Unofficial) Cloudflare Statuspage">
+        <meta property="og:description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://spstat.us/">
+        <meta property="og:url" content="https://spstat.us/refresh/">
         <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="300" />
         <meta property="og:image:height" content="300" />
         
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="(Unofficial) Cloudflare Status">
-        <meta name="twitter:description" content="A website to monitor a website monitored by Cloudflare Status.">
+        <meta name="twitter:title" content="(Unofficial) Cloudflare Statuspage">
+        <meta name="twitter:description" content="A website to monitor a website monitored by Cloudflare Statuspage.">
         <meta name="twitter:image" content="https://spstat.us/img/status/lowres/min/status-min-good.webp">
         
         <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status">
+        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Statuspage">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="#53C68C">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://spstat.us/" />
+        <link rel="canonical" href="https://spstat.us/refresh/" />
         
         <link rel="icon" type="image/x-icon" href="https://spstat.us/favicon.ico">
         <link rel="apple-touch-icon" sizes="144x144" href="https://spstat.us/img/maskable/144px.png">
@@ -39,67 +39,17 @@
         <link rel="dns-prefetch" href="//www.cloudflarestatus.com/" />
         <link rel="preconnect" href="//www.cloudflarestatus.com/">
 
-        <link rel="manifest" href="/manifest.json">
-
         <title>(Unofficial) Cloudflare Status</title>
-
-        <script type="application/ld+json">
-            {
-                "@context": "http://schema.org/",
-                "@type": "WebApplication",
-                "name": "(Unofficial) Cloudflare Status",
-                "alternateName": "CloudflareStatus",
-                "description": "An unofficial website to monitor Cloudflare status updates.",
-                "softwareVersion": "{{version}}",
-                "applicationCategory": "DeveloperApplication, BrowserApplication",
-                "browserRequirements": "Required HTML5 Support",
-                "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
-                "softwareRequirements": "Modern Web Browser",
-                "url": "https://spstat.us/",
-                "screenshot": "https://img.spstat.us/img/screenshots/screenshot1.webp",
-                "image": "https://img.spstat.us/img/status/highres/min/status-min-good.png",
-                "thumbnailUrl": "https://img.spstat.us/img/status/lowres/min/status-min-good.png",
-                "author": [{
-                    "@type": "Person",
-                    "name": "Ryan Fredrickson",
-                    "jobTitle": "Software Developer",
-                    "url": "https://github.com/rtsfred3"
-                }],
-                "maintainer": {
-                    "@type": "Person",
-                    "name": "Ryan Fredrickson",
-                    "jobTitle": "Software Developer",
-                    "url": "https://github.com/rtsfred3"
-                },
-                "offers": {
-                    "@type": "Offer",
-                    "price": "0.00",
-                    "priceCurrency": "USD"
-                }
-            }
-        </script>
-
-        <!-- <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').then(function(reg) {
-                    console.log(reg);
-                }).catch(function(err) {
-                    console.log(err);
-                });
-            }
-        </script> -->
 
         <!-- <link rel="stylesheet" href="../styling/github.base.css"> -->
 
         <!-- <link rel="stylesheet" href="../styling/github.css"> -->
         <!-- <link rel="stylesheet" href="../styling/messages.css"> -->
 
-        <!-- <script src="../js/StatuspageHTML.js"></script> -->
+        <!-- <script src="../../js/StatuspageHTML.js"></script> -->
 
         <style>
             :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:#646464}*{margin:0;padding:0}body{font-family:arial}.component-height,statuspage-component{height:20vh}.full-status-height,.fullScreen,.statuspage-status:has(.fullScreen),:has(.fullScreen),[fullScreen]{height:100vh}.psa-full-status-height{height:calc(100vh - 1.15em + .275em)}.statuspage-status,statuspage-component,statuspage-status{width:100vw;text-align:center;font-size:48pt;vertical-align:middle;display:table-cell}.min[data-status]::before,.statuspage-status[data-status]::before,statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}statuspage-component[data-message]::before{content:attr(data-message);font-weight:700;color:#fff}.statuspage-status[data-status=good]::before,.statuspage-status[data-status=none]::before,statuspage-status[data-status=good]::before,statuspage-status[data-status=none]::before{content:"good"}.status-height,.statuspage-status:not(.fullScreen),statuspage-status{height:240px}@media only screen and (max-height:400px){.status-height,.statuspage-status:not(.fullScreen),statuspage-status{height:45vh}}@media only screen and (max-width:320px) and (max-height:320px){.status-height,.statuspage-status:not(.fullScreen),statuspage-status{height:100vh}}@media only screen and (min-width:2048px) and (min-height:1080px){.status-height,.statuspage-status:not(.fullScreen),statuspage-status{height:30vh}.status-width,.statuspage-status,statuspage-status{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.status-height,.statuspage-status:not(.fullScreen),statuspage-status{height:40vh}.status-width,.statuspage-status,statuspage-status{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.status-height,.statuspage-status:not(.fullScreen),statuspage-status{height:40vh}.status-width,.statuspage-status,statuspage-status{font-size:16em}}.messages-empty{padding:3vh 7.5vw 0;color:var(--font)}.messages-empty-all-good::before{content:"All good."}.messages-empty-all-good{font-size:36pt;font-weight:600;margin-bottom:2.5vh}.messages-empty-body{font-size:9pt;font-weight:500}[data-message]::before{content:attr(data-message)}.min[data-status=good]::before,.min[data-status=none]::before{content:"good";text-transform:uppercase;background-color:var(--none)}.good,.min[data-background=good],.min[data-background=none],.none,[data-status=good],[data-status=none]{background-color:var(--none)}.min[data-background=minor],.minor,[data-status=minor]{background-color:var(--minor)}.major,.min[data-background=major],[data-status=major]{background-color:var(--major)}.critical,.min[data-background=critical],[data-status=critical]{background-color:var(--critical)}.maintenance,.min[data-background=maintenance],[data-status=maintenance]{background-color:var(--maintenance)}.loading,.min[data-background=loading],.min[data-background=unavailable],.unavailable,[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}.error,.min[data-background=error],[data-status=error]{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){.maintenance,[data-status=maintenance]{font-size:36pt;font-weight:500}}@media only screen and (min-width:251px) and (max-width:350px){.maintenance,[data-status=maintenance]{font-size:30pt;font-weight:500}}@media only screen and (min-width:151px) and (max-width:250px){.maintenance,[data-status=maintenance]{font-size:20pt;font-weight:500}}
-
-            .messages{margin:1.5em 0;padding:0}.date{font-size:9pt!important}.status-box{height:45px;font-size:14pt;color:#f8f8f8;display:table!important}.text-margin{font-size:11pt;margin:1em 2.5vw}.message-status[data-impact]::before{content:attr(data-impact)}.message-status[data-impact=error],.message-status[data-impact=good]{width:120px}.message-status[data-impact=maintenance],.message-status[data-impact=minor],.message-status[data-impact=none]{width:200px}.message-status[data-impact=good]{background-color:#396}.message-status[data-impact=none]{background-color:#000}.message-status[data-impact=minor]{background-color:#f1c40f}.message-status[data-impact=maintenance]{background-color:#0366d6}.message-status[data-impact=major]{width:280px;background-color:#f90}.message-status[data-impact=critical]{width:360px;background-color:#900}.message-status[data-impact=error]{background-color:#646464}@media only screen and (max-width:850px){.message-status[data-impact=good]{width:20vw}.message-status[data-impact=maintenance],.message-status[data-impact=minor],.message-status[data-impact=none]{width:40vw}.message-status[data-impact=major]{width:60vw}.message-status[data-impact=critical]{width:80vw}.message-status[data-impact=error]{width:50vw}.text-margin{margin:3vh 4vw}}@media only screen and (max-width:400px){.text-margin{margin:3vh 7vw}}@media only screen and (max-width:320px) and (max-height:320px){.messages{display:none;height:0}}@media only screen and (min-width:2048px) and (min-height:1080px){.status-box,.text-margin{font-size:2.5em}.message-status[data-impact=good]{width:20vw}.message-status[data-impact=maintenance],.message-status[data-impact=minor],.message-status[data-impact=none]{width:40vw}.message-status[data-impact=major]{width:60vw}.message-status[data-impact=critical]{width:80vw}.message-status[data-impact=error]{width:50vw}.status-box{height:2em}.date{font-size:.75em!important}}@media (min-width:2100px) and (min-height:1100px){.status-box{height:1.75em;font-size:3.5em}.text-margin{font-size:3em}.messages{margin:3em 0}}@media (min-width:3000px) and (min-height:2000px){.status-box{height:1.75em;font-size:5em}.text-margin{font-size:4em}}.message-status{padding-right:.5em;vertical-align:middle;display:table-cell!important;text-align:end}.message-error{padding:3vh 7.5vw 0!important;color:#646464}
         </style>
 
         <script>
@@ -107,7 +57,6 @@
         </script>
     </head>
     <body id="body">
-        <statuspage-app data-url="https://www.cloudflarestatus.com"></statuspage-app>
-        <!-- <statuspage-status data-url="https://www.cloudflarestatus.com/" data-status="loading" fullScreen setTimer></statuspage-status> -->
+        <statuspage-status data-url="https://www.cloudflarestatus.com/" data-status="loading" fullScreen setTimer></statuspage-status>
     </body>
 </html>

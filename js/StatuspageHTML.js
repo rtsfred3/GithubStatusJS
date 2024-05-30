@@ -11,6 +11,8 @@
  */
 
 class StatuspageDictionary {
+    static get SiteNameValue() { return "{{SiteName}}"; }
+
     /**
      * @static
      * @readonly
@@ -495,6 +497,31 @@ class StatuspageHTMLElements {
     /**
      * 
      * @param {string} id 
+     * @returns {HTMLLinkElement}
+     */
+    static GetLinkTag(id) {
+        let linkTagsArr = Array.from(document.getElementsByTagName("link"));
+        return linkTagsArr.find((mTag) => mTag.getAttribute("rel") == id);
+    }
+
+    /**
+     * 
+     * @param {string|Array} id 
+     * @param {string} value 
+     */
+    static SetLinkTag(id, value) {
+        if (typeof id == 'string') {
+            StatuspageHTMLElements.GetLinkTag(id).setAttribute("href", value);
+        } else if(Array.isArray(id)) {
+            for(var i = 0; i < id.length; i++){
+                StatuspageHTMLElements.GetLinkTag(id[i]).setAttribute("href", value);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param {string} id 
      * @returns {HTMLMetaElement}
      */
     static GetMetaTag(id) {
@@ -568,6 +595,24 @@ class StatuspageHTMLElements {
 
     /**
      * 
+     * @param {string} url 
+     * @param {string} imgUrl 
+     * @param {string} title 
+     * @param {string} description 
+     * @param {string} themeColor 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     */
+    static UpdateMetaTagValues(url, imgUrl, title, description, themeColor, author, keywords=[]) {
+        var metaTagVals = StatuspageHTMLElements.MetaTagValues(url, imgUrl, title, description, themeColor, author, keywords);
+
+        for (const [key, value] of Object.entries(metaTagVals)) {
+            StatuspageHTMLElements.SetMetaTag(key, value);
+        }
+    }
+
+    /**
+     * 
      * @param {string} id 
      * @param {string} content 
      * @param {string} attr 
@@ -578,6 +623,21 @@ class StatuspageHTMLElements {
         meta.setAttribute(attr, id);
         meta.setAttribute("content", content);
         return meta;
+    }
+
+    /**
+     * 
+     * @param {string} canonicalUrl 
+     * @param {string} prefetchUrl 
+     * @param {string} iconUrl 
+     * @param {string} imgUrl 
+     */
+    static UpdateLinkTags(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
+        StatuspageHTMLElements.SetLinkTag("canonical", canonicalUrl);
+        StatuspageHTMLElements.SetLinkTag("icon", iconUrl);
+        StatuspageHTMLElements.SetLinkTag("apple-touch-icon", imgUrl);
+        StatuspageHTMLElements.SetLinkTag("dns-prefetch", prefetchUrl);
+        StatuspageHTMLElements.SetLinkTag("preconnect", prefetchUrl);
     }
 
     /**
@@ -599,7 +659,7 @@ class StatuspageHTMLElements {
         icon.setAttribute("href", iconUrl);
 
         var appleTouchIcon = document.createElement('link');
-        appleTouchIcon.setAttribute('apple-touch-icon', 'icon');
+        appleTouchIcon.setAttribute('rel', 'apple-touch-icon');
         appleTouchIcon.setAttribute('sizes', '144x144');
         appleTouchIcon.setAttribute("href", imgUrl);
 
@@ -746,6 +806,7 @@ class StatuspageWebComponents {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
                 var isFullScreen = this.hasAttribute('fullScreen');
+                var setTimer = this.hasAttribute('setTimer');
 
                 this.setAttribute('data-status', StatuspageDictionary.StatusEnums.loading);
                 this.setAttribute('fullScreen', '');
@@ -761,7 +822,13 @@ class StatuspageWebComponents {
 
                 if (this.hasAttribute('data-url')) {
                     if (navigator.onLine) {
-                        this.fetchStatus(this.getAttribute('data-url'));
+                        this.url = this.getAttribute('data-url');
+                        this.removeAttribute('data-url');
+                        this.fetchStatus(this.url);
+
+                        if (setTimer) {
+                            setInterval(() => { this.fetchStatus(this.url); }, 60000);
+                        }
                     } else {
                         this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
                         this.parseStatus(StatuspageDictionary.StatusEnums.error, this.fullScreen);
@@ -777,40 +844,43 @@ class StatuspageWebComponents {
             fetchStatus(url) {
                 return new Promise((res, rej) => {
                     var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
-    
-                    this.removeAttribute('data-url');
-                    fetch(baseUrl + '/api/v2/status.json')
-                        .then(data => data.json())
-                        .then((json) => {
-                            if ('status' in json) {
-                                this.setThemeMetaTags(json.status.indicator);
-                                this.parseStatus(json.status.indicator, this.fullScreen);
-                            } else {
+                    
+                    if (navigator.onLine) {
+                        fetch(baseUrl + '/api/v2/status.json')
+                            .then(data => data.json())
+                            .then((json) => {
+                                if ('page' in json && 'name' in json.page) {
+                                    this.title = StatuspageDictionary.Titles[StatuspageDictionary.PathNames.Index].replace(StatuspageDictionary.SiteNameValue, json.page.name);
+
+                                    console.log(this.title);
+                                }
+
+                                if ('status' in json) {
+                                    this.setThemeMetaTags(json.status.indicator);
+                                    this.parseStatus(json.status.indicator, this.fullScreen);
+                                } else {
+                                    this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
+                                    this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                                }
+                                
+                                res();
+                            }).catch((error) => {
                                 this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
                                 this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
-                            }
-                            
-                            res();
-                        }).catch((error) => {
-                            this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
-                            this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
-                            rej(error);
-                        });
+                                rej(error);
+                            });
+                    }
                 })
             }
 
-            setThemeMetaTags(status) {
-                Array.from(document.getElementsByTagName("meta")).filter((mTag) => {
-                    return ["theme-color", "apple-mobile-web-app-status-bar-style"].includes((mTag.hasAttribute("property") ? mTag.getAttribute("property") : mTag.getAttribute("name")));
-                }).forEach((e) => e.setAttribute('content', StatuspageDictionary.MetaColors[status]));
-            }
+            setThemeMetaTags(status) { StatuspageHTMLElements.SetThemeColor(status); }
 
             parseStatus(status, fullScreen) {
                 console.log(status, fullScreen);
-                
-                this.setThemeMetaTags(status);
+
+                StatuspageHTMLElements.SetThemeColor(status);
                 this.setAttribute('data-status', status);
-                
+
                 if (fullScreen) {
                     this.setAttribute('fullScreen', '');
                 } else {
