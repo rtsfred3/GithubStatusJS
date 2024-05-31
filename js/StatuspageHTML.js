@@ -806,7 +806,15 @@ class StatuspageWebComponents {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
                 var isFullScreen = this.hasAttribute('fullScreen');
-                var setTimer = this.hasAttribute('autoRefresh');
+                var autoRefresh = this.hasAttribute('autoRefresh');
+
+                this.refreshTimer = autoRefresh && this.getAttribute('autoRefresh') != ''
+                    ? parseInt(this.getAttribute('autoRefresh'))
+                    : 5;
+
+                if (autoRefresh) {
+                    console.log(`Refresh Interval: ${this.refreshTimer} minutes`);
+                }
 
                 this.setAttribute('data-status', StatuspageDictionary.StatusEnums.loading);
                 this.setAttribute('fullScreen', '');
@@ -826,8 +834,8 @@ class StatuspageWebComponents {
                         this.removeAttribute('data-url');
                         this.fetchStatus(this.url);
 
-                        if (setTimer) {
-                            setInterval(() => { this.fetchStatus(this.url); }, 5*60*1000);
+                        if (autoRefresh) {
+                            setInterval(() => { this.fetchStatus(this.url); }, this.refreshTimer * 60 * 1000);
                         }
                     } else {
                         this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
