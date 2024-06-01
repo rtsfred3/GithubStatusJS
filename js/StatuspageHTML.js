@@ -511,10 +511,13 @@ class StatuspageHTMLElements {
      */
     static SetLinkTag(id, value) {
         if (typeof id == 'string') {
-            StatuspageHTMLElements.GetLinkTag(id).setAttribute("href", value);
+            if (StatuspageHTMLElements.GetLinkTag(id) != undefined) {
+                StatuspageHTMLElements.GetLinkTag(id).setAttribute("href", value);
+            }
         } else if(Array.isArray(id)) {
             for(var i = 0; i < id.length; i++){
-                StatuspageHTMLElements.GetLinkTag(id[i]).setAttribute("href", value);
+                StatuspageHTMLElements.SetLinkTag(id[i], value);
+                // StatuspageHTMLElements.GetLinkTag(id[i]).setAttribute("href", value);
             }
         }
     }
@@ -697,6 +700,12 @@ class StatuspageHTMLElements {
         return metaTagElements;
     }
 
+
+    static UpdateUrlTags(canonicalUrl) {
+        StatuspageHTMLElements.SetLinkTag("canonical", canonicalUrl);
+        StatuspageHTMLElements.SetMetaTag("og:url", canonicalUrl);
+    }
+
     /**
      * 
      * @param {string} canonicalUrl 
@@ -755,22 +764,25 @@ class StatuspageWebComponents {
                     console.log(this.url);
 
                     if (location.pathname == StatuspageDictionary.Paths.Index) {
+                        StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
                         summary.setAttribute('data-url', this.url);
     
                         this.app.replaceWith(summary);
-                    } else if (location.pathname == StatuspageDictionary.Paths.Components) {
+                    } else if (location.pathname == StatuspageDictionary.Paths.Components || location.pathname.endsWith(StatuspageDictionary.Paths.Components)) {
+                        StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var components = document.createElement(StatuspageWebComponents.Components.is, { is: StatuspageWebComponents.Components.is });
                         components.setAttribute('data-url', this.url);
     
                         this.app.replaceWith(components);
-                    } else if (location.pathname == StatuspageDictionary.Paths.Status) {
+                    } else if (location.pathname == StatuspageDictionary.Paths.Status || location.pathname.endsWith(StatuspageDictionary.Paths.Status)) {
                         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                         status.setAttribute('data-url', this.url);
                         status.setAttribute('fullScreen', '');
     
                         this.app.replaceWith(status);
                     } else {
+                        StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
                         summary.setAttribute('data-url', this.url);
     
@@ -804,6 +816,8 @@ class StatuspageWebComponents {
         
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
+
+                StatuspageHTMLElements.UpdateUrlTags(location.href);
 
                 var isFullScreen = this.hasAttribute('fullScreen');
                 var autoRefresh = this.hasAttribute('autoRefresh');
