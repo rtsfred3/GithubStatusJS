@@ -15,6 +15,7 @@
 
 .date {
     font-size: 9pt !important;
+    color: var(--font);
 }
 
 .status-box {

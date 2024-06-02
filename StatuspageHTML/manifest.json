@@ -170,7 +170,7 @@
         },
         {
             "src": "https://spstat.us/img/screenshots/original/screenshot2.png",
-            "sizes": "1280x720",
+            "sizes": "2560x1440",
             "type": "image/png"
         },
         {
@@ -181,7 +181,7 @@
         },
         {
             "src": "https://spstat.us/img/screenshots/original/screenshot4.png",
-            "sizes": "1280x720",
+            "sizes": "2560x1440",
             "type": "image/png"
         },
         {
@@ -192,29 +192,7 @@
         },
         {
             "src": "https://spstat.us/img/screenshots/original/screenshot6.png",
-            "sizes": "1280x720",
-            "type": "image/png"
-        },
-        {
-            "src": "https://spstat.us/img/screenshots/original/screenshot7.png",
-            "sizes": "720x1280",
-            "type": "image/png",
-            "form_factor": "narrow"
-        },
-        {
-            "src": "https://spstat.us/img/screenshots/original/screenshot8.png",
-            "sizes": "1280x720",
-            "type": "image/png"
-        },
-        {
-            "src": "https://spstat.us/img/screenshots/original/screenshot9.png",
-            "sizes": "720x1280",
-            "type": "image/png",
-            "form_factor": "narrow"
-        },
-        {
-            "src": "https://spstat.us/img/screenshots/original/screenshot10.png",
-            "sizes": "1280x720",
+            "sizes": "2560x1440",
             "type": "image/png"
         }
     ]

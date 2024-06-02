@@ -451,12 +451,20 @@ class StatuspageHTMLElements {
      * @param {boolean} [displayUTCTime=false] 
      * @returns {HTMLDivElement}
      */
-    static IncidentsHTMLElements(incidentsJson, previousDays = 7, displayUTCTime = false) {
+    static IncidentsHTMLElements(incidentsJson, previousDays = 7, displayUTCTime = false, showMaintenance = false) {
         var previousDate = new Date();
         previousDate.setHours(0, 0, 0);
         var previousDaysDate = previousDate.setDate((new Date).getDate() - previousDays);
+        
+        var incidents = [];
 
-        var incidents = previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; });
+        if ('incidents' in incidentsJson) {
+            incidents = incidents.concat(previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+        }
+
+        if ('scheduled_maintenances' in incidentsJson && showMaintenance) {
+            incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+        }
 
         var messagesList = document.createElement("div");
         messagesList.setAttribute("id", "messages");
@@ -478,9 +486,7 @@ class StatuspageHTMLElements {
                             incidents[i]["incident_updates"][j].status,
                             incidents[i]["incident_updates"][j].body,
                             incidents[i]["incident_updates"][j].created_at,
-                            // incidentsJson["incidents"][i]["incident_updates"][j].body,
-                            // incidentsJson["incidents"][i]["incident_updates"][j].created_at,
-                            incidentsJson["incidents"][i].shortlink, 
+                            incidents[i].shortlink, 
                             (j == incidents[i]["incident_updates"].length - 1),
                             displayUTCTime
                         ));
@@ -997,6 +1003,10 @@ class StatuspageWebComponents {
 
             parseJson(json){
                 if ('incidents' in json) {
+                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(json));
+                }
+
+                if ('scheduled_maintenances' in json) {
                     this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(json));
                 }
             }
