@@ -1,6 +1,6 @@
 import MainHtml from "../../index.html";
 
-import { StatuspageDictionary, StatuspageHTMLElements } from '../../modules/Statuspage.esm.js';
+import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
 
 import { BotChecker } from '../lib/BotChecker.js';
 import CustomHeaders from '../lib/CustomHeaders.js';
@@ -54,11 +54,10 @@ class FacebookRewriter {
             this.setLinkTag(element, "canonical", this.canonicalUrl);
         }
         else if (element.tagName == 'title') {
-            element.remove();
+            element.setInnerContent(this.title);
         }
         else if (element.tagName == 'body') {
-            element.replace('<body><statuspage-status data-status="loading" fullScreen></statuspage-status></body>', { html: true });
-            console.log(element.tagName);
+            element.setInnerContent('<statuspage-status data-status="loading" fullScreen></statuspage-status>', { html: true });
         }
     }
 
@@ -74,7 +73,7 @@ async function ProcessContext(context) {
     var botChecker = new BotChecker(context);
     var rewriteAttr = new FacebookRewriter(statusJson, context.request.url);
 
-    var resp = new Response(MainHtml, { headers: CustomHeaders("text/html; charset=utf-8", 0) });
+    var resp = new Response(MainHtml, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 
     const rewriter = new HTMLRewriter()
         .on("script", rewriteAttr)
