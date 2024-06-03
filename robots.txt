@@ -16,3 +16,4 @@ Disallow: /api/mstock/
 Disallow: /sso/
 Disallow: /glpi
 Disallow: /cxwebclient/
+Disallow: /testing/
