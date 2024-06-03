@@ -1,11 +1,11 @@
-import MainHtml from "../../index.html";
+import MainHtml from "../../../index.html";
 
-import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
+import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
 
-import { BotChecker } from '../lib/BotChecker.js';
-import CustomHeaders from '../lib/CustomHeaders.js';
+import { BotChecker } from '../../lib/BotChecker.js';
+import CustomHeaders from '../../lib/CustomHeaders.js';
 
-import CapitalizeFirstLetter from '../lib/CapitalizeFirstLetter.js';
+import CapitalizeFirstLetter from '../../lib/CapitalizeFirstLetter.js';
 
 class FacebookRewriter {
     constructor(statusJson, canonicalUrl) {
@@ -66,14 +66,11 @@ class FacebookRewriter {
     }
 }
 
-async function ProcessContext(context) {
+async function ProcessBotRequest(context, resp) {
     const statusFetch = await fetch("https://www.githubstatus.com/api/v2/status.json");
     const statusJson = await statusFetch.json();
 
-    var botChecker = new BotChecker(context);
     var rewriteAttr = new FacebookRewriter(statusJson, context.request.url);
-
-    var resp = new Response(MainHtml, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 
     const rewriter = new HTMLRewriter()
         .on("script", rewriteAttr)
@@ -84,8 +81,23 @@ async function ProcessContext(context) {
         .on("head", rewriteAttr)
         .on("body", rewriteAttr);
 
+    return rewriter.transform(resp);
+}
+
+async function ProcessContext(context) {
+    var botChecker = new BotChecker(context);
+    var resp = new Response(MainHtml, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
+
+    console.log("-".repeat(50));
+
+    // console.log(context);
+    // console.log(context.request);
+    // console.log(context.request.cf);
+    // console.log(context.request.cf.verifiedBotCategory);
+    // console.log(context.request.cf.botManagement);
+
     if (botChecker.IsFacebookBot) {
-        return rewriter.transform(resp);
+        return await ProcessBotRequest(context, resp);
     } else {
         return resp;
     }
