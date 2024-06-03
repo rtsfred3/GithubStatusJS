@@ -1,7 +1,8 @@
 {
-    "name": "GitHub Status",
+    "id": "us.hstat.g",
+    "name": "(Unofficial) GitHub Status",
     "short_name": "GHStatus",
-    "description": "A simple website to monitor GitHub status updates.",
+    "description": "A stripped website to monitor GitHub status updates.",
     "start_url": "https://g.hstat.us/",
     "display_override": ["standalone"],
     "display": "standalone",
@@ -76,6 +77,6 @@
         }
     ],
     
-    "categories": ["utilities", "productivity", "development", "developer tools"],
+    "categories": ["utilities", "productivity", "development", "developer", "developer tools"],
     "orientation": "portrait-primary"
 }
