@@ -57,7 +57,7 @@ class FacebookRewriter {
             element.setInnerContent(this.title);
         }
         else if (element.tagName == 'body') {
-            element.setInnerContent('<statuspage-status data-status="loading" fullScreen></statuspage-status>', { html: true });
+            element.setInnerContent(`<statuspage-status data-status="${this.statusIndicator}" fullScreen></statuspage-status>`, { html: true });
         }
     }
 
