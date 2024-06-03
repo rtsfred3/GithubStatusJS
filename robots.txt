@@ -16,4 +16,10 @@ Disallow: /api/mstock/
 Disallow: /sso/
 Disallow: /glpi
 Disallow: /cxwebclient/
-# Disallow: /testing/
+Disallow: /testing/
+
+User-agent: Googlebot
+Allow: /testing/fb/
+
+User-agent: facebookexternalhit
+Allow: /testing/
