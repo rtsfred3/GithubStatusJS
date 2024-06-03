@@ -17,3 +17,4 @@ Disallow: /sso/
 Disallow: /glpi
 Disallow: /cxwebclient/
 Disallow: /testing/
+Allow: /testing/status_fb/
