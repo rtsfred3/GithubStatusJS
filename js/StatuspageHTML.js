@@ -516,6 +516,11 @@ class StatuspageHTMLElements {
         if (typeof id == 'string') {
             if (StatuspageHTMLElements.GetLinkTag(id) != undefined) {
                 StatuspageHTMLElements.GetLinkTag(id).setAttribute("href", value);
+            } else {
+                var head = document.getElementsByTagName("head");
+                if (head.length > 0) {
+                    head[0].appendChild(this.LinkTag(id, value));
+                }
             }
         } else if(Array.isArray(id)) {
             for(var i = 0; i < id.length; i++){
@@ -548,6 +553,11 @@ class StatuspageHTMLElements {
         if (typeof id == 'string') {
             if (StatuspageHTMLElements.GetMetaTag(id, attr) != undefined) {
                 StatuspageHTMLElements.GetMetaTag(id, attr).setAttribute("content", value);
+            } else {
+                var head = document.getElementsByTagName("head");
+                if (head.length > 0) {
+                    head[0].appendChild(this.MetaTag(id, value));
+                }
             }
         } else if(Array.isArray(id)) {
             for(var i = 0; i < id.length; i++){
@@ -585,10 +595,12 @@ class StatuspageHTMLElements {
      * @param {string} themeColor 
      * @param {string} author 
      * @param {string[]} keywords defaults to `[]`
+     * @param {string} additionalDescription defaults to `null`
+     * @param {string} title defaults to `null`
      * @param {string} description defaults to `null`
      * @returns {object}
      */
-    static MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], title = null, description = null) {
+    static MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null, title = null, description = null) {
         if (title == null) {
             title = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.SiteNameValue, siteName);
         }
@@ -597,14 +609,16 @@ class StatuspageHTMLElements {
             description = StatuspageDictionary.StatuspageHTMLTemplates.template_descrisption.replace(StatuspageDictionary.replaceableStringValue, siteName);
         }
 
+        if (additionalDescription != null) {
+            description = description == null ? additionalDescription : `${description} ${additionalDescription}`;
+        }
+
         return {
             "author": author,
             "application-name": title,
             "theme-color": themeColor,
             "description": description,
             "keywords": keywords.join(', '),
-
-            "image": imgUrl,
 
             "og:site_name": title,
             "og:title": title,
@@ -637,15 +651,19 @@ class StatuspageHTMLElements {
      * @param {string} author 
      * @param {string[]} keywords 
      */
-    static UpdateMetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords=[]) {
-        var metaTagVals = StatuspageHTMLElements.MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords);
+    static UpdateMetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null) {
+        var metaTagVals = StatuspageHTMLElements.MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
         for (const [key, value] of Object.entries(metaTagVals)) {
             StatuspageHTMLElements.SetMetaTag(key, value);
+
+            if (key == 'description') {
+                StatuspageHTMLElements.SetMetaTag(key, value, 'itemprop');
+            }
         }
 
-        StatuspageHTMLElements.SetMetaTag('description', metaTagVals['description'], 'itemprop');
-        StatuspageHTMLElements.SetMetaTag('image', metaTagVals['image'], 'itemprop');
+        // StatuspageHTMLElements.SetMetaTag('description', metaTagVals['description'], 'itemprop');
+        StatuspageHTMLElements.SetMetaTag('image', imgUrl, 'itemprop');
     }
 
     /**
@@ -659,8 +677,23 @@ class StatuspageHTMLElements {
         var meta = document.createElement('meta');
         meta.setAttribute(attr, id);
         meta.content = content;
-        // meta.setAttribute("content", content);
         return meta;
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} content 
+     * @returns {HTMLLinkElement}
+     */
+    static LinkTag(id, content){
+        var link = document.createElement('link');
+        link.rel = id;
+        link.href = content;
+
+        if (id == "icon") { link.type = "image/x-icon"; }
+
+        return link;
     }
 
     /**
@@ -693,29 +726,23 @@ class StatuspageHTMLElements {
      * @returns {HTMLLinkElement[]}
      */
     static LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
-        var canonical = document.createElement('link');
-        canonical.setAttribute('rel', 'canonical');
-        canonical.setAttribute("href", canonicalUrl);
+        var linkTagVals = StatuspageHTMLElements.LinkTagValues(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
 
-        var icon = document.createElement('link');
-        icon.setAttribute('rel', 'icon');
-        icon.setAttribute('type', 'image/x-icon');
-        icon.setAttribute("href", iconUrl);
+        var linkTagElements = [];
 
-        var appleTouchIcon = document.createElement('link');
-        appleTouchIcon.setAttribute('rel', 'apple-touch-icon');
-        appleTouchIcon.setAttribute('sizes', '144x144');
-        appleTouchIcon.setAttribute("href", imgUrl);
+        for (const [k, v] of Object.entries(linkTagVals)) {
+            linkTagElements.push(StatuspageHTMLElements.LinkTag(k, v));
+        }
 
-        var prefetch = document.createElement('link');
-        prefetch.setAttribute('rel', 'dns-prefetch');
-        prefetch.setAttribute("href", prefetchUrl);
+        return linkTagElements;
 
-        var preconnect = document.createElement('link');
-        preconnect.setAttribute('rel', 'preconnect');
-        preconnect.setAttribute("href", prefetchUrl);
-
-        return [ canonical, icon, appleTouchIcon, prefetch, preconnect ];
+        // var canonical = this.LinkTag('canonical', canonicalUrl);
+        // var icon = this.LinkTag('icon', iconUrl);
+        // var appleTouchIcon = this.LinkTag('apple-touch-icon', imgUrl);
+        // appleTouchIcon.setAttribute('sizes', '144x144');
+        // var prefetch = this.LinkTag('dns-prefetch', prefetchUrl);
+        // var preconnect = this.LinkTag('preconnect', prefetchUrl);
+        // return [ canonical, icon, appleTouchIcon, prefetch, preconnect ];
     }
 
     /**
@@ -729,8 +756,8 @@ class StatuspageHTMLElements {
      * @param {string[]} keywords 
      * @returns {HTMLMetaElement[]}
      */
-    static MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords=[]){
-        var metaTagVals = StatuspageHTMLElements.MetaTagValues(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords);
+    static MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null){
+        var metaTagVals = StatuspageHTMLElements.MetaTagValues(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
         var metaTagElements = [];
 
@@ -760,11 +787,11 @@ class StatuspageHTMLElements {
      * @param {string[]} keywords 
      * @returns {HTMLHeadElement}
      */
-    static HeadElement(canonicalUrl, prefetchUrl, iconUrl, imgUrl, siteName, pathName, themeColor, author, keywords=[]) {
+    static HeadElement(canonicalUrl, prefetchUrl, iconUrl, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null) {
         var head = document.createElement('head');
 
         var linkElements = StatuspageHTMLElements.LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
-        var metaElements = StatuspageHTMLElements.MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords);
+        var metaElements = StatuspageHTMLElements.MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
         for(let link of linkElements){
             head.appendChild(link);
@@ -906,11 +933,9 @@ class StatuspageWebComponents {
                         fetch(baseUrl + '/api/v2/status.json')
                             .then(data => data.json())
                             .then((json) => {
-                                if ('page' in json && 'name' in json.page) {
-                                    this.title = StatuspageDictionary.StatuspageHTMLTemplates[StatuspageDictionary.PathNames.Index].replace(StatuspageDictionary.SiteNameValue, json.page.name);
-
-                                    console.log(this.title);
-                                }
+                                /* if ('page' in json && 'name' in json.page) {
+                                    StatuspageHTMLElements.UpdateMetaTagValues(location.href, "https://spstat.us/img/status/lowres/min/status-min-good.png", json.page.name, StatuspageDictionary.PathNames.Index, StatuspageDictionary.MetaColors.loading, "rtsfred3", [`${json.page.name} Status`], `${json.page.name}'s Current Status: ${json.status.indicator}`)
+                                } */
 
                                 if ('status' in json) {
                                     this.setThemeMetaTags(json.status.indicator);
