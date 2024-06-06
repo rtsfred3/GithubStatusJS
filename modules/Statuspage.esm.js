@@ -1,15 +1,3 @@
-/**
- * @typedef {object} StatuspageStatusResponse
- * @property {object} status
- * @property {string} status.indicator
- * @property {string} status.description
- * @property {object} page
- * @property {string} page.id
- * @property {string} page.name
- * @property {string} page.url
- * @property {string} page.updated_at
- */
-
 class StatuspageDictionary {
     static get SiteNameValue() { return '{{SiteName}}'; }
 
@@ -201,7 +189,7 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
-     * @type {HTMLDivElement}
+     * @type {HTMLElement}
      */
     static get ErrorHTMLElement(){
         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
@@ -213,7 +201,7 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
-     * @type {HTMLDivElement}
+     * @type {HTMLElement}
      */
     static get LoadingHTMLElement(){
         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
@@ -287,7 +275,7 @@ class StatuspageHTMLElements {
     /**
      * 
      * @param {string} indicator dummy status
-     * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output that only contains `status.indicator`
+     * @returns {object} Returns a dummy Statuspage output that only contains `status.indicator`
      */
     static GetStatusJson(indicator) {
         return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
@@ -296,7 +284,7 @@ class StatuspageHTMLElements {
     /**
      * Creates a Status HTML Elemnent
      * 
-     * @param {string|StatuspageStatusResponse} status The status of the page
+     * @param {string|object} status The status of the page
      * @param {!boolean} [fullStatus=false] this will determine if the status page will fill the current view of the screen
      * @param {string} [_id=status]
      * @param {string} [message=null]
@@ -397,19 +385,19 @@ class StatuspageHTMLElements {
      * @returns {HTMLSpanElement}
      */
     static MessageHTMLElement(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus, _displayUTCTime){
-        var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        var options =  { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
         var currImpact = (status == StatuspageDictionary.StatusEnums.resolved
             ? StatuspageDictionary.StatusEnums.good
             : impact);
         if (currImpact == undefined) { currImpact = StatuspageDictionary.IndicatorMessages[status]; }
 
-        var date = new Date(created_at).toLocaleDateString("en-US", options);
+        var date = new Date(created_at).toLocaleDateString("en-US");
 
         if (_displayUTCTime) {
-            options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-            var t_date = new Date(created_at);
-            t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
-            date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
+            options = { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
+            var m_date = new Date(created_at);
+            var t_date = Date.UTC(m_date.getUTCFullYear(), m_date.getUTCMonth(), m_date.getUTCDate(), m_date.getUTCHours() + (m_date.getTimezoneOffset() / 60), m_date.getUTCMinutes(), m_date.getUTCSeconds());
+            date = new Date(t_date).toLocaleDateString("en-US") + ' UTC';
         }
 
         const messageElement = document.createElement("span");
@@ -456,11 +444,13 @@ class StatuspageHTMLElements {
         var incidents = [];
 
         if ('incidents' in incidentsJson) {
-            incidents = incidents.concat(previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+            incidents = incidents.concat(incidentsJson["incidents"]);
+            // incidents = incidents.concat(previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
         }
 
         if ('scheduled_maintenances' in incidentsJson && showMaintenance) {
-            incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+            incidents = incidents.concat(incidentsJson["scheduled_maintenances"]);
+            // incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
         }
 
         var messagesList = document.createElement("div");
@@ -1107,10 +1097,10 @@ class StatuspageWebComponents {
                             this.app.appendChild(incidents);
                         }
                     } else {
-                        app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                        this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                     }
                 } else {
-                    app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                 }
 
                 console.log(`Finished ${StatuspageWebComponents.Summary.is}`);

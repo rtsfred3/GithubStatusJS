@@ -34,10 +34,10 @@
         <!-- <link rel="stylesheet" href="../styling/main.min.css"> -->
 
         <link rel="modulepreload" href="https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs">
-        <!-- <link rel="modulepreload" href="../modules/Statuspage.esm.min.js"> -->
-        <link rel="modulepreload" href="https://spstat.us/{{version}}/modules/Statuspage.esm.min.js">
+        <!-- <link rel="modulepreload" href="../../modules/Statuspage.esm.min.js"> -->
+        <link rel="modulepreload" href="https://spstat.us/{{versioxn}}/modules/Statuspage.esm.min.js">
 
-        <!-- <link rel="preload" href="../styling/main.min.css" as="style" onload="this.rel='stylesheet'"> -->
+        <!-- <link rel="preload" href="../../styling/main.min.css" as="style" onload="this.rel='stylesheet'"> -->
         <link rel="preload" href="https://spstat.us/{{version}}/styling/main.min.css" as="style" onload="this.rel='stylesheet'">
 
         <title>(Unofficial) Cloudflare Status | Preact</title>
@@ -45,7 +45,7 @@
     <body>
         <script type="module">
             import { h, render } from 'https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs';
-            // import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from '/modules/Statuspage.esm.min.js';
+            // import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from '../../modules/Statuspage.esm.min.js';
             import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from 'https://spstat.us/{{version}}/modules/Statuspage.esm.min.js';
 
             customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);

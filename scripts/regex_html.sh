@@ -81,8 +81,8 @@ echo "StatuspageHTML/amp/index.html";
 cat StatuspageHTML/amp/index.html > StatuspageHTML/tmp/amp/index.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/amp/index.html
 
-echo "preact/index.html";
-cat preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
+echo "StatuspageHTML/preact/index.html";
+cat StatuspageHTML/preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/preact/index.tmp.html
 
 echo "StatuspageHTML/sitemap.xml";

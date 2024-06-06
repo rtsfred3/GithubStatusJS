@@ -1,6 +1,6 @@
 import MainHtml from "../../../index.html";
 
-import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
+import { StatuspageDictionary, StatuspageWebComponents } from '../../../modules/Statuspage.esm.js';
 
 import { BotChecker } from '../../lib/BotChecker.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';
@@ -89,6 +89,8 @@ async function ProcessContext(context) {
     var resp = new Response(MainHtml, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 
     console.log("-".repeat(50));
+
+    console.log(new DOMParser());
 
     // console.log(context);
     // console.log(context.request);
