@@ -122,10 +122,6 @@ statuspage-loading::before {
     font-weight: 500;
 }
 
-[data-message]::before {
-    content: attr(data-message);
-}
-
 .min[data-status="none"]::before, .min[data-status="good"]::before {
     content: "good";
     text-transform: uppercase;

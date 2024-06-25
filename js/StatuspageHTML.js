@@ -987,7 +987,7 @@ class StatuspageWebComponents {
             /**
              * @param {boolean} val
              */
-            set refreshEnabled(val) {
+            set isRefreshEnabled(val) {
                 if (typeof val == 'boolean') {
                     this._refreshEnabled = val;
                 }
@@ -996,7 +996,7 @@ class StatuspageWebComponents {
             /**
              * @returns {boolean}
              */
-            get refreshEnabled() {
+            get isRefreshEnabled() {
                 return this._refreshEnabled;
             }
 
@@ -1025,6 +1025,8 @@ class StatuspageWebComponents {
 
                     if ('status' in this._dataJson && 'indicator' in this._dataJson.status) {
                         this.dataStatus = this._dataJson.status.indicator;
+
+                        if (this.isRefreshEnabled) { console.log(`this.dataStatus = ${this.dataStatus}`); }
                     }
                 }
             }
@@ -1036,7 +1038,6 @@ class StatuspageWebComponents {
                 this._status = null;
                 this._url = null;
                 this._isLoading = false;
-                this._isError = null;
                 this._dataJson = null;
 
                 this._refreshEnabled = false;
@@ -1050,7 +1051,7 @@ class StatuspageWebComponents {
 
                 this.isLoading = true;
 
-                if (this.refreshEnabled) {
+                if (this.isRefreshEnabled) {
                     console.log(`Refresh Interval: ${this.refreshTime} minutes`);
                 }
 
@@ -1061,13 +1062,13 @@ class StatuspageWebComponents {
 
                 if (this.baseUrl != null) {
                     if (navigator.onLine) {
-                        this.fetchStatus(this.baseUrl);
+                        this.fetchStatus();
 
-                        if (this.refreshEnabled) {
-                            setInterval(() => { this.fetchStatus(this.baseUrl); }, this.refreshTime * 60 * 1000);
+                        if (this.isRefreshEnabled) {
+                            setInterval(() => { this.fetchStatus(); }, this.refreshTime * 60 * 1000);
                         }
                     } else {
-                        this.setStatus(StatuspageDictionary.StatusEnums.error, true);
+                        this.setError();
                     }
                 }
 
@@ -1099,43 +1100,33 @@ class StatuspageWebComponents {
                 if (name == 'fullscreen' && this.fullScreen == null && !this.isLoading) {
                     this.fullScreen = (newValue != null);
                 }
+
+                if (name == 'autorefresh') {
+                    this.isRefreshEnabled = (newValue != null);
+                }
             }
 
-            fetchStatus(url) {
+            fetchStatus() {
                 return new Promise((res, rej) => {
-                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
+                    var _url = this.baseUrl.slice(-1) == '/' ? this.baseUrl.substring(0, this.baseUrl.length - 1) : this.baseUrl;
                     
                     if (navigator.onLine) {
-                        fetch(baseUrl + '/api/v2/status.json')
+                        fetch(_url + '/api/v2/status.json')
                             .then(data => data.json())
                             .then((json) => {
                                 this.dataJson = json;
-                                // this._dataJson = json;
-                                // this.parseJson(json);
                                 res();
                             }).catch((error) => {
-                                this.setStatus(StatuspageDictionary.StatusEnums.error, true);
+                                this.setError();
                                 rej(error);
                             });
                     }
                 })
             }
 
-            parseJson(json) {
-                if ('status' in json) {
-                    this.dataStatus = json.status.indicator;
-                } else {
-                    this.setStatus(StatuspageDictionary.StatusEnums.error, true);
-                }
-            }
-
-            /**
-             * @param {string} status
-             * @param {boolean} fullScreen
-             */
-            setStatus(status, fullScreen) {
-                this.dataStatus = status;
-                this.fullScreen = fullScreen;
+            setError() {
+                this.dataStatus = StatuspageDictionary.StatusEnums.error;
+                this.fullScreen = true;
             }
 
             /**
@@ -1147,9 +1138,6 @@ class StatuspageWebComponents {
         }
     }
 
-    /**
-     * @returns {HTMLElement}
-     */
     static get Components() {
         return class extends HTMLElement {
             constructor() { super(); }
@@ -1366,9 +1354,6 @@ class StatuspageWebComponents {
         }
     }
 
-    /**
-     * @returns {HTMLHtmlElement}
-     */
     static get HTMLWebComponent() {
         return class extends HTMLElement {
             constructor() {
