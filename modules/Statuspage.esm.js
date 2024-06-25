@@ -1,3 +1,11 @@
+import { JSDOM } from 'jsdom';
+const { window } = new JSDOM(`<html><head></head><body></body></html>`);
+const { document, location, HTMLElement } = window;
+
+// import * as htmlparser2 from "htmlparser2";
+// const { Document, DomHandler, Element } = require("domhandler");
+// const document = htmlparser2.parseDocument(`<html><head></head><body></body></html>`);
+
 class StatuspageDictionary {
     static get SiteNameValue() { return '{{SiteName}}'; }
 
@@ -204,10 +212,7 @@ class StatuspageHTMLElements {
      * @type {HTMLElement}
      */
     static get LoadingHTMLElement(){
-        var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-        status.setAttribute('status', StatuspageDictionary.StatusEnums.loading);
-        status.setAttribute('fullScreen', '');
-        return status;
+        return document.createElement(StatuspageWebComponents.Loading.is, { is: StatuspageWebComponents.Loading.is });
     }
 
     /**
@@ -217,7 +222,7 @@ class StatuspageHTMLElements {
      */
     static get AppHTMLElement(){
         const appElement = document.createElement("div");
-        appElement.setAttribute('id', 'app');
+        appElement.id = 'app';
         return appElement;
     }
 
@@ -229,7 +234,7 @@ class StatuspageHTMLElements {
     static get AppLoadingHTMLElement() {
         var app = StatuspageHTMLElements.AppHTMLElement;
         app.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
-        app.firstElementChild.setAttribute('id', 'status');
+        app.firstElementChild.id = 'status';
         return app;
     }
 
@@ -275,7 +280,7 @@ class StatuspageHTMLElements {
     /**
      * 
      * @param {string} indicator dummy status
-     * @returns {object} Returns a dummy Statuspage output that only contains `status.indicator`
+     * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output that only contains `status.indicator`
      */
     static GetStatusJson(indicator) {
         return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
@@ -284,7 +289,7 @@ class StatuspageHTMLElements {
     /**
      * Creates a Status HTML Elemnent
      * 
-     * @param {string|object} status The status of the page
+     * @param {string|StatuspageStatusResponse} status The status of the page
      * @param {!boolean} [fullStatus=false] this will determine if the status page will fill the current view of the screen
      * @param {string} [_id=status]
      * @param {string} [message=null]
@@ -385,19 +390,19 @@ class StatuspageHTMLElements {
      * @returns {HTMLSpanElement}
      */
     static MessageHTMLElement(incident_update_id, name, impact, status, body, created_at, shortlink, isOldestStatus, _displayUTCTime){
-        var options =  { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
+        var options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         var currImpact = (status == StatuspageDictionary.StatusEnums.resolved
             ? StatuspageDictionary.StatusEnums.good
             : impact);
         if (currImpact == undefined) { currImpact = StatuspageDictionary.IndicatorMessages[status]; }
 
-        var date = new Date(created_at).toLocaleDateString("en-US");
+        var date = new Date(created_at).toLocaleDateString("en-US", options);
 
         if (_displayUTCTime) {
-            options = { year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
-            var m_date = new Date(created_at);
-            var t_date = Date.UTC(m_date.getUTCFullYear(), m_date.getUTCMonth(), m_date.getUTCDate(), m_date.getUTCHours() + (m_date.getTimezoneOffset() / 60), m_date.getUTCMinutes(), m_date.getUTCSeconds());
-            date = new Date(t_date).toLocaleDateString("en-US") + ' UTC';
+            options = { month: 'short', day: '2-digit', hour: 'numeric', minute: 'numeric' };
+            var t_date = new Date(created_at);
+            t_date = Date.UTC(t_date.getUTCFullYear(), t_date.getUTCMonth(), t_date.getUTCDate(), t_date.getUTCHours() + (t_date.getTimezoneOffset() / 60), t_date.getUTCMinutes(), t_date.getUTCSeconds());
+            date = new Date(t_date).toLocaleDateString("en-US", options) + ' UTC';
         }
 
         const messageElement = document.createElement("span");
@@ -444,13 +449,11 @@ class StatuspageHTMLElements {
         var incidents = [];
 
         if ('incidents' in incidentsJson) {
-            incidents = incidents.concat(incidentsJson["incidents"]);
-            // incidents = incidents.concat(previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+            incidents = incidents.concat(previousDays == 0 ? incidentsJson["incidents"] : incidentsJson["incidents"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
         }
 
         if ('scheduled_maintenances' in incidentsJson && showMaintenance) {
-            incidents = incidents.concat(incidentsJson["scheduled_maintenances"]);
-            // incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+            incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
         }
 
         var messagesList = document.createElement("div");
@@ -641,18 +644,20 @@ class StatuspageHTMLElements {
      * @param {string} author 
      * @param {string[]} keywords 
      */
-    static UpdateMetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null) {
+    static UpdateMetaTags(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null) {
         var metaTagVals = StatuspageHTMLElements.MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
         for (const [key, value] of Object.entries(metaTagVals)) {
-            StatuspageHTMLElements.SetMetaTag(key, value);
 
-            if (key == 'description') {
-                StatuspageHTMLElements.SetMetaTag(key, value, 'itemprop');
+            if (value != null) {
+                StatuspageHTMLElements.SetMetaTag(key, value);
+
+                if (key == 'description') {
+                    StatuspageHTMLElements.SetMetaTag(key, value, 'itemprop');
+                }
             }
         }
 
-        // StatuspageHTMLElements.SetMetaTag('description', metaTagVals['description'], 'itemprop');
         StatuspageHTMLElements.SetMetaTag('image', imgUrl, 'itemprop');
     }
 
@@ -697,14 +702,10 @@ class StatuspageHTMLElements {
         var linkTagVals = StatuspageHTMLElements.LinkTagValues(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
 
         for (const [key, value] of Object.entries(linkTagVals)) {
-            StatuspageHTMLElements.SetLinkTag(key, value);
+            if (value != null) {
+                StatuspageHTMLElements.SetLinkTag(key, value);
+            }
         }
-
-        // StatuspageHTMLElements.SetLinkTag("canonical", canonicalUrl);
-        // StatuspageHTMLElements.SetLinkTag("icon", iconUrl);
-        // StatuspageHTMLElements.SetLinkTag("apple-touch-icon", imgUrl);
-        // StatuspageHTMLElements.SetLinkTag("dns-prefetch", prefetchUrl);
-        // StatuspageHTMLElements.SetLinkTag("preconnect", prefetchUrl);
     }
 
     /**
@@ -721,18 +722,12 @@ class StatuspageHTMLElements {
         var linkTagElements = [];
 
         for (const [k, v] of Object.entries(linkTagVals)) {
-            linkTagElements.push(StatuspageHTMLElements.LinkTag(k, v));
+            if (v != null) {
+                linkTagElements.push(StatuspageHTMLElements.LinkTag(k, v));
+            }
         }
 
         return linkTagElements;
-
-        // var canonical = this.LinkTag('canonical', canonicalUrl);
-        // var icon = this.LinkTag('icon', iconUrl);
-        // var appleTouchIcon = this.LinkTag('apple-touch-icon', imgUrl);
-        // appleTouchIcon.setAttribute('sizes', '144x144');
-        // var prefetch = this.LinkTag('dns-prefetch', prefetchUrl);
-        // var preconnect = this.LinkTag('preconnect', prefetchUrl);
-        // return [ canonical, icon, appleTouchIcon, prefetch, preconnect ];
     }
 
     /**
@@ -752,7 +747,9 @@ class StatuspageHTMLElements {
         var metaTagElements = [];
 
         for(const [k, v] of Object.entries(metaTagVals)){
-            metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+            if (v != null) {
+                metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+            }
         }
 
         return metaTagElements;
@@ -807,44 +804,54 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.App.is}`);
 
-                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
-                this.app = document.getElementById('app');
+                this.id = 'app';
+                this.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
 
                 if (this.hasAttribute('data-url')) {
                     this.url = this.getAttribute('data-url');
-
-                    console.log(this.url);
+                    this.removeAttribute('data-url');
 
                     if (location.pathname == StatuspageDictionary.Paths.Index) {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
                         summary.setAttribute('data-url', this.url);
     
-                        this.app.replaceWith(summary);
+                        this.firstElementChild.replaceWith(summary);
                     } else if (location.pathname == StatuspageDictionary.Paths.Components || location.pathname.endsWith(StatuspageDictionary.Paths.Components)) {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var components = document.createElement(StatuspageWebComponents.Components.is, { is: StatuspageWebComponents.Components.is });
                         components.setAttribute('data-url', this.url);
     
-                        this.app.replaceWith(components);
+                        this.firstElementChild.replaceWith(components);
                     } else if (location.pathname == StatuspageDictionary.Paths.Status || location.pathname.endsWith(StatuspageDictionary.Paths.Status)) {
                         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                         status.setAttribute('data-url', this.url);
                         status.setAttribute('fullScreen', '');
     
-                        this.app.replaceWith(status);
+                        this.firstElementChild.replaceWith(status);
                     } else {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
                         summary.setAttribute('data-url', this.url);
-    
-                        this.app.replaceWith(summary);
-                        // this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                        
+                        this.removeChild(this.firstChild);
+                        this.appendChild(summary);
+                        
+                        // for (const child of summary.children) {
+                        //     console.log(`--------------------${child.toString()}`);
+                        //     this.appendChild((HTML)child);
+                        // }                          
+                        // this.appendChild(summary);
+                        // this.firstElementChild.replaceWith(summary);
                     }
                 }
-                
+
+                console.log(this.innerHTML.toString());
+                console.log(this.toString());
                 console.log(`Finished ${StatuspageWebComponents.App.is}`);
             }
+
+            toString() { return this.outerHTML.toString(); }
             
             static get is() { return 'statuspage-app'; }
         }
@@ -852,11 +859,17 @@ class StatuspageWebComponents {
     
     static get Loading() {
         return class extends HTMLElement {
-            constructor() { super(); }
+            constructor() {
+                super();
 
-            connectedCallback() {
-                this.replaceWith(StatuspageHTMLElements.LoadingHTMLElement);
+                this.statusElement = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                this.statusElement.isLoading = true;
+                this.statusElement.fullScreen = true;
             }
+
+            connectedCallback() { this.replaceWith(this.statusElement); }
+
+            toString() { return this.outerHTML.toString(); }
             
             static get is() { return 'statuspage-loading'; }
         }
@@ -864,55 +877,170 @@ class StatuspageWebComponents {
 
     static get Status() {
         return class extends HTMLElement {
-            constructor() { super(); }
+            static get observedAttributes() { return [ "data-status", "data-url", "status", "fullscreen", "autorefresh" ]; }
+
+            set isLoading(val) {
+                console.log(this._isLoading, this.dataStatus, this.fullScreen);
+
+                if (typeof val == "boolean") {
+                    this._isLoading = val;
+                    if (!this._isLoading) {
+                        if (this._status != null) {
+                            this.setAttribute('data-status', this._status);
+                        }
+
+                        if (!this._fullScreen && this.hasAttribute('fullScreen')) {
+                            this.removeAttribute('fullScreen');
+                        }
+
+                        if (this._fullScreen && !this.hasAttribute('fullScreen')) {
+                            this.setAttribute('fullScreen', '');
+                        }
+                    }
+
+                    if (this._isLoading) {
+                        this.setAttribute('data-status', StatuspageDictionary.StatusEnums.loading);
+
+                        console.log(this.hasAttribute('fullScreen'));
+
+                        if (!this.hasAttribute('fullScreen')) {
+                            this.setAttribute('fullScreen', '');
+                        }
+                    }
+                }
+            }
+
+            get isLoading() {
+                return this._isLoading;
+            }
+
+            set fullScreen(val) {
+                if (typeof val == "boolean") {
+                    this._fullScreen = val;
+
+                    if (this._fullScreen) {
+                        this.setAttribute('fullScreen', '');
+                    } else {
+                        this.removeAttribute('fullScreen');
+                    }
+                }
+            }
+
+            get fullScreen() {
+                return this._fullScreen;
+            }
+
+            set dataStatus(val) {
+                if (typeof val == "string" && val in StatuspageDictionary.StatusEnums) {
+                    this._status = val;
+                    this.setAttribute('data-status', this._status);
+
+                    if (this._fullScreen == null) {
+                        this._fullScreen = false;
+                    }
+                }
+            }
+
+            get dataStatus() {
+                return this._status;
+            }
+
+            set baseUrl(val) {
+                if (typeof val == "string") {
+                    this._url = val;
+                }
+            }
+
+            get baseUrl() {
+                return this._url;
+            }
+
+            set refreshEnabled(val) {
+                if (typeof val == "boolean") {
+                    this._refreshEnabled = val;
+                }
+            }
+
+            get refreshEnabled() {
+                return this._refreshEnabled;
+            }
+
+            set refreshTime(val) {
+                if (typeof val == 'number') {
+                    this._refreshTime = val;
+                }
+            }
+
+            get refreshTime() {
+                return this._refreshTime;
+            }
+
+            constructor() {
+                super();
+                
+                this._fullScreen = null;
+                this._status = null;
+                this._url = null;
+                this._isLoading = false;
+
+                this._refreshEnabled = false;
+                this._refreshTime = 5;
+            }
         
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
                 StatuspageHTMLElements.UpdateUrlTags(location.href);
 
-                var isFullScreen = this.hasAttribute('fullScreen');
                 var autoRefresh = this.hasAttribute('autoRefresh');
 
-                this.refreshTimer = autoRefresh && this.getAttribute('autoRefresh') != ''
-                    ? parseInt(this.getAttribute('autoRefresh'))
-                    : 5;
+                this.isLoading = true;
 
-                if (autoRefresh) {
-                    console.log(`Refresh Interval: ${this.refreshTimer} minutes`);
+                if (this.refreshEnabled) {
+                    console.log(`Refresh Interval: ${this.refreshTime} minutes`);
                 }
 
-                this.setAttribute('data-status', StatuspageDictionary.StatusEnums.loading);
-                this.setAttribute('fullScreen', '');
-                this.setThemeMetaTags(StatuspageDictionary.StatusEnums.loading);
+                if (this.getAttribute('data-url')) {
+                    this.baseUrl = this.getAttribute('data-url');
+                    this.removeAttribute('data-url');
+                }
 
-                this.status = this.hasAttribute('status') && this.getAttribute('status') in StatuspageDictionary.StatusEnums
-                    ? this.getAttribute('status')
-                    : StatuspageDictionary.StatusEnums.error;
-        
-                this.fullScreen = this.hasAttribute('status') || this.hasAttribute('data-url')
-                    ? isFullScreen
-                    : true;
-
-                if (this.hasAttribute('data-url')) {
+                if (this.baseUrl != null) {
                     if (navigator.onLine) {
-                        this.url = this.getAttribute('data-url');
-                        this.removeAttribute('data-url');
-                        this.fetchStatus(this.url);
+                        this.fetchStatus(this.baseUrl);
 
-                        if (autoRefresh) {
-                            setInterval(() => { this.fetchStatus(this.url); }, this.refreshTimer * 60 * 1000);
+                        if (this.refreshEnabled) {
+                            setInterval(() => { this.fetchStatus(this.baseUrl); }, this.refreshTime * 60 * 1000);
                         }
                     } else {
-                        this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
-                        this.parseStatus(StatuspageDictionary.StatusEnums.error, this.fullScreen);
+                        this.setStatus(StatuspageDictionary.StatusEnums.error, true);
                     }
-                } else {
-                    this.setThemeMetaTags(this.status);
-                    this.parseStatus(this.status, this.fullScreen);
                 }
 
+                this.isLoading = false;
+
+                console.log(this.toString());
                 console.log(`Finished ${StatuspageWebComponents.Status.is}`);
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                if (name == 'status' && newValue != null) {
+                    this.setAttribute('data-status', newValue);
+                    this.removeAttribute('status');
+                }
+
+                if (name == 'data-status' && newValue != null && newValue in StatuspageDictionary.StatusEnums) {
+                    StatuspageHTMLElements.SetThemeColor(newValue);
+                }
+
+                if (name == 'data-status' && newValue != null && newValue in StatuspageDictionary.StatusEnums && this._status == null) {
+                    this.dataStatus = newValue;
+                    StatuspageHTMLElements.SetThemeColor(newValue);
+                }
+
+                if (name == 'fullscreen' && this.fullScreen == null && !this.isLoading) {
+                    this.fullScreen = (newValue != null);
+                }
             }
 
             fetchStatus(url) {
@@ -923,46 +1051,30 @@ class StatuspageWebComponents {
                         fetch(baseUrl + '/api/v2/status.json')
                             .then(data => data.json())
                             .then((json) => {
-                                if ('page' in json && 'name' in json.page) {
-                                    StatuspageHTMLElements.UpdateMetaTagValues(location.href, "https://spstat.us/img/status/lowres/min/status-min-good.png", json.page.name, StatuspageDictionary.PathNames.Index, StatuspageDictionary.MetaColors.loading, "rtsfred3")
-                                }
-
-                                if ('status' in json) {
-                                    this.setThemeMetaTags(json.status.indicator);
-                                    this.parseStatus(json.status.indicator, this.fullScreen);
-                                } else {
-                                    this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
-                                    this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
-                                }
-                                
+                                this.parseJson(json);
                                 res();
                             }).catch((error) => {
-                                this.setThemeMetaTags(StatuspageDictionary.StatusEnums.error);
-                                this.parseStatus(StatuspageDictionary.StatusEnums.error, true);
+                                this.setStatus(StatuspageDictionary.StatusEnums.error, true);
                                 rej(error);
                             });
                     }
                 })
             }
 
-            setThemeMetaTags(status) { StatuspageHTMLElements.SetThemeColor(status); }
-
-            parseStatus(status, fullScreen) {
-                console.log(status, fullScreen);
-
-                StatuspageHTMLElements.SetThemeColor(status);
-                this.setAttribute('data-status', status);
-
-                if (fullScreen) {
-                    this.setAttribute('fullScreen', '');
+            parseJson(json) {
+                if ('status' in json) {
+                    this.dataStatus = json.status.indicator;
                 } else {
-                    this.removeAttribute('fullScreen');
-                }
-                
-                if (this.hasAttribute('status')) {
-                    this.removeAttribute('status');
+                    this.setStatus(StatuspageDictionary.StatusEnums.error, true);
                 }
             }
+
+            setStatus(status, fullScreen) {
+                this.dataStatus = status;
+                this.fullScreen = fullScreen;
+            }
+
+            toString() { return this.outerHTML.toString(); }
         
             static get is() { return 'statuspage-status'; }
         }
@@ -1009,6 +1121,8 @@ class StatuspageWebComponents {
         
                 for(var i = 0; i < componentsArr.length; i++){ this.app.append(componentsArr[i]); }
             }
+
+            toString() { return this.outerHTML.toString(); }
         
             static get is(){ return 'statuspage-components'; }
         }
@@ -1016,18 +1130,52 @@ class StatuspageWebComponents {
 
     static get Incidents() {
         return class extends HTMLElement {
-            constructor() { super(); }
+            static get observedAttributes() { return [ "data-json" ]; }
+
+            set dataJson(val) {
+                if (typeof val == "string") {
+                    this._dataJson = JSON.parse(val);
+                }
+
+                if (typeof val == "object") {
+                    this._dataJson = val;
+                }
+            }
+
+            get dataJson() {
+                return this._dataJson;
+            }
+
+            constructor() {
+                super();
+
+                this._dataJson = null;
+            }
 
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Incidents.is}`);
 
-                if (this.hasAttribute('data-json')) {
-                    this.parseJson(JSON.parse(this.getAttribute('data-json')));
-                } else if (this.hasAttribute('data-url')) {
-                    this.fetchIncidents(this.getAttribute('data-url'));
+                if (this.dataJson != null) {
+                    this.parseJson(this.dataJson);
+                } else {
+                    if (this.hasAttribute('data-json')) {
+                        this.dataJson = this.getAttribute('data-json');
+                        this.parseJson(this.dataJson);
+                    } else if (this.hasAttribute('data-url')) {
+                        this.fetchIncidents(this.getAttribute('data-url'));
+                    }
                 }
-
+                
                 console.log(`Finished ${StatuspageWebComponents.Incidents.is}`);
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                console.log(StatuspageWebComponents.Incidents.is, name, oldValue, newValue);
+
+                if (name == 'data-json' && newValue != null) {
+                    this.dataJson = newValue;
+                    this.parseJson(this.dataJson);
+                }
             }
 
             fetchIncidents(url) {
@@ -1055,6 +1203,8 @@ class StatuspageWebComponents {
                 }
             }
 
+            toString() { return this.outerHTML.toString(); }
+
             static get is(){ return 'statuspage-incidents'; }
         }
     }
@@ -1066,11 +1216,12 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Summary.is}`);
 
-                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
-
-                this.app = document.getElementById('app');
-
                 this.singleRequest = true;
+
+                this.status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                this.incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
+
+                this.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
 
                 if (this.hasAttribute('data-single-request')) {
                     if (this.getAttribute('data-single-request') == "true") {
@@ -1082,25 +1233,23 @@ class StatuspageWebComponents {
 
                 if (this.hasAttribute('data-url')) {
                     this.url = this.getAttribute('data-url');
+                    this.removeAttribute('data-url');
 
                     if (navigator.onLine) {
                         if (this.singleRequest) {
                             this.fetchSummary(this.url);
                         } else {
-                            var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                            status.setAttribute('data-url', this.url);
+                            this.status.setAttribute('data-url', this.url);
+                            this.incidents.setAttribute('data-url', this.url);
     
-                            var incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
-                            incidents.setAttribute('data-url', this.url);
-    
-                            this.app.firstChild.replaceWith(status);
-                            this.app.appendChild(incidents);
+                            this.firstElementChild.replaceWith(this.status);
+                            this.appendChild(this.incidents);
                         }
                     } else {
-                        this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                        this.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                     }
                 } else {
-                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    this.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                 }
 
                 console.log(`Finished ${StatuspageWebComponents.Summary.is}`);
@@ -1122,22 +1271,52 @@ class StatuspageWebComponents {
             }
 
             parseJson(json) {
+                console.log(json);
+
                 if (!('status' in json)) {
-                    this.app.firstChild.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    this.firstElementChild.replaceWith(StatuspageHTMLElements.LoadingHTMLElement)
                     return;
+                } else {
+                    this.status.dataStatus = json.status.indicator;
+                    this.incidents.dataJson = json;
+
+                    console.log(this.incidents);
+
+                    // this.status.setAttribute('status', json.status.indicator);
+                    // this.incidents.setAttribute('data-json', JSON.stringify(json));
+
+                    this.firstElementChild.replaceWith(this.status);
+                    this.appendChild(this.incidents);
                 }
-
-                var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                status.setAttribute('status', json.status.indicator);
-
-                var summary = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
-                summary.setAttribute('data-json', JSON.stringify(json));
-
-                this.app.firstChild.replaceWith(status);
-                this.app.appendChild(summary);
             }
 
+            toString() { return this.outerHTML.toString(); }
+
             static get is(){ return 'statuspage-summary'; }
+        }
+    }
+
+    static get HTMLWebComponent() {
+        return class extends HTMLElement {
+            constructor() {
+                super();
+
+                this.htmlElement = document.createElement('html');
+
+                this.head = document.createElement('head');
+                this.body = document.createElement('body');
+
+                this.appendChild(this.head);
+                this.appendChild(this.body);
+            }
+
+            connectedCallback() {
+                this.replaceWith(this.htmlElement);
+            }
+
+            toString() { return this.outerHTML.toString(); }
+
+            static get is(){ return 'statuspage-html'; }
         }
     }
 }
@@ -1148,4 +1327,4 @@ class StatuspageWebComponents {
 // customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 // customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
-export { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents };
+export { window, document, StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents };

@@ -100,7 +100,7 @@ if [ -f StatuspageHTML/tmp/static/index.error.html ]; then cat StatuspageHTML/tm
 if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageHTML/tmp/static/index.maintenance.html > StatuspageHTML/output/static/index.maintenance.html; fi;
 
 if [ -f StatuspageHTML/tmp/amp/index.html ]; then cat StatuspageHTML/tmp/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
-if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
+if [ -f StatuspageHTML/tmp/preact/index.tmp.html ]; then cat StatuspageHTML/tmp/preact/index.tmp.html > StatuspageHTML/output/preact/index.html; fi;
 
 # --------------------------------------------------------------------------------------------------------------------------
 

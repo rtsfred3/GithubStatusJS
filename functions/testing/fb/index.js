@@ -90,7 +90,7 @@ async function ProcessContext(context) {
 
     console.log("-".repeat(50));
 
-    console.log(new DOMParser());
+    // console.log(new DOMParser());
 
     // console.log(context);
     // console.log(context.request);
