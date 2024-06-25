@@ -862,15 +862,7 @@ class StatuspageWebComponents {
 
     static get Loading() {
         return class extends HTMLElement {
-            constructor() {
-                super();
-
-                // this.statusElement = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                // this.statusElement.isLoading = true;
-                // this.statusElement.fullScreen = true;
-            }
-
-            // connectedCallback() { this.replaceWith(this.statusElement); }
+            constructor() { super(); }
 
             toString() { return this.outerHTML.toString(); }
             
@@ -927,10 +919,6 @@ class StatuspageWebComponents {
              */
             set fullScreen(val) {
                 if (typeof val == 'boolean') {
-                    console.log('set fullScreen(val)', this._fullScreen, val);
-
-                    console.log("hasAttribute('fullScreen')", this.hasAttribute('fullScreen'));
-
                     this._fullScreen = val;
 
                     if (this._fullScreen && !this.hasAttribute('fullScreen')) {
@@ -1090,16 +1078,12 @@ class StatuspageWebComponents {
             }
 
             attributeChangedCallback(name, oldValue, newValue) {
-                // console.log(`attributeChangedCallback,\tname=${name},\toldValue=${oldValue},\tnewValue=${newValue}`);
-
                 if (name == 'status' && newValue != null && newValue in StatuspageDictionary.StatusEnums) {
                     this.dataStatus = newValue;
                     this.removeAttribute('status');
                 }
 
                 if (name == 'data-status' && newValue != null && newValue in StatuspageDictionary.StatusEnums) {
-                    // console.log('data-status', '1');
-
                     if (this._status == null) { 
                         this.dataStatus = newValue;
                     }
@@ -1107,11 +1091,10 @@ class StatuspageWebComponents {
                     StatuspageHTMLElements.SetThemeColor(newValue);
                 }
 
-                // if (name == 'data-status' && newValue != null && newValue in StatuspageDictionary.StatusEnums && this._status == null) {
-                //     console.log('data-status', '2');
-                //     this.dataStatus = newValue;
-                //     StatuspageHTMLElements.SetThemeColor(newValue);
-                // }
+                if (name == 'data-url') {
+                    this.baseUrl = newValue;
+                    this.fetchStatus(this.baseUrl);
+                }
 
                 if (name == 'fullscreen' && this.fullScreen == null && !this.isLoading) {
                     this.fullScreen = (newValue != null);
@@ -1126,7 +1109,8 @@ class StatuspageWebComponents {
                         fetch(baseUrl + '/api/v2/status.json')
                             .then(data => data.json())
                             .then((json) => {
-                                this._dataJson = json;
+                                this.dataJson = json;
+                                // this._dataJson = json;
                                 // this.parseJson(json);
                                 res();
                             }).catch((error) => {
