@@ -205,7 +205,7 @@ class StatuspageHTMLElements {
      */
     static get ErrorHTMLElement(){
         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-        status.setStatus(StatuspageDictionary.StatusEnums.error, true);
+        status.setError();
         return status;
     }
 
@@ -878,8 +878,6 @@ class StatuspageWebComponents {
              * @param {boolean} val
              */
             set isLoading(val) {
-                // console.log(this._isLoading, this.dataStatus, this.fullScreen);
-
                 if (typeof val == "boolean") {
                     this._isLoading = val;
 
@@ -973,7 +971,12 @@ class StatuspageWebComponents {
              */
             set baseUrl(val) {
                 if (typeof val == 'string') {
-                    this._url = val;
+                    if (URL.canParse('/api/v2/status.json', val)) {
+                        var _urlObj = new URL('/api/v2/status.json', val);
+
+                        this._baseUrl = _urlObj.origin;
+                        this._url = _urlObj.href;
+                    }
                 }
             }
 
@@ -981,6 +984,13 @@ class StatuspageWebComponents {
              * @returns {string}
              */
             get baseUrl() {
+                return this._baseUrl;
+            }
+
+            /**
+             * @returns {string}
+             */
+            get url() {
                 return this._url;
             }
 
@@ -1036,6 +1046,7 @@ class StatuspageWebComponents {
                 
                 this._fullScreen = null;
                 this._status = null;
+                this._baseUrl = null;
                 this._url = null;
                 this._isLoading = false;
                 this._dataJson = null;
@@ -1047,9 +1058,9 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
-                StatuspageHTMLElements.UpdateUrlTags(location.href);
-
                 this.isLoading = true;
+
+                StatuspageHTMLElements.UpdateUrlTags(location.href);
 
                 if (this.isRefreshEnabled) {
                     console.log(`Refresh Interval: ${this.refreshTime} minutes`);
@@ -1094,7 +1105,6 @@ class StatuspageWebComponents {
 
                 if (name == 'data-url') {
                     this.baseUrl = newValue;
-                    this.fetchStatus(this.baseUrl);
                 }
 
                 if (name == 'fullscreen' && this.fullScreen == null && !this.isLoading) {
@@ -1108,10 +1118,8 @@ class StatuspageWebComponents {
 
             fetchStatus() {
                 return new Promise((res, rej) => {
-                    var _url = this.baseUrl.slice(-1) == '/' ? this.baseUrl.substring(0, this.baseUrl.length - 1) : this.baseUrl;
-                    
-                    if (navigator.onLine) {
-                        fetch(_url + '/api/v2/status.json')
+                    if (navigator.onLine && this.url != null) {
+                        fetch(this.url)
                             .then(data => data.json())
                             .then((json) => {
                                 this.dataJson = json;
@@ -1363,6 +1371,10 @@ class StatuspageWebComponents {
 
                 this.head = document.createElement('head');
                 this.body = document.createElement('body');
+
+                var loading = document.createElement(StatuspageWebComponents.Loading.is, { is: StatuspageWebComponents.Loading.is });
+
+                this.body.appendChild(loading);
 
                 this.appendChild(this.head);
                 this.appendChild(this.body);
