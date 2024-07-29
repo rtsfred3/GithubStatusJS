@@ -51,6 +51,11 @@
             "type": "image/png"
         },
         {
+            "src": "https://githubstat.us/img/maskable/webp/144px.webp",
+            "sizes": "144x144",
+            "type": "image/webp"
+        },
+        {
             "src": "https://githubstat.us/img/maskable/152px.png",
             "sizes": "152x152",
             "type": "image/png"
@@ -73,9 +78,21 @@
             "purpose": "maskable"
         },
         {
+            "src": "https://githubstat.us/img/maskable/webp/512px.webp",
+            "sizes": "512x512",
+            "type": "image/webp",
+            "purpose": "maskable"
+        },
+        {
             "src": "https://githubstat.us/img/maskable/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "https://githubstat.us/img/maskable/webp/1024px.webp",
+            "sizes": "1024x1024",
+            "type": "image/webp",
             "purpose": "maskable"
         }
     ],

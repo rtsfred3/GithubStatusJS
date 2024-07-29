@@ -818,7 +818,8 @@ class StatuspageWebComponents {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
                         summary.setAttribute('data-url', this.url);
-    
+                        summary.setAttribute('data-single-request', true);
+
                         this.firstElementChild.replaceWith(summary);
                     } else if (location.pathname == StatuspageDictionary.Paths.Components || location.pathname.endsWith(StatuspageDictionary.Paths.Components)) {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
@@ -828,14 +829,15 @@ class StatuspageWebComponents {
                         this.firstElementChild.replaceWith(components);
                     } else if (location.pathname == StatuspageDictionary.Paths.Status || location.pathname.endsWith(StatuspageDictionary.Paths.Status)) {
                         var status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                        status.setAttribute('data-url', this.url);
-                        status.setAttribute('fullScreen', '');
+                        status.baseUrl = this.url;
+                        status.fullScreen = true;
     
                         this.firstElementChild.replaceWith(status);
                     } else {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
                         summary.setAttribute('data-url', this.url);
+                        summary.setAttribute('data-single-request', false);
                         
                         this.removeChild(this.firstChild);
                         this.appendChild(summary);
@@ -860,6 +862,16 @@ class StatuspageWebComponents {
         }
     }
 
+    static get Error() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+
+            toString() { return this.outerHTML.toString(); }
+            
+            static get is() { return 'statuspage-error'; }
+        }
+    }
+
     static get Loading() {
         return class extends HTMLElement {
             constructor() { super(); }
@@ -878,12 +890,14 @@ class StatuspageWebComponents {
              * @param {boolean} val
              */
             set isLoading(val) {
-                if (typeof val == "boolean") {
+                if (typeof val == "boolean" && this._isLoadingEnabled) {
                     this._isLoading = val;
 
                     if (!this._isLoading) {
                         if (this._status != null) {
                             this.setAttribute('data-status', this._status);
+                        } else if (this._status == null) {
+                            this.removeAttribute('data-status');
                         }
 
                         if (!this._fullScreen && this.hasAttribute('fullScreen')) {
@@ -918,9 +932,12 @@ class StatuspageWebComponents {
             set fullScreen(val) {
                 if (typeof val == 'boolean') {
                     this._fullScreen = val;
+                    this._isFullScreenSet = true;
 
-                    if (this._fullScreen && !this.hasAttribute('fullScreen')) {
-                        this.setAttribute('fullScreen', '');
+                    if (this._fullScreen) {
+                        if (!this.hasAttribute('fullScreen')) {
+                            this.setAttribute('fullScreen', '');
+                        }
                     } else {
                         this.removeAttribute('fullScreen');
                     }
@@ -971,11 +988,15 @@ class StatuspageWebComponents {
              */
             set baseUrl(val) {
                 if (typeof val == 'string') {
-                    if (URL.canParse('/api/v2/status.json', val)) {
-                        var _urlObj = new URL('/api/v2/status.json', val);
+                    if (URL.canParse(this._urlPath, val)) {
+                        var _urlObj = new URL(this._urlPath, val);
 
                         this._baseUrl = _urlObj.origin;
                         this._url = _urlObj.href;
+
+                        if (!this.hasAttribute('data-url')) {
+                            this.setAttribute('data-url', this.baseUrl);
+                        }
                     }
                 }
             }
@@ -1044,12 +1065,17 @@ class StatuspageWebComponents {
             constructor() {
                 super();
                 
-                this._fullScreen = null;
-                this._status = null;
+                this._urlPath = '/api/v2/status.json';
                 this._baseUrl = null;
                 this._url = null;
+
+                this._fullScreen = null;
                 this._isLoading = false;
+                this._status = null;
                 this._dataJson = null;
+
+                this._isFullScreenSet = false;
+                this._isLoadingEnabled = true;
 
                 this._refreshEnabled = false;
                 this._refreshTime = 5;
@@ -1066,16 +1092,12 @@ class StatuspageWebComponents {
                     console.log(`Refresh Interval: ${this.refreshTime} minutes`);
                 }
 
-                if (this.getAttribute('data-url')) {
-                    this.baseUrl = this.getAttribute('data-url');
-                    this.removeAttribute('data-url');
-                }
-
                 if (this.baseUrl != null) {
                     if (navigator.onLine) {
                         this.fetchStatus();
 
                         if (this.isRefreshEnabled) {
+                            console.log("Timer set");
                             setInterval(() => { this.fetchStatus(); }, this.refreshTime * 60 * 1000);
                         }
                     } else {
@@ -1090,9 +1112,12 @@ class StatuspageWebComponents {
             }
 
             attributeChangedCallback(name, oldValue, newValue) {
+                console.log('attributeChangedCallback', name, oldValue, newValue);
+
                 if (name == 'status' && newValue != null && newValue in StatuspageDictionary.StatusEnums) {
                     this.dataStatus = newValue;
                     this.removeAttribute('status');
+                    this._isLoadingEnabled = false;
                 }
 
                 if (name == 'data-status' && newValue != null && newValue in StatuspageDictionary.StatusEnums) {
@@ -1105,9 +1130,10 @@ class StatuspageWebComponents {
 
                 if (name == 'data-url') {
                     this.baseUrl = newValue;
+                    this._isLoadingEnabled = true;
                 }
 
-                if (name == 'fullscreen' && this.fullScreen == null && !this.isLoading) {
+                if (name == 'fullscreen' && !this._isFullScreenSet && !this.isLoading) {
                     this.fullScreen = (newValue != null);
                 }
 
@@ -1198,6 +1224,9 @@ class StatuspageWebComponents {
         return class extends HTMLElement {
             static get observedAttributes() { return [ "data-json" ]; }
 
+            /**
+             * @param {object} val
+             */
             set dataJson(val) {
                 if (typeof val == "string") {
                     this._dataJson = JSON.parse(val);
@@ -1206,31 +1235,71 @@ class StatuspageWebComponents {
                 if (typeof val == "object") {
                     this._dataJson = val;
                 }
+
+                if (this._dataJson != null) {
+                    this._incidentsElements = StatuspageHTMLElements.IncidentsHTMLElements(this._dataJson);
+                }
             }
 
+            /**
+             * @returns {object}
+             */
             get dataJson() {
                 return this._dataJson;
+            }
+
+            /**
+             * @param {string} val
+             */
+            set baseUrl(val) {
+                if (typeof val == 'string') {
+                    if (URL.canParse(this._urlPath, val)) {
+                        var _urlObj = new URL(this._urlPath, val);
+
+                        this._baseUrl = _urlObj.origin;
+                        this._url = _urlObj.href;
+
+                        if (!this.hasAttribute('data-url')) {
+                            this.setAttribute('data-url', this._baseUrl);
+                        }
+                    }
+                }
+            }
+
+            /**
+             * @returns {string}
+             */
+            get baseUrl() {
+                return this._baseUrl;
+            }
+
+            /**
+             * @returns {string}
+             */
+            get url() {
+                return this._url;
+            }
+
+            get incidentElements(){
+                return this._incidentsElements;
             }
 
             constructor() {
                 super();
 
+                this._urlPath = '/api/v2/incidents.json';
+                this._baseUrl = null;
+                this._url = null;
+
                 this._dataJson = null;
+
+                this._incidentsElements = null;
             }
 
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Incidents.is}`);
 
-                if (this.dataJson != null) {
-                    this.parseJson(this.dataJson);
-                } else {
-                    if (this.hasAttribute('data-json')) {
-                        this.dataJson = this.getAttribute('data-json');
-                        this.parseJson(this.dataJson);
-                    } else if (this.hasAttribute('data-url')) {
-                        this.fetchIncidents(this.getAttribute('data-url'));
-                    }
-                }
+                if (this.url != null) { this.fetchIncidents(); }
                 
                 console.log(`Finished ${StatuspageWebComponents.Incidents.is}`);
             }
@@ -1240,32 +1309,34 @@ class StatuspageWebComponents {
 
                 if (name == 'data-json' && newValue != null) {
                     this.dataJson = newValue;
-                    this.parseJson(this.dataJson);
+                }
+
+                if (name == 'data-url' && newValue != null) {
+                    this.baseUrl = newValue;
                 }
             }
 
-            fetchIncidents(url) {
-                console.log(url);
-
+            fetchIncidents() {
                 return new Promise((res, rej) => {
-                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
-        
-                    fetch(baseUrl + '/api/v2/incidents.json')
-                        .then(data => data.json())
-                        .then((json) => {
-                            this.parseJson(json);
-                            res();
-                        }).catch((error) => rej(error));
+                    if (navigator.onLine && this.url != null) {
+                        fetch(this.url)
+                            .then(data => data.json())
+                            .then((json) => {
+                                this.dataJson = json;
+                                console.log(this.dataJson);
+                                res();
+                            }).catch((error) => rej(error));
+                    }
                 })
             }
 
-            parseJson(json){
-                if ('incidents' in json) {
-                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(json));
+            parseJson() {
+                if ('incidents' in this.dataJson) {
+                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(this.dataJson));
                 }
 
-                if ('scheduled_maintenances' in json) {
-                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(json));
+                if ('scheduled_maintenances' in this.dataJson) {
+                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(this.dataJson));
                 }
             }
 
@@ -1277,7 +1348,72 @@ class StatuspageWebComponents {
 
     static get Summary() {
         return class extends HTMLElement {
-            constructor() { super(); }
+            static get observedAttributes() { return [ "data-url", "data-single-request" ]; }
+
+            /**
+             * @param {boolean} val
+             */
+            set isSingleRequest(val) {
+                if (typeof val == "boolean") {
+                    this._isSingleRequest = val;
+
+                    if (!this.hasAttribute('data-single-request')) {
+                        this.setAttribute('data-single-request', this._isSingleRequest);
+                    }
+                }
+            }
+
+            /**
+             * @returns {boolean}
+             */
+            get isSingleRequest() {
+                return this._isSingleRequest;
+            }
+
+            /**
+             * @param {string} val
+             */
+            set baseUrl(val) {
+                if (typeof val == 'string') {
+                    if (URL.canParse(this._urlPath, val)) {
+                        var _urlObj = new URL(this._urlPath, val);
+
+                        this._baseUrl = _urlObj.origin;
+                        this._url = _urlObj.href;
+                    }
+
+                    if (!this.hasAttribute('data-url')) {
+                        this.setAttribute('data-url', this.baseUrl);
+                    }
+                }
+            }
+
+            /**
+             * @returns {string}
+             */
+            get baseUrl() {
+                return this._baseUrl;
+            }
+
+            /**
+             * @returns {string}
+             */
+            get url() {
+                return this._url;
+            }
+
+            constructor() {
+                super();
+
+                this._urlPath = '/api/v2/summary.json';
+                this._baseUrl = null;
+                this._url = null;
+
+                this._isLoading = false;
+                this._isSingleRequest = true;
+                this._dataJson = null;
+
+            }
 
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Summary.is}`);
@@ -1289,24 +1425,16 @@ class StatuspageWebComponents {
 
                 this.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
 
-                if (this.hasAttribute('data-single-request')) {
-                    if (this.getAttribute('data-single-request') == "true") {
-                        this.singleRequest = true;
-                    } else if (this.getAttribute('data-single-request') == "false") {
-                        this.singleRequest = false;
-                    }
-                }
-
                 if (this.hasAttribute('data-url')) {
-                    this.url = this.getAttribute('data-url');
+                    this.baseUrl = this.getAttribute('data-url');
                     this.removeAttribute('data-url');
 
                     if (navigator.onLine) {
                         if (this.singleRequest) {
-                            this.fetchSummary(this.url);
+                            this.fetchSummary();
                         } else {
-                            this.status.setAttribute('data-url', this.url);
-                            this.incidents.setAttribute('data-url', this.url);
+                            this.status.baseUrl = this.baseUrl;
+                            this.incidents.baseUrl = this.baseUrl;
     
                             this.firstElementChild.replaceWith(this.status);
                             this.appendChild(this.incidents);
@@ -1321,11 +1449,21 @@ class StatuspageWebComponents {
                 console.log(`Finished ${StatuspageWebComponents.Summary.is}`);
             }
 
-            fetchSummary(url) {
+            attributeChangedCallback(name, oldValue, newValue) {
+                console.log('attributeChangedCallback', name, oldValue, newValue);
+
+                if (name == 'data-url') {
+                    this.baseUrl = newValue;
+                }
+
+                if (name == 'data-single-request') {
+                    this.isSingleRequest = this.getAttribute('data-single-request').toLowerCase() === "true";
+                }
+            }
+
+            fetchSummary() {
                 return new Promise((res, rej) => {
-                    var baseUrl = url.slice(-1) == '/' ? url.substring(0, url.length - 1) : url;
-        
-                    fetch(baseUrl + '/api/v2/summary.json')
+                    fetch(this.url)
                         .then(data => data.json())
                         .then((json) => {
                             this.parseJson(json);
@@ -1337,19 +1475,12 @@ class StatuspageWebComponents {
             }
 
             parseJson(json) {
-                console.log(json);
-
                 if (!('status' in json)) {
                     this.firstElementChild.replaceWith(StatuspageHTMLElements.LoadingHTMLElement)
                     return;
                 } else {
                     this.status.dataStatus = json.status.indicator;
                     this.incidents.dataJson = json;
-
-                    console.log(this.incidents);
-
-                    // this.status.setAttribute('status', json.status.indicator);
-                    // this.incidents.setAttribute('data-json', JSON.stringify(json));
 
                     this.firstElementChild.replaceWith(this.status);
                     this.appendChild(this.incidents);
@@ -1891,6 +2022,7 @@ function Router(url, previousDays = 7, indexHomeSingleRequest = true, displayUTC
 }
 
 customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
+customElements.define(StatuspageWebComponents.Error.is, StatuspageWebComponents.Error);
 customElements.define(StatuspageWebComponents.Loading.is, StatuspageWebComponents.Loading);
 customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
