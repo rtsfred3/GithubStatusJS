@@ -19,7 +19,6 @@
     --loading-text: "loading";
     --unavailable-text: "unavailable";
     --error-text: "error";
-    --all-good-text: "All good.";
 }
 
 * {
@@ -123,10 +122,6 @@ statuspage-error::before {
     color: var(--font);
 }
 
-.messages-empty-all-good::before {
-    content: var(--all-good-text);
-}
-
 .messages-empty-all-good {
     font-size: 36pt;
     font-weight: 600;
@@ -136,11 +131,6 @@ statuspage-error::before {
 .messages-empty-body {
     font-size: 9pt;
     font-weight: 500;
-}
-
-.min[data-status="none"]::before, .min[data-status="good"]::before {
-    content: var(--good-text);
-    text-transform: uppercase;
 }
 
 .good, .none, .min[data-background="none"], .min[data-background="good"], [data-status="none"], [data-status="good"] {

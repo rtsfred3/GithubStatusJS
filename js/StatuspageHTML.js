@@ -252,6 +252,13 @@ class StatuspageHTMLElements {
         return app;
     }
 
+    static get AllGoodElement() {
+        const allGoodElement = document.createElement("div");
+        allGoodElement.classList.add('messages-empty-all-good');
+        allGoodElement.textContent = "All good.";
+        return allGoodElement;
+    }
+
     /**
      * 
      * @param {string} siteName 
@@ -260,22 +267,14 @@ class StatuspageHTMLElements {
     static NoIncidentsElement(siteName) {
         const emptyIncidents = document.createElement("div");
         emptyIncidents.classList.add("messages-empty");
+
+        const emptyBodyDiv = document.createElement("div");
+        emptyBodyDiv.classList.add('messages-empty-body');
+        emptyBodyDiv.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${siteName} is up and running and has been stable for quite some time.`));
+        emptyBodyDiv.append(document.createElement("br"), document.createElement("br"));
+        emptyBodyDiv.appendChild(document.createTextNode("Now get back to work!"));
     
-        const emptyIncidentsFirstChild = document.createElement("div");
-        const emptyIncidentsSecondChild = document.createElement("div");
-        
-        emptyIncidentsFirstChild.classList.add('messages-empty-all-good');
-        emptyIncidentsSecondChild.classList.add('messages-empty-body');
-        
-        // emptyIncidentsFirstChild.appendChild(document.createTextNode("All good."));
-    
-        emptyIncidentsSecondChild.appendChild(document.createTextNode(`Nothing to see here folks. Looks like ${siteName} is up and running and has been stable for quite some time.`));
-        emptyIncidentsSecondChild.appendChild(document.createElement("br"));
-        emptyIncidentsSecondChild.appendChild(document.createElement("br"));
-        emptyIncidentsSecondChild.appendChild(document.createTextNode("Now get back to work!"));
-    
-        emptyIncidents.appendChild(emptyIncidentsFirstChild);
-        emptyIncidents.appendChild(emptyIncidentsSecondChild);
+        emptyIncidents.append(StatuspageHTMLElements.AllGoodElement, emptyBodyDiv);
 
         return emptyIncidents;
     }
@@ -290,6 +289,7 @@ class StatuspageHTMLElements {
     }
 
     /**
+     * [Deprecated] DO NOT USER
      * Creates a Status HTML Elemnent
      * 
      * @param {string|StatuspageStatusResponse} status The status of the page
@@ -363,16 +363,11 @@ class StatuspageHTMLElements {
             if (componentsJson.components[i].name.substring(0, 5) == 'Visit') { continue; }
 
             const component = document.createElement("statuspage-component");
+            component.setAttribute("id", componentsJson.components[i].id);
             component.setAttribute('data-message', componentsJson.components[i].name);
             component.setAttribute('data-status', StatuspageDictionary.IndicatorVals[componentsJson.components[i].status]);
 
-            const componentDiv = document.createElement("div");
-            componentDiv.setAttribute("id", componentsJson.components[i].id)
-            componentDiv.appendChild(component);
-
-            componentsArr.push(componentDiv);
-
-            // componentsArr.push(StatuspageHTMLElements.StatusHTMLElement(componentsJson.components[i]));
+            componentsArr.push(component);
         }
 
         return componentsArr;
@@ -817,8 +812,8 @@ class StatuspageWebComponents {
                     if (location.pathname == StatuspageDictionary.Paths.Index) {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
-                        summary.setAttribute('data-url', this.url);
-                        summary.setAttribute('data-single-request', true);
+                        summary.baseUrl = this.url;
+                        summary.isSingleRequest = true;
 
                         this.firstElementChild.replaceWith(summary);
                     } else if (location.pathname == StatuspageDictionary.Paths.Components || location.pathname.endsWith(StatuspageDictionary.Paths.Components)) {
@@ -836,23 +831,14 @@ class StatuspageWebComponents {
                     } else {
                         StatuspageHTMLElements.UpdateUrlTags(location.href);
                         var summary = document.createElement(StatuspageWebComponents.Summary.is, { is: StatuspageWebComponents.Summary.is });
-                        summary.setAttribute('data-url', this.url);
-                        summary.setAttribute('data-single-request', false);
+                        summary.baseUrl = this.url;
+                        summary.isSingleRequest = true;
                         
                         this.removeChild(this.firstChild);
                         this.appendChild(summary);
-                        
-                        // for (const child of summary.children) {
-                        //     console.log(`--------------------${child.toString()}`);
-                        //     this.appendChild((HTML)child);
-                        // }                          
-                        // this.appendChild(summary);
-                        // this.firstElementChild.replaceWith(summary);
                     }
                 }
 
-                console.log(this.innerHTML.toString());
-                console.log(this.toString());
                 console.log(`Finished ${StatuspageWebComponents.App.is}`);
             }
 
@@ -1179,15 +1165,14 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Components.is}`);
 
-                this.replaceWith(StatuspageHTMLElements.AppLoadingHTMLElement);
-                this.app = document.getElementById('app');
+                this.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
 
                 if (this.hasAttribute('data-json')) {
                     this.parseJson(JSON.parse(this.getAttribute('data-json')));
                 } else if (this.hasAttribute('data-url')) {
                     this.fetchComponents(this.getAttribute('data-url'));
                 } else {
-                    this.app.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
+                    this.replaceWith(StatuspageHTMLElements.ErrorHTMLElement);
                 }
 
                 console.log(`Finished ${StatuspageWebComponents.Components.is}`);
@@ -1209,9 +1194,9 @@ class StatuspageWebComponents {
             parseJson(json) {
                 var componentsArr = StatuspageHTMLElements.ComponentsHTMLElement(json);
 
-                this.app.removeChild(document.getElementById('status'));
-        
-                for(var i = 0; i < componentsArr.length; i++){ this.app.append(componentsArr[i]); }
+                for(var i = 0; i < componentsArr.length; i++){ this.append(componentsArr[i]); }
+
+                this.removeChild(this.firstElementChild);
             }
 
             toString() { return this.outerHTML.toString(); }
@@ -1222,7 +1207,7 @@ class StatuspageWebComponents {
 
     static get Incidents() {
         return class extends HTMLElement {
-            static get observedAttributes() { return [ "data-json" ]; }
+            static get observedAttributes() { return [ "data-json", "data-url" ]; }
 
             /**
              * @param {object} val
@@ -1238,6 +1223,10 @@ class StatuspageWebComponents {
 
                 if (this._dataJson != null) {
                     this._incidentsElements = StatuspageHTMLElements.IncidentsHTMLElements(this._dataJson);
+                }
+
+                if (!this.hasAttribute('data-json')) {
+                    this.setAttribute('data-json', JSON.stringify(this._dataJson));
                 }
             }
 
@@ -1300,6 +1289,8 @@ class StatuspageWebComponents {
                 console.log(`Starting ${StatuspageWebComponents.Incidents.is}`);
 
                 if (this.url != null) { this.fetchIncidents(); }
+
+                if (this.dataJson != null) { this.parseJson(); }
                 
                 console.log(`Finished ${StatuspageWebComponents.Incidents.is}`);
             }
@@ -1323,7 +1314,7 @@ class StatuspageWebComponents {
                             .then(data => data.json())
                             .then((json) => {
                                 this.dataJson = json;
-                                console.log(this.dataJson);
+                                this.parseJson();
                                 res();
                             }).catch((error) => rej(error));
                     }
@@ -1412,7 +1403,6 @@ class StatuspageWebComponents {
                 this._isLoading = false;
                 this._isSingleRequest = true;
                 this._dataJson = null;
-
             }
 
             connectedCallback() {
@@ -1425,12 +1415,9 @@ class StatuspageWebComponents {
 
                 this.appendChild(StatuspageHTMLElements.LoadingHTMLElement);
 
-                if (this.hasAttribute('data-url')) {
-                    this.baseUrl = this.getAttribute('data-url');
-                    this.removeAttribute('data-url');
-
+                if (this.baseUrl != null) {
                     if (navigator.onLine) {
-                        if (this.singleRequest) {
+                        if (this.isSingleRequest) {
                             this.fetchSummary();
                         } else {
                             this.status.baseUrl = this.baseUrl;
@@ -1456,7 +1443,7 @@ class StatuspageWebComponents {
                     this.baseUrl = newValue;
                 }
 
-                if (name == 'data-single-request') {
+                if (name == 'data-single-request' && newValue != null) {
                     this.isSingleRequest = this.getAttribute('data-single-request').toLowerCase() === "true";
                 }
             }
