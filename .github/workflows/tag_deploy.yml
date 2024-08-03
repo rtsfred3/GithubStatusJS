@@ -73,6 +73,18 @@ jobs:
               run: |
                 for x in $(ls -p modules | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/modules/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @modules/$x; done
                 for x in $(ls -p modules | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/modules/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @modules/$x; done
+            - name: Sync /img/
+              run: |
+                  for x in $(ls -p img/cf/maskable/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/maskable/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/maskable/$x; done
+
+                  for x in $(ls -p img/cf/status/lowres/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/status/lowres/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/status/lowres/$x; done
+                  for x in $(ls -p img/cf/status/lowres/min/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/status/lowres/min/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/status/lowres/min/$x; done
+
+                  for x in $(ls -p img/cf/status/highres/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/status/highres/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/status/highres/$x; done
+                  for x in $(ls -p img/cf/status/highres/min/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/status/highres/min/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/status/highres/min/$x; done
+
+                  for x in $(ls -p img/cf/screenshots/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/screenshots/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/screenshots/$x; done
+                  for x in $(ls -p img/cf/screenshots/originals/min/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/screenshots/originals/min/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/screenshots/originals/min/$x; done
     
     githubstatus:
         runs-on: macos-latest
@@ -94,8 +106,6 @@ jobs:
                 echo "<!-- ${{ github.ref_name }} -->" >> ./amp/index.html
                 
                 sed -i '' -re "s/githubstat\.us/ghstat\.us/g" index.html
-                sed -i '' -re "s/<script>\s+if\('serviceWorker' in navigator\){ navigator\.serviceWorker\.register\('\/sw\.js'\)\.then\(\(reg\) => console\.log\(reg\)\)\.catch\(\(err\) => console\.log\(err\)\); }\s+<\/script>//g" index.html
-
                 sed -i '' -re "s/githubstat\.us/ghstat\.us/g" amp/index.html
                 sed -i '' -re "s/githubstat\.us/ghstat\.us/g" manifest.json
 

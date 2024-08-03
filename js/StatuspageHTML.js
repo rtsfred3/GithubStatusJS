@@ -848,6 +848,8 @@ class StatuspageWebComponents {
             
             // static is = 'statuspage-error';
             static get is() { return 'statuspage-error'; }
+            static toHTML() { return document.createElement(this.is, { is: this.is }); }
+            static toString() { return `<${this.is}></${this.is}>`; }
         }
     }
 
@@ -861,6 +863,8 @@ class StatuspageWebComponents {
 
             // static is = 'statuspage-loading';
             static get is() { return 'statuspage-loading'; }
+            static toHTML() { return document.createElement(this.is, { is: this.is }); }
+            static toString() { return `<${this.is}></${this.is}>`; }
         }
     }
 
@@ -1143,15 +1147,11 @@ class StatuspageWebComponents {
 
     static get Component() {
         return class extends HTMLElement {
-            set dataStatus(val) {
-                if (typeof val == 'string') { this.dataset.status = val; }
-            }
+            set dataStatus(val) { if (typeof val == 'string') { this.dataset.status = val; } }
 
             get dataStatus() { return this.dataset.status; }
 
-            set dataMessage(val) {
-                if (typeof val == 'string') { this.dataset.message = val; }
-            }
+            set dataMessage(val) { if (typeof val == 'string') { this.dataset.message = val; } }
 
             get dataMessage() { return this.dataset.message; }
 
