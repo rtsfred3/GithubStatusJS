@@ -74,7 +74,6 @@ jobs:
                 for x in $(ls -p modules | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/modules/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @modules/$x; done
                 for x in $(ls -p modules | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/${{github.ref_name}}/modules/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @modules/$x; done
     
-    
     githubstatus:
         runs-on: macos-latest
         name: Backup githubsta.us to BunnyCDN
@@ -92,19 +91,44 @@ jobs:
             - name: Sync index.html, robots.txt, & sitemap.xml for githubstat.us backup
               run: |
                 echo "<!-- ${{ github.ref_name }} -->" >> index.html
+                echo "<!-- ${{ github.ref_name }} -->" >> ./amp/index.html
+                
+                sed -i '' -re "s/githubstat\.us/ghstat\.us/g" index.html
+                sed -i '' -re "s/githubstat\.us/ghstat\.us/g" amp/index.html
+                sed -i '' -re "s/githubstat\.us/ghstat\.us/g" manifest.json
+
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @index.html
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/amp/index.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @amp/index.html
+                
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/sitemap.xml --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @root_sitemap2.xml
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/robots.txt --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @robots.txt
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/manifest.json --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @manifest.json
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/favicon.ico --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @favicon.ico
-                curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/sw.js --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sw.js
-                curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/sw2.js --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sw2.js
                 curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/error.html --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @error.html
+
+                for x in $(ls -p *.js); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @$x; done
+
+                # curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/sw.js --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sw.js
+                # curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/sw2.js --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @sw2.js
             - name: Sync /js/ & /styling/
               run: |
-                for x in $(ls -p js | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
-                for x in $(ls -p styling | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/styling/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @styling/$x; done
+                for x in $(ls -p js/*.js); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @$x; done
+                for x in $(ls -p styling/*.css); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @$x; done
+            - name: Sync /img/
+              run: | 
+                for x in $(ls -p img/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                
+                for x in $(ls -p img/maskable/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                for x in $(ls -p img/maskable/webp/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                
+                for x in $(ls -p img/screenshots/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                for x in $(ls -p img/screenshots/lowres/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                for x in $(ls -p img/screenshots/original/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                
+                for x in $(ls -p img/status/lowres/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                for x in $(ls -p img/status/lowres/min/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                for x in $(ls -p img/status/highes/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
+                for x in $(ls -p img/status/highes/min/*.(png|webp)); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME_GITHUB_US }}/js/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY_GITHUB_US }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @js/$x; done
     
     publish-tauri:
         if: false
