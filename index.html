@@ -75,9 +75,7 @@
         </script>
 
         <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').then((reg) => console.log(reg)).catch((err) => console.log(err));
-            }
+            if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js').then((reg) => console.log(reg)).catch((err) => console.log(err)); }
         </script>
 
         <!-- <script src="./js/StatuspageHTML.js"></script> -->
