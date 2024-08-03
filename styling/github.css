@@ -30,16 +30,10 @@ body {
     font-family: arial;
 }
 
-.component-height {
-    height: 20vh;
-}
+statuspage-component { height: 20vh; }
 
 .full-status-height, statuspage-error, statuspage-loading, .statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {
     height: 100vh;
-}
-
-.psa-full-status-height {
-    height: calc(100vh - 1.15em + 0.275em);
 }
 
 .statuspage-status:not(.fullScreen), statuspage-status, statuspage-component {
@@ -56,11 +50,7 @@ body {
     font-size: 48pt;
 }
 
-statuspage-component {
-    height: 20vh;
-}
-
-.min[data-status]::before, .statuspage-status[data-status]::before, statuspage-status[data-status]::before, statuspage-loading::before, statuspage-error::before {
+.statuspage-status[data-status]::before, statuspage-status[data-status]::before, statuspage-loading::before, statuspage-error::before {
     content: attr(data-status);
     text-transform: uppercase;
     font-weight: bold;
@@ -85,14 +75,8 @@ statuspage-error::before {
     content: var(--error-text);
 }
 
-.statuspage-status:not(.fullScreen), statuspage-status {
-    height: 240px;
-}
-
 @media only screen and (max-height: 400px) {
-    .statuspage-status:not(.fullScreen), statuspage-status {
-        height: 45vh;
-    }
+    .statuspage-status:not(.fullScreen), statuspage-status { height: 45vh; }
 }
 
 @media only screen and (max-width: 320px) and (max-height: 320px) {
@@ -102,19 +86,13 @@ statuspage-error::before {
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
     .statuspage-status:not(.fullScreen), statuspage-status { height: 30vh; }
 
-    .status-width, .statuspage-status, statuspage-status { font-size: 12em; }
+    .statuspage-status, statuspage-error, statuspage-loading, statuspage-status { font-size: 12em; }
 }
 
-@media only screen and (min-width: 2100px) and (min-height: 1100px) {
+@media only screen and (((min-width: 2100px) and (min-height: 1100px)) or ((min-width: 3000px) and (min-height: 2000px))) {
     .statuspage-status:not(.fullScreen), statuspage-status { height: 40vh; }
 
-    .status-width, .statuspage-status, statuspage-status { font-size: 16em; }
-}
-
-@media only screen and (min-width: 3000px) and (min-height: 2000px) {
-    .statuspage-status:not(.fullScreen), statuspage-status { height: 40vh; }
-
-    .status-width, .statuspage-status, statuspage-status { font-size: 16em; }
+    .statuspage-status, statuspage-error, statuspage-loading, statuspage-status { font-size: 16em; }
 }
 
 .messages-empty {
@@ -133,51 +111,43 @@ statuspage-error::before {
     font-weight: 500;
 }
 
-.good, .none, .min[data-background="none"], .min[data-background="good"], [data-status="none"], [data-status="good"] {
+[data-status="none"], [data-status="good"] {
     background-color: var(--none);
 }
 
-.minor, .min[data-background="minor"], [data-status="minor"] {
+[data-status="minor"] {
     background-color: var(--minor);
 }
 
-.major, .min[data-background="major"], [data-status="major"] {
+[data-status="major"] {
     background-color: var(--major);
 }
 
-.critical, .min[data-background="critical"], [data-status="critical"] {
+[data-status="critical"] {
     background-color: var(--critical);
 }
 
-.maintenance, .min[data-background="maintenance"], [data-status="maintenance"] {
+[data-status="maintenance"] {
     background-color: var(--maintenance);
+    font-weight: 500;
 }
 
-.unavailable, .loading, statuspage-loading, .min[data-background="unavailable"], .min[data-background="loading"], [data-status="unavailable"], [data-status="loading"] {
+statuspage-loading, [data-status="unavailable"], [data-status="loading"] {
     background-color: var(--loading);
 }
 
-.error, statuspage-error, .min[data-background="error"], [data-status="error"] {
+statuspage-error, [data-status="error"] {
     background-color: var(--error);
 }
 
 @media only screen and (min-width: 351px) and (max-width: 450px) {
-    .maintenance, [data-status="maintenance"] {
-        font-size: 36pt;
-        font-weight: 500;
-    }
+    [data-status="maintenance"] { font-size: 36pt; }
 }
 
 @media only screen and (min-width: 251px) and (max-width: 350px) {
-    .maintenance, [data-status="maintenance"] {
-        font-size: 30pt;
-        font-weight: 500;
-    }
+    [data-status="maintenance"] { font-size: 30pt; }
 }
 
 @media only screen and (min-width: 151px) and (max-width: 250px) {
-    .maintenance, [data-status="maintenance"] {
-        font-size: 20pt;
-        font-weight: 500;
-    }
+    [data-status="maintenance"] { font-size: 20pt; }
 }

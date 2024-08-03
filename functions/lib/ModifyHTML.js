@@ -129,7 +129,7 @@ export default async function ModifyHTML(context, _path){
     }
 
     if (path == StatuspageDictionary.PathNames.Index) {
-        html = html.replaceAll("{{Title}}", StatuspageDictionary.Titles.Index);
+        html = html.replaceAll("{{Title}}", StatuspageDictionary.StatuspageHTMLTemplates.template_title_index);
         html = html.replace("{{Body}}", "<statuspage-app data-url=\"{{StatuspageUrl}}\"></statuspage-app>");
     }
     else if (path == StatuspageDictionary.PathNames.Status) {

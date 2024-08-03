@@ -1,6 +1,6 @@
-import { JSDOM } from 'jsdom';
-const { window } = new JSDOM(`<html><head></head><body></body></html>`);
-const { document, location, HTMLElement } = window;
+// import { JSDOM } from 'jsdom';
+// const { window } = new JSDOM(`<html><head></head><body></body></html>`);
+// const { document, location, HTMLElement } = window;
 
 // import * as htmlparser2 from "htmlparser2";
 // const { Document, DomHandler, Element } = require("domhandler");
@@ -1327,4 +1327,4 @@ class StatuspageWebComponents {
 // customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 // customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
-export { window, document, StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents };
+export { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents };
