@@ -89,13 +89,13 @@
     <body>
         <amp-render src="https://www.githubstatus.com/api/v2/status.json" binding="never" height="0" width="0" layout="responsive" key="status">
             <template type="amp-mustache">
-                <div id="status" data-status="{{indicator}}" data-background="{{indicator}}" class="min full-status-height status-width bold status-color center-status"></div>
+                <div id="status" data-status="{{indicator}}" class="statuspage-status fullScreen"></div>
             </template>
             <div placeholder>
-                <div id="status" data-status="loading" data-background="loading" class="min full-status-height status-width bold status-color center-status"></div>
+                <div id="status" data-status="loading" class="statuspage-status fullScreen"></div>
             </div>
             <div fallback>
-                <div id="status" data-status="error" data-background="error" class="min full-status-height status-width bold status-color center-status"></div>
+                <div id="status" data-status="error" class="statuspage-status fullScreen"></div>
             </div>
         </amp-render>
     </body>
