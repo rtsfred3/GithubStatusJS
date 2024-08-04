@@ -32,7 +32,7 @@ body {
 
 statuspage-component { height: 20vh; }
 
-.full-status-height, statuspage-error, statuspage-loading, .statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {
+statuspage-error, statuspage-unavailable, statuspage-loading, .statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {
     height: 100vh;
 }
 
@@ -40,7 +40,7 @@ statuspage-component { height: 20vh; }
     height: 240px;
 }
 
-.statuspage-status, statuspage-status, statuspage-component, statuspage-loading, statuspage-error {
+.statuspage-status, statuspage-status, statuspage-component, statuspage-error, statuspage-unavailable, statuspage-loading {
     width: 100vw;
     text-align: center;
     justify-content: center;
@@ -50,7 +50,7 @@ statuspage-component { height: 20vh; }
     font-size: 48pt;
 }
 
-.statuspage-status[data-status]::before, statuspage-status[data-status]::before, statuspage-loading::before, statuspage-error::before {
+.statuspage-status[data-status]::before, statuspage-status[data-status]::before, statuspage-error::before, statuspage-unavailable::before, statuspage-loading::before {
     content: attr(data-status);
     text-transform: uppercase;
     font-weight: bold;
@@ -71,6 +71,10 @@ statuspage-loading::before {
     content: var(--loading-text);
 }
 
+statuspage-unavailable::before {
+    content: var(--unavailable-text);
+}
+
 statuspage-error::before {
     content: var(--error-text);
 }
@@ -86,29 +90,13 @@ statuspage-error::before {
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
     .statuspage-status:not(.fullScreen), statuspage-status { height: 30vh; }
 
-    .statuspage-status, statuspage-error, statuspage-loading, statuspage-status { font-size: 12em; }
+    .statuspage-status, statuspage-status, statuspage-error, statuspage-unavailable, statuspage-loading { font-size: 12em; }
 }
 
 @media only screen and (((min-width: 2100px) and (min-height: 1100px)) or ((min-width: 3000px) and (min-height: 2000px))) {
     .statuspage-status:not(.fullScreen), statuspage-status { height: 40vh; }
 
-    .statuspage-status, statuspage-error, statuspage-loading, statuspage-status { font-size: 16em; }
-}
-
-.messages-empty {
-    padding: 3vh 7.5vw 0vh;
-    color: var(--font);
-}
-
-.messages-empty-all-good {
-    font-size: 36pt;
-    font-weight: 600;
-    margin-bottom: 2.5vh;
-}
-
-.messages-empty-body {
-    font-size: 9pt;
-    font-weight: 500;
+    .statuspage-status, statuspage-status, statuspage-error, statuspage-unavailable, statuspage-loading { font-size: 16em; }
 }
 
 [data-status="none"], [data-status="good"] {
@@ -132,7 +120,7 @@ statuspage-error::before {
     font-weight: 500;
 }
 
-statuspage-loading, [data-status="unavailable"], [data-status="loading"] {
+statuspage-unavailable, statuspage-loading, [data-status="unavailable"], [data-status="loading"] {
     background-color: var(--loading);
 }
 

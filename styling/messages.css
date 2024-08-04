@@ -4,6 +4,22 @@
     position: relative;
 } */
 
+.messages-empty {
+    padding: 3vh 7.5vw 0vh;
+    color: var(--font);
+}
+
+.messages-empty-all-good {
+    font-size: 36pt;
+    font-weight: 600;
+    margin-bottom: 2.5vh;
+}
+
+.messages-empty-body {
+    font-size: 9pt;
+    font-weight: 500;
+}
+
 .messages {
     margin: 1.5em 0px 1.5em 0px;
     padding: 0px;
