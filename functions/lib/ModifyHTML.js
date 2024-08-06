@@ -13,7 +13,7 @@ import { BotChecker } from './BotChecker.js';
 
 import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
 
-export default async function ModifyHTML(context, _path){
+export default async function ModifyHTML(context, _path) {
     const db = context.env.CACHE_DB;
     const table = context.env.TABLE;
     const ClouldflareCache = TimeSpans.Week * 2;

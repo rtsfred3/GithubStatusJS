@@ -15,7 +15,7 @@ class StatuspageDictionary {
     // static replaceableStringValue = '{}'; 
 
     static get SiteNameValue() { return '{{SiteName}}'; }
-    static get replaceableStringValue() { return '{}' }; 
+    static get replaceableStringValue() { return '{}'; } 
 
     /**
      * @static
@@ -43,7 +43,7 @@ class StatuspageDictionary {
             get [this.PathNames.Amp]() { return this.template_title_amp.replace(this.replaceableStringValue, this.SiteNameValue); },
             get [this.PathNames.Maintenance]() { return this.template_title_maintenance.replace(this.replaceableStringValue, this.SiteNameValue); },
             get [this.PathNames.Error]() { return this.template_title_error.replace(this.replaceableStringValue, this.SiteNameValue); },
-            get [this.PathNames.Description]() { return this.template_descrisption.replace(this.replaceableStringValue, this.SiteNameValue); },
+            get [this.PathNames.Description]() { return this.template_descrisption.replace(this.replaceableStringValue, this.SiteNameValue); }
         });
     }
 
@@ -237,22 +237,6 @@ class StatuspageDictionary {
 class StatuspageHTMLElements {
     /**
      * @static
-     * @deprecated in v0.2.61
-     * @memberof StatuspageHTMLElements
-     * @type {HTMLElement}
-     */
-    static get ErrorHTMLElement() { return document.createElement(StatuspageWebComponents.Error.is, { is: StatuspageWebComponents.Error.is }); }
-
-    /**
-     * @static
-     * @deprecated in v0.2.61
-     * @memberof StatuspageHTMLElements
-     * @type {HTMLElement}
-     */
-    static get LoadingHTMLElement() { return document.createElement(StatuspageWebComponents.Loading.is, { is: StatuspageWebComponents.Loading.is }); }
-
-    /**
-     * @static
      * @memberof StatuspageHTMLElements
      * @type {HTMLDivElement}
      */
@@ -290,10 +274,22 @@ class StatuspageHTMLElements {
      * @memberof StatuspageHTMLElements
      * 
      * @param {string} indicator dummy status
-     * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output that only contains `status.indicator`
+     * @returns {object} Returns a dummy Statuspage output that only contains `status.indicator`
      */
     static GetStatusJson(indicator) {
         return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * 
+     * @param {object} attr attributes object
+     * @returns {string} string of attributes
+     */
+    static GenerateAttributes(attr) {
+        var attributes = Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`);
+        return attributes.join(' ');
     }
 
     /**
@@ -322,6 +318,44 @@ class StatuspageHTMLElements {
         }
 
         return componentsArr;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * 
+     * @param {string} body 
+     * @param {string} date 
+     * @returns {HTMLDivElement}
+     */
+    static MessageBodyElement(body, date){
+        var messageElement = document.createElement('div');
+        messageElement.classList.add('message-body');
+
+        var dateElement = document.createElement('span');
+        dateElement.classList.add('date');
+        dateElement.textContent = date;
+
+        var messageBodyElement = document.createElement('div');
+        messageBodyElement.textContent = body;
+
+        messageElement.appendChild(messageBodyElement);
+        messageElement.appendChild(dateElement);
+
+        return messageElement;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * 
+     * @param {string} impact 
+     * @returns {HTMLDivElement}
+     */
+    static MessageStatusElement(impact){
+        var htmlElement = document.createElement('div');
+        htmlElement.dataset.impact = impact;
+        return htmlElement;
     }
 
     /**
@@ -360,27 +394,9 @@ class StatuspageHTMLElements {
         const messageElement = document.createElement("span");
         messageElement.id = incident_update_id;
 
-        // Creating status box
-        const statusBoxElement = document.createElement("div");
-        statusBoxElement.classList.add("status-box", 'message-status');
-        // statusBoxElement.classList.add("status-box", 'message-status', `${currImpact}-message`);
-        statusBoxElement.setAttribute('data-impact', currImpact);
-
-        // Creating message & date
-        const messageDateElement = document.createElement("div");
-        messageDateElement.classList.add('text-margin');
-        messageDateElement.appendChild(document.createTextNode(body));
-        messageDateElement.appendChild(document.createElement("br"));
-
-        const innerMessageDateElement = document.createElement("span");
-        innerMessageDateElement.classList.add("date", "empty");
-        innerMessageDateElement.appendChild(document.createTextNode(date));
-
-        messageDateElement.appendChild(innerMessageDateElement);
-
         // Adding message elements to message element
-        messageElement.appendChild(statusBoxElement);
-        messageElement.appendChild(messageDateElement);
+        messageElement.appendChild(this.MessageStatusElement(currImpact));
+        messageElement.appendChild(this.MessageBodyElement(body, date));
 
         return messageElement;
     }
@@ -405,8 +421,22 @@ class StatuspageHTMLElements {
         }
 
         if ('scheduled_maintenances' in incidentsJson && showMaintenance) {
-            incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return new Date(incident["created_at"]) > previousDaysDate; }));
+            incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return (new Date(incident["created_at"]) > previousDaysDate && incident['status'] == "in_progress" ); }));
         }
+
+        incidents.forEach((e) => {
+            e["created_at"] = new Date(e["created_at"]);
+            e["started_at"] = new Date(e["started_at"]);
+            e["updated_at"] = new Date(e["updated_at"]);
+
+            e["incident_updates"].forEach((u) => {
+                u["created_at"] = new Date(u["created_at"]);
+                u["display_at"] = new Date(u["display_at"]);
+                u["updated_at"] = new Date(u["updated_at"]);
+            });
+        });
+
+        incidents = incidents.sort((a, b) => b["created_at"] - a["created_at"]);
 
         var messagesList = document.createElement("div");
         messagesList.id = "messages";
@@ -835,59 +865,51 @@ class StatuspageWebComponents {
 
             toString() { return this.outerHTML.toString(); }
             
-            // static is = 'statuspage-app';
             static get is() { return 'statuspage-app'; }
         }
     }
 
-    static get Error() {
+    static get StatusElement() {
         return class extends HTMLElement {
-            constructor() { super(); }
+            constructor(status) { super(); this.status = status; }
 
-            connectedCallback() { StatuspageHTMLElements.SetThemeColor(StatuspageDictionary.StatusEnums.error); }
+            connectedCallback() { StatuspageHTMLElements.SetThemeColor(this.status); }
 
             toString() { return this.outerHTML.toString(); }
             
-            // static is = 'statuspage-error';
-            static get is() { return 'statuspage-error'; }
+            static get is() { return 'status-element'; }
             static toHTML() { return document.createElement(this.is, { is: this.is }); }
             static toString() { return `<${this.is}></${this.is}>`; }
+        }
+    }
+
+    static get Error() {
+        return class extends StatuspageWebComponents.StatusElement {
+            constructor() { super(StatuspageDictionary.StatusEnums.error); }
+
+            static get is() { return 'statuspage-error'; }
         }
     }
 
     static get Loading() {
-        return class extends HTMLElement {
-            constructor() { super(); }
-
-            connectedCallback() { StatuspageHTMLElements.SetThemeColor(StatuspageDictionary.StatusEnums.loading); }
-
-            toString() { return this.outerHTML.toString(); }
-
-            // static is = 'statuspage-loading';
+        return class extends StatuspageWebComponents.StatusElement {
+            constructor() { super(StatuspageDictionary.StatusEnums.loading); }
+            
             static get is() { return 'statuspage-loading'; }
-            static toHTML() { return document.createElement(this.is, { is: this.is }); }
-            static toString() { return `<${this.is}></${this.is}>`; }
         }
     }
 
     static get Unavailable() {
-        return class extends HTMLElement {
-            constructor() { super(); }
-
-            connectedCallback() { StatuspageHTMLElements.SetThemeColor(StatuspageDictionary.StatusEnums.unavailable); }
-
-            toString() { return this.outerHTML.toString(); }
-
-            // static is = 'statuspage-unavailable';
+        return class extends StatuspageWebComponents.StatusElement {
+            constructor() { super(StatuspageDictionary.StatusEnums.unavailable); }
+            
             static get is() { return 'statuspage-unavailable'; }
-            static toHTML() { return document.createElement(this.is, { is: this.is }); }
-            static toString() { return `<${this.is}></${this.is}>`; }
         }
     }
 
     static get Status() {
         return class extends HTMLElement {
-            static get observedAttributes() { return [ "data-status", "data-url", "status", "fullscreen", "autorefresh" ]; }
+            static get observedAttributes() { return [ "data-status", "data-url", "status", "fullscreen" ]; }
 
             /**
              * @param {boolean} val
@@ -1015,35 +1037,36 @@ class StatuspageWebComponents {
             get url() { return this.data._url; }
 
             /**
+             * @deprecated after v0.2.62
              * @param {boolean} val
              */
             set isRefreshEnabled(val) {
-                if (typeof val == 'boolean') {
-                    this.data._refreshEnabled = val;
-                }
+                if (typeof val == 'boolean') { this.data._refreshEnabled = val; }
             }
 
             /**
+             * @deprecated after v0.2.62
              * @type {boolean}
              */
             get isRefreshEnabled() { return this.data._refreshEnabled; }
 
             /**
+             * @deprecated after v0.2.62
              * @param {number} val
              */
             set refreshTime(val) {
-                if (typeof val == 'number') {
-                    this.data._refreshTime = val;
-                }
+                if (typeof val == 'number') { this.data._refreshTime = val; }
             }
 
             /**
+             * @deprecated after v0.2.62
              * @type {number}
              */
             get refreshTime() { return this.data._refreshTime; }
 
             /**
-             * @param {object} val
+             * @deprecated after v0.2.62
+             * @param {StatuspageStatusResponse} val
              */
             set dataJson(val) {
                 if (typeof val == 'object') {
@@ -1051,8 +1074,6 @@ class StatuspageWebComponents {
 
                     if ('status' in this.data._dataJson && 'indicator' in this.data._dataJson.status) {
                         this.dataStatus = this.data._dataJson.status.indicator;
-
-                        if (this.isRefreshEnabled) { console.log(`this.dataStatus = ${this.dataStatus}`); }
                     }
                 }
             }
@@ -1082,18 +1103,9 @@ class StatuspageWebComponents {
 
                 StatuspageHTMLElements.UpdateUrlTags(location.href);
 
-                if (this.isRefreshEnabled) {
-                    console.log(`Refresh Interval: ${this.refreshTime} minutes`);
-                }
-
                 if (this.baseUrl != null) {
                     if (navigator.onLine) {
                         this.fetchStatus();
-
-                        if (this.isRefreshEnabled) {
-                            console.log("Timer set");
-                            setInterval(() => { this.fetchStatus(); }, this.refreshTime * 60 * 1000);
-                        }
                     } else {
                         this.setError();
                     }
@@ -1123,10 +1135,6 @@ class StatuspageWebComponents {
                 if (name == 'fullscreen' && !this.data._isFullScreenSet && !this.isLoading) {
                     this.fullScreen = (newValue != null);
                 }
-
-                if (name == 'autorefresh') {
-                    this.isRefreshEnabled = (newValue != null);
-                }
             }
 
             fetchStatus() {
@@ -1135,7 +1143,9 @@ class StatuspageWebComponents {
                         fetch(this.url)
                             .then(data => data.json())
                             .then((json) => {
-                                this.dataJson = json;
+                                if ('status' in json && 'indicator' in json.status) {
+                                    this.dataStatus = json.status.status;
+                                }
                                 res();
                             }).catch((error) => {
                                 this.setError();
@@ -1154,14 +1164,22 @@ class StatuspageWebComponents {
              * @returns {string}
              */
             toString() { return this.outerHTML.toString(); }
-
-            // static is = 'statuspage-status';
+            
             static get is() { return 'statuspage-status'; }
+
             static toHTML(status, isFullScreen = false) {
                 var htmlElement = document.createElement(this.is, { is: this.is });
                 htmlElement.dataStatus = status;
                 htmlElement.fullScreen = isFullScreen;
                 return htmlElement;
+            }
+
+            static staticHTML(status, isFullScreen = false) {
+                var attr = { 'data-status': status };
+
+                if (isFullScreen) { attr['fullScreen'] = null; }
+
+                return `<${this.is} ${StatuspageHTMLElements.GenerateAttributes(attr)}></${this.is}>`;
             }
         }
     }
@@ -1179,9 +1197,14 @@ class StatuspageWebComponents {
             constructor() { super(); }
 
             toString() { return this.outerHTML.toString(); }
-        
-            // static is = 'statuspage-component';
+            
             static get is() { return 'statuspage-component'; }
+
+            static staticHTML(status, message) {
+                var attr = { 'data-status': status, 'data-message': message };
+
+                return `<${this.is} ${StatuspageHTMLElements.GenerateAttributes(attr)}></${this.is}>`;
+            }
         }
     }
 
@@ -1227,8 +1250,7 @@ class StatuspageWebComponents {
             }
 
             toString() { return this.outerHTML.toString(); }
-        
-            // static is = 'statuspage-components';
+            
             static get is() { return 'statuspage-components'; }
         }
     }
@@ -1253,9 +1275,7 @@ class StatuspageWebComponents {
                     this._incidentsElements = StatuspageHTMLElements.IncidentsHTMLElements(this._dataJson);
                 }
 
-                if (!this.hasAttribute('data-json')) {
-                    this.setAttribute('data-json', JSON.stringify(this._dataJson));
-                }
+                // if (!this.hasAttribute('data-json')) { this.setAttribute('data-json', JSON.stringify(this._dataJson)); }
             }
 
             /**
@@ -1318,7 +1338,7 @@ class StatuspageWebComponents {
 
                 if (this.url != null) { this.fetchIncidents(); }
 
-                if (this.dataJson != null) { this.parseJson(); }
+                if (this.incidentElements != null) { this.replaceWith(this.incidentElements); }
                 
                 console.log(`Finished ${StatuspageWebComponents.Incidents.is}`);
             }
@@ -1340,26 +1360,14 @@ class StatuspageWebComponents {
                             .then(data => data.json())
                             .then((json) => {
                                 this.dataJson = json;
-                                this.parseJson();
                                 res();
                             }).catch((error) => rej(error));
                     }
                 })
             }
 
-            parseJson() {
-                if ('incidents' in this.dataJson) {
-                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(this.dataJson));
-                }
-
-                if ('scheduled_maintenances' in this.dataJson) {
-                    this.replaceWith(StatuspageHTMLElements.IncidentsHTMLElements(this.dataJson));
-                }
-            }
-
             toString() { return this.outerHTML.toString(); }
-
-            // static is = 'statuspage-incidents';
+            
             static get is() { return 'statuspage-incidents'; }
         }
     }
@@ -1496,8 +1504,7 @@ class StatuspageWebComponents {
             }
 
             toString() { return this.outerHTML.toString(); }
-
-            // static is = 'statuspage-summary';
+            
             static get is() { return 'statuspage-summary'; }
         }
     }
@@ -1525,8 +1532,7 @@ class StatuspageWebComponents {
             }
 
             toString() { return this.outerHTML.toString(); }
-
-            // static is = 'statuspage-html';
+            
             static get is() { return 'statuspage-html'; }
         }
     }

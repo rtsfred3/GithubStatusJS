@@ -10,6 +10,14 @@
     --error: #646464;
     --font: var(--error);
 
+    --incident-good: var(--good);
+    --incident-none: #000000;
+    --incident-minor: #F1C40F;
+    --incident-major: #FF9900;
+    --incident-critical: #990000;
+    --incident-maintenance: var(--maintenance);
+    --incident-error: var(--error);
+
     --good-text: "good";
     --none-text: var(--good-text);
     --minor-text: "minor";
