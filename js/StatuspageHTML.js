@@ -1,21 +1,29 @@
 /**
  * @typedef {object} StatuspageStatusResponse
- * @property {object} status
- * @property {string} status.indicator
- * @property {string} status.description
- * @property {object} page
- * @property {string} page.id
- * @property {string} page.name
- * @property {string} page.url
- * @property {string} page.updated_at
+ * @property {StatuspageStatusObject} status
+ * @property {StatuspagePageObject} page
+ */
+
+/**
+ * @typedef {object} StatuspageStatusObject
+ * @property {string} indicator
+ * @property {string} description
+ */
+
+/**
+ * @typedef {object} StatuspagePageObject
+ * @property {string} id
+ * @property {string} name
+ * @property {string} url
+ * @property {string} updated_at
  */
 
 class StatuspageDictionary {
-    // static SiteNameValue = '{{SiteName}}';
-    // static replaceableStringValue = '{}'; 
+    static SiteNameValue = '{{SiteName}}';
+    static replaceableStringValue = '{}';
 
-    static get SiteNameValue() { return '{{SiteName}}'; }
-    static get replaceableStringValue() { return '{}'; } 
+    // static get SiteNameValue() { return '{{SiteName}}'; }
+    // static get replaceableStringValue() { return '{}'; }
 
     /**
      * @static
@@ -29,13 +37,13 @@ class StatuspageDictionary {
      */
     static get StatuspageHTMLTemplates() {
         return Object.freeze({
-            template_title_index: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status`,
-            template_title_status: `(Unofficial) Mini ${StatuspageDictionary.replaceableStringValue} Status`,
-            template_title_components: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status Components`,
-            template_title_amp: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status AMP`,
+            template_title_index: `(Unofficial) ${this.replaceableStringValue} Status`,
+            template_title_status: `(Unofficial) Mini ${this.replaceableStringValue} Status`,
+            template_title_components: `(Unofficial) ${this.replaceableStringValue} Status Components`,
+            template_title_amp: `(Unofficial) ${this.replaceableStringValue} Status AMP`,
             template_title_maintenance: `Under Maintenance`,
-            template_title_error: `(Unofficial) ${StatuspageDictionary.replaceableStringValue} Status - Error`,
-            template_descrisption: `An unofficial website to monitor ${StatuspageDictionary.replaceableStringValue} status updates.`,
+            template_title_error: `(Unofficial) ${this.replaceableStringValue} Status - Error`,
+            template_descrisption: `An unofficial website to monitor ${this.replaceableStringValue} status updates.`,
 
             get [this.PathNames.Index]() { return this.template_title_index.replace(this.replaceableStringValue, this.SiteNameValue); },
             get [this.PathNames.Status]() { return this.template_title_status.replace(this.replaceableStringValue, this.SiteNameValue); },
@@ -119,13 +127,13 @@ class StatuspageDictionary {
             [this.StatusEnums.maintenance]: '#0366D6',
             psa: '#D83D42',
 
-            get [StatuspageDictionary.StatusEnums.good]() { return this.none; },
-            get [StatuspageDictionary.StatusEnums.under_maintenance]() { return this.maintenance; },
-            get [StatuspageDictionary.StatusEnums.loading]() { return this.unavailable; },
+            get [this.StatusEnums.good]() { return this.none; },
+            get [this.StatusEnums.under_maintenance]() { return this.maintenance; },
+            get [this.StatusEnums.loading]() { return this.unavailable; },
 
-            get [StatuspageDictionary.StatusEnums.operational](){ return this.none; },
-            get [StatuspageDictionary.StatusEnums.degraded_performance](){ return this.minor; },
-            get [StatuspageDictionary.StatusEnums.partial_outage](){ return this.major; }
+            get [this.StatusEnums.operational](){ return this.none; },
+            get [this.StatusEnums.degraded_performance](){ return this.minor; },
+            get [this.StatusEnums.partial_outage](){ return this.major; }
         });
     }
     
@@ -157,14 +165,14 @@ class StatuspageDictionary {
             [this.StatusEnums.unavailable]: this.StatusEnums.unavailable,
             [this.StatusEnums.loading]: this.StatusEnums.loading,
 
-            get [StatuspageDictionary.StatusEnums.resolved]() { return this.good; },
-            get [StatuspageDictionary.StatusEnums.none]() { return this.good; },
-            get [StatuspageDictionary.StatusEnums.operational]() { return this.good; },
+            get [this.StatusEnums.resolved]() { return this.good; },
+            get [this.StatusEnums.none]() { return this.good; },
+            get [this.StatusEnums.operational]() { return this.good; },
 
-            get [StatuspageDictionary.StatusEnums.degraded_performance]() { return this.minor; },
-            get [StatuspageDictionary.StatusEnums.partial_outage]() { return this.major; },
-            get [StatuspageDictionary.StatusEnums.major_outage]() { return this.critical; },
-            get [StatuspageDictionary.StatusEnums.under_maintenance]() { return this.maintenance; }
+            get [this.StatusEnums.degraded_performance]() { return this.minor; },
+            get [this.StatusEnums.partial_outage]() { return this.major; },
+            get [this.StatusEnums.major_outage]() { return this.critical; },
+            get [this.StatusEnums.under_maintenance]() { return this.maintenance; }
         });
     }
     
@@ -274,10 +282,13 @@ class StatuspageHTMLElements {
      * @memberof StatuspageHTMLElements
      * 
      * @param {string} indicator dummy status
-     * @returns {object} Returns a dummy Statuspage output that only contains `status.indicator`
+     * @returns {StatuspageStatusResponse} Returns a dummy Statuspage output
      */
     static GetStatusJson(indicator) {
-        return { status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error } };
+        return {
+            status: { indicator: indicator in StatuspageDictionary.StatusEnums ? indicator : StatuspageDictionary.StatusEnums.error },
+            page: { id: null, name: null, url: null, updated_at: Date.now() }
+        };
     }
 
     /**
@@ -493,8 +504,8 @@ class StatuspageHTMLElements {
      */
     static SetLinkTag(id, value) {
         if (typeof id == 'string') {
-            if (StatuspageHTMLElements.GetLinkTag(id) != undefined) {
-                StatuspageHTMLElements.GetLinkTag(id).setAttribute("href", value);
+            if (this.GetLinkTag(id) != undefined) {
+                this.GetLinkTag(id).setAttribute("href", value);
             } else {
                 var head = document.getElementsByTagName("head");
                 if (head.length > 0) {
@@ -503,7 +514,7 @@ class StatuspageHTMLElements {
             }
         } else if(Array.isArray(id)) {
             for(var i = 0; i < id.length; i++){
-                StatuspageHTMLElements.SetLinkTag(id[i], value);
+                this.SetLinkTag(id[i], value);
             }
         }
     }
@@ -561,6 +572,21 @@ class StatuspageHTMLElements {
      * @static
      * @memberof StatuspageHTMLElements
      * 
+     * @param {string} siteName 
+     * @param {string} pathName 
+     */
+    static SetTitle(siteName, pathName = StatuspageDictionary.PathNames.Index) {
+        var title = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.replaceableStringValue, siteName);
+
+        StatuspageHTMLElements.SetMetaTag(["application-name", "og:site_name", "og:title", "twitter:title", "apple-mobile-web-app-title"], title);
+        document.getElementsByTagName('title')[0].innerText = title;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
+     * 
      * @param {string} canonicalUrl 
      * @param {string} prefetchUrl 
      * @param {string} iconUrl 
@@ -580,6 +606,7 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
      * 
      * @param {string} url 
      * @param {string} imgUrl 
@@ -593,9 +620,9 @@ class StatuspageHTMLElements {
      * @param {string} description defaults to `null`
      * @returns {object}
      */
-    static MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null, title = null, description = null) {
+    static MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords = [], additionalDescription = null, title = null, description = null) {
         if (title == null) {
-            title = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.SiteNameValue, siteName);
+            title = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.replaceableStringValue, siteName);
         }
 
         if (description == null) {
@@ -637,6 +664,7 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
      * 
      * @param {string} url 
      * @param {string} imgUrl 
@@ -647,20 +675,20 @@ class StatuspageHTMLElements {
      * @param {string[]} keywords 
      */
     static UpdateMetaTags(url, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null) {
-        var metaTagVals = StatuspageHTMLElements.MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
+        var metaTagVals = this.MetaTagValues(url, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
         for (const [key, value] of Object.entries(metaTagVals)) {
 
             if (value != null) {
-                StatuspageHTMLElements.SetMetaTag(key, value);
+                this.SetMetaTag(key, value);
 
                 if (key == 'description') {
-                    StatuspageHTMLElements.SetMetaTag(key, value, 'itemprop');
+                    this.SetMetaTag(key, value, 'itemprop');
                 }
             }
         }
 
-        StatuspageHTMLElements.SetMetaTag('image', imgUrl, 'itemprop');
+        this.SetMetaTag('image', imgUrl, 'itemprop');
     }
 
     /**
@@ -672,7 +700,7 @@ class StatuspageHTMLElements {
      * @param {string} attr 
      * @returns {HTMLMetaElement}
      */
-    static MetaTag(id, content, attr = "name"){
+    static MetaTag(id, content, attr = "name") {
         var meta = document.createElement('meta');
         meta.setAttribute(attr, id);
         meta.content = content;
@@ -687,7 +715,7 @@ class StatuspageHTMLElements {
      * @param {string} content 
      * @returns {HTMLLinkElement}
      */
-    static LinkTag(id, content){
+    static LinkTag(id, content) {
         var link = document.createElement('link');
         link.rel = id;
         link.href = content;
@@ -701,17 +729,31 @@ class StatuspageHTMLElements {
      * @static
      * @memberof StatuspageHTMLElements
      * 
+     * @param {string} src 
+     * @returns {HTMLScriptElement}
+     */
+    static ScriptTag(src) {
+        var script = document.createElement('script');
+        script.src = src;
+        return script;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
+     * 
      * @param {string} canonicalUrl 
      * @param {string} prefetchUrl 
      * @param {string} iconUrl 
      * @param {string} imgUrl 
      */
     static UpdateLinkTags(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
-        var linkTagVals = StatuspageHTMLElements.LinkTagValues(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
+        var linkTagVals = this.LinkTagValues(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
 
         for (const [key, value] of Object.entries(linkTagVals)) {
             if (value != null) {
-                StatuspageHTMLElements.SetLinkTag(key, value);
+                this.SetLinkTag(key, value);
             }
         }
     }
@@ -719,6 +761,7 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
      * 
      * @param {string} canonicalUrl 
      * @param {string} prefetchUrl 
@@ -727,13 +770,13 @@ class StatuspageHTMLElements {
      * @returns {HTMLLinkElement[]}
      */
     static LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl){
-        var linkTagVals = StatuspageHTMLElements.LinkTagValues(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
+        var linkTagVals = this.LinkTagValues(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
 
         var linkTagElements = [];
 
         for (const [k, v] of Object.entries(linkTagVals)) {
             if (v != null) {
-                linkTagElements.push(StatuspageHTMLElements.LinkTag(k, v));
+                linkTagElements.push(this.LinkTag(k, v));
             }
         }
 
@@ -743,6 +786,7 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
      * 
      * @param {string} canonicalUrl 
      * @param {string} imgUrl 
@@ -754,13 +798,25 @@ class StatuspageHTMLElements {
      * @returns {HTMLMetaElement[]}
      */
     static MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null){
-        var metaTagVals = StatuspageHTMLElements.MetaTagValues(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
+        var metaTagVals = this.MetaTagValues(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
+        return this.MetaTagsHTMLElementsFromVals(metaTagVals);
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
+     * 
+     * @param {object} metaTagVals 
+     * @returns {HTMLMetaElement[]}
+     */
+    static MetaTagsHTMLElementsFromVals(metaTagVals){
         var metaTagElements = [];
 
         for(const [k, v] of Object.entries(metaTagVals)){
             if (v != null) {
-                metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+                metaTagElements.push(this.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
             }
         }
 
@@ -774,13 +830,14 @@ class StatuspageHTMLElements {
      * @param {string} canonicalUrl 
      */
     static UpdateUrlTags(canonicalUrl) {
-        StatuspageHTMLElements.SetLinkTag("canonical", canonicalUrl);
-        StatuspageHTMLElements.SetMetaTag("og:url", canonicalUrl);
+        this.SetLinkTag("canonical", canonicalUrl);
+        this.SetMetaTag("og:url", canonicalUrl);
     }
 
     /**
      * @static
      * @memberof StatuspageHTMLElements
+     * @deprecated as of v0.2.63
      * 
      * @param {string} canonicalUrl 
      * @param {string} prefetchUrl 
@@ -796,22 +853,257 @@ class StatuspageHTMLElements {
     static HeadElement(canonicalUrl, prefetchUrl, iconUrl, imgUrl, siteName, pathName, themeColor, author, keywords=[], additionalDescription = null) {
         var head = document.createElement('head');
 
-        var linkElements = StatuspageHTMLElements.LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
-        var metaElements = StatuspageHTMLElements.MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
+        var linkElements = this.LinkTagElements(canonicalUrl, prefetchUrl, iconUrl, imgUrl);
+        var metaElements = this.MetaTagsHTMLElements(canonicalUrl, imgUrl, siteName, pathName, themeColor, author, keywords, additionalDescription);
 
-        for(let link of linkElements){
+        for (let link of linkElements) {
             head.appendChild(link);
         }
 
-        for(let meta of metaElements){
+        for (let meta of metaElements) {
             head.appendChild(meta);
         }
 
         var titleElement = document.createElement('title');
-        titleElement.innerHTML = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.SiteNameValue, siteName);
+        titleElement.innerHTML = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.replaceableStringValue, siteName);
         head.append(titleElement);
 
         return head;
+    }
+
+    static get HTMLElementFromMetadata() {
+        return class {
+            constructor(canonicalUrl, statuspageUrl, iconUrl, imgUrl, siteName, pathName, author = null, keywords=[], additionalDescription = null, title = null, description = null){
+                this._status = StatuspageDictionary.StatusEnums.loading;
+
+                this.canonicalUrl = canonicalUrl;
+                this.statuspageUrl = statuspageUrl;
+                this.iconUrl = iconUrl;
+                this.imgUrl = imgUrl;
+                this.siteName = siteName;
+                this.pathName = pathName;
+                this.author = author;
+                this.keywords = keywords;
+
+                this._title = title;
+                this._description = description;
+                this._additionalDescription = additionalDescription;
+            }
+
+            get title() { return this._title != null ? this._title : StatuspageDictionary.StatuspageHTMLTemplates[this.pathName].replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
+            
+            get description() {
+                if (this._description != null) {
+                    return this._description;
+                }
+
+                var description = StatuspageDictionary.StatuspageHTMLTemplates.template_descrisption.replace(StatuspageDictionary.replaceableStringValue, this.siteName);
+
+                if (this._additionalDescription != null) {
+                    description = description == null ? this._additionalDescription : `${description} ${this._additionalDescription}`;
+                }
+
+                return description;
+            }
+
+            get themeColor() { return StatuspageDictionary.MetaColors[this._status]; }
+
+            set status(val) {
+                if (typeof val == 'string' && val in StatuspageDictionary.StatusEnums) {
+                    this._status = val;
+                }
+            }
+
+            get status() { return this._status; }
+            
+            get LinkTagValues() {
+                return {
+                    "canonical": this.canonicalUrl,
+                    "icon": this.iconUrl,
+                    "apple-touch-icon": this.imgUrl,
+                    "dns-prefetch": this.statuspageUrl.replace('https:', ''),
+                    "preconnect": this.statuspageUrl.replace('https:', '')
+                };
+            }
+
+            get Stylesheets() {
+                return ["../styling/github.css", "../styling/messages.css"];
+            }
+
+            get Scripts() {
+                return ["../js/StatuspageHTML.js"];
+            }
+
+            get MetaTagValues() {
+                return {
+                    "author": this.author,
+                    "application-name": this.title,
+                    "theme-color": this.themeColor,
+                    "description": this.description,
+                    "keywords": this.keywords.length > 0 ? this.keywords.join(', ') : null,
+        
+                    "og:site_name": this.title,
+                    "og:title": this.title,
+                    "og:description": this.description,
+                    "og:type": "website",
+                    "og:url": this.canonicalUrl,
+                    "og:image": this.imgUrl,
+                    
+                    "twitter:card": "summary",
+                    "twitter:title": this.title,
+                    "twitter:description": this.description,
+                    "twitter:image": this.imgUrl,
+        
+                    "mobile-web-app-capable": "yes",
+                    "apple-mobile-web-app-capable": "yes",
+                    "apple-mobile-web-app-status-bar-style": this.themeColor,
+                    "apple-mobile-web-app-title": this.title,
+                    "viewport": "width=device-width, initial-scale=1.0, user-scalable=0.0",
+                    "HandheldFriendly": "true",
+                };
+            }
+
+            get LinkTags() {
+                var linkTagElements = [];
+
+                for (const [k, v] of Object.entries(this.LinkTagValues)) {
+                    if (v != null) {
+                        linkTagElements.push(StatuspageHTMLElements.LinkTag(k, v));
+                    }
+                }
+
+                for (let stylesheet of this.Stylesheets) {
+                    linkTagElements.push(StatuspageHTMLElements.LinkTag('stylesheet', stylesheet));
+                }
+
+                return linkTagElements;
+            }
+
+            get LinkTagsToStrings() {
+                var linkTagElements = [];
+
+                for (const [k, v] of Object.entries(this.LinkTagValues)) {
+                    if (v != null) {
+                        linkTagElements.push(`<link ${StatuspageHTMLElements.GenerateAttributes({ 'rel': k, 'href': v })}>`)
+                        // linkTagElements.push(StatuspageHTMLElements.LinkTagToString(k, v));
+                    }
+                }
+
+                for (let stylesheet of this.Stylesheets) {
+                    linkTagElements.push(`<link ${StatuspageHTMLElements.GenerateAttributes({ 'rel': 'stylesheet', 'href': stylesheet })}>`)
+                    // linkTagElements.push(StatuspageHTMLElements.LinkTagToString('stylesheet', stylesheet));
+                }
+
+                return linkTagElements;
+            }
+
+            get MetaTags() {
+                var metaTagElements = [];
+
+                for(const [k, v] of Object.entries(this.MetaTagValues)){
+                    if (v != null) {
+                        metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+                    }
+                }
+
+                return metaTagElements;
+            }
+
+            get MetaTagsToStrings() {
+                var metaTagElements = [];
+
+                for(const [k, v] of Object.entries(this.MetaTagValues)){
+                    if (v != null) {
+                        metaTagElements.push(`<meta ${StatuspageHTMLElements.GenerateAttributes({ [k.includes('og:') ? "property" : "name"]: k, 'content': v })}>`);
+                    }
+                }
+
+                return metaTagElements;
+            }
+
+            get ScriptTags() {
+                var scriptTagElements = [];
+
+                for (let script of this.Scripts) {
+                    scriptTagElements.push(StatuspageHTMLElements.ScriptTag(script));
+                }
+
+                return scriptTagElements;
+            }
+
+            get ScriptTagsToStrings() {
+                var scriptTagElements = [];
+
+                for (let script of this.Scripts) {
+                    scriptTagElements.push(`<script ${StatuspageHTMLElements.GenerateAttributes({ 'src': script })}></script>`);
+                }
+
+                return scriptTagElements;
+            }
+
+            get TitleTag() {
+                var titleElement = document.createElement('title');
+                titleElement.innerHTML = this.title;
+                return titleElement;
+            }
+
+            get TitleTagToString() {
+                return `<title>${this.title}</title>`;
+            }
+
+            get Head() {
+                var head = document.createElement('head');
+
+                for (let meta of this.MetaTags) { head.appendChild(meta); }
+
+                for (let link of this.LinkTags) { head.appendChild(link); }
+
+                for (let script of this.ScriptTags) { head.appendChild(script); }
+
+                head.appendChild(this.TitleTag);
+
+                return head;
+            }
+
+            get HeadToString() {
+                var metaTags = this.MetaTagsToStrings.join('');
+                var linkTags = this.LinkTagsToStrings.join('');
+                var scriptTags = this.ScriptTagsToStrings.join('');
+                return `<head>${metaTags}${linkTags}${scriptTags}${this.TitleTagToString}</head>`;
+            }
+
+            get Body() {
+                var body = document.createElement('body');
+                body.id = 'body';
+
+                if (this.pathName == StatuspageDictionary.PathNames.Status) {
+                    var statusElement = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+                    statusElement.baseUrl = this.statuspageUrl;
+                    statusElement.fullScreen = true;
+
+                    body.appendChild(statusElement);
+                } else {
+                    var error = document.createElement(StatuspageWebComponents.Error.is, { is: StatuspageWebComponents.Error.is });
+                    body.appendChild(error);
+                }
+
+                return body;
+            }
+
+            get BodyToString() {
+                var child = StatuspageWebComponents.Error.toString();
+                return `<body>${child}</body>`;
+            }
+
+            get HTML() {
+                var htmlElement = document.createElement('html');
+
+                htmlElement.appendChild(this.Head);
+                htmlElement.appendChild(this.Body);
+
+                return htmlElement;
+            }
+        };
     }
 }
 
@@ -964,8 +1256,7 @@ class StatuspageWebComponents {
                     } else {
                         this.removeAttribute('fullScreen');
                     }
-                }
-                else {
+                } else {
                     console.error(`'${val}' is not a boolean.`);
                 }
             }
@@ -990,12 +1281,10 @@ class StatuspageWebComponents {
                     if (this.data._fullScreen == null) {
                         this.data._fullScreen = false;
                     }
-                }
-                else {
+                } else {
                     if (typeof val == 'string') {
                         console.error(`'${val}' is not a valid status.`);
-                    }
-                    else {
+                    } else {
                         console.error(`'${val}' is not a string.`);
                     }
                 }
@@ -1022,7 +1311,12 @@ class StatuspageWebComponents {
                         if (!('url' in this.dataset)) {
                             this.dataset.url = this.data._baseUrl;
                         }
+                    } else {
+                        console.error(`${val} is an invalid URL`);
                     }
+                } else if (val == null || val == undefined) {
+                    this.data._baseUrl = null;
+                    this.data._url = null;
                 }
             }
 
@@ -1036,48 +1330,6 @@ class StatuspageWebComponents {
              */
             get url() { return this.data._url; }
 
-            /**
-             * @deprecated after v0.2.62
-             * @param {boolean} val
-             */
-            set isRefreshEnabled(val) {
-                if (typeof val == 'boolean') { this.data._refreshEnabled = val; }
-            }
-
-            /**
-             * @deprecated after v0.2.62
-             * @type {boolean}
-             */
-            get isRefreshEnabled() { return this.data._refreshEnabled; }
-
-            /**
-             * @deprecated after v0.2.62
-             * @param {number} val
-             */
-            set refreshTime(val) {
-                if (typeof val == 'number') { this.data._refreshTime = val; }
-            }
-
-            /**
-             * @deprecated after v0.2.62
-             * @type {number}
-             */
-            get refreshTime() { return this.data._refreshTime; }
-
-            /**
-             * @deprecated after v0.2.62
-             * @param {StatuspageStatusResponse} val
-             */
-            set dataJson(val) {
-                if (typeof val == 'object') {
-                    this.data._dataJson = val;
-
-                    if ('status' in this.data._dataJson && 'indicator' in this.data._dataJson.status) {
-                        this.dataStatus = this.data._dataJson.status.indicator;
-                    }
-                }
-            }
-
             constructor() {
                 super();
 
@@ -1088,30 +1340,26 @@ class StatuspageWebComponents {
                     _fullScreen: null,
                     _isLoading: false,
                     _status: undefined,
-                    _dataJson: null,
                     _isFullScreenSet: false,
                     _isLoadingEnabled: false,
-                    _refreshEnabled: false,
-                    _refreshTime: 5
                 };
             }
         
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
-                this.isLoading = true;
-
                 StatuspageHTMLElements.UpdateUrlTags(location.href);
 
                 if (this.baseUrl != null) {
                     if (navigator.onLine) {
+                        this.isLoading = true;
                         this.fetchStatus();
+                        delete this.dataset.url;
+                        this.isLoading = false;
                     } else {
                         this.setError();
                     }
                 }
-
-                this.isLoading = false;
 
                 console.log(this.toString());
                 console.log(`Finished ${StatuspageWebComponents.Status.is}`);
@@ -1128,7 +1376,7 @@ class StatuspageWebComponents {
                     StatuspageHTMLElements.SetThemeColor(newValue);
                 }
 
-                if (name == 'data-url') {
+                if (name == 'data-url' && newValue != 'null') {
                     this.baseUrl = newValue;
                 }
 
@@ -1139,18 +1387,27 @@ class StatuspageWebComponents {
 
             fetchStatus() {
                 return new Promise((res, rej) => {
+                    console.log(this.url);
                     if (navigator.onLine && this.url != null) {
                         fetch(this.url)
                             .then(data => data.json())
                             .then((json) => {
                                 if ('status' in json && 'indicator' in json.status) {
-                                    this.dataStatus = json.status.status;
+                                    this.dataStatus = json.status.indicator;
+                                }
+
+                                if ('page' in json && 'name' in json.page) {
+                                    StatuspageHTMLElements.SetTitle(json.page.name, StatuspageDictionary.PathNames.Status)
                                 }
                                 res();
                             }).catch((error) => {
                                 this.setError();
                                 rej(error);
                             });
+                    } else if (!navigator.onLine) {
+                        console.log(`Browser is offline`);
+                    } else if (this.url == null) {
+                        console.error(`this.url is ${this.url}`);
                     }
                 })
             }
@@ -1174,8 +1431,11 @@ class StatuspageWebComponents {
                 return htmlElement;
             }
 
-            static staticHTML(status, isFullScreen = false) {
-                var attr = { 'data-status': status };
+            static staticHTML(status = null, url = null, isFullScreen = false) {
+                var attr = { };
+
+                if (status != null) { attr['data-status'] = status; }
+                if (url != null) { attr['data-url'] = url; }
 
                 if (isFullScreen) { attr['fullScreen'] = null; }
 
@@ -1548,3 +1808,6 @@ customElements.define(StatuspageWebComponents.Components.is, StatuspageWebCompon
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 customElements.define(StatuspageWebComponents.HTMLWebComponent.is, StatuspageWebComponents.HTMLWebComponent);
+
+// var tmp = new StatuspageHTMLElements.HTMLElementFromMetadata('https://spstat.us/', 'https://www.cloudflarestatus.com/', 'https://githubstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', 'Cloudflare', StatuspageDictionary.PathNames.Status, 'rtsfred3');
+// console.log(tmp.HTML.outerHTML.toString());

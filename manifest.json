@@ -53,7 +53,8 @@
         {
             "src": "https://githubstat.us/img/maskable/webp/144px.webp",
             "sizes": "144x144",
-            "type": "image/webp"
+            "type": "image/webp",
+            "purpose": "any"
         },
         {
             "src": "https://githubstat.us/img/maskable/152px.png",
