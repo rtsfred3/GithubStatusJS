@@ -1603,37 +1603,6 @@ class StatuspageWebComponents {
             static get is() { return StatuspageDictionary.HTMLTags.StatuspageSummary; }
         }
     }
-
-    /**
-     * @deprecated as of v0.2.64
-     */
-    static get HTMLWebComponent() {
-        return class extends HTMLElement {
-            constructor() {
-                super();
-
-                this.htmlElement = document.createElement('html');
-
-                this.head = document.createElement('head');
-                this.body = document.createElement('body');
-
-                var loading = document.createElement(StatuspageWebComponents.Loading.is, { is: StatuspageWebComponents.Loading.is });
-
-                this.body.appendChild(loading);
-
-                this.appendChild(this.head);
-                this.appendChild(this.body);
-            }
-
-            connectedCallback() {
-                this.replaceWith(this.htmlElement);
-            }
-
-            toString() { return this.outerHTML.toString(); }
-            
-            static get is() { return 'statuspage-html'; }
-        }
-    }
 }
 
 customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
@@ -1645,4 +1614,3 @@ customElements.define(StatuspageWebComponents.Component.is, StatuspageWebCompone
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
-customElements.define(StatuspageWebComponents.HTMLWebComponent.is, StatuspageWebComponents.HTMLWebComponent);
