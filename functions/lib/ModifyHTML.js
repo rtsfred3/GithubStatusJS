@@ -11,7 +11,7 @@ import GetFileFromAssets from './GetFileFromAssets.js';
 
 import { BotChecker } from './BotChecker.js';
 
-import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
+import { StatuspageDictionary, StatuspageHTMLElements } from '../../modules/Statuspage.esm.js';
 
 export default async function ModifyHTML(context, _path) {
     const db = context.env.CACHE_DB;

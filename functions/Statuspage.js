@@ -1,5 +1,3 @@
-import { StatuspageWebComponents } from '../modules/Statuspage.esm.js'
-
 export async function onRequestGet({ request, params, env }) {
     const db = env.CACHE_DB;
     const table = env.TABLE;

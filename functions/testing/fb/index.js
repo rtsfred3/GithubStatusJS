@@ -1,6 +1,6 @@
 import MainHtml from "../../../index.html";
 
-import { StatuspageDictionary, StatuspageWebComponents } from '../../../modules/Statuspage.esm.js';
+import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
 
 import { BotChecker } from '../../lib/BotChecker.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';

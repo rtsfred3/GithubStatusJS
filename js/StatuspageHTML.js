@@ -50,7 +50,8 @@ class StatuspageDictionary {
             StatuspageComponent: 'statuspage-component',
             StatuspageComponents: 'statuspage-components',
             StatuspageIncidents: 'statuspage-incidents',
-            StatuspageSummary: 'statuspage-summary'
+            StatuspageSummary: 'statuspage-summary',
+            StatusElement: 'status-element'
         });
     }
 
@@ -72,6 +73,7 @@ class StatuspageDictionary {
             template_title_amp: `(Unofficial) ${this.replaceableStringValue} Status AMP`,
             template_title_maintenance: `Under Maintenance`,
             template_title_error: `(Unofficial) ${this.replaceableStringValue} Status - Error`,
+            template_title_unavailable: `(Unofficial) ${this.replaceableStringValue} Status - Unavailable`,
             template_descrisption: `An unofficial website to monitor ${this.replaceableStringValue} status updates.`,
 
             get [this.PathNames.Index]() { return this.template_title_index.replace(this.replaceableStringValue, this.SiteNameValue); },
@@ -81,6 +83,7 @@ class StatuspageDictionary {
             get [this.PathNames.Amp]() { return this.template_title_amp.replace(this.replaceableStringValue, this.SiteNameValue); },
             get [this.PathNames.Maintenance]() { return this.template_title_maintenance.replace(this.replaceableStringValue, this.SiteNameValue); },
             get [this.PathNames.Error]() { return this.template_title_error.replace(this.replaceableStringValue, this.SiteNameValue); },
+            get [this.PathNames.Unavailable]() { return this.template_title_unavailable.replace(this.replaceableStringValue, this.SiteNameValue); },
             get [this.PathNames.Description]() { return this.template_descrisption.replace(this.replaceableStringValue, this.SiteNameValue); }
         });
     }
@@ -267,6 +270,7 @@ class StatuspageDictionary {
             Components: 'Components',
             Amp: 'Amp',
             Maintenance: 'Maintenance',
+            Unavailable: 'Unavailable',
             Error: 'Error',
             Description: 'Description'
         });
@@ -342,8 +346,9 @@ class StatuspageHTMLElements {
      * @param {object} attr attributes object
      * @returns {string} string of tag and attributes
      */
-    static TagStringAndAttributes(tag, attr) {
-        return `<${tag} ${this.GenerateAttributes(attr)}></${tag}>`;
+    static TagStringAndAttributes(tag, attr = null) {
+        var attrs = attr != null ? ` ${this.GenerateAttributes(attr)}` : '';
+        return `<${tag}${attrs}></${tag}>`;
     }
 
     /**
@@ -475,7 +480,8 @@ class StatuspageHTMLElements {
         }
 
         if ('scheduled_maintenances' in incidentsJson && showMaintenance) {
-            incidents = incidents.concat(previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return (new Date(incident["created_at"]) > previousDaysDate && incident['status'] == "in_progress" ); }));
+            var maintenances = previousDays == 0 ? incidentsJson["scheduled_maintenances"] : incidentsJson["scheduled_maintenances"].filter(function (incident) { return (new Date(incident["started_at"]) > previousDaysDate && incident['status'] == "in_progress" ); });
+            incidents = incidents.concat(maintenances);
         }
 
         incidents.forEach((e) => {
@@ -683,26 +689,32 @@ class StatuspageHTMLElements {
         this.SetMetaTag("og:url", canonicalUrl);
     }
 
-    static get HTMLMetadataBase() {
+    static get StaticHTML() {
         return class {
-            constructor(canonicalUrl, statuspageUrl, iconUrl, imgUrl, siteName, pathName, author = null, keywords=[], additionalDescription = null, title = null, description = null){
+            constructor(iconUrl, imgUrl, siteName, pathName, canonicalUrl = null, statuspageUrl = null, author = null, keywords=[], additionalDescription = null, title = null, description = null){
                 this._status = StatuspageDictionary.StatusEnums.loading;
 
                 this.canonicalUrl = canonicalUrl;
                 this.statuspageUrl = statuspageUrl;
                 this.iconUrl = iconUrl;
                 this.imgUrl = imgUrl;
-                this.siteName = siteName != null ? siteName : 'Statuspage';
                 this.pathName = pathName;
+                this.statusPathName = pathName;
                 this.author = author;
                 this.keywords = keywords;
 
+                this._siteName = siteName != null ? siteName : 'Statuspage';
+                this._isBot = false;
                 this._title = title;
                 this._description = description;
                 this._additionalDescription = additionalDescription;
+
+                this._bodyTemplate = `<body id="body">${StatuspageDictionary.replaceableStringValue}</body>`;
             }
 
-            get title() { return this._title != null ? this._title : StatuspageDictionary.StatuspageHTMLTemplates[this.pathName].replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
+            get prefetchStatuspageUrl() { return this.statuspageUrl != null ? this.statuspageUrl.replace('https:', '') : null; }
+
+            get title() { return this._title != null ? this._title : StatuspageDictionary.StatuspageHTMLTemplates[this.statusPathName].replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
             
             get description() {
                 if (this._description != null) {
@@ -727,23 +739,39 @@ class StatuspageHTMLElements {
             }
 
             get status() { return this._status; }
+
+            set siteName(val) {
+                if (typeof val == 'string') {
+                    this._siteName = val;
+                }
+            }
+
+            get siteName() { return this._siteName; }
+
+            set isBot(val) {
+                if (typeof val == 'boolean') {
+                    this._isBot = val;
+                }
+            }
+
+            get isBot() { return this._isBot; }
             
             get LinkTagValues() {
                 return {
                     "canonical": this.canonicalUrl,
                     "icon": this.iconUrl,
                     "apple-touch-icon": this.imgUrl,
-                    "dns-prefetch": this.statuspageUrl.replace('https:', ''),
-                    "preconnect": this.statuspageUrl.replace('https:', '')
+                    "dns-prefetch": this.prefetchStatuspageUrl,
+                    "preconnect": this.prefetchStatuspageUrl
                 };
             }
 
             get Stylesheets() {
-                return ["../styling/github.css", "../styling/messages.css"];
+                return [ 'https://spstat.us/styling/main.min.css' ];
             }
 
             get Scripts() {
-                return ["../js/StatuspageHTML.js"];
+                return [ 'https://spstat.us/js/StatuspageHTML.js' ];
             }
 
             get MetaTagValues() {
@@ -774,108 +802,7 @@ class StatuspageHTMLElements {
                     "HandheldFriendly": "true",
                 };
             }
-        }
-    }
-
-    static get HTMLElementMetadata() {
-        return class extends StatuspageHTMLElements.HTMLMetadataBase {
-            constructor(canonicalUrl, statuspageUrl, iconUrl, imgUrl, siteName, pathName, author = null, keywords=[], additionalDescription = null, title = null, description = null) {
-                super(canonicalUrl, statuspageUrl, iconUrl, imgUrl, siteName, pathName, author, keywords, additionalDescription, title, description);
-            }
-
-            get LinkTags() {
-                var linkTagElements = [];
-
-                for (const [k, v] of Object.entries(this.LinkTagValues)) {
-                    if (v != null) {
-                        linkTagElements.push(StatuspageHTMLElements.LinkTag(k, v));
-                    }
-                }
-
-                for (let stylesheet of this.Stylesheets) {
-                    linkTagElements.push(StatuspageHTMLElements.LinkTag('stylesheet', stylesheet));
-                }
-
-                return linkTagElements;
-            }
             
-            get MetaTags() {
-                var metaTagElements = [];
-
-                for(const [k, v] of Object.entries(this.MetaTagValues)){
-                    if (v != null) {
-                        metaTagElements.push(StatuspageHTMLElements.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
-                    }
-                }
-
-                return metaTagElements;
-            }
-            
-            get ScriptTags() {
-                var scriptTagElements = [];
-
-                for (let script of this.Scripts) {
-                    scriptTagElements.push(StatuspageHTMLElements.ScriptTag(script));
-                }
-
-                return scriptTagElements;
-            }
-
-            get TitleTag() {
-                var titleElement = document.createElement('title');
-                titleElement.innerHTML = this.title;
-                return titleElement;
-            }
-            
-            get Head() {
-                var head = document.createElement('head');
-
-                for (let meta of this.MetaTags) { head.appendChild(meta); }
-
-                for (let link of this.LinkTags) { head.appendChild(link); }
-
-                for (let script of this.ScriptTags) { head.appendChild(script); }
-
-                head.appendChild(this.TitleTag);
-
-                return head;
-            }
-            
-            get Body() {
-                var body = document.createElement('body');
-                body.id = 'body';
-
-                if (this.pathName == StatuspageDictionary.PathNames.Status) {
-                    var statusElement = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-                    statusElement.baseUrl = this.statuspageUrl;
-                    statusElement.fullScreen = true;
-
-                    body.appendChild(statusElement);
-                } else {
-                    var error = document.createElement(StatuspageWebComponents.Error.is, { is: StatuspageWebComponents.Error.is });
-                    body.appendChild(error);
-                }
-
-                return body;
-            }
-            
-            get HTML() {
-                var htmlElement = document.createElement('html');
-
-                htmlElement.appendChild(this.Head);
-                htmlElement.appendChild(this.Body);
-
-                return htmlElement;
-            }
-        };
-    }
-
-    static get HTMLStringMetadata() {
-        return class extends StatuspageHTMLElements.HTMLMetadataBase {
-            constructor(canonicalUrl, statuspageUrl, iconUrl, imgUrl, siteName, pathName, author = null, keywords=[], additionalDescription = null, title = null, description = null) {
-                super(canonicalUrl, statuspageUrl, iconUrl, imgUrl, siteName, pathName, author, keywords, additionalDescription, title, description);
-            }
-
             get LinkTags() {
                 var linkTagElements = [];
 
@@ -885,8 +812,10 @@ class StatuspageHTMLElements {
                     }
                 }
 
-                for (let stylesheet of this.Stylesheets) {
-                    linkTagElements.push(`<link ${StatuspageHTMLElements.GenerateAttributes({ 'rel': 'stylesheet', 'href': stylesheet })}>`);
+                if (!this.isBot) {
+                    for (let stylesheet of this.Stylesheets) {
+                        linkTagElements.push(`<link ${StatuspageHTMLElements.GenerateAttributes({ 'rel': 'stylesheet', 'href': stylesheet })}>`);
+                    }
                 }
 
                 return linkTagElements;
@@ -907,6 +836,8 @@ class StatuspageHTMLElements {
             get ScriptTags() {
                 var scriptTagElements = [];
 
+                if (this.isBot) { return scriptTagElements; }
+
                 for (let script of this.Scripts) {
                     scriptTagElements.push(`<script ${StatuspageHTMLElements.GenerateAttributes({ 'src': script })}></script>`);
                 }
@@ -914,34 +845,84 @@ class StatuspageHTMLElements {
                 return scriptTagElements;
             }
 
-            get TitleTag() {
-                return `<title>${this.title}</title>`;
-            }
+            get TitleTag() { return `<title>${this.title}</title>`; }
 
             get Head() {
-                var metaTags = this.MetaTags.join('');
-                var linkTags = this.LinkTags.join('');
-                var scriptTags = this.ScriptTags.join('');
-                return `<head>${metaTags}${linkTags}${scriptTags}${this.TitleTag}</head>`;
+                var metaTags = `\n\t\t${this.MetaTags.join('\n\t\t')}`;
+                var linkTags = `\n\t\t${this.LinkTags.join('\n\t\t')}`;
+                var scriptTags = this.ScriptTags.length > 0 ? `\n\t\t${this.ScriptTags.join('\n\t\t')}` : '';
+                var titleTag = `\n\t\t${this.TitleTag}`;
+
+                return `<head>${metaTags}${linkTags}${scriptTags}${titleTag}\n\t</head>`;
             }
 
             get Body() {
-                var child = StatuspageWebComponents.Error.toString();
+                var child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError);
+
+                if (this.isBot) {
+                    return this._bodyTemplate.replace(StatuspageDictionary.replaceableStringValue, '');
+                }
 
                 if (this.pathName == StatuspageDictionary.PathNames.Status) {
-                    child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-url': this.statuspageUrl, 'fullScreen': null });
+                    var attr = {};
+                    
+                    if (this.statuspageUrl != null) {
+                        attr['data-url'] = this.statuspageUrl;
+                    } else if (this.status != null) {
+                        attr['data-status'] = this.status;
+                    }
+
+                    if (Object.keys(attr).length == 0) {
+                        attr['data-status'] = StatuspageDictionary.StatusEnums.error;
+                    }
+
+                    attr['fullScreen'] = null;
+
+                    child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, attr);
                 }
 
                 if (this.pathName == StatuspageDictionary.PathNames.Summary) {
                     child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageSummary, { 'data-url': this.statuspageUrl });
                 }
 
-                return `<body id="body">${child}</body>`;
+                if (this.pathName == StatuspageDictionary.PathNames.Maintenance) {
+                    child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': StatuspageDictionary.StatusEnums.maintenance, 'fullScreen': null });
+                }
+
+                if (this.pathName == StatuspageDictionary.PathNames.Unavailable) {
+                    child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageUnavailable);
+                }
+
+                if (this.pathName == StatuspageDictionary.PathNames.Error) {
+                    child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError);
+                }
+
+                return this._bodyTemplate.replace(StatuspageDictionary.replaceableStringValue, child);
             }
 
-            get HTML() {
-                return `<html>\n\t${this.Head}\n\t${this.Body}\n</html>`;
+            get HTML() { return `<html>\n\t${this.Head}\n\t${this.Body}\n</html>`; }
+
+            get ErrorHTML() {
+                this.pathName = StatuspageDictionary.PathNames.Error;
+                return this.HTML;
             }
+
+            get UnavailableHTML() {
+                this.pathName = StatuspageDictionary.PathNames.Unavailable;
+                return this.HTML;
+            }
+
+            BodyFromStatus(status) {
+                var child = '';
+
+                if (status in StatuspageDictionary.StatusEnums){
+                    child = StatuspageHTMLElements.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': status, 'fullScreen': null });
+                }
+
+                return this._bodyTemplate.replace(StatuspageDictionary.replaceableStringValue, child);
+            }
+
+            HTMLFromStatus(status) { return `<html>\n\t${this.Head}\n\t${this.BodyFromStatus(status)}\n</html>`; }
         }
     }
 }
@@ -1008,7 +989,7 @@ class StatuspageWebComponents {
 
             toString() { return this.outerHTML.toString(); }
             
-            static get is() { return 'status-element'; }
+            static get is() { return StatuspageDictionary.HTMLTags.StatusElement; }
             static toHTML() { return document.createElement(this.is, { is: this.is }); }
             static toString() { return `<${this.is}></${this.is}>`; }
         }
@@ -1371,16 +1352,14 @@ class StatuspageWebComponents {
                 }
 
                 if (this._dataJson != null) {
-                    this._incidentsElements = StatuspageHTMLElements.IncidentsHTMLElements(this._dataJson);
+                    this._incidentsElements = StatuspageHTMLElements.IncidentsHTMLElements(this._dataJson, this.previousDays, false, this.showMaintenance);
                 }
             }
 
             /**
              * @returns {object}
              */
-            get dataJson() {
-                return this._dataJson;
-            }
+            get dataJson() { return this._dataJson; }
 
             /**
              * @param {string} val
@@ -1408,13 +1387,40 @@ class StatuspageWebComponents {
             /**
              * @returns {string}
              */
-            get url() {
-                return this._url;
+            get url() { return this._url; }
+
+            /**
+             * @returns {string}
+             */
+            get incidentElements() { return this._incidentsElements; }
+
+            /**
+             * @param {boolean} val
+             */
+            set showMaintenance(val) {
+                if (typeof val == 'boolean') {
+                    this._showMaintenance = val;
+                }
             }
 
-            get incidentElements(){
-                return this._incidentsElements;
+            /**
+             * @returns {boolean}
+             */
+            get showMaintenance() { return this._showMaintenance; }
+
+            /**
+             * @param {number} val
+             */
+            set previousDays(val) {
+                if (typeof val == 'number') {
+                    this._previousDays = val;
+                }
             }
+
+            /**
+             * @returns {number}
+             */
+            get previousDays() { return this._previousDays; }
 
             constructor() {
                 super();
@@ -1422,6 +1428,9 @@ class StatuspageWebComponents {
                 this._urlPath = '/api/v2/incidents.json';
                 this._baseUrl = null;
                 this._url = null;
+
+                this._previousDays = 7;
+                this._showMaintenance = false;
 
                 this._dataJson = null;
 
@@ -1515,9 +1524,7 @@ class StatuspageWebComponents {
             /**
              * @returns {string}
              */
-            get url() {
-                return this._url;
-            }
+            get url() { return this._url; }
 
             constructor() {
                 super();
@@ -1614,3 +1621,11 @@ customElements.define(StatuspageWebComponents.Component.is, StatuspageWebCompone
 customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
+
+// var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', null, StatuspageDictionary.PathNames.Status);
+// t.isBot = true;
+// t.siteName = 'Cloudflare';
+// t.statusPathName = StatuspageDictionary.PathNames.Index;
+// console.log(t.HTML);
+
+// document.head.outerHTML = t.Head;
