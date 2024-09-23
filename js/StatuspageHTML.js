@@ -755,6 +755,48 @@ class StatuspageHTMLElements {
             }
 
             get isBot() { return this._isBot; }
+
+            get JsonLinkingData() {
+                return {
+                    "@context": "http://schema.org/",
+                    "@type": "WebApplication",
+                    "name": this.title,
+                    "alternateName": `${this.siteName}Status`,
+                    "description": `An unofficial website to monitor ${this.siteName} status updates.`,
+                    "softwareVersion": "1.0.0",
+                    "applicationCategory": "DeveloperApplication, BrowserApplication",
+                    "browserRequirements": "Required HTML5 Support",
+                    "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
+                    "softwareRequirements": "Modern Web Browser",
+                    "url": this.canonicalUrl,
+                    "screenshot": "https://spstat.us/img/screenshots/screenshot1.webp",
+                    "image": "https://spstat.us/img/status/highres/min/status-min-good.png",
+                    "thumbnailUrl": "https://spstat.us/img/status/lowres/min/status-min-good.png",
+                    "author": [{
+                        "@type": "Person",
+                        "name": "Ryan Fredrickson",
+                        "jobTitle": "Software Developer",
+                        "url": "https://github.com/rtsfred3"
+                    }],
+                    "maintainer": {
+                        "@type": "Person",
+                        "name": "Ryan Fredrickson",
+                        "jobTitle": "Software Developer",
+                        "url": "https://github.com/rtsfred3"
+                    },
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "0.00",
+                        "priceCurrency": "USD"
+                    }
+                };
+            }
+
+            get JsonLinkingDataTag() {
+                var jsonStr = JSON.stringify(this.JsonLinkingData);
+                var attrString = StatuspageHTMLElements.GenerateAttributes({ 'type': 'application/ld+json' });
+                return `<script ${attrString}>${jsonStr}</script>`;
+            }
             
             get LinkTagValues() {
                 return {
@@ -1622,10 +1664,11 @@ customElements.define(StatuspageWebComponents.Components.is, StatuspageWebCompon
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
-// var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', null, StatuspageDictionary.PathNames.Status);
+var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', null, StatuspageDictionary.PathNames.Status);
 // t.isBot = true;
 // t.siteName = 'Cloudflare';
 // t.statusPathName = StatuspageDictionary.PathNames.Index;
+// t.canonicalUrl = 'http://localhost:8888/GithubHTML/StatuspageHTML/';
 // console.log(t.HTML);
 
 // document.head.outerHTML = t.Head;
