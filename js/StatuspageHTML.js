@@ -617,6 +617,36 @@ class StatuspageHTMLElements {
         StatuspageHTMLElements.SetMetaTag(["theme-color", "apple-mobile-web-app-status-bar-style"], hexColor);
     }
 
+    static get HasLinkedData() {
+        var scripts = Array.from(document.getElementsByTagName('script'));
+        scripts = scripts.filter((e) => e.hasAttribute('type') && e.getAttribute('type') == 'application/ld+json');
+
+        if (scripts.length != 0){
+            var script = scripts.pop().innerHTML;
+
+            try {
+                var json = JSON.parse(script);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    static UpdateLinkedData(key, value) {
+        if (StatuspageHTMLElements.HasLinkedData) {
+            var scripts = Array.from(document.getElementsByTagName('script'));
+            var script = scripts.find((e) => e.hasAttribute('type') && e.getAttribute('type') == 'application/ld+json');
+            var ld = JSON.parse(script.innerHTML);
+
+            ld[key] = value;
+
+            script.innerHTML = JSON.stringify(ld, null, 2);
+        }
+    }
+
     /**
      * @static
      * @memberof StatuspageHTMLElements
@@ -627,8 +657,24 @@ class StatuspageHTMLElements {
     static SetTitle(siteName, pathName = StatuspageDictionary.PathNames.Index) {
         var title = StatuspageDictionary.StatuspageHTMLTemplates[pathName].replace(StatuspageDictionary.replaceableStringValue, siteName);
 
+        StatuspageHTMLElements.UpdateLinkedData('name', title);
+        StatuspageHTMLElements.UpdateLinkedData('alternateName', `${siteName}Status`);
+
         StatuspageHTMLElements.SetMetaTag(["application-name", "og:site_name", "og:title", "twitter:title", "apple-mobile-web-app-title"], title);
         document.getElementsByTagName('title')[0].innerText = title;
+    }
+
+    /**
+     * @static
+     * @memberof StatuspageHTMLElements
+     * 
+     * @param {string} siteName 
+     */
+    static SetDescription(siteName) {
+        var description = StatuspageDictionary.StatuspageHTMLTemplates.template_descrisption.replace(StatuspageDictionary.replaceableStringValue, siteName);
+
+        StatuspageHTMLElements.UpdateLinkedData('description', description);
+        StatuspageHTMLElements.SetMetaTag(["description", "og:description", "twitter:description"], description);
     }
 
     /**
@@ -687,6 +733,56 @@ class StatuspageHTMLElements {
     static UpdateUrlTags(canonicalUrl) {
         this.SetLinkTag("canonical", canonicalUrl);
         this.SetMetaTag("og:url", canonicalUrl);
+    }
+
+    static LinkedData(title, siteName, canonicalUrl, imageUrl = null, thumbnailUrl = null, screenshotUrl = null, version = "1.0.0") {
+        var linkedData = {
+            "@context": "http://schema.org/",
+            "@type": "WebApplication",
+            "name": title,
+            "alternateName": `${siteName}Status`,
+            "description": `An unofficial website to monitor ${siteName} status updates.`,
+            "softwareVersion": version,
+            "applicationCategory": "DeveloperApplication, BrowserApplication",
+            "browserRequirements": "Required HTML5 Support",
+            "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
+            "softwareRequirements": "Modern Web Browser",
+            "url": canonicalUrl,
+            "screenshot": screenshotUrl,
+            "image": imageUrl,
+            "thumbnailUrl": thumbnailUrl,
+            "author": [{
+                "@type": "Person",
+                "name": "Ryan Fredrickson",
+                "jobTitle": "Software Developer",
+                "url": "https://github.com/rtsfred3"
+            }],
+            "maintainer": {
+                "@type": "Person",
+                "name": "Ryan Fredrickson",
+                "jobTitle": "Software Developer",
+                "url": "https://github.com/rtsfred3"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "0.00",
+                "priceCurrency": "USD"
+            }
+        };
+
+        if (imageUrl == null) {
+            delete linkedData['image'];
+        }
+
+        if (thumbnailUrl == null) {
+            delete linkedData['thumbnailUrl'];
+        }
+
+        if (screenshotUrl == null) {
+            delete linkedData['screenshot'];
+        }
+
+        return linkedData;
     }
 
     static get StaticHTML() {
@@ -756,44 +852,12 @@ class StatuspageHTMLElements {
 
             get isBot() { return this._isBot; }
 
-            get JsonLinkingData() {
-                return {
-                    "@context": "http://schema.org/",
-                    "@type": "WebApplication",
-                    "name": this.title,
-                    "alternateName": `${this.siteName}Status`,
-                    "description": `An unofficial website to monitor ${this.siteName} status updates.`,
-                    "softwareVersion": "1.0.0",
-                    "applicationCategory": "DeveloperApplication, BrowserApplication",
-                    "browserRequirements": "Required HTML5 Support",
-                    "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
-                    "softwareRequirements": "Modern Web Browser",
-                    "url": this.canonicalUrl,
-                    "screenshot": "https://spstat.us/img/screenshots/screenshot1.webp",
-                    "image": "https://spstat.us/img/status/highres/min/status-min-good.png",
-                    "thumbnailUrl": "https://spstat.us/img/status/lowres/min/status-min-good.png",
-                    "author": [{
-                        "@type": "Person",
-                        "name": "Ryan Fredrickson",
-                        "jobTitle": "Software Developer",
-                        "url": "https://github.com/rtsfred3"
-                    }],
-                    "maintainer": {
-                        "@type": "Person",
-                        "name": "Ryan Fredrickson",
-                        "jobTitle": "Software Developer",
-                        "url": "https://github.com/rtsfred3"
-                    },
-                    "offers": {
-                        "@type": "Offer",
-                        "price": "0.00",
-                        "priceCurrency": "USD"
-                    }
-                };
+            get JsonLinkedData() {
+                return StatuspageHTMLElements.LinkedData(this.title, this.siteName, this.canonicalUrl);
             }
 
-            get JsonLinkingDataTag() {
-                var jsonStr = JSON.stringify(this.JsonLinkingData);
+            get JsonLinkedDataTag() {
+                var jsonStr = JSON.stringify(this.JsonLinkedData);
                 var attrString = StatuspageHTMLElements.GenerateAttributes({ 'type': 'application/ld+json' });
                 return `<script ${attrString}>${jsonStr}</script>`;
             }
@@ -878,12 +942,13 @@ class StatuspageHTMLElements {
             get ScriptTags() {
                 var scriptTagElements = [];
 
+                scriptTagElements.push(this.JsonLinkedDataTag);
+
                 if (this.isBot) { return scriptTagElements; }
 
                 for (let script of this.Scripts) {
                     scriptTagElements.push(`<script ${StatuspageHTMLElements.GenerateAttributes({ 'src': script })}></script>`);
                 }
-
                 return scriptTagElements;
             }
 
@@ -1259,7 +1324,7 @@ class StatuspageWebComponents {
                                 }
 
                                 if ('page' in json && 'name' in json.page) {
-                                    StatuspageHTMLElements.SetTitle(json.page.name, StatuspageDictionary.PathNames.Status)
+                                    StatuspageHTMLElements.SetTitle(json.page.name, StatuspageDictionary.PathNames.Status);
                                 }
                                 res();
                             }).catch((error) => {
@@ -1645,6 +1710,11 @@ class StatuspageWebComponents {
                     this.firstElementChild.replaceWith(this.status);
                     this.appendChild(this.incidents);
                 }
+
+                if ('page' in json && 'name' in json.page) {
+                    StatuspageHTMLElements.SetTitle(json.page.name, StatuspageDictionary.PathNames.Index);
+                    StatuspageHTMLElements.SetDescription(json.page.name);
+                }
             }
 
             toString() { return this.outerHTML.toString(); }
@@ -1664,7 +1734,7 @@ customElements.define(StatuspageWebComponents.Components.is, StatuspageWebCompon
 customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
 customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
-var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', null, StatuspageDictionary.PathNames.Status);
+// var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', null, StatuspageDictionary.PathNames.Status);
 // t.isBot = true;
 // t.siteName = 'Cloudflare';
 // t.statusPathName = StatuspageDictionary.PathNames.Index;
@@ -1672,3 +1742,6 @@ var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', '
 // console.log(t.HTML);
 
 // document.head.outerHTML = t.Head;
+
+// var tmp = StatuspageHTMLElements.LinkedData('Cloudflare Status', 'Cloudflare', 'https://spstat.us/amp/');
+// console.log(tmp);
