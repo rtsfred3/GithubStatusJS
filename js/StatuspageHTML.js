@@ -20,10 +20,8 @@
 
 class StatuspageDictionary {
     static SiteNameValue = '{{SiteName}}';
+    static AmpIndicatorValue = '{{indicator}}';
     static replaceableStringValue = '{}';
-
-    // static get SiteNameValue() { return '{{SiteName}}'; }
-    // static get replaceableStringValue() { return '{}'; }
 
     /**
      * @static
@@ -290,6 +288,15 @@ class StatuspageHTMLElements {
         return allGoodElement;
     }
 
+    static ComponentlessStatusHtml(status) {
+        if (status in StatuspageDictionary.StatusEnums || status == StatuspageDictionary.AmpIndicatorValue) {
+            var attr = { 'id': 'status', 'data-status': status, 'class': 'statuspage-status fullScreen' };
+            return StatuspageHTMLElements.TagStringAndAttributes('div', attr);
+        }
+
+        return StatuspageHTMLElements.ComponentlessStatusHtml(StatuspageDictionary.StatusEnums.error);
+    }
+
     /**
      * @static
      * @memberof StatuspageHTMLElements
@@ -346,9 +353,10 @@ class StatuspageHTMLElements {
      * @param {object} attr attributes object
      * @returns {string} string of tag and attributes
      */
-    static TagStringAndAttributes(tag, attr = null) {
+    static TagStringAndAttributes(tag, attr = null, child = null) {
         var attrs = attr != null ? ` ${this.GenerateAttributes(attr)}` : '';
-        return `<${tag}${attrs}></${tag}>`;
+        var childStr = child != null ? child : '';
+        return `<${tag}${attrs}>${childStr}</${tag}>`;
     }
 
     /**
@@ -735,56 +743,6 @@ class StatuspageHTMLElements {
         this.SetMetaTag("og:url", canonicalUrl);
     }
 
-    static LinkedData(title, siteName, canonicalUrl, imageUrl = null, thumbnailUrl = null, screenshotUrl = null, version = "1.0.0") {
-        var linkedData = {
-            "@context": "http://schema.org/",
-            "@type": "WebApplication",
-            "name": title,
-            "alternateName": `${siteName}Status`,
-            "description": `An unofficial website to monitor ${siteName} status updates.`,
-            "softwareVersion": version,
-            "applicationCategory": "DeveloperApplication, BrowserApplication",
-            "browserRequirements": "Required HTML5 Support",
-            "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
-            "softwareRequirements": "Modern Web Browser",
-            "url": canonicalUrl,
-            "screenshot": screenshotUrl,
-            "image": imageUrl,
-            "thumbnailUrl": thumbnailUrl,
-            "author": [{
-                "@type": "Person",
-                "name": "Ryan Fredrickson",
-                "jobTitle": "Software Developer",
-                "url": "https://github.com/rtsfred3"
-            }],
-            "maintainer": {
-                "@type": "Person",
-                "name": "Ryan Fredrickson",
-                "jobTitle": "Software Developer",
-                "url": "https://github.com/rtsfred3"
-            },
-            "offers": {
-                "@type": "Offer",
-                "price": "0.00",
-                "priceCurrency": "USD"
-            }
-        };
-
-        if (imageUrl == null) {
-            delete linkedData['image'];
-        }
-
-        if (thumbnailUrl == null) {
-            delete linkedData['thumbnailUrl'];
-        }
-
-        if (screenshotUrl == null) {
-            delete linkedData['screenshot'];
-        }
-
-        return linkedData;
-    }
-
     static get StaticHTML() {
         return class {
             constructor(iconUrl, imgUrl, siteName, pathName, canonicalUrl = null, statuspageUrl = null, author = null, keywords=[], additionalDescription = null, title = null, description = null){
@@ -851,16 +809,6 @@ class StatuspageHTMLElements {
             }
 
             get isBot() { return this._isBot; }
-
-            get JsonLinkedData() {
-                return StatuspageHTMLElements.LinkedData(this.title, this.siteName, this.canonicalUrl);
-            }
-
-            get JsonLinkedDataTag() {
-                var jsonStr = JSON.stringify(this.JsonLinkedData);
-                var attrString = StatuspageHTMLElements.GenerateAttributes({ 'type': 'application/ld+json' });
-                return `<script ${attrString}>${jsonStr}</script>`;
-            }
             
             get LinkTagValues() {
                 return {
@@ -941,8 +889,6 @@ class StatuspageHTMLElements {
 
             get ScriptTags() {
                 var scriptTagElements = [];
-
-                scriptTagElements.push(this.JsonLinkedDataTag);
 
                 if (this.isBot) { return scriptTagElements; }
 
@@ -1737,11 +1683,7 @@ customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponent
 // var t = new StatuspageHTMLElements.StaticHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', null, StatuspageDictionary.PathNames.Status);
 // t.isBot = true;
 // t.siteName = 'Cloudflare';
+// t.statuspageUrl = 'https://www.cloudflarestatus.com';
 // t.statusPathName = StatuspageDictionary.PathNames.Index;
 // t.canonicalUrl = 'http://localhost:8888/GithubHTML/StatuspageHTML/';
-// console.log(t.HTML);
-
-// document.head.outerHTML = t.Head;
-
-// var tmp = StatuspageHTMLElements.LinkedData('Cloudflare Status', 'Cloudflare', 'https://spstat.us/amp/');
-// console.log(tmp);
+// console.log(t.AmpBody);
