@@ -395,7 +395,7 @@ class StatuspageHTMLElements {
      * @param {string} date 
      * @returns {HTMLDivElement}
      */
-    static MessageBodyElement(body, date){
+    static MessageBodyElement(body, date, name = null){
         var messageElement = document.createElement('div');
         messageElement.classList.add('message-body');
 
@@ -404,7 +404,7 @@ class StatuspageHTMLElements {
         dateElement.textContent = date;
 
         var messageBodyElement = document.createElement('div');
-        messageBodyElement.textContent = body;
+        messageBodyElement.textContent = name != null ? `${name}: ${body}` : body;
 
         messageElement.appendChild(messageBodyElement);
         messageElement.appendChild(dateElement);
@@ -463,7 +463,7 @@ class StatuspageHTMLElements {
 
         // Adding message elements to message element
         messageElement.appendChild(this.MessageStatusElement(currImpact));
-        messageElement.appendChild(this.MessageBodyElement(body, date));
+        messageElement.appendChild(this.MessageBodyElement(body, date, name));
 
         return messageElement;
     }
