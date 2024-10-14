@@ -42,11 +42,11 @@ body {
     height: 100vh;
 }
 
-.statuspage-status:not(.fullScreen) {
+statuspage-status, .statuspage-status:not(.fullScreen) {
     height: 240px;
 }
 
-.statuspage-status {
+statuspage-status, .statuspage-status {
     width: 100vw;
     text-align: center;
     justify-content: center;
@@ -56,27 +56,27 @@ body {
     font-size: 48pt;
 }
 
-.statuspage-status[data-status]::before {
+statuspage-status[data-status]::before, .statuspage-status[data-status]::before {
     content: attr(data-status);
     text-transform: uppercase;
     font-weight: bold;
     color: white;
 }
 
-.statuspage-status[data-status="none"]::before, .statuspage-status[data-status="good"]::before {
+statuspage-status[data-status="none"]::before, statuspage-status[data-status="good"]::before, .statuspage-status[data-status="none"]::before, .statuspage-status[data-status="good"]::before {
     content: var(--good-text);
 }
 
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
-    .statuspage-status { font-size: 12em; }
+    statuspage-status, .statuspage-status { font-size: 12em; }
 }
 
 @media only screen and (min-width: 2100px) and (min-height: 1100px) {
-    .statuspage-status { font-size: 16em; }
+    statuspage-status, .statuspage-status { font-size: 16em; }
 }
 
 @media only screen and (min-width: 3000px) and (min-height: 2000px) {
-    .statuspage-status { font-size: 16em; }
+    statuspage-status, .statuspage-status { font-size: 16em; }
 }
 
 [data-status="none"], [data-status="good"] {
