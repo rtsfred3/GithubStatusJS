@@ -1601,6 +1601,8 @@ class StatuspageWebComponents {
                 this.status = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
                 this.incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
 
+                this.incidents.previousDays = 365;
+
                 if (this.baseUrl != null) {
                     if (navigator.onLine) {
                         if (this.isSingleRequest) {
