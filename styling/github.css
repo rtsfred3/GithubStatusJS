@@ -38,6 +38,10 @@ body {
     font-family: arial;
 }
 
+[capitalize] {
+    text-transform: capitalize;
+}
+
 statuspage-component { height: 20vh; }
 
 statuspage-error, statuspage-unavailable, statuspage-loading, .statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {

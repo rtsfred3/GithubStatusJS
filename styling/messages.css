@@ -41,6 +41,11 @@
     content: attr(data-impact);
 }
 
+[data-impact-body]::before {
+    content: attr(data-impact-body);
+    text-transform: capitalize;
+}
+
 [data-impact="good"], [data-impact="error"] {
     width: 120px;
 }

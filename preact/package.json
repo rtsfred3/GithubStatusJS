@@ -11,7 +11,8 @@
 	"dependencies": {
 		"preact": "^10.22.0",
 		"preact-custom-element": "^4.3.0",
-		"preact-iso": "^2.6.3"
+		"preact-iso": "^2.6.3",
+		"preact-material-components": "^1.6.1"
 	},
 	"devDependencies": {
 		"wmr": "^3.8.0"
