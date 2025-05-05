@@ -1,13 +1,6 @@
-class StatuspageStaticHTML {
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} id 
-     * @param {string} content 
-     * @param {string} attr 
-     * @returns {HTMLMetaElement}
-     */
+import { StatuspageDictionary } from './StatuspageDictionary.esm.js';
+
+export default class StatuspageStaticHTML {
     static MetaTag(id, content, attr = "name") {
         var meta = document.createElement('meta');
         meta.setAttribute(attr, id);
@@ -15,27 +8,10 @@ class StatuspageStaticHTML {
         return meta;
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} id 
-     * @param {string} content 
-     * @param {string} attr 
-     * @returns {string}
-     */
     static MetaTagStr(id, content, attr = "name") {
         return this.TagStringAndAttributes('meta', { [attr]: id, "content": content });
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} id 
-     * @param {string} content 
-     * @returns {HTMLLinkElement}
-     */
     static LinkTag(id, content) {
         var link = document.createElement('link');
         link.rel = id;
@@ -46,14 +22,6 @@ class StatuspageStaticHTML {
         return link;
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} id 
-     * @param {string} content 
-     * @returns {string}
-     */
     static LinkTagStr(id, content) {
         var attr = { 'rel': id, "href": content };
 
@@ -62,104 +30,41 @@ class StatuspageStaticHTML {
         return this.TagStringAndAttributes('link', attr);
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} src 
-     * @returns {HTMLScriptElement}
-     */
     static ScriptTag(src) {
         var script = document.createElement('script');
         script.src = src;
         return script;
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} src 
-     * @returns {string}
-     */
     static ScriptSrcTagStr(src) {
         var attr = { 'src': src };
         return this.TagStringAndAttributes('script', attr);
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} jsBody 
-     * @returns {string}
-     */
     static ScriptBodyTagStr(jsBody) {
         return this.TagStringAndAttributes('script', null, jsBody);
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} styling 
-     * @returns {string}
-     */
     static EmbeddedStylesheet(styling) {
         return this.TagStringAndAttributes('style', null, styling);
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {object} attr attributes object
-     * @returns {string} string of attributes
-     */
     static GenerateAttributes(attr) {
         var attributes = Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`);
         return attributes.join(' ');
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} tag tag name
-     * @param {object} attr attributes object
-     * @returns {string} string of tag and attributes
-     */
     static TagStringAndAttributes(tag, attr = null, child = null) {
         var attrs = attr != null ? ` ${this.GenerateAttributes(attr)}` : '';
         var childStr = child != null ? child : '';
         return `<${tag}${attrs}>${childStr}</${tag}>`;
     }
 
-    /**
-     * @static
-     * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} shortlink 
-     * @param {string} text 
-     * @param {boolean} inNewTab defaults to `false`
-     * @returns {string}
-     */
     static CreateAnchorTagHTML(shortlink, text, inNewTab = false) {
         var attrs = inNewTab ? { 'href': shortlink } : { 'href': shortlink, 'target': '_blank' };
         return StatuspageStaticHTML.TagStringAndAttributes('a', attrs, text);
     }
 
-    /**
-     * 
-     * @param {string} imgUrl 
-     * @param {string} themeColor 
-     * @param {string} canonicalUrl 
-     * @param {string} author 
-     * @param {string[]} keywords 
-     * @param {string} title 
-     * @param {string} description 
-     * @returns {object}
-     */
     static MetaTagDictionary(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
         return {
             "author": author,
@@ -189,17 +94,6 @@ class StatuspageStaticHTML {
         };
     }
 
-    /**
-     * 
-     * @param {string} imgUrl 
-     * @param {string} themeColor 
-     * @param {string} canonicalUrl 
-     * @param {string} author 
-     * @param {string[]} keywords 
-     * @param {string} title 
-     * @param {string} description 
-     * @returns {string[]}
-     */
     static MetaTagsStrList(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
         var metaTagDictionary = this.MetaTagDictionary(imgUrl, themeColor, canonicalUrl, author, keywords, title, description);
 
@@ -214,15 +108,6 @@ class StatuspageStaticHTML {
         return metaTagElements;   
     }
 
-
-    /**
-     * 
-     * @param {string?} canonicalUrl 
-     * @param {string?} iconUrl 
-     * @param {string?} imgUrl 
-     * @param {string?} prefetchStatuspageUrl 
-     * @returns {object}
-     */
     static LinkTagDictionary(canonicalUrl = null, iconUrl = null, imgUrl = null, prefetchStatuspageUrl = null) {
         return {
             "canonical": canonicalUrl,
@@ -233,14 +118,6 @@ class StatuspageStaticHTML {
         };
     }
 
-    /**
-     * 
-     * @param {string?} canonicalUrl 
-     * @param {string?} iconUrl 
-     * @param {string?} imgUrl 
-     * @param {string?} prefetchStatuspageUrl 
-     * @returns {string[]}
-     */
     static LinkTagStrList(canonicalUrl = null, iconUrl = null, imgUrl = null, prefetchStatuspageUrl = null, stylesheets = []) {
         var linkTagDictionary = this.LinkTagDictionary(canonicalUrl, iconUrl, imgUrl, prefetchStatuspageUrl);
 
@@ -261,11 +138,6 @@ class StatuspageStaticHTML {
         return linkTagElements;
     }
 
-    /**
-     * 
-     * @param {string|string[]} head 
-     * @returns {string}
-     */
     static StaticHeadHTMLStr(head) {
         if (Array.isArray(head)) {
             return this.TagStringAndAttributes('head', null, `\n\t\t${head.join("\n\t\t")}\n\t`);
@@ -274,31 +146,14 @@ class StatuspageStaticHTML {
         }
     }
 
-    /**
-     * 
-     * @param {string} body 
-     * @returns {string}
-     */
     static StaticBodyHTMLStr(body) {
         return this.TagStringAndAttributes('body', { 'id': 'body' }, `\n\t\t${body}\n\t`);
     }
 
-    /**
-     * 
-     * @param {string} head 
-     * @param {string} body 
-     * @returns {string}
-     */
     static StaticBaseHTML(head, body) {
         return this.TagStringAndAttributes('html', null, `\n\t${head}\n\t${body}\n`);
     }
 
-    /**
-     * 
-     * @param {string} status 
-     * @param {boolean} fullScreen 
-     * @returns 
-     */
     static StatusHTML(status, fullScreen = false) {
         if (!(status in StatuspageDictionary.StatusEnums)) {
             status = StatuspageDictionary.StatusEnums.error;
@@ -327,21 +182,6 @@ class StatuspageStaticHTML {
         return this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, attrs);
     }
 
-    /**
-     * 
-     * @param {string} status 
-     * @param {string} iconUrl 
-     * @param {string} imgUrl 
-     * @param {string} siteName 
-     * @param {string} pathName 
-     * @param {string?} canonicalUrl 
-     * @param {string?} author 
-     * @param {string[]} keywords 
-     * @param {string?} title 
-     * @param {string?} description 
-     * @param {string?} styling 
-     * @returns 
-     */
     static StaticHTMLString(status, iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, useCustomTag = false) {
         if (!(status in StatuspageDictionary.StatusEnums)) {
             status = StatuspageDictionary.StatusEnums.error;
@@ -379,40 +219,12 @@ class StatuspageStaticHTML {
         return this.StaticBaseHTML(head, body);
     }
 
-    /**
-     * 
-     * @param {string} iconUrl 
-     * @param {string} imgUrl 
-     * @param {string} siteName 
-     * @param {string} pathName 
-     * @param {string?} canonicalUrl 
-     * @param {string?} author 
-     * @param {string[]} keywords 
-     * @param {string?} title 
-     * @param {string?} description 
-     * @param {string?} styling 
-     * @returns 
-     */
     static ErrorHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, useCustomTag = false) {
         if (title == null) { title = `${siteName} | Error`; }
 
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.error, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, useCustomTag);
     }
 
-    /**
-     * 
-     * @param {string} iconUrl 
-     * @param {string} imgUrl 
-     * @param {string} siteName 
-     * @param {string} pathName 
-     * @param {string?} canonicalUrl 
-     * @param {string?} author 
-     * @param {string[]} keywords 
-     * @param {string?} title 
-     * @param {string?} description 
-     * @param {string?} styling 
-     * @returns 
-     */
     static LoadingHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, useCustomTag = false) {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.loading, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, useCustomTag);
     }
@@ -648,14 +460,3 @@ class StatuspageStaticHTML {
         }
     }
 }
-
-// var styling = ':root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:var(--error);--incident-good:var(--good);--incident-none:#000000;--incident-minor:#F1C40F;--incident-major:#FF9900;--incident-critical:#990000;--incident-maintenance:var(--maintenance);--incident-error:var(--error);--good-text:"good";--none-text:var(--good-text);--minor-text:"minor";--major-text:"major";--critical-text:"critical";--maintenance-text:"maintenance";--loading-text:"loading";--unavailable-text:"unavailable";--error-text:"error"}*{margin:0;padding:0}body{font-family:arial}[capitalize]{text-transform:capitalize}.fullScreen,.statuspage-status:has(.fullScreen),:has(.fullScreen),[fullScreen],statuspage-error,statuspage-loading,statuspage-unavailable{height:100vh}.statuspage-status:not(.fullScreen),statuspage-component,statuspage-status{height:240px}.statuspage-status,statuspage-component,statuspage-error,statuspage-loading,statuspage-status,statuspage-unavailable{width:100vw;text-align:center;justify-content:center;align-items:center;display:block;display:flex;font-size:48pt}.statuspage-status[data-status]::before,statuspage-error::before,statuspage-loading::before,statuspage-status[data-status]::before,statuspage-unavailable::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}statuspage-component[data-message]::before{content:attr(data-message);font-weight:700;color:#fff}.statuspage-status[data-status=good]::before,.statuspage-status[data-status=none]::before,statuspage-status[data-status=good]::before,statuspage-status[data-status=none]::before{content:var(--good-text)}statuspage-loading::before{content:var(--loading-text)}statuspage-unavailable::before{content:var(--unavailable-text)}statuspage-error::before{content:var(--error-text)}@media only screen and (max-height:400px){.statuspage-status:not(.fullScreen),statuspage-status{height:45vh}}@media only screen and (max-width:320px) and (max-height:320px){.statuspage-status:not(.fullScreen),statuspage-status{height:100vh}}@media only screen and (min-width:2048px) and (min-height:1080px){.statuspage-status:not(.fullScreen),statuspage-status{height:30vh}.statuspage-status,statuspage-error,statuspage-loading,statuspage-status,statuspage-unavailable{font-size:12em}}@media only screen and (((min-width:2100px) and (min-height:1100px)) or ((min-width:3000px) and (min-height:2000px))){.statuspage-status:not(.fullScreen),statuspage-status{height:40vh}.statuspage-status,statuspage-error,statuspage-loading,statuspage-status,statuspage-unavailable{font-size:16em}}[data-status=good],[data-status=none]{background-color:var(--none)}[data-status=minor]{background-color:var(--minor)}[data-status=major]{background-color:var(--major)}[data-status=critical]{background-color:var(--critical)}[data-status=maintenance]{background-color:var(--maintenance);font-weight:500}[data-status=loading],[data-status=unavailable],statuspage-loading,statuspage-unavailable{background-color:var(--loading)}[data-status=error],statuspage-error{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){[data-status=maintenance]{font-size:36pt}}@media only screen and (min-width:251px) and (max-width:350px){[data-status=maintenance]{font-size:30pt}}@media only screen and (min-width:151px) and (max-width:250px){[data-status=maintenance]{font-size:20pt}}';
-
-// var statusHTMLString = StatuspageStaticHTML.StaticHTMLString(StatuspageDictionary.StatusEnums.good , 'https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', 'Cloudflare Status', 'https://spstat.us/', 'rtsfred3', [], null, 'Status of Cloudflare', styling);
-// console.log(statusHTMLString);
-
-// var error = StatuspageStaticHTML.ErrorHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', 'Cloudflare Status', 'https://spstat.us/', 'rtsfred3', [], null, 'Status of Cloudflare', styling);
-// console.log(error);
-
-// var loading = StatuspageStaticHTML.LoadingHTML('https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', 'Cloudflare Status', 'https://spstat.us/', 'rtsfred3', [], null, 'Status of Cloudflare', styling);
-// console.log(loading);

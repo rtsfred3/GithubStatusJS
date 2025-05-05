@@ -1,8 +1,27 @@
-export default class StatuspageDictionary {
+class StatuspageDictionary {
     static SiteNameValue = '{{SiteName}}';
     static AmpIndicatorValue = '{{indicator}}';
     static replaceableStringValue = '{}';
-    
+
+    // static get SiteNameValue() { return '{{SiteName}}'; }
+    // static get AmpIndicatorValue() { return '{{indicator}}'; }
+    // static get replaceableStringValue() { return '{}'; }
+
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} StatuspageApp
+     * @property {string} StatuspageError
+     * @property {string} StatuspageLoading
+     * @property {string} StatuspageUnavailable
+     * @property {string} StatuspageStatus
+     * @property {string} StatuspageComponent
+     * @property {string} StatuspageComponents
+     * @property {string} StatuspageIncidents
+     * @property {string} StatuspageSummary
+     */
     static get HTMLTags() {
         return Object.freeze({
             StatuspageApp: 'statuspage-app',
@@ -17,7 +36,17 @@ export default class StatuspageDictionary {
             StatusElement: 'status-element'
         });
     }
-    
+
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} template_title_index
+     * @property {string} template_title_status
+     * @property {string} template_title_components
+     * @property {string} template_descrisption
+     */
     static get StatuspageHTMLTemplates() {
         return Object.freeze({
             template_title_index: `(Unofficial) ${this.replaceableStringValue} Status`,
@@ -41,6 +70,27 @@ export default class StatuspageDictionary {
         });
     }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} good
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} unavailable
+     * @property {string} loading
+     * @property {string} none
+     * @property {string} resolved
+     * @property {string} operational
+     * @property {string} degraded_performance
+     * @property {string} partial_outage
+     * @property {string} major_outage
+     * @property {string} under_maintenance
+     */
     static get StatusEnums() {
         return Object.freeze({
             good: "good",
@@ -61,6 +111,26 @@ export default class StatuspageDictionary {
         });
     }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} none
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} unavailable
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} psa
+     * @property {string} good
+     * @property {string} under_maintenance
+     * @property {string} loading
+     * @property {string} operational
+     * @property {string} degraded_performance
+     * @property {string} partial_outage
+     */
     static get MetaColors() {
         return Object.freeze({
             [this.StatusEnums.none]: '#339966',
@@ -82,6 +152,23 @@ export default class StatuspageDictionary {
         });
     }
     
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} good
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     * @property {string} error
+     * @property {string} maintenance
+     * @property {string} unavailable
+     * @property {string} loading
+     * @property {string} resolved
+     * @property {string} none
+     * @property {string} operational
+     */
     static get IndicatorVals() {
         return Object.freeze({
             [this.StatusEnums.good]: this.StatusEnums.good,
@@ -104,6 +191,16 @@ export default class StatuspageDictionary {
         });
     }
     
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} resolved
+     * @property {string} minor
+     * @property {string} major
+     * @property {string} critical
+     */
     static get IndicatorMessages() {
         return Object.freeze({
             [this.StatusEnums.resolved]: this.StatusEnums.good,
@@ -113,6 +210,16 @@ export default class StatuspageDictionary {
         });
     }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} Index
+     * @property {string} Status
+     * @property {string} Components
+     * @property {string} Amp
+     */
     static get Paths() {
         return Object.freeze({
             [this.PathNames.Index]: '/',
@@ -122,6 +229,20 @@ export default class StatuspageDictionary {
         });
     }
 
+    /**
+     * @static
+     * @readonly
+     * @enum {string}
+     * 
+     * @property {string} Index
+     * @property {string} Status
+     * @property {string} Component
+     * @property {string} Components
+     * @property {string} Amp
+     * @property {string} Maintenance
+     * @property {string} Error
+     * @property {string} Description
+     */
     static get PathNames() {
         return Object.freeze({
             Index: 'Index',
