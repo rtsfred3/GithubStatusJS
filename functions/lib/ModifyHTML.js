@@ -11,9 +11,9 @@ import GetFileFromAssets from './GetFileFromAssets.js';
 
 import { BotChecker } from './BotChecker.js';
 
-import { StatuspageDictionary } from '../../modules/Statuspage.esm.js';
+import { StatuspageDictionary, StatuspageHTMLElements } from '../../modules/Statuspage.esm.js';
 
-export default async function ModifyHTML(context, _path){
+export default async function ModifyHTML(context, _path) {
     const db = context.env.CACHE_DB;
     const table = context.env.TABLE;
     const ClouldflareCache = TimeSpans.Week * 2;
@@ -129,7 +129,7 @@ export default async function ModifyHTML(context, _path){
     }
 
     if (path == StatuspageDictionary.PathNames.Index) {
-        html = html.replaceAll("{{Title}}", StatuspageDictionary.Titles.Index);
+        html = html.replaceAll("{{Title}}", StatuspageDictionary.StatuspageHTMLTemplates.template_title_index);
         html = html.replace("{{Body}}", "<statuspage-app data-url=\"{{StatuspageUrl}}\"></statuspage-app>");
     }
     else if (path == StatuspageDictionary.PathNames.Status) {

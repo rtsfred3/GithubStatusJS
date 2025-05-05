@@ -1,0 +1,12 @@
+{
+	"version": "1.0",
+	"type": "rich",
+	"provider_name": "(Unofficial) Cloudflare Status",
+	"provider_url": "https://spstat.com/",
+	"title": "(Unofficial) Cloudflare Status",
+	"author_name": "rtsfred3",
+	"author_url": "https://github.com/rtsfred3",
+	"html": "<div style=\"height: 100vh; width: 100vw; text-align: center; justify-content: center; align-items: center; display: block; display: flex; font-size: 48pt; font-weight: bold; color: white; background-color: #339966;\">Cloudflare</div>",
+    "width": 400,
+	"height": 400
+}

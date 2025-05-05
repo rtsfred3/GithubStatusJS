@@ -1,7 +1,8 @@
 {
-    "name": "GitHub Status",
+    "id": "us.hstat.g",
+    "name": "(Unofficial) GitHub Status",
     "short_name": "GHStatus",
-    "description": "A simple website to monitor GitHub status updates.",
+    "description": "A stripped website to monitor GitHub status updates.",
     "start_url": "https://g.hstat.us/",
     "display_override": ["standalone"],
     "display": "standalone",
@@ -50,6 +51,11 @@
             "type": "image/png"
         },
         {
+            "src": "https://spstat.us/img/maskable/144px.webp",
+            "sizes": "144x144",
+            "type": "image/webp"
+        },
+        {
             "src": "https://g.hstat.us/img/maskable/152px.png",
             "sizes": "152x152",
             "type": "image/png"
@@ -70,12 +76,24 @@
             "type": "image/png"
         },
         {
+            "src": "https://spstat.us/img/maskable/512px.webp",
+            "sizes": "512x512",
+            "type": "image/webp",
+            "purpose": "maskable"
+        },
+        {
             "src": "https://g.hstat.us/img/maskable/1024px.png",
             "sizes": "1024x1024",
             "type": "image/png"
+        },
+        {
+            "src": "https://spstat.us/img/maskable/1024px.webp",
+            "sizes": "1024x1024",
+            "type": "image/webp",
+            "purpose": "maskable"
         }
     ],
     
-    "categories": ["utilities", "productivity", "development", "developer tools"],
+    "categories": ["utilities", "productivity", "development", "developer", "developer tools"],
     "orientation": "portrait-primary"
 }

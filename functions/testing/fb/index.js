@@ -1,8 +1,10 @@
-import MainHtml from "../../../index.html";
+import StatuspageDictionary from '../../../modules/StatuspageDictionary.esm.js';
+import StatuspageStaticHTML from '../../../modules/StatuspageStaticHTML.esm.js';
 
-import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
+import GetFileFromAssets from '../../lib/GetFileFromAssets.js';
 
 import { BotChecker } from '../../lib/BotChecker.js';
+import { LoadingHTMLResp, ErrorHTMLResp, StatusHTMLResp } from '../../lib/StaticHTMLResp.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';
 
 import CapitalizeFirstLetter from '../../lib/CapitalizeFirstLetter.js';
@@ -90,12 +92,6 @@ async function ProcessContext(context) {
 
     console.log("-".repeat(50));
 
-    // console.log(context);
-    // console.log(context.request);
-    // console.log(context.request.cf);
-    // console.log(context.request.cf.verifiedBotCategory);
-    // console.log(context.request.cf.botManagement);
-
     if (botChecker.IsFacebookBot) {
         return await ProcessBotRequest(context, resp);
     } else {
@@ -104,9 +100,9 @@ async function ProcessContext(context) {
 }
 
 export async function onRequestGet(context) {
-    return ProcessContext(context);
+    return await LoadingHTMLResp(context);
 }
 
 export async function onRequestHead(context) {
-    return ProcessContext(context);
+    return await LoadingHTMLResp(context);
 }

@@ -21,6 +21,22 @@ if [ ! -d StatuspageHTML/output/amp/ ]; then mkdir StatuspageHTML/output/amp/; f
 if [ ! -d StatuspageHTML/output/preact/ ]; then mkdir StatuspageHTML/output/preact/; fi;
 if [ ! -d StatuspageHTML/output/static/ ]; then mkdir StatuspageHTML/output/static/; fi;
 
+setSiteName() {
+    sed -i '' -re "s/{{siteName}}/$2/g" $1
+}
+
+setStatus() {
+    sed -i '' -re "s/{{status}}/$2/g" $1
+}
+
+setThemeColor() {
+    sed -i '' -re "s/{{ThemeColor}}/$2/g" $1
+}
+
+setPath() {
+    sed -i '' -re "s/{{path}}/$2/g" $1
+}
+
 setVersionInline() {
     sed -i '' -re "s/{{_?version}}/$REGEXVERSION/g" $1
 }
@@ -36,15 +52,16 @@ setVersionAndRemoveCommentsInline() {
 
 setUrlAndTitleGitHub() {
     sed -i '' -re "s/spstat\.us/githubstat\.us/g" $1
-    sed -i '' -re "s/Cloudflare/GitHub/g" $1
+    setSiteName $1 GitHub
 }
 
 createTemplatedFile() {
     echo $1
     sed -re "s/-good\.(png|webp)/-$2\.\1/g" StatuspageHTML/tmp/static/index.template.html > $1
-    sed -i '' -re "s/{{status}}/$2/g" $1
-    sed -i '' -re "s/{{ThemeColor}}/$3/g" $1
-    sed -i '' -re "s/{{path}}/$4/g" $1
+    setSiteName $1 Cloudflare
+    setStatus $1 $2
+    setThemeColor $1 $3
+    setPath $1 $4
 }
 
 createTemplatedFileGithubStatus() {
@@ -68,6 +85,7 @@ createTemplatedFileGithubStatus autogen/static/index.minor.html minor "#DBAB09" 
 createTemplatedFileGithubStatus autogen/static/index.major.html major "#E25D10" ""
 createTemplatedFileGithubStatus autogen/static/index.critical.html critical "#DC3545" ""
 createTemplatedFileGithubStatus autogen/static/index.unavailable.html unavailable "#4F93BD" ""
+createTemplatedFileGithubStatus autogen/static/index.loading.html loading "#4F93BD" ""
 createTemplatedFileGithubStatus autogen/static/index.error.html error "#646464" ""
 createTemplatedFileGithubStatus autogen/static/index.maintenance.html maintenance "#0366D6" ""
 
@@ -81,8 +99,8 @@ echo "StatuspageHTML/amp/index.html";
 cat StatuspageHTML/amp/index.html > StatuspageHTML/tmp/amp/index.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/amp/index.html
 
-echo "preact/index.html";
-cat preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
+echo "StatuspageHTML/preact/index.html";
+cat StatuspageHTML/preact/index.html > StatuspageHTML/tmp/preact/index.tmp.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/preact/index.tmp.html
 
 echo "StatuspageHTML/sitemap.xml";
@@ -100,7 +118,7 @@ if [ -f StatuspageHTML/tmp/static/index.error.html ]; then cat StatuspageHTML/tm
 if [ -f StatuspageHTML/tmp/static/index.maintenance.html ]; then cat StatuspageHTML/tmp/static/index.maintenance.html > StatuspageHTML/output/static/index.maintenance.html; fi;
 
 if [ -f StatuspageHTML/tmp/amp/index.html ]; then cat StatuspageHTML/tmp/amp/index.html > StatuspageHTML/output/amp/index.html; fi;
-if [ -f preact/index.html ]; then cat preact/index.html > StatuspageHTML/output/preact/index.html; fi;
+if [ -f StatuspageHTML/tmp/preact/index.tmp.html ]; then cat StatuspageHTML/tmp/preact/index.tmp.html > StatuspageHTML/output/preact/index.html; fi;
 
 # --------------------------------------------------------------------------------------------------------------------------
 

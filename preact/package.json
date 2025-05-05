@@ -1,0 +1,20 @@
+{
+	"private": true,
+	"scripts": {
+		"start": "wmr",
+		"build": "cp ../styling/main.min.css public/main.min.css && wmr build --prerender",
+		"serve": "wmr serve"
+	},
+	"eslintConfig": {
+		"extends": "preact"
+	},
+	"dependencies": {
+		"preact": "^10.22.0",
+		"preact-custom-element": "^4.3.0",
+		"preact-iso": "^2.6.3",
+		"preact-material-components": "^1.6.1"
+	},
+	"devDependencies": {
+		"wmr": "^3.8.0"
+	}
+}
