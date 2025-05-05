@@ -1,7 +1,7 @@
-// import StatuspageDictionary from '../../../modules/StatuspageDictionary.esm.js';
-import StatuspageStaticHTML from '../../../modules/StatuspageStaticHTML.esm.js';
+// import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+import StatuspageStaticHTML from '../../modules/StatuspageStaticHTML.esm.js';
 
-import GetFileFromAssets from '../../lib/GetFileFromAssets.js';
+import GetFileFromAssets from './GetFileFromAssets.js';
 
 import { BotChecker } from './BotChecker.js';
 
