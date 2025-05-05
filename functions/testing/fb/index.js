@@ -1,10 +1,7 @@
-import MainHtml from "../../../index.html";
-
-import MainCss from "../../../styling/github.min.css";
-
-// import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
 import StatuspageDictionary from '../../../modules/StatuspageDictionary.esm.js';
 import StatuspageStaticHTML from '../../../modules/StatuspageStaticHTML.esm.js';
+
+import GetFileFromAssets from '../../lib/GetFileFromAssets.js';
 
 import { BotChecker } from '../../lib/BotChecker.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';
@@ -94,14 +91,6 @@ async function ProcessContext(context) {
 
     console.log("-".repeat(50));
 
-    // console.log(new DOMParser());
-
-    // console.log(context);
-    // console.log(context.request);
-    // console.log(context.request.cf);
-    // console.log(context.request.cf.verifiedBotCategory);
-    // console.log(context.request.cf.botManagement);
-
     if (botChecker.IsFacebookBot) {
         return await ProcessBotRequest(context, resp);
     } else {
@@ -110,13 +99,17 @@ async function ProcessContext(context) {
 }
 
 export async function onRequestGet(context) {
-    const styling = await GetFileFromAssets(context, "/styling/github.min.css");
+    const primaryStatusStyling = await GetFileFromAssets(context, "/styling/github.min.css");
+    const ampStatusStyling = await GetFileFromAssets(context, "/styling/github.min.css");
 
-    console.log(styling);
+    var botChecker = new BotChecker(context);
+    var isBot = botChecker.IsBot
+
+    const styling = isBot ? ampStatusStyling : primaryStatusStyling;
     
-    var errorHtml =  StatuspageStaticHTML.ErrorHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, true);
+    var html =  StatuspageStaticHTML.LoadingHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, isBot);
 
-    return new Response(errorHtml, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
+    return new Response(html, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 }
 
 export async function onRequestHead(context) {

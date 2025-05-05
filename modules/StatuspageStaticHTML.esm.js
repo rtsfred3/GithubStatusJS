@@ -182,9 +182,13 @@ export default class StatuspageStaticHTML {
         return this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, attrs);
     }
 
-    static StaticHTMLString(status, iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, useCustomTag = false) {
+    static StaticHTMLString(status, iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
         if (!(status in StatuspageDictionary.StatusEnums)) {
             status = StatuspageDictionary.StatusEnums.error;
+        }
+
+        if (isBot) {
+            useCustomTag = false;
         }
 
         if (title == null) { title = siteName; }
@@ -200,7 +204,7 @@ export default class StatuspageStaticHTML {
         
         headTagsList.push(this.TagStringAndAttributes('title', null, siteName));
 
-        if (styling != null) {
+        if (styling != null && !isBot) {
             headTagsList.push(this.EmbeddedStylesheet(styling));
         }
 
@@ -218,15 +222,15 @@ export default class StatuspageStaticHTML {
         
         return this.StaticBaseHTML(head, body);
     }
-
-    static ErrorHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, useCustomTag = false) {
+    
+    static ErrorHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
         if (title == null) { title = `${siteName} | Error`; }
 
-        return this.StaticHTMLString(StatuspageDictionary.StatusEnums.error, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, useCustomTag);
+        return this.StaticHTMLString(StatuspageDictionary.StatusEnums.error, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
-
-    static LoadingHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, useCustomTag = false) {
-        return this.StaticHTMLString(StatuspageDictionary.StatusEnums.loading, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, useCustomTag);
+    
+    static LoadingHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
+        return this.StaticHTMLString(StatuspageDictionary.StatusEnums.loading, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
 
     static get StaticHTML() {
