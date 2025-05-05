@@ -2,6 +2,7 @@
 import StatuspageStaticHTML from '../../modules/StatuspageStaticHTML.esm.js';
 
 import GetFileFromAssets from './GetFileFromAssets.js';
+import CustomHeaders from './CustomHeaders.js';
 
 import { BotChecker } from './BotChecker.js';
 
