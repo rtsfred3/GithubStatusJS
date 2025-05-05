@@ -1,4 +1,4 @@
-import { StatuspageDictionary } from './StatuspageDictionary.esm.js';
+import StatuspageDictionary from './StatuspageDictionary.esm.js';
 
 export default class StatuspageStaticHTML {
     static MetaTag(id, content, attr = "name") {
