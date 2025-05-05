@@ -113,7 +113,9 @@ export async function onRequestGet(context) {
     console.log(MainCss);
     var styling = MainCss;
     
-    return StatuspageStaticHTML.ErrorHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, true);
+    var errorHtml =  StatuspageStaticHTML.ErrorHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, true);
+
+    return new Response(errorHtml, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 
     // return ProcessContext(context);
 }
