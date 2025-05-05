@@ -415,10 +415,28 @@ class StatuspageStaticHTML {
      * @param {string?} title 
      * @param {string?} description 
      * @param {string?} styling 
-     * @returns 
+     * @returns {string}
      */
     static LoadingHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.loading, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
+    }
+
+    /**
+     * 
+     * @param {string} iconUrl 
+     * @param {string} imgUrl 
+     * @param {string} siteName 
+     * @param {string} pathName 
+     * @param {string?} canonicalUrl 
+     * @param {string?} author 
+     * @param {string[]} keywords 
+     * @param {string?} title 
+     * @param {string?} description 
+     * @param {string?} styling 
+     * @returns {string}
+     */
+    static MaintenanceHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
+        return this.StaticHTMLString(StatuspageDictionary.StatusEnums.maintenance, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
 
     static get StaticHTML() {

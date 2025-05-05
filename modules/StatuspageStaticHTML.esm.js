@@ -233,6 +233,10 @@ export default class StatuspageStaticHTML {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.loading, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
 
+    static MaintenanceHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
+        return this.StaticHTMLString(StatuspageDictionary.StatusEnums.maintenance, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
+    }
+
     static get StaticHTML() {
         return class {
             /**
