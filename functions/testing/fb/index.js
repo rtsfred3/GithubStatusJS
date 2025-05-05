@@ -1,10 +1,10 @@
 import MainHtml from "../../../index.html";
 
+import MainCss from "../../../styling/github.min.css";
+
 // import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
 import { StatuspageDictionary } from '../../../modules/StatuspageDictionary.esm.js';
 import { StatuspageStaticHTML } from '../../../modules/StatuspageStaticHTML.esm.js';
-
-
 
 import { BotChecker } from '../../lib/BotChecker.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';
@@ -110,7 +110,12 @@ async function ProcessContext(context) {
 }
 
 export async function onRequestGet(context) {
-    return ProcessContext(context);
+    console.log(MainCss);
+    var styling = MainCss;
+    
+    return StatuspageStaticHTML.ErrorHTML(iconUrl, 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, true);
+
+    // return ProcessContext(context);
 }
 
 export async function onRequestHead(context) {
