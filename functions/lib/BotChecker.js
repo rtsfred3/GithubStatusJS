@@ -6,8 +6,6 @@ class BotChecker {
         this.asOrg = this.context.request.cf.asOrganization;
         this.userAgent = this.context.request.headers.get('User-Agent');
 
-        console.log('asOrg', this.asOrg);
-
         this.botUserAgents = UserAgents.Google;
         UserAgents.Bing.forEach((x) => this.botUserAgents.push(x));
         UserAgents.DuckDuckGo.forEach((x) => this.botUserAgents.push(x));

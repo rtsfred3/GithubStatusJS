@@ -4,6 +4,7 @@ import StatuspageStaticHTML from '../../../modules/StatuspageStaticHTML.esm.js';
 import GetFileFromAssets from '../../lib/GetFileFromAssets.js';
 
 import { BotChecker } from '../../lib/BotChecker.js';
+import { LoadingHTMLResp, ErrorHTMLResp, StatusHTMLResp } from '../../lib/StaticHTMLResp.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';
 
 import CapitalizeFirstLetter from '../../lib/CapitalizeFirstLetter.js';
@@ -99,19 +100,23 @@ async function ProcessContext(context) {
 }
 
 export async function onRequestGet(context) {
-    const primaryStatusStyling = await GetFileFromAssets(context, "/styling/github.min.css");
-    const ampStatusStyling = await GetFileFromAssets(context, "/styling/github.min.css");
+    return await LoadingHTMLResp(context);
 
-    var botChecker = new BotChecker(context);
-    var isBot = botChecker.IsBot
+    // const primaryStatusStyling = await GetFileFromAssets(context, "/styling/github.min.css");
+    // const ampStatusStyling = await GetFileFromAssets(context, "/styling/github.min.css");
 
-    const styling = isBot ? ampStatusStyling : primaryStatusStyling;
+    // var botChecker = new BotChecker(context);
+    // var isBot = botChecker.IsBot;
+
+    // console.log('Is Requester a Facebook Bot?', botChecker.IsFacebookBot);
+
+    // const styling = isBot ? ampStatusStyling : primaryStatusStyling;
     
-    var html =  StatuspageStaticHTML.LoadingHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, isBot);
+    // var html =  StatuspageStaticHTML.LoadingHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, isBot);
 
-    return new Response(html, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
+    // return new Response(html, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 }
 
 export async function onRequestHead(context) {
-    return ProcessContext(context);
+    return await LoadingHTMLResp(context);
 }
