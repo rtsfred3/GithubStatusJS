@@ -3,8 +3,8 @@ import MainHtml from "../../../index.html";
 import MainCss from "../../../styling/github.min.css";
 
 // import { StatuspageDictionary } from '../../../modules/Statuspage.esm.js';
-import { StatuspageDictionary } from '../../../modules/StatuspageDictionary.esm.js';
-import { StatuspageStaticHTML } from '../../../modules/StatuspageStaticHTML.esm.js';
+import StatuspageDictionary from '../../../modules/StatuspageDictionary.esm.js';
+import StatuspageStaticHTML from '../../../modules/StatuspageStaticHTML.esm.js';
 
 import { BotChecker } from '../../lib/BotChecker.js';
 import CustomHeaders from '../../lib/CustomHeaders.js';
