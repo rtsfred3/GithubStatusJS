@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="application-name" content="(Unofficial) Cloudflare Status">
+        <meta name="theme-color" content="#646464">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#646464">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+
+        <style>
+            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:var(--error);--good-text:"good";--none-text:var(--good-text);--minor-text:"minor";--major-text:"major";--critical-text:"critical";--maintenance-text:"maintenance";--loading-text:"loading";--unavailable-text:"unavailable";--error-text:"error"}*{margin:0;padding:0}body{font-family:arial}statuspage-error,statuspage-loading{height:100vh;width:100vw;text-align:center;justify-content:center;align-items:center;display:block;display:flex;font-size:48pt}statuspage-error::before,statuspage-loading::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}statuspage-loading::before{content:var(--loading-text)}statuspage-error::before{content:var(--error-text)}@media only screen and (min-width:2048px) and (min-height:1080px){statuspage-error,statuspage-loading{font-size:12em}}@media only screen and (((min-width:2100px) and (min-height:1100px)) or ((min-width:3000px) and (min-height:2000px))){statuspage-error,statuspage-loading{font-size:16em}}statuspage-loading{background-color:var(--loading)}statuspage-error{background-color:var(--error)}
+        </style>
+
+        <title>(Unofficial) Cloudflare Status</title>
+    </head>
+    <body>
+        <statuspage-error></statuspage-error>
+    </body>
+</html>
