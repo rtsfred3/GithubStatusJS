@@ -38,7 +38,7 @@ body {
     font-family: arial;
 }
 
-.statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {
+statuspage-error, .statuspage-status:has(.fullScreen), :has(.fullScreen), .fullScreen, [fullScreen] {
     height: 100vh;
 }
 
@@ -46,7 +46,7 @@ statuspage-status, .statuspage-status:not(.fullScreen) {
     height: 240px;
 }
 
-statuspage-status, .statuspage-status {
+statuspage-status, statuspage-error, .statuspage-status {
     width: 100vw;
     text-align: center;
     justify-content: center;
@@ -54,6 +54,13 @@ statuspage-status, .statuspage-status {
     display: block;
     display: flex;
     font-size: 48pt;
+}
+
+statuspage-error::before {
+    content: var(--error-text);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
 }
 
 statuspage-status[data-status]::before, .statuspage-status[data-status]::before {
@@ -104,7 +111,7 @@ statuspage-status[data-status="none"]::before, statuspage-status[data-status="go
     background-color: var(--loading);
 }
 
-[data-status="error"] {
+statuspage-error, [data-status="error"] {
     background-color: var(--error);
 }
 
