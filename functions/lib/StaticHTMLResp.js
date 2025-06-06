@@ -20,7 +20,8 @@ async function LoadingHTMLResp(context) {
 
     const compressedHtml = await Compression.Compress(html);
 
-    console.log(Array.from(compressedHtml));
+    console.log(html.length);
+    console.log(compressedHtml.length);
 
     return new Response(html, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 }
