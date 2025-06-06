@@ -1,4 +1,4 @@
-class Compression {
+export default class Compression {
     static kbString = '0'.repeat(1000);
     static mbString = this.kbString.repeat(1000);
 
