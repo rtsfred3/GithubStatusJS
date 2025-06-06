@@ -20,11 +20,9 @@ async function LoadingHTMLResp(context) {
 
     const compressedHtml = await Compression.Compress(html);
 
-    var headers = CustomHeaders("text/html; charset=utf-8", 30);
+    console.log(Array.from(compressedHtml));
 
-    headers.set('Content-Encoding', 'gzip');
-
-    return new Response(compressedHtml, { headers: headers });
+    return new Response(html, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 }
 
 async function ErrorHTMLResp(context) {
