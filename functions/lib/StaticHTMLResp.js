@@ -1,6 +1,6 @@
 // import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 import StatuspageStaticHTML from '../../modules/StatuspageStaticHTML.esm.js';
-import Compression from '../../../modules/Compression.esm.js';
+import Compression from '../../modules/Compression.esm.js';
 
 import GetFileFromAssets from './GetFileFromAssets.js';
 import CustomHeaders from './CustomHeaders.js';
