@@ -35,7 +35,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0.0" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://spstat.us/" />
+        <!-- <link rel="canonical" href="https://spstat.us/" /> -->
         
         <link rel="icon" type="image/x-icon" href="https://spstat.us/favicon.ico">
         <link rel="apple-touch-icon" sizes="144x144" href="https://spstat.us/img/maskable/144px.png">
@@ -47,20 +47,9 @@
         <meta name="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
 
         <title>Compression Testing</title>
-
-        <!-- <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').then(function(reg) {
-                    console.log(reg);
-                }).catch(function(err) {
-                    console.log(err);
-                });
-            }
-        </script> -->
-
-        <!-- <link rel="stylesheet" href="../styling/github.amp.css"> -->
-        <!-- <link rel="stylesheet" href="../styling/github.css"> -->
-        <!-- <link rel="stylesheet" href="../styling/messages.css"> -->
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
         <script src="../js/StatuspageDictionary.js"></script>
         <script src="../js/StatuspageStaticHTML.js"></script>
@@ -76,73 +65,78 @@
         </style>
     </head>
     <body id="body">
-        <form name="uploadForm">
-            <input type="file" id="gzFiles" accept="application/gzip" />
-            <!-- <label for="statusElement">Status:</label> -->
-            <!-- <output id="statusElement">unavailable</output> -->
-            <div><pre id="fileBody"></pre></div>
-            <!-- <input type="submit" value="Send file" /> -->
-        </form>
+        <div class="container">
+            <form name="uploadForm">
+                <div class="mb-3">
+                    <label for="gzFiles" class="form-label">Default file input example</label>
+                    <input class="form-control" type="file" id="gzFiles" accept="application/gzip">
+                </div>
+            </form>
+        </div>
+
+        <div><pre id="fileBody"></pre></div>
+
+        <script>
+            function printFile(file) {
+                const reader = new FileReader();
+                // reader.onload = (evt) => {
+                //     console.log(evt.target.result);
+                // };
+                reader.onloadend = (evt) => {
+                    console.log('Completed Load');
+                }
+                reader.readAsText(file);
+
+                return reader.result;
+            }
+
+            // const host = document.querySelector("#body");
+            // const shadow = host.attachShadow({ mode: "open" });
+            
+            const statusWebComponent = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
+            // statusWebComponent.baseUrl = 'https://www.cloudflarestatus.com';
+            statusWebComponent.dataStatus = StatuspageDictionary.StatusEnums.good;
+            statusWebComponent.hidden = true;
+
+            // host.appendChild(statusWebComponent);
+
+            console.log(statusWebComponent.toString());
+        </script>
 
         <script>
             const uploadInput = document.getElementById("gzFiles");
             const statusElement = document.getElementById("statusElement");
             const fileBody = document.getElementById("fileBody");
 
-            const sizeableMbString = Compression.mbRandomString.repeat(10);
+            // var tmp = Array.from({ length: (4294967295 / (1000 * 1000)) }, (_) => 0);
 
-            let sampleTextFile = Compression.SampleTextFile(50, '_random.txt');
+            const sizeableMbString = Compression.mbString.repeat(50);
+            const mbStringFile = Compression.TextFile(sizeableMbString, '50MB_Repeat.txt');
+            // Compression.CompressFile(mbStringFile).then(f => Compression.DownloadFile(f));
+            // const mbStringFile = new File([sizeableMbString], '50MB_Repeat.txt', { 'type': 'text/plain' });
 
-            const compressedStringGzipAsync = Compression.Compress(sizeableMbString, 'gzip');
-            const compressedStringDeflateAsync = Compression.Compress(sizeableMbString, 'deflate');
+            let sampleTextFile1 = Compression.SampleTextFile(10);
+            let sampleTextFile2 = Compression.SampleTextFile(50);
+            // Compression.CompressFile(sampleTextFile1).then(f => Compression.DownloadFile(f));
+            // Compression.CompressFile(sampleTextFile2).then(f => Compression.DownloadFile(f));
 
-            compressedStringGzipAsync.then(t => console.log(t.length));
-            compressedStringDeflateAsync.then(t => console.log(t.length));
+            // const compressedStringGzipAsync = Compression.Compress(sizeableMbString, 'gzip');
+            // const compressedStringDeflateAsync = Compression.Compress(sizeableMbString, 'deflate');
 
-            const randString = Compression.kbRandomString;
-            var textFile = Compression.TextFile(randString, '_random.txt');
-
-            // Compression.DownloadFile(textFile);
-            // Compression.CompressFile(textFile).then(async (t) => {
-            //     const decompressedFile = await Compression.DecompressFile(t, '_random2.txt', 'text/plain');
-            //     Compression.DownloadFile(decompressedFile);
-            // })
+            // compressedStringGzipAsync.then(t => {
+            //     console.log(t.length);
+            //     Compression.DownloadFile(compressedFile);
+            // });
 
             // Compression.Compress('0'.repeat(1000 * 1000)).then(t => console.log(t));
 
             uploadInput.addEventListener("change", () => {
                 console.log(uploadInput.files);
                 for (const file of uploadInput.files) {
-                    file.arrayBuffer().then(ab => {
-                        console.log(ab)
-                        var uint8Arr = new Uint8Array(ab);
-                        // var hexArr = uint8Arr.toBase64();
-                        // var intArr = Array.from(uint8Arr);
-                        // var arr = intArr.map(t => t.toString(16));
-                        console.log(uint8Arr);
-                        // .toString(16);
-                    });
-
-                    const readable = file.stream().getReader().read();
-                    readable.then(r => console.log(r.value))
-
-                    Compression.DecompressFile(file, 'status.json', 'application/json', 'gzip').then(t => {
-                        // Compression.DownloadFile(t);
-                        t.text().then(text => {
-                            // let json = JSON.parse(text);
-
-                            let xmlFile = new File([text], 'fileName.xml', { 'type': 'text/plain' });
-                            Compression.DownloadFile(xmlFile);
-
-                            let xml = (new DOMParser()).parseFromString(text, 'text/xml');
-                            console.log(xml);
-
-                            fileBody.textContent = text;// JSON.stringify(json, null, 2);
-
-                            // if ('status' in json && 'indicator' in json['status']) {
-                            //     statusElement.textContent = json['status']['indicator'].toUpperCase();
-                            // }
-                        });
+                    Compression.DecompressFile(file).then(f => {
+                        console.log(f);
+                        // Compression.DownloadFile(f);
+                        f.text().then(text => { fileBody.innerText = text; });
                     });
                 }
             }, false);
