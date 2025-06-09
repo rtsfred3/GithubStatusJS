@@ -53,6 +53,7 @@
 
         <script src="../js/StatuspageDictionary.js"></script>
         <script src="../js/StatuspageStaticHTML.js"></script>
+        <script src="../js/Utils.js"></script>
         <script src="../js/Compression.js"></script>
         <script src="../js/StatuspageHTML.js"></script>
 
@@ -68,34 +69,30 @@
         <div class="container">
             <form name="uploadForm">
                 <div class="mb-3">
-                    <label for="gzFiles" class="form-label">Default file input example</label>
+                    <label for="uncompressedFile" class="form-label">File to Compress</label>
+                    <input class="form-control" type="file" id="uncompressedFile">
+                </div>
+            </form>
+
+            <form name="uploadForm">
+                <div class="mb-3">
+                    <label for="gzFiles" class="form-label">File to Decompress</label>
                     <input class="form-control" type="file" id="gzFiles" accept="application/gzip">
                 </div>
             </form>
         </div>
 
-        <div><pre id="fileBody"></pre></div>
+        <div>
+            <pre id="fileBody" style="white-space: pre-wrap; word-break: keep-all; overflow-x: auto;"></pre>
+        </div>
 
         <script>
-            function printFile(file) {
-                const reader = new FileReader();
-                // reader.onload = (evt) => {
-                //     console.log(evt.target.result);
-                // };
-                reader.onloadend = (evt) => {
-                    console.log('Completed Load');
-                }
-                reader.readAsText(file);
-
-                return reader.result;
-            }
-
             // const host = document.querySelector("#body");
             // const shadow = host.attachShadow({ mode: "open" });
             
             const statusWebComponent = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
-            // statusWebComponent.baseUrl = 'https://www.cloudflarestatus.com';
-            statusWebComponent.dataStatus = StatuspageDictionary.StatusEnums.good;
+            statusWebComponent.baseUrl = 'https://www.cloudflarestatus.com';
+            // statusWebComponent.dataStatus = StatuspageDictionary.StatusEnums.good;
             statusWebComponent.hidden = true;
 
             // host.appendChild(statusWebComponent);
@@ -104,9 +101,14 @@
         </script>
 
         <script>
-            const uploadInput = document.getElementById("gzFiles");
+            const uploadCompressedInput = document.getElementById("gzFiles");
+            const uploadUncompressedInput = document.getElementById("uncompressedFile");
             const statusElement = document.getElementById("statusElement");
             const fileBody = document.getElementById("fileBody");
+
+            const statuspageDictionaryObj = Utils.ToObject(StatuspageDictionary);
+            Compression.DownloadFile(Compression.JsonFile(statuspageDictionaryObj, 'StatuspageDictionary.json'));
+            Compression.CompressAndDownloadJson(statuspageDictionaryObj, 'StatuspageDictionary.json');
 
             // var tmp = Array.from({ length: (4294967295 / (1000 * 1000)) }, (_) => 0);
 
@@ -130,13 +132,18 @@
 
             // Compression.Compress('0'.repeat(1000 * 1000)).then(t => console.log(t));
 
-            uploadInput.addEventListener("change", () => {
-                console.log(uploadInput.files);
-                for (const file of uploadInput.files) {
-                    Compression.DecompressFile(file).then(f => {
-                        console.log(f);
-                        // Compression.DownloadFile(f);
-                        f.text().then(text => { fileBody.innerText = text; });
+            uploadUncompressedInput.addEventListener("change", () => {
+                for (const file of uploadUncompressedInput.files) {
+                    Compression.CompressFile(file).then(f => Compression.DownloadFile(f));
+                }
+            }, false);
+
+            uploadCompressedInput.addEventListener("change", () => {
+                for (const file of uploadCompressedInput.files) {
+                    Compression.DecompressFile(file, '').then(f => {
+                        f.text().then(text => { 
+                            fileBody.innerText = text;
+                        });
                     });
                 }
             }, false);

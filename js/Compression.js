@@ -53,6 +53,17 @@ class Compression {
 
     /**
      * 
+     * @param {object} jsonObject 
+     * @param {string} fileName 
+     * @param {string} encoding 
+     */
+    static CompressAndDownloadJson(jsonObject, fileName = 'compressed.json') {
+        const jsonFile = this.JsonFile(jsonObject, fileName);
+        this.CompressFile(jsonFile, 'gzip').then(f => this.DownloadFile(f));
+    }
+
+    /**
+     * 
      * @param {object} chunk 
      * @param {string} encoding 
      * @returns {Promise<Uint8Array>}
@@ -96,6 +107,10 @@ class Compression {
             fileName = file.name.replace('.gz', '');
         }
 
+        if (fileName.endsWith('.json')) {
+            mimeType = 'application/json';
+        }
+
         return new File([arrayBuffer], fileName, { 'type': mimeType });
     }
 
@@ -112,7 +127,7 @@ class Compression {
 
         while(!read.done) {
             uint8Array = this.concatUint8Arrays(uint8Array, read.value);
-            read = await reader.read();            
+            read = await reader.read();
         }
 
         return uint8Array.buffer;
