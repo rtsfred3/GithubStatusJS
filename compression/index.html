@@ -107,20 +107,24 @@
             const fileBody = document.getElementById("fileBody");
 
             const statuspageDictionaryObj = Utils.ToObject(StatuspageDictionary);
-            Compression.DownloadFile(Compression.JsonFile(statuspageDictionaryObj, 'StatuspageDictionary.json'));
-            Compression.CompressAndDownloadJson(statuspageDictionaryObj, 'StatuspageDictionary.json');
+            // Compression.DownloadFile(Compression.JsonFile(statuspageDictionaryObj, 'StatuspageDictionary.json'));
+            // Compression.CompressAndDownloadJson(statuspageDictionaryObj, 'StatuspageDictionary.json');
 
             // var tmp = Array.from({ length: (4294967295 / (1000 * 1000)) }, (_) => 0);
 
-            const sizeableMbString = Compression.mbString.repeat(50);
-            const mbStringFile = Compression.TextFile(sizeableMbString, '50MB_Repeat.txt');
+            const sizeableMbString = Utils.mbString.repeat(50);
+            const mbStringFile = Utils.TextFile(sizeableMbString, '50MB_Repeat.txt');
             // Compression.CompressFile(mbStringFile).then(f => Compression.DownloadFile(f));
             // const mbStringFile = new File([sizeableMbString], '50MB_Repeat.txt', { 'type': 'text/plain' });
 
-            let sampleTextFile1 = Compression.SampleTextFile(10);
-            let sampleTextFile2 = Compression.SampleTextFile(50);
-            // Compression.CompressFile(sampleTextFile1).then(f => Compression.DownloadFile(f));
+            let sampleTextFile1 = Utils.SampleTextFile(1);
+            let sampleTextFile2 = Utils.SampleTextFile(50);
+            Compression.CompressFile(sampleTextFile1).then(f => Compression.DownloadFile(f));
             // Compression.CompressFile(sampleTextFile2).then(f => Compression.DownloadFile(f));
+
+            // Compression.Compress(sizeableMbString).then(f => Compression.Decompress(f).then(t => console.log(t)));
+            // Compression.Compress(sizeableMbString).then(f => Compression.Decompress(f.buffer).then(t => console.log(t)));
+            // Compression.Compress(sizeableMbString).then(f => console.log(Compression.Decompress(f.buffer)));
 
             // const compressedStringGzipAsync = Compression.Compress(sizeableMbString, 'gzip');
             // const compressedStringDeflateAsync = Compression.Compress(sizeableMbString, 'deflate');

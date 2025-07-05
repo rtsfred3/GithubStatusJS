@@ -1,12 +1,7 @@
 export default class Compression {
-    static kbString = '0'.repeat(1000);
-    static mbString = this.kbString.repeat(1000);
-
-    static  kbRandomString = Array.from({length: 1000}, (_) => `${Math.floor(Math.random()*9)}`).join('');
-    static  mbRandomString = Array.from({length: 1000 * 1000}, (_) => `${Math.floor(Math.random()*9)}`).join('');
-
     /**
      * 
+     * @static
      * @param {Uint8Array} uint8Array1 
      * @param {Uint8Array} uint8Array2 
      * @returns {Uint8Array}
@@ -20,9 +15,11 @@ export default class Compression {
 
     /**
      * 
+     * @static
+     * @async
      * @param {string} str 
      * @param {string} encoding 
-     * @returns {Uint8Array}
+     * @returns {Promise<Uint8Array>}
      */
     static async Compress(str, encoding = "gzip") {
         const byteArray = (new TextEncoder()).encode(str);
@@ -31,6 +28,18 @@ export default class Compression {
 
     /**
      * 
+     * @param {Object} jsonObject 
+     * @param {string} encoding 
+     * @returns {Promise<Uint8Array>}
+     */
+    static async CompressJson(jsonObject, encoding = "gzip") {
+        return await this.Compress(JSON.stringify(jsonObject), encoding);
+    }
+
+    /**
+     * 
+     * @static
+     * @async
      * @param {File} file 
      * @param {string} encoding 
      * @returns {Promise<File>}
@@ -53,6 +62,21 @@ export default class Compression {
 
     /**
      * 
+     * @static
+     * @async
+     * @param {object} jsonObject 
+     * @param {string} fileName 
+     * @param {string} encoding 
+     */
+    static CompressAndDownloadJson(jsonObject, fileName = 'compressed.json') {
+        const jsonFile = this.JsonFile(jsonObject, fileName);
+        this.CompressFile(jsonFile, 'gzip').then(f => this.DownloadFile(f));
+    }
+
+    /**
+     * 
+     * @static
+     * @async
      * @param {object} chunk 
      * @param {string} encoding 
      * @returns {Promise<Uint8Array>}
@@ -69,20 +93,37 @@ export default class Compression {
 
     /**
      * 
-     * @param {Uint8Array} uint8Array 
+     * @static
+     * @async
+     * @param {Uint8Array|ArrayBuffer} compressedData 
      * @param {string} encoding 
      * @returns {Promise<string>}
      */
-    static async Decompress(uint8Array, encoding = "gzip") {
-        var compressedArrayBuffer = uint8Array.buffer;
+    static async Decompress(compressedData, encoding = "gzip") {
+        if (compressedData instanceof Uint8Array) {
+            compressedData = compressedData.buffer;
+        }
 
-        var arrayBuffer = await this.DecompressChunk(compressedArrayBuffer, encoding);
+        var arrayBuffer = await this.DecompressChunk(compressedData, encoding);
         
         return new TextDecoder().decode(arrayBuffer);
+    }
+    
+    /**
+     * 
+     * @param {Uint8Array|ArrayBuffer} compressedData 
+     * @param {string} encoding 
+     * @returns {Object}
+     */
+    static async DecompressJson(compressedData, encoding = "gzip") {
+        const jsonStr = await this.Decompress(compressedData, encoding);
+        return JSON.parse(jsonStr);
     }
 
     /**
      * 
+     * @static
+     * @async
      * @param {File} file 
      * @param {string} encoding 
      * @returns {Promise<File>}
@@ -93,7 +134,15 @@ export default class Compression {
         const arrayBuffer = await this.DecompressChunk(readableStream, encoding);
 
         if (fileName == undefined) {
-            fileName = file.name.replace('.gz', '');
+            if (fileName.endsWith('.gz')) {
+                fileName = file.name.replace('.gz', '');
+            } else {
+                fileName = 'output';
+            }
+        }
+
+        if (fileName.endsWith('.json')) {
+            mimeType = 'application/json';
         }
 
         return new File([arrayBuffer], fileName, { 'type': mimeType });
@@ -101,6 +150,8 @@ export default class Compression {
 
     /**
      * 
+     * @static
+     * @async
      * @param {ReadableStream} readableStream 
      * @returns {Promise<ReadableStream>}
      */
@@ -112,7 +163,7 @@ export default class Compression {
 
         while(!read.done) {
             uint8Array = this.concatUint8Arrays(uint8Array, read.value);
-            read = await reader.read();            
+            read = await reader.read();
         }
 
         return uint8Array.buffer;
@@ -120,6 +171,8 @@ export default class Compression {
 
     /**
      * 
+     * @static
+     * @async
      * @param {ArrayBuffer} chunk 
      * @param {string} encoding 
      * @returns {Promise<ArrayBuffer>}
@@ -135,6 +188,7 @@ export default class Compression {
 
     /**
      * 
+     * @static
      * @param {Array|ArrayBuffer|TypedArray|DataView|Blob} arrayBuffer 
      * @param {string} fileName 
      * @param {string} mimeType 
@@ -146,6 +200,7 @@ export default class Compression {
 
     /**
      * 
+     * @static
      * @param {File} file 
      */
     static DownloadFile(file) {
@@ -154,6 +209,7 @@ export default class Compression {
 
     /**
      * 
+     * @static
      * @param {Blob} blob 
      * @param {string} fileName 
      */
@@ -164,39 +220,5 @@ export default class Compression {
         document.body.appendChild(link);
         link.click();
         link.remove();
-    }
-
-    /**
-     * 
-     * @param {object} data 
-     * @param {string} fileName 
-     * @returns {File}
-     */
-    static JsonFile(data, fileName) {
-        return new File([JSON.stringify(data, null, 2)], fileName, { 'type': 'application/json' });
-    }
-
-    /**
-     * 
-     * @param {string} text 
-     * @param {string} fileName 
-     * @returns {File}
-     */
-    static TextFile(text, fileName) {
-        return new File([text], fileName, { 'type': 'text/plain' });
-    }
-
-    /**
-     * 
-     * @param {Number} sizeInMB 
-     * @param {string|undefined} fileName 
-     * @returns {File}
-     */
-    static SampleTextFile(sizeInMB, fileName = undefined) {
-        if (fileName == undefined) {
-            fileName = `${sizeInMB}MB.txt`
-        }
-
-        return this.TextFile(this.mbRandomString.repeat(parseInt(sizeInMB)), fileName);
     }
 }
