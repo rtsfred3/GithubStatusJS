@@ -8,17 +8,6 @@ class Utils {
     /**
      * 
      * @static
-     * @param {object} data 
-     * @param {string} fileName 
-     * @returns {File}
-     */
-    static JsonFile(data, fileName) {
-        return new File([JSON.stringify(data, null, 2)], fileName, { 'type': 'application/json' });
-    }
-
-    /**
-     * 
-     * @static
      * @param {string} text 
      * @param {string} fileName 
      * @returns {File}

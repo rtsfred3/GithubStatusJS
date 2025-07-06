@@ -221,4 +221,15 @@ class Compression {
         link.click();
         link.remove();
     }
+
+    /**
+     * 
+     * @static
+     * @param {object} data 
+     * @param {string} fileName 
+     * @returns {File}
+     */
+    static JsonFile(data, fileName) {
+        return new File([JSON.stringify(data, null, 2)], fileName, { 'type': 'application/json' });
+    }
 }
