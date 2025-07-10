@@ -3,10 +3,6 @@ class StatuspageDictionary {
     static AmpIndicatorValue = '{{indicator}}';
     static replaceableStringValue = '{}';
 
-    // static get SiteNameValue() { return '{{SiteName}}'; }
-    // static get AmpIndicatorValue() { return '{{indicator}}'; }
-    // static get replaceableStringValue() { return '{}'; }
-
     /**
      * @static
      * @readonly

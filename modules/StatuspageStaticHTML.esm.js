@@ -237,6 +237,10 @@ export default class StatuspageStaticHTML {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.maintenance, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
 
+    static Error = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.error, true);
+    static Loading = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.loading, true);
+    static Maintenance = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.maintenance, true);
+
     static get StaticHTML() {
         return class {
             /**
