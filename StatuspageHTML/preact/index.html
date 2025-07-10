@@ -33,8 +33,8 @@
 
         <!-- <link rel="stylesheet" href="../styling/main.min.css"> -->
 
-        <link rel="modulepreload" href="https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs">
-        <link rel="modulepreload" href="../../modules/Statuspage.esm.min.js">
+        <!-- <link rel="modulepreload" href="https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs"> -->
+        <!-- <link rel="modulepreload" href="../../modules/Statuspage.esm.min.js"> -->
         <!-- <link rel="modulepreload" href="https://spstat.us/{{versioxn}}/modules/Statuspage.esm.min.js"> -->
 
         <link rel="preload" href="../../styling/main.min.css" as="style" onload="this.rel='stylesheet'">
@@ -45,19 +45,29 @@
     <body>
         <script type="module">
             import { h, render } from 'https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs';
-            import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from '../../modules/Statuspage.esm.min.js';
+            // import { StatuspageHTMLElements, StatuspageWebComponents } from '../../modules/Statuspage.esm.min.js';
             // import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from 'https://spstat.us/{{version}}/modules/Statuspage.esm.min.js';
 
-            customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
-            customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
-            customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
-            customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
-            customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
-            customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
+            import StatuspageDictionary from 'https://esm.sh/gh/rtsfred3/GithubStatusJS@v0.2.73/modules/StatuspageDictionary.esm.js';
+            import StatuspageStaticHTML from 'https://esm.sh/gh/rtsfred3/GithubStatusJS@v0.2.73/modules/StatuspageStaticHTML.esm.js';
 
-            const app = h(StatuspageWebComponents.Status.is, { "data-url": "https://www.cloudflarestatus.com", "fullScreen": '' });
+            // customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
+            // customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
+            // customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
+            // customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
+            // customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
+            // customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
 
-            render(app, document.body);
+            var statusHtml = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.good, true);
+            // document.body.innerHTML = statusHtml;
+
+            console.log(statusHtml);
+
+            const appLoading = h(StatuspageDictionary.HTMLTags.StatuspageLoading, { });
+            // const app = h(StatuspageWebComponents.Status.is, { "data-url": "https://www.cloudflarestatus.com", "fullScreen": '' });
+
+            // render(app, document.body);
+            render(appLoading, document.body);
         </script>
     </body>
 </html>

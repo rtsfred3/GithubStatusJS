@@ -214,7 +214,6 @@ class StatuspageStaticHTML {
         return metaTagElements;   
     }
 
-
     /**
      * 
      * @param {string?} canonicalUrl 
@@ -315,6 +314,12 @@ class StatuspageStaticHTML {
         return this.TagStringAndAttributes('div', attrs);
     }
 
+    /**
+     * 
+     * @param {string} status 
+     * @param {boolean} fullScreen 
+     * @returns {string}
+     */
     static CustomStatusHTML(status, fullScreen = false) {
         if (!(status in StatuspageDictionary.StatusEnums)) {
             status = StatuspageDictionary.StatusEnums.error;
@@ -438,6 +443,12 @@ class StatuspageStaticHTML {
     static MaintenanceHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.maintenance, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
+    
+    static Error = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError, null);
+    static Loading = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError, null);
+    // static Error = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.error, true);
+    static Loading = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.loading, true);
+    static Maintenance = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.maintenance, true);
 
     static get StaticHTML() {
         return class {

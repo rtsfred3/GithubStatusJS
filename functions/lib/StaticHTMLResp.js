@@ -1,5 +1,6 @@
 // import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 import StatuspageStaticHTML from '../../modules/StatuspageStaticHTML.esm.js';
+import Compression from '../../modules/Compression.esm.js';
 
 import GetFileFromAssets from './GetFileFromAssets.js';
 import CustomHeaders from './CustomHeaders.js';
@@ -14,8 +15,13 @@ async function LoadingHTMLResp(context) {
     var isBot = botChecker.IsBot;
 
     const styling = isBot ? ampStatusStyling : primaryStatusStyling;
-
+    
     var html =  StatuspageStaticHTML.LoadingHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, isBot);
+
+    const compressedHtml = await Compression.Compress(html);
+
+    console.log(html.length);
+    console.log(compressedHtml.length);
 
     return new Response(html, { headers: CustomHeaders("text/html; charset=utf-8", 30) });
 }

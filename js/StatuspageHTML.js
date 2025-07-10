@@ -1322,7 +1322,7 @@ class StatuspageWebComponents {
                 this.incidents = document.createElement(StatuspageWebComponents.Incidents.is, { is: StatuspageWebComponents.Incidents.is });
 
                 this.incidents.previousDays = this.isSingleRequest ? 365 : 7;
-                this.incidents.showMaintenance = true;
+                this.incidents.showMaintenance = false;
 
                 if (this.baseUrl != null) {
                     if (navigator.onLine) {
