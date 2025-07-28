@@ -445,9 +445,9 @@ class StatuspageStaticHTML {
     }
     
     static Error = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError, null);
-    static Loading = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError, null);
+    static Loading = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageLoading, null);
     // static Error = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.error, true);
-    static Loading = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.loading, true);
+    // static Loading = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.loading, true);
     static Maintenance = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.maintenance, true);
 
     static get StaticHTML() {

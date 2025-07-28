@@ -11,6 +11,9 @@ Disallow: /lang/
 Disallow: /min/
 Disallow: /cache/
 Disallow: /api/
+Disallow: /api/*
+Disallow: /api/v1/*
+Disallow: /api/v2/*
 Disallow: /api/uploads/
 Disallow: /api/mstock/
 Disallow: /sso/

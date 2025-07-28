@@ -80,11 +80,43 @@
                     <input class="form-control" type="file" id="gzFiles" accept="application/gzip">
                 </div>
             </form>
+
+            <form name="decompressJson">
+                <div class="mb-3">
+                    <label for="gzJsonFiles" class="form-label">JSON File to Decompress</label>
+                    <input class="form-control" type="file" id="gzJsonFiles" accept="application/gzip">
+                </div>
+            </form>
         </div>
 
         <div>
             <pre id="fileBody" style="white-space: pre-wrap; word-break: keep-all; overflow-x: auto;"></pre>
         </div>
+
+        <div class="container">
+            <div id="downloadFileRandomButtons"></div>
+            <div id="downloadFileRepeatButtons"></div>
+        </div>
+
+        <script>
+            const downloadFileRandomButtons = document.getElementById('downloadFileRandomButtons');
+            const downloadFileRepeatButtons = document.getElementById('downloadFileRepeatButtons');
+
+            for (let fileSize of [32, 64, 128, 256, 512]) {
+                downloadFileRandomButtons.innerHTML += `<button type="button" class="btn btn-primary" onclick="downloadFile(${fileSize})">Download ${fileSize}MB Unique File</button>`;
+                downloadFileRepeatButtons.innerHTML += `<button type="button" class="btn btn-primary" onclick="downloadRepeatingFile(${fileSize})">Download ${fileSize}MB Repeat File</button>`;
+            }
+
+            function downloadFile(fileSizeInMb) {
+                let sampleTextFile = Utils.SampleTextFile(fileSizeInMb);
+                Compression.CompressFileAsync(sampleTextFile).then(f => Compression.DownloadFile(f));
+            }
+
+            function downloadRepeatingFile(fileSizeInMb) {
+                let sampleTextFile = Utils.SampleTextFileRepeating(fileSizeInMb);
+                Compression.CompressFileAsync(sampleTextFile).then(f => Compression.DownloadFile(f));
+            }
+        </script>
 
         <script>
             // const host = document.querySelector("#body");
@@ -92,7 +124,6 @@
             
             const statusWebComponent = document.createElement(StatuspageWebComponents.Status.is, { is: StatuspageWebComponents.Status.is });
             statusWebComponent.baseUrl = 'https://www.cloudflarestatus.com';
-            // statusWebComponent.dataStatus = StatuspageDictionary.StatusEnums.good;
             statusWebComponent.hidden = true;
 
             // host.appendChild(statusWebComponent);
@@ -101,30 +132,31 @@
         </script>
 
         <script>
+            const uploadCompressedJson = document.getElementById("gzJsonFiles");
             const uploadCompressedInput = document.getElementById("gzFiles");
             const uploadUncompressedInput = document.getElementById("uncompressedFile");
             const statusElement = document.getElementById("statusElement");
             const fileBody = document.getElementById("fileBody");
 
-            const statuspageDictionaryObj = Utils.ToObject(StatuspageDictionary);
+            // const statuspageDictionaryObj = Utils.ToObject(StatuspageDictionary);
             // Compression.DownloadFile(Compression.JsonFile(statuspageDictionaryObj, 'StatuspageDictionary.json'));
             // Compression.CompressAndDownloadJson(statuspageDictionaryObj, 'StatuspageDictionary.json');
 
             // var tmp = Array.from({ length: (4294967295 / (1000 * 1000)) }, (_) => 0);
 
-            const sizeableMbString = Utils.mbString.repeat(50);
-            const mbStringFile = Utils.TextFile(sizeableMbString, '50MB_Repeat.txt');
-            // Compression.CompressFile(mbStringFile).then(f => Compression.DownloadFile(f));
+            // const sizeableMbString = Utils.mbString.repeat(50);
+            // const mbStringFile = Utils.TextFile(sizeableMbString, '50MB_Repeat.txt');
+            // Compression.CompressFileAsync(mbStringFile).then(f => Compression.DownloadFile(f));
             // const mbStringFile = new File([sizeableMbString], '50MB_Repeat.txt', { 'type': 'text/plain' });
 
-            let sampleTextFile1 = Utils.SampleTextFile(1);
-            let sampleTextFile2 = Utils.SampleTextFile(50);
-            Compression.CompressFile(sampleTextFile1).then(f => Compression.DownloadFile(f));
-            // Compression.CompressFile(sampleTextFile2).then(f => Compression.DownloadFile(f));
+            // let sampleTextFile1 = Utils.SampleTextFile(1);
+            // let sampleTextFile2 = Utils.SampleTextFile(50);
+            // Compression.CompressFileAsync(sampleTextFile1).then(f => Compression.DownloadFile(f));
+            // Compression.CompressFileAsync(sampleTextFile2).then(f => Compression.DownloadFile(f));
 
-            // Compression.Compress(sizeableMbString).then(f => Compression.Decompress(f).then(t => console.log(t)));
-            // Compression.Compress(sizeableMbString).then(f => Compression.Decompress(f.buffer).then(t => console.log(t)));
-            // Compression.Compress(sizeableMbString).then(f => console.log(Compression.Decompress(f.buffer)));
+            // Compression.CompressAsync(sizeableMbString).then(f => Compression.Decompress(f).then(t => console.log(t)));
+            // Compression.CompressAsync(sizeableMbString).then(f => Compression.Decompress(f.buffer).then(t => console.log(t)));
+            // Compression.CompressAsync(sizeableMbString).then(f => console.log(Compression.Decompress(f.buffer)));
 
             // const compressedStringGzipAsync = Compression.Compress(sizeableMbString, 'gzip');
             // const compressedStringDeflateAsync = Compression.Compress(sizeableMbString, 'deflate');
@@ -136,21 +168,35 @@
 
             // Compression.Compress('0'.repeat(1000 * 1000)).then(t => console.log(t));
 
+            async function UploadCompressedJsonAsync() {
+                const jsonFile = await Compression.DecompressFileAsync(uploadCompressedJson.files[0], 'application/json');
+                const jsonFromFile = JSON.parse(await jsonFile.text());
+
+                localStorage.setItem(jsonFile.name, JSON.stringify(jsonFromFile));
+
+                console.log(jsonFromFile);
+
+                uploadCompressedJson.value = "";
+            }
+
             uploadUncompressedInput.addEventListener("change", () => {
                 for (const file of uploadUncompressedInput.files) {
-                    Compression.CompressFile(file).then(f => Compression.DownloadFile(f));
+                    Compression.CompressFileAsync(file).then(f => Compression.DownloadFile(f));
                 }
             }, false);
 
             uploadCompressedInput.addEventListener("change", () => {
                 for (const file of uploadCompressedInput.files) {
-                    Compression.DecompressFile(file, '').then(f => {
+                    Compression.DecompressFileAsync(file, '').then(f => {
                         f.text().then(text => { 
+                            console.log(text);
                             fileBody.innerText = text;
                         });
                     });
                 }
             }, false);
+
+            uploadCompressedJson.onchange = UploadCompressedJsonAsync;
         </script>
     </body>
 </html>
