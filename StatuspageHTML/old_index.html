@@ -8,6 +8,10 @@
         <meta name="theme-color" content="#53C68C">
         <meta name="description" content="A website to monitor a website monitored by Cloudflare Status.">
         <meta name="keywords" content="Cloudflare Statuspage, Cloudflare Status Page, Cloudflare Status, Statuspage, Status">
+        
+        <!-- <meta itemprop="name" content="(Unofficial) Cloudflare Status">
+        <meta itemprop="description" content="A website to monitor a website monitored by Cloudflare Status.">
+        <meta itemprop="image" content="http://spstat.us/img/status/lowres/min/status-min-good.png"> -->
 
         <meta property="og:site_name" content="(Unofficial) Cloudflare Statuspage">
         <meta property="og:title" content="(Unofficial) Cloudflare Status">
@@ -82,6 +86,16 @@
             }
         </script>
 
+        <!-- <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                    console.log(reg);
+                }).catch(function(err) {
+                    console.log(err);
+                });
+            }
+        </script> -->
+
         <!-- <link rel="stylesheet" href="../styling/github.amp.css"> -->
         <!-- <link rel="stylesheet" href="../styling/github.css"> -->
         <!-- <link rel="stylesheet" href="../styling/messages.css"> -->
@@ -108,5 +122,21 @@
     </head>
     <body id="body">
         <statuspage-app data-url="https://www.cloudflarestatus.com"></statuspage-app>
+
+        <!-- <statuspage-error></statuspage-error> -->
+        <!-- <statuspage-unavailable></statuspage-unavailable> -->
+        <!-- <statuspage-loading></statuspage-loading> -->
+        <!-- <div><statuspage-status status="maintenance" fullScreen></statuspage-status></div> -->
+        <!-- <div><statuspage-status status="none" fullScreen></statuspage-status></div> -->
+        <!-- <div><statuspage-status data-status="good" fullScreen></statuspage-status></div> -->
+        <!-- <div><statuspage-status status="none" fullScreen></statuspage-status></div> -->
+        <!-- <div><statuspage-status status="minor" fullScreen></statuspage-status></div> -->
+        <!-- <div><statuspage-status status="major" fullScreen></statuspage-status></div> -->
+        <!-- <div><statuspage-status status="critical" fullScreen></statuspage-status></div> -->
+        <!-- <statuspage-status data-url="https://www.cloudflarestatus.com" fullScreen></statuspage-status> -->
+        <!-- <statuspage-status data-url="https://www.cloudflarestatus.com" fullScreen autoRefresh></statuspage-status> -->
+        <!-- <statuspage-summary data-url="https://www.cloudflarestatus.com"></statuspage-summary> -->
+        <!-- <statuspage-summary data-url="https://www.cloudflarestatus.com" data-single-request="false"></statuspage-summary> -->
+        <!-- <statuspage-status data-url="https://www.cloudflarestatus.com/" data-status="loading" fullScreen></statuspage-status> -->
     </body>
 </html>

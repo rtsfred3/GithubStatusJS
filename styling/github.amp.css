@@ -10,15 +10,7 @@
     --error: #646464;
     --font: var(--error);
 
-    /* --incident-good: var(--good);
-    --incident-none: '#000000';
-    --incident-minor: '#F1C40F';
-    --incident-major: '#FF9900';
-    --incident-critical: '#990000';
-    --incident-maintenance: var(--maintenance);
-    --incident-error: var(--error); */
-
-    /* --good-text: "good";
+    --good-text: "good";
     --none-text: var(--good-text);
     --minor-text: "minor";
     --major-text: "major";
@@ -26,7 +18,7 @@
     --maintenance-text: "maintenance";
     --loading-text: "loading";
     --unavailable-text: "unavailable";
-    --error-text: "error"; */
+    --error-text: "error";
 }
 
 body {
@@ -71,7 +63,7 @@ statuspage-status[data-status]::before, .statuspage-status[data-status]::before 
 }
 
 statuspage-status[data-status="none"]::before, statuspage-status[data-status="good"]::before, .statuspage-status[data-status="none"]::before, .statuspage-status[data-status="good"]::before {
-    content: 'good'; /* var(--good-text); */
+    content: var(--good-text);
 }
 
 @media only screen and (min-width: 2048px) and (min-height: 1080px) {
