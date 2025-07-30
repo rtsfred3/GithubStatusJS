@@ -880,6 +880,8 @@ class StatuspageWebComponents {
 
                     if (this.hasAttribute('status')) { this.removeAttribute('status'); }
 
+                    if (!this.hasAttribute('data-status')) { this.setAttribute('data-status', this.dataset.status); }
+
                     StatuspageHTMLElements.SetThemeColor(this.data._status);
 
                     if (this.data._fullScreen == null) {
@@ -1034,8 +1036,13 @@ class StatuspageWebComponents {
 
             static toHTML(status, isFullScreen = false) {
                 var htmlElement = document.createElement(this.is, { is: this.is });
-                htmlElement.dataStatus = status;
-                htmlElement.fullScreen = isFullScreen;
+                
+                htmlElement.setAttribute('data-status', status);
+
+                if (isFullScreen) {
+                    htmlElement.setAttribute('fullScreen', '');
+                }
+                
                 return htmlElement;
             }
 

@@ -44,30 +44,20 @@
     </head>
     <body>
         <script type="module">
-            import { h, render } from 'https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs';
-            // import { StatuspageHTMLElements, StatuspageWebComponents } from '../../modules/Statuspage.esm.min.js';
-            // import { StatuspageDictionary, StatuspageHTMLElements, StatuspageWebComponents } from 'https://spstat.us/{{version}}/modules/Statuspage.esm.min.js';
+            const url = 'https://www.cloudflarestatus.com/api/v2/summary.json';
+            const json = await (await fetch(url)).json();
 
-            import StatuspageDictionary from 'https://esm.sh/gh/rtsfred3/GithubStatusJS@v0.2.73/modules/StatuspageDictionary.esm.js';
-            import StatuspageStaticHTML from 'https://esm.sh/gh/rtsfred3/GithubStatusJS@v0.2.73/modules/StatuspageStaticHTML.esm.js';
+            // import Compression from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.75/modules/Compression.esm.js';
 
-            // customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
-            // customElements.define(StatuspageWebComponents.AppLoading.is, StatuspageWebComponents.AppLoading);
-            // customElements.define(StatuspageWebComponents.Status.is, StatuspageWebComponents.Status);
-            // customElements.define(StatuspageWebComponents.Components.is, StatuspageWebComponents.Components);
-            // customElements.define(StatuspageWebComponents.Incidents.is, StatuspageWebComponents.Incidents);
-            // customElements.define(StatuspageWebComponents.Summary.is, StatuspageWebComponents.Summary);
+            import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+            import StatuspageWebComponents from '../../modules/StatuspageWebComponents.esm.js';
 
-            var statusHtml = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.good, true);
-            // document.body.innerHTML = statusHtml;
+            var statusIndicator = 'status' in json && 'indicator' in json.status
+                ? json.status.indicator
+                : StatuspageDictionary.StatusEnums.error;
 
-            console.log(statusHtml);
-
-            const appLoading = h(StatuspageDictionary.HTMLTags.StatuspageLoading, { });
-            // const app = h(StatuspageWebComponents.Status.is, { "data-url": "https://www.cloudflarestatus.com", "fullScreen": '' });
-
-            // render(app, document.body);
-            render(appLoading, document.body);
+            var statusToHtml = StatuspageWebComponents.Status.toHTML(statusIndicator, true);
+            document.body.appendChild(statusToHtml);
         </script>
     </body>
 </html>
