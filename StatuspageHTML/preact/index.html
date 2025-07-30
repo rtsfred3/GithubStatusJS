@@ -47,10 +47,13 @@
             const url = 'https://www.cloudflarestatus.com/api/v2/summary.json';
             const json = await (await fetch(url)).json();
 
-            // import Compression from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.75/modules/Compression.esm.js';
+            // import Compression from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/Compression.esm.js';
+            
+            import StatuspageDictionary from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/StatuspageDictionary.esm.js';
+            import StatuspageWebComponents from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/StatuspageWebComponents.esm.js';
 
-            import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
-            import StatuspageWebComponents from '../../modules/StatuspageWebComponents.esm.js';
+            // import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+            // import StatuspageWebComponents from '../../modules/StatuspageWebComponents.esm.js';
 
             var statusIndicator = 'status' in json && 'indicator' in json.status
                 ? json.status.indicator
