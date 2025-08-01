@@ -3,64 +3,77 @@
     <head>
         <meta charset="utf-8">
 
-        <meta name="author" content="rtsfred3">
-        <meta name="application-name" content="(Unofficial) Cloudflare Status | Preact">
-        <meta name="theme-color" content="#339966">
-        <meta name="description" content="Testing page for new features or ideas in Cloudflare Status.">
-        <meta name="keywords" content="CloudflareStatus, Cloudflare Status, Cloudflare, Status, Mini Version">
+        <!-- <meta name="author" content="rtsfred3"> -->
+        <!-- <meta name="application-name" content="(Unofficial) Cloudflare Status | Preact"> -->
+        <!-- <meta name="theme-color" content="#339966"> -->
+        <!-- <meta name="description" content="Testing page for new features or ideas in Cloudflare Status."> -->
+        <!-- <meta name="keywords" content="CloudflareStatus, Cloudflare Status, Cloudflare, Status, Mini Version"> -->
 
-        <meta property="og:site_name" content="(Unofficial) Cloudflare Status">
-        <meta property="og:title" content="(Unofficial) Cloudflare Status | Preact">
-        <meta property="og:description" content="Testing page for new features or ideas in Cloudflare Status.">
-        <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
-        <meta property="og:type" content="website">
-        <meta property="og:locale" content="en_US">
-        <meta property="og:url" content="https://spstat.us/preact/">
+        <!-- <meta property="og:site_name" content="(Unofficial) Cloudflare Status"> -->
+        <!-- <meta property="og:title" content="(Unofficial) Cloudflare Status | Preact"> -->
+        <!-- <meta property="og:description" content="Testing page for new features or ideas in Cloudflare Status."> -->
+        <!-- <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png"> -->
+        <!-- <meta property="og:type" content="website"> -->
+        <!-- <meta property="og:locale" content="en_US"> -->
+        <!-- <meta property="og:url" content="https://spstat.us/preact/"> -->
 
-        <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="(Unofficial) Cloudflare Status | Preact">
-        <meta name="twitter:description" content="Testing page for new features or ideas in Cloudflare Status.">
-        <meta name="twitter:image:src" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
+        <!-- <meta name="twitter:card" content="summary"> -->
+        <!-- <meta name="twitter:title" content="(Unofficial) Cloudflare Status | Preact"> -->
+        <!-- <meta name="twitter:description" content="Testing page for new features or ideas in Cloudflare Status."> -->
+        <!-- <meta name="twitter:image:src" content="https://spstat.us/img/status/lowres/min/status-min-good.png"> -->
 
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status | Preact">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-        <meta name="HandheldFriendly" content="true" />
+        <!-- <meta name="mobile-web-app-capable" content="yes"> -->
+        <!-- <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status | Preact"> -->
+        <!-- <meta name="apple-mobile-web-app-capable" content="yes"> -->
+        <!-- <meta name="apple-mobile-web-app-status-bar-style" content="#339966"> -->
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" /> -->
+        <!-- <meta name="HandheldFriendly" content="true" /> -->
+
+        <title>(Unofficial) Statuspage Status</title>
 
         <link rel="canonical" href="https://spstat.us/preact/" />
 
-        <!-- <link rel="stylesheet" href="../styling/main.min.css"> -->
-
-        <!-- <link rel="modulepreload" href="https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs"> -->
-        <!-- <link rel="modulepreload" href="../../modules/Statuspage.esm.min.js"> -->
-        <!-- <link rel="modulepreload" href="https://spstat.us/{{versioxn}}/modules/Statuspage.esm.min.js"> -->
-
-        <link rel="preload" href="../../styling/main.min.css" as="style" onload="this.rel='stylesheet'">
-        <!-- <link rel="preload" href="https://spstat.us/{{version}}/styling/main.min.css" as="style" onload="this.rel='stylesheet'"> -->
-
-        <title>(Unofficial) Cloudflare Status | Preact</title>
+        <style>
+            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:var(--error);--good-text:"good";--none-text:var(--good-text);--minor-text:"minor";--major-text:"major";--critical-text:"critical";--maintenance-text:"maintenance";--loading-text:"loading";--unavailable-text:"unavailable";--error-text:"error"}body{margin:0;padding:0;font-family:arial}.fullScreen,.statuspage-status:has(.fullScreen),:has(.fullScreen),[fullScreen],statuspage-error{height:100vh}.statuspage-status:not(.fullScreen),statuspage-status{height:240px}.statuspage-status,statuspage-error,statuspage-status{width:100vw;text-align:center;justify-content:center;align-items:center;display:block;display:flex;font-size:48pt}statuspage-error::before{content:var(--error-text);text-transform:uppercase;font-weight:700;color:#fff}.statuspage-status[data-status]::before,statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}.statuspage-status[data-status=good]::before,.statuspage-status[data-status=none]::before,statuspage-status[data-status=good]::before,statuspage-status[data-status=none]::before{content:var(--good-text)}@media only screen and (min-width:2048px) and (min-height:1080px){.statuspage-status,statuspage-status{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.statuspage-status,statuspage-status{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.statuspage-status,statuspage-status{font-size:16em}}[data-status=good],[data-status=none]{background-color:var(--none)}[data-status=minor]{background-color:var(--minor)}[data-status=major]{background-color:var(--major)}[data-status=critical]{background-color:var(--critical)}[data-status=maintenance]{background-color:var(--maintenance);font-weight:500}[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}[data-status=error],statuspage-error{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){[data-status=maintenance]{font-size:36pt}}@media only screen and (min-width:251px) and (max-width:350px){[data-status=maintenance]{font-size:30pt}}@media only screen and (min-width:151px) and (max-width:250px){[data-status=maintenance]{font-size:20pt}}
+        </style>
     </head>
     <body>
-        <script type="module">
-            const url = 'https://www.cloudflarestatus.com/api/v2/summary.json';
-            const json = await (await fetch(url)).json();
-
-            // import Compression from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/Compression.esm.js';
-            
-            import StatuspageDictionary from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/StatuspageDictionary.esm.js';
-            import StatuspageWebComponents from 'https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/StatuspageWebComponents.esm.js';
-
-            // import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
-            // import StatuspageWebComponents from '../../modules/StatuspageWebComponents.esm.js';
-
-            var statusIndicator = 'status' in json && 'indicator' in json.status
-                ? json.status.indicator
-                : StatuspageDictionary.StatusEnums.error;
-
-            var statusToHtml = StatuspageWebComponents.Status.toHTML(statusIndicator, true);
-            document.body.appendChild(statusToHtml);
+        <script type="importmap">
+        {
+            "imports": {
+                "Compression.esm.js": "../../modules/Compression.min.esm.js",
+                "StatuspageDictionary.esm.js": "../../modules/StatuspageDictionary.esm.js",
+                "StatuspageStaticHTML.esm.js": "../../modules/StatuspageStaticHTML.esm.js",
+                "StatuspageWebComponents.esm.js": "../../modules/StatuspageWebComponents.esm.js",
+                "StatuspageHTMLElements.esm.js": "../../modules/StatuspageHTMLElements.esm.js",
+                "github.amp.css": "../../styling/github.amp.min.css",
+                "preact.mjs": "https://esm.sh/stable/preact@10.20.2/es2022/preact.mjs"
+            }
+        }
         </script>
+
+        <!-- <script type="importmap">
+        {
+            "imports": {
+                "Compression.esm.js": "https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/Compression.min.esm.js",
+                "StatuspageDictionary.esm.js": "https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/StatuspageDictionary.min.esm.js",
+                "StatuspageStaticHTML.esm.js": "https://cdn.jsdelivr.net/gh/rtsfred3/GithubStatusJS@v0.2.76/modules/StatuspageStaticHTML.min.esm.js"
+            }
+        }
+        </script> -->
+
+        <!-- <script type="module">
+            import { createElement, render } from 'preact.mjs';
+            
+            import StatuspageDictionary from 'StatuspageDictionary.esm.js';
+            import StatuspageStaticHTML from 'StatuspageStaticHTML.esm.js';
+            import StatuspageWebComponents from 'StatuspageWebComponents.esm.js';
+
+            // document.createElement(StatuspageDictionary.HTMLTags.StatuspageStatus)
+
+            var vdom = createElement(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-url': 'https://www.cloudflarestatus.com/' }, '');
+        </script> -->
+
+        <script type="module" src="../../modules/StatuspagePreact.esm.js"></script>
     </body>
 </html>

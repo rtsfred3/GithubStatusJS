@@ -188,6 +188,31 @@ class StatuspageStaticHTML {
             "HandheldFriendly": "true",
         };
     }
+    
+    /**
+     * 
+     * @param {string} imgUrl 
+     * @param {string} themeColor 
+     * @param {string} canonicalUrl 
+     * @param {string} author 
+     * @param {string[]} keywords 
+     * @param {string} title 
+     * @param {string} description 
+     * @returns {string[]}
+     */
+    static MetaTagsList(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
+        var metaTagDictionary = this.MetaTagDictionary(imgUrl, themeColor, canonicalUrl, author, keywords, title, description);
+
+        var metaTagElements = [];
+
+        for(const [k, v] of Object.entries(metaTagDictionary)){
+            if (v != null) {
+                metaTagElements.push(this.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+            }
+        }
+
+        return metaTagElements;   
+    }
 
     /**
      * 

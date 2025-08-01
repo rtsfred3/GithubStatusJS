@@ -94,6 +94,20 @@ export default class StatuspageStaticHTML {
         };
     }
 
+    static MetaTagsList(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
+        var metaTagDictionary = this.MetaTagDictionary(imgUrl, themeColor, canonicalUrl, author, keywords, title, description);
+
+        var metaTagElements = [];
+
+        for(const [k, v] of Object.entries(metaTagDictionary)){
+            if (v != null) {
+                metaTagElements.push(this.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+            }
+        }
+
+        return metaTagElements;   
+    }
+
     static MetaTagsStrList(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
         var metaTagDictionary = this.MetaTagDictionary(imgUrl, themeColor, canonicalUrl, author, keywords, title, description);
 

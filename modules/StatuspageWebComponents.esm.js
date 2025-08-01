@@ -1,4 +1,5 @@
-import StatuspageDictionary from './StatuspageDictionary.esm.js';
+import StatuspageDictionary from 'StatuspageDictionary.esm.js';
+import StatuspageHTMLElements from 'StatuspageHTMLElements.esm.js';
 
 export default class StatuspageWebComponents {
     static get CustomHTMLElement() {
