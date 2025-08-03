@@ -50,8 +50,7 @@ export default class StatuspageStaticHTML {
     }
 
     static GenerateAttributes(attr) {
-        var attributes = Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`);
-        return attributes.join(' ');
+        return Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`).join(' ');
     }
 
     static TagStringAndAttributes(tag, attr = null, child = null) {

@@ -74,6 +74,14 @@
             var vdom = createElement(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-url': 'https://www.cloudflarestatus.com/' }, '');
         </script> -->
 
-        <script type="module" src="../../modules/StatuspagePreact.esm.js"></script>
+        <!-- <script type="module" src="../../modules/StatuspagePreact.esm.js"></script> -->
+        <script type="module">
+            import Compression from 'https://esm.sh/gh/rtsfred3/GithubStatusJS@v0.2.79/es2022/modules/Compression.esm.mjs';
+
+            const resp = await fetch('https://www.cloudflarestatus.com/api/v2/summary.json');//.then(e => e.json().then(json => Compression.CompressAndDownloadJson(json, 'output.json')))
+            const json = await resp.json();
+            Compression.CompressAndDownloadJson(json, 'output.json');
+            console.log();
+        </script>
     </body>
 </html>

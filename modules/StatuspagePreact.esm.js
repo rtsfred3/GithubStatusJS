@@ -1,11 +1,7 @@
-import StatuspageDictionary from 'StatuspageDictionary.esm.js';
-import StatuspageStaticHTML from 'StatuspageStaticHTML.esm.js';
-import StatuspageWebComponents from 'StatuspageWebComponents.esm.js';
-import StatuspageHTMLElements from 'StatuspageHTMLElements.esm.js';
-
-import { createElement, render } from 'preact.mjs';
-
-customElements.define(StatuspageWebComponents.App.is, StatuspageWebComponents.App);
+import StatuspageDictionary from './StatuspageDictionary.esm.js';
+import StatuspageStaticHTML from './StatuspageStaticHTML.esm.js';
+// import sheet from '../styling/github.static.min.css' with { type: 'css' };
+import sheet from 'github.amp.css' with { type: 'css' };
 
 class StatuspagePreact {
     get MetaTagsDict() {
@@ -37,25 +33,16 @@ class StatuspagePreact {
         };
     }
 
-    get MetaTags() {
-        var arr = [];
-        
-        for (const [key, value] of Object.entries(this.MetaTagsDict)) {
-            var attrs = {};// name: key, content: value };
+    get MetaTagAttributes() {
+        return Object.entries(this.MetaTagsDict).map(([key, value]) => {
+            var attrs = { [key.startsWith('og:') ? 'property' : 'name']: key, content: value };
+            var attributes = Object.entries(attrs).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`);
+            return attributes.join(' ');
+        });
+    }
 
-            if (key.startsWith('og:')) {
-                attrs['property'] = key;
-            } else {
-                attrs['name'] = key;
-            }
-            
-            attrs['content'] = value;
-
-            var tag = createElement('meta', attrs, '');
-            arr.push(tag);
-        }
-
-        return arr;
+    get MetaTagStrings() {
+        return ['<meta charset="utf-8">'].concat(this.MetaTagAttributes.map(e => `<meta ${e}>`));
     }
 
     get description() {
@@ -68,26 +55,24 @@ class StatuspagePreact {
 
     get themeColor() { return this.status != null ? StatuspageDictionary.MetaColors[this.status]  : StatuspageDictionary.MetaColors.loading; }
 
-    get head() {
-        var metaTagsList = this.MetaTags;
-
-        metaTagsList.push(createElement('title', {}, this.title));
-
-        return metaTagsList;
-
-        // return createElement('head', {}, metaTagsList);
+    get cssStr() {
+        return [...sheet.cssRules].map(e => e.cssText).join('');
     }
 
-    get body() {
-        var child = '';
+    get headStr() {
+        return this.MetaTagStrings.concat(`<title>${this.title}</title>`).concat(`<style>${this.cssStr}</style>`).join('');
+    }
 
-        if (this.status != null) {
-            child = createElement(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': this.status,  fullScreen: '' }, '');
-        }
+    get bodyStr() {
+        return StatuspageStaticHTML.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': this.status, fullScreen: '' });
+    }
 
-        return child;
-        
-        // return createElement('body', {}, child);
+    get bodyHTML() {
+        return `<body id="body">${this.bodyStr}</body>`;
+    }
+
+    get statusHTML() {
+        return `<!DOCTYPE html><html lang="en"><head>${this.headStr}</head><body>${this.bodyStr}</body></html>`;
     }
 
     constructor(baseUrl) {
@@ -97,7 +82,7 @@ class StatuspagePreact {
         this.author = null;
         this.keywords = [];
 
-        this.status = null;
+        this.status = StatuspageDictionary.StatusEnums.loading;
 
         this.fetchStatuspageData(baseUrl);
     }
@@ -110,38 +95,10 @@ class StatuspagePreact {
             ? json.status.indicator
             : StatuspageDictionary.StatusEnums.error;
     }
-
-    renderHTML() {
-        // while (this.status == null) { }
-        render(this.head, document.head);
-        render(this.body, document.body);
-    }
-
-    static updateTitle(siteName) {
-        document.title = `${StatuspageDictionary.StatuspageHTMLTemplates.template_title_index} | Preact`.replace(StatuspageDictionary.replaceableStringValue, siteName);
-    }
-
-    static async renderStatus(baseUrl) {
-        const json = await (await fetch(`${baseUrl}api/v2/status.json`)).json();
-
-        this.updateTitle(json.page.name);
-
-        var status = 'status' in json && 'indicator' in json.status
-            ? json.status.indicator
-            : StatuspageDictionary.StatusEnums.error;
-
-        var vdom = createElement(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': status,  fullScreen: '' }, '');
-        render(vdom, document.body);
-    }
 }
-
-// var status = StatuspageWebComponents.Status.toHTML(StatuspageDictionary.StatusEnums.good, true);
-// document.body.appendChild(status);
-// console.log(status);
 
 const baseUrl = 'https://www.cloudflarestatus.com/';
 const route = 'api/v2/status.json';
-// StatuspagePreact.renderStatus(baseUrl);
 
 var preact = new StatuspagePreact(baseUrl);
 
@@ -150,54 +107,13 @@ preact.canonicalUrl = 'https://spstat.us/';
 preact.imgUrl = 'https://spstat.us/img/maskable/144px.webp';
 // preact.fetchStatuspageData(baseUrl);
 
-console.log(preact);
-console.log(preact.status);
-console.log(preact.MetaTags);
+document.head.innerHTML = preact.headStr;
+document.body.outerHTML = preact.bodyHTML;
 
-// function RemoveCommentsAndFormatFromHTMLCollection(htmlCollection) {
-//     return Array.from(htmlCollection)
-//         .filter((node) => node.nodeType != document.COMMENT_NODE)
-//         .filter((node) => node.nodeType != document.TEXT_NODE)
-//         .map((node) => [new Text('\n\t\t'), node])
-//         .flat();
-// }
-
-// function RemoveAllComments(doc) {
-//     const headChildNodesNoComments = RemoveCommentsAndFormatFromHTMLCollection(doc.head.childNodes);
-//     const bodyChildNodesNoComments = RemoveCommentsAndFormatFromHTMLCollection(doc.body.childNodes);
-    
-//     doc.head.replaceChildren(...headChildNodesNoComments, new Text('\n'));
-//     doc.body.replaceChildren(...bodyChildNodesNoComments, new Text('\n'));
-
-//     return doc;
-// }
-
-// const json = await (await fetch(`${baseUrl}${route}`)).json();
-
-// var status = 'status' in json && 'indicator' in json.status
-//     ? json.status.indicator
-//     : StatuspageDictionary.StatusEnums.error;
-
-// var vdomHead = createElement('head',
-//     {},
-//     ''
-// );
-
-
-// var vdom = createElement(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': status,  fullScreen: '' }, '');
-// render(vdom, document.body);
-// console.log(vdom);
-
-//////////////////////////
-
-// RemoveAllComments(document);
-
-// var metaTags = StatuspageStaticHTML.MetaTagsList('https://spstat.us/img/maskable/144px.png', StatuspageDictionary.MetaColors[status], 'https://spstat.us/', 'rtsfred3');
-
-// for (let child of metaTags) {
-//     document.head.appendChild(child);
-// }
-
-// var staticHTMLTag = StatuspageStaticHTML.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': status, 'fullScreen': '' });
-// console.log(staticHTMLTag);
-// document.body.innerHTML = staticHTMLTag;
+// console.log(preact);
+// console.log(preact.status);
+// console.log(preact.cssStr);
+// console.log(preact.headStr);
+// console.log(preact.bodyStr);
+// console.log(preact.statusHTML);
+// console.log(preact.statusHTML.length);

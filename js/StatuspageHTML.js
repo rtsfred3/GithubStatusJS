@@ -997,7 +997,6 @@ class StatuspageWebComponents {
 
             fetchStatus() {
                 return new Promise((res, rej) => {
-                    console.log(this.url);
                     if (navigator.onLine && this.url != null) {
                         fetch(this.url)
                             .then(data => data.json())
