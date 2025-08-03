@@ -83,11 +83,7 @@ class Compression {
      */
     static async CompressChunkAsync(chunk, encoding = 'gzip') {
         const cs = new CompressionStream(encoding);
-        const writer = cs.writable.getWriter();
-        writer.write(chunk);
-        writer.close();
-
-        const arrayBuffer = await new Response(cs.readable).arrayBuffer();
+        const arrayBuffer = await this.toArrayBuffer(cs, chunk);
         return new Uint8Array(arrayBuffer);
     }
 
@@ -197,10 +193,15 @@ class Compression {
      */
     static async DecompressChunkAsync(chunk, encoding = 'gzip') {
         const cs = new DecompressionStream(encoding);
+        return await this.toArrayBuffer(cs, chunk);
+    }
+
+    static async toArrayBuffer(cs, chunk) {
         const writer = cs.writable.getWriter();
+        
         writer.write(chunk);
         writer.close();
-        
+
         return await new Response(cs.readable).arrayBuffer();
     }
 

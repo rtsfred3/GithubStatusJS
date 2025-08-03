@@ -1,5 +1,4 @@
 import StatuspageDictionary from './StatuspageDictionary.esm.js';
-// import StatuspageStaticHTML from './StatuspageStaticHTML.esm.js';
 
 export default class StatuspageDetails {
     imgUrl;
@@ -13,12 +12,19 @@ export default class StatuspageDetails {
     siteName = 'Statuspage';
     status = StatuspageDictionary.StatusEnums.loading;
     cssStyling;
+    isMinified = true;
+
+    get noIndent() { return this.isMinified ? '' : '\n'; }
+    get singleIndent() { return this.isMinified ? '' : '\n\t'; }
+    get doubleIndent() { return this.isMinified ? '' : '\n\t\t'; }
 
     get themeColor() { return this.status != null ? StatuspageDictionary.MetaColors[this.status]  : StatuspageDictionary.MetaColors.loading; }
     
     get title() {  return StatuspageDictionary.StatuspageHTMLTemplates.template_title_index.replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
     
     get description() { return StatuspageDictionary.StatuspageHTMLTemplates.template_descrisption.replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
+
+    get statusUrl() { return this.baseUrl ? new URL('/api/v2/status.json', this.baseUrl) : null; }
 
     get MetaTagsDict() {
         return {
@@ -65,8 +71,7 @@ export default class StatuspageDetails {
             "icon": this.iconUrl,
             "apple-touch-icon": this.imgUrl,
             "dns-prefetch": this.prefetchStatuspageUrl ? this.prefetchStatuspageUrl : null,
-            "preconnect": this.prefetchStatuspageUrl ? this.prefetchStatuspageUrl : null,
-            "stylesheet": "../styling/github.amp.css"
+            "preconnect": this.prefetchStatuspageUrl ? this.prefetchStatuspageUrl : null
         };
     }
 
@@ -91,22 +96,43 @@ export default class StatuspageDetails {
         return list;
     }
 
-    get headHTML() { return `<head>${this.headStr.join('')}</head>`; }
+    get headHTML() { return this.singleIndent + `<head>${this.doubleIndent}${this.headStr.join(this.doubleIndent)}${this.singleIndent}</head>`; }
 
     get bodyStr() {
         var tag = StatuspageDictionary.HTMLTags.StatuspageStatus;
         return `<${tag} data-status="${this.status}" fullScreen></${tag}>`;
     }
 
-    get bodyHTML() { return `<body id="body">${this.bodyStr}</body>`; }
+    get bodyHTML() { return `${this.singleIndent}<body id="body">${this.doubleIndent}${this.bodyStr}${this.singleIndent}</body>`; }
 
-    get fullHTML() { return `<!DOCTYPE html><html lang="en">${this.headHTML}${this.bodyHTML}</html>` }
+    get fullHTML() { return `<!DOCTYPE html>${this.noIndent}<html lang="en">${this.headHTML}${this.bodyHTML}${this.noIndent}</html>` }
+
+    get toJSON() {
+        const tmp = Object.getOwnPropertyNames(this).filter(e => !['constructor', 'toJSON'].includes(e));
+        const dict = tmp.map(e => [e, this[e]]);
+        return Object.fromEntries(dict);
+    }
 
     constructor(data) {
         for (const key in data) {
             if (Object.prototype.hasOwnProperty.call(data, key)) {
                 this[key] = data[key];
             }
+        }
+    }
+
+    async fetchStatus(){
+        if (!this.statusUrl) { return; }
+
+        const resp = await fetch(this.statusUrl);
+        const json = await resp.json();
+
+        if (json.status && json.status.indicator) {
+            this.status = json.status.indicator;
+        }
+
+        if (json.page && json.page.name) {
+            this.siteName = json.page.name;
         }
     }
 }
