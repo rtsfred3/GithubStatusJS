@@ -6,7 +6,7 @@ on:
             - 'v[0-9]+\.[0-9]+\.[0-9]+'
 
 jobs:
-    deploy:
+    spstatus:
         runs-on: macos-latest
         name: Deploy spstat.us to BunnyCDN
         steps:
@@ -90,6 +90,19 @@ jobs:
 
                   for x in $(ls -p img/cf/screenshots/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/screenshots/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/screenshots/$x; done
                   for x in $(ls -p img/cf/screenshots/originals/min/ | grep -v /); do curl --silent --request PUT --url https://storage.bunnycdn.com/${{ secrets.BUNNY_STORAGE_ZONE_NAME }}/img/screenshots/originals/min/$x --header 'AccessKey: ${{ secrets.BUNNY_STORAGE_API_KEY }}' --header 'Content-Type: application/octet-stream' --header 'accept: application/json' --data-binary @img/cf/screenshots/originals/min/$x; done
+    
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                tag_name: ${{ github.ref }}
+                release_name: ${{ github.ref }}
+                body: |
+                    Release of ${{ github.ref }}
+                draft: false
+                prerelease: false
     
     githubstatus:
         runs-on: macos-latest

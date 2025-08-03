@@ -54,9 +54,7 @@ class StatuspageDetails {
         });
     }
 
-    get MetaTagsStr() {
-        return ['<meta charset="utf-8">'].concat(this.MetaTagAttributes.map(e => `<meta ${e}>`));
-    }
+    get MetaTagsStr() { return ['<meta charset="utf-8">'].concat(this.MetaTagAttributes.map(e => `<meta ${e}>`)); }
 
     get LinkTagsDict() {
         return {
@@ -82,17 +80,24 @@ class StatuspageDetails {
             .map(e => `<link ${e}>`);
     }
 
-    get headStr() { return this.MetaTagsStr.concat(this.LinkTagsStr).concat(`<title>${this.title}</title>`).concat(`<style>${this.cssStr}</style>`); }
+    get headStr() {
+        var list = this.MetaTagsStr.concat(this.LinkTagsStr).concat(`<title>${this.title}</title>`);
+
+        if (this.cssStyling) { list = list.concat(`<style>${this.cssStyling}</style>`); }
+
+        return list;
+    }
 
     get headHTML() { return `<head>${this.headStr.join('')}</head>`; }
 
-    // get bodyStr() { return StatuspageStaticHTML.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageStatus, { 'data-status': this.status, fullScreen: '' }); }
     get bodyStr() {
         var tag = StatuspageDictionary.HTMLTags.StatuspageStatus;
         return `<${tag} data-status="${this.status}" fullScreen></${tag}>`;
     }
 
     get bodyHTML() { return `<body id="body">${this.bodyStr}</body>`; }
+
+    get fullHTML() { return `<!DOCTYPE html><html lang="en">${this.headHTML}${this.bodyHTML}</html>` }
 
     constructor(data) {
         for (const key in data) {

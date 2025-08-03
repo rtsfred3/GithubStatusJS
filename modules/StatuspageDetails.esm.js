@@ -1,5 +1,5 @@
 import StatuspageDictionary from './StatuspageDictionary.esm.js';
-import StatuspageStaticHTML from './StatuspageStaticHTML.esm.js';
+// import StatuspageStaticHTML from './StatuspageStaticHTML.esm.js';
 
 export default class StatuspageDetails {
     imgUrl;
@@ -57,9 +57,7 @@ export default class StatuspageDetails {
         });
     }
 
-    get MetaTagsStr() {
-        return ['<meta charset="utf-8">'].concat(this.MetaTagAttributes.map(e => `<meta ${e}>`));
-    }
+    get MetaTagsStr() { return ['<meta charset="utf-8">'].concat(this.MetaTagAttributes.map(e => `<meta ${e}>`)); }
 
     get LinkTagsDict() {
         return {
@@ -85,7 +83,13 @@ export default class StatuspageDetails {
             .map(e => `<link ${e}>`);
     }
 
-    get headStr() { return this.MetaTagsStr.concat(this.LinkTagsStr).concat(`<title>${this.title}</title>`).concat(`<style>${this.cssStr}</style>`); }
+    get headStr() {
+        var list = this.MetaTagsStr.concat(this.LinkTagsStr).concat(`<title>${this.title}</title>`);
+
+        if (this.cssStyling) { list = list.concat(`<style>${this.cssStyling}</style>`); }
+
+        return list;
+    }
 
     get headHTML() { return `<head>${this.headStr.join('')}</head>`; }
 
@@ -95,6 +99,8 @@ export default class StatuspageDetails {
     }
 
     get bodyHTML() { return `<body id="body">${this.bodyStr}</body>`; }
+
+    get fullHTML() { return `<!DOCTYPE html><html lang="en">${this.headHTML}${this.bodyHTML}</html>` }
 
     constructor(data) {
         for (const key in data) {
