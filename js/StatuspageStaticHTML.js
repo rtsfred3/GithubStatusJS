@@ -118,8 +118,6 @@ class StatuspageStaticHTML {
      */
     static GenerateAttributes(attr) {
         return Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`).join(' ');
-        // var attributes = Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`);
-        // return attributes.join(' ');
     }
 
     /**

@@ -102,7 +102,7 @@
             const downloadFileRandomButtons = document.getElementById('downloadFileRandomButtons');
             const downloadFileRepeatButtons = document.getElementById('downloadFileRepeatButtons');
 
-            for (let fileSize of [32, 64, 128, 256, 512, 2048, 2.25 * 1024]) {
+            for (let fileSize of [32, 64, 128, 256, 512, 1024, 2048]) {
                 downloadFileRandomButtons.innerHTML += `<button type="button" class="btn btn-primary" onclick="downloadFile(${fileSize})">Download ${fileSize}MB Unique File</button>`;
                 downloadFileRepeatButtons.innerHTML += `<button type="button" class="btn btn-primary" onclick="downloadRepeatingFile(${fileSize})">Download ${fileSize}MB Repeat File</button>`;
             }

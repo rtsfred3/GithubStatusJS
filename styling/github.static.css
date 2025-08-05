@@ -11,16 +11,29 @@
     --font: var(--error);
 }
 
-body > :not([data-status="none"]):not([data-status="good"]):not([data-status="minor"]):not([data-status="major"]):not([data-status="critical"]):not([data-status="maintenance"]):not([data-status="unavailable"]):not([data-status="loading"]):not([data-status="error"]) {
-    background-color: var(--error);
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: arial;
+    background-color: white !important;
 }
 
-body > :not([data-status="none"]):not([data-status="good"]):not([data-status="minor"]):not([data-status="major"]):not([data-status="critical"]):not([data-status="maintenance"]):not([data-status="unavailable"]):not([data-status="loading"]):not([data-status="error"])::before {
-    content: 'error';
+statuspage-status {
+    height: 100vh;
+    width: 100vw;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: block;
+    display: flex;
+    font-size: 48pt;
 }
 
-[data-status]::before {
+statuspage-status[data-status]::before {
     content: attr(data-status);
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
 }
 
 [data-status="none"], [data-status="good"] {

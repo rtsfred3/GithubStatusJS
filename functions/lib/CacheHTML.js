@@ -28,6 +28,7 @@ export default async function CacheHTML(context, _html, _path) {
 
             _headers.set(HeaderTypes.Age, response.headers.get(HeaderTypes.Age));
             _headers.set(HeaderTypes.CfCacheStatus, response.headers.get(HeaderTypes.CfCacheStatus));
+            _headers.set('bunny', true);
 
             return response;
         } 

@@ -10,7 +10,7 @@ export default class StatuspageDetails {
     baseUrl;
     isBot = false;
     siteName = 'Statuspage';
-    status = StatuspageDictionary.StatusEnums.loading;
+    _status = StatuspageDictionary.StatusEnums.loading;
     cssStyling;
     isMinified = true;
 
@@ -18,7 +18,21 @@ export default class StatuspageDetails {
     get singleIndent() { return this.isMinified ? '' : '\n\t'; }
     get doubleIndent() { return this.isMinified ? '' : '\n\t\t'; }
 
-    get themeColor() { return this.status != null ? StatuspageDictionary.MetaColors[this.status]  : StatuspageDictionary.MetaColors.loading; }
+    set status(val) {
+        if (val in StatuspageDictionary.StatusEnums) {
+            if (val == StatuspageDictionary.StatusEnums.none) {
+                this._status = StatuspageDictionary.StatusEnums.good;
+            } else {
+                this._status = val;
+            }
+        } else {
+            this._status = StatuspageDictionary.StatusEnums.error;
+        }
+    }
+
+    get status() { return this._status }
+
+    get themeColor() { return this._status != null ? StatuspageDictionary.MetaColors[this._status] : StatuspageDictionary.MetaColors.loading; }
     
     get title() {  return StatuspageDictionary.StatuspageHTMLTemplates.template_title_index.replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
     
@@ -100,7 +114,7 @@ export default class StatuspageDetails {
 
     get bodyStr() {
         var tag = StatuspageDictionary.HTMLTags.StatuspageStatus;
-        return `<${tag} data-status="${this.status}" fullScreen></${tag}>`;
+        return `<${tag} data-status="${this._status}" fullScreen></${tag}>`;
     }
 
     get bodyHTML() { return `${this.singleIndent}<body id="body">${this.doubleIndent}${this.bodyStr}${this.singleIndent}</body>`; }
@@ -112,6 +126,8 @@ export default class StatuspageDetails {
         const dict = tmp.map(e => [e, this[e]]);
         return Object.fromEntries(dict);
     }
+
+    get statusFile() { return new File([this.fullHTML], 'index.html', { type: 'text/html' }); }
 
     constructor(data) {
         for (const key in data) {
