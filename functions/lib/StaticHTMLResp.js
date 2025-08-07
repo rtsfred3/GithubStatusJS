@@ -18,7 +18,7 @@ async function LoadingHTMLResp(context) {
     
     var html =  StatuspageStaticHTML.LoadingHTML('https://githubstat.us/favicon.ico', 'https://githubstat.us/img/status/lowres/min/status-min-good.png', '(Unofficial) GitHub Status', 'https://githubstat.us/testing/fb/', 'rtsfred3', [], '(Unofficial) GitHub Status', 'An unofficial website to monitor GitHub status updates.', styling, isBot);
 
-    const compressedHtml = await Compression.Compress(html);
+    const compressedHtml = await Compression.CompressAsync(html);
 
     console.log(html.length);
     console.log(compressedHtml.length);

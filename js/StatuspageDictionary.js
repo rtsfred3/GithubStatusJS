@@ -253,4 +253,13 @@ class StatuspageDictionary {
             Description: 'Description'
         });
     }
+    
+    static get toJson() {
+        var classDefaults = Object.getOwnPropertyNames(class tmp {});
+        var statuspageDictionary = Object.getOwnPropertyNames(StatuspageDictionary)
+            .filter(e => !classDefaults.includes(e))
+            .filter(e => e != "toJson")
+            .map(e => [e, StatuspageDictionary[e]]);
+        return Object.fromEntries(statuspageDictionary);
+    }
 }

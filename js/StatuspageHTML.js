@@ -700,6 +700,18 @@ class StatuspageHTMLElements {
 }
 
 class StatuspageWebComponents {
+    static get CustomHTMLElement() {
+        return class extends HTMLElement {
+            constructor() { super(); }
+
+            get parentElementTag() { return this.parentElement != null ? this.parentElement.tagName.toLowerCase() : null; }
+
+            get isInSummary() { return this.parentElementTag == StatuspageWebComponents.Summary.is.toLowerCase(); }
+
+            get summaryJson() { return this.isInSummary ? this.parentElement.dataJson : null; }
+        }
+    }
+
     static get App() {
         return class extends HTMLElement {
             constructor() { super(); }
@@ -792,7 +804,7 @@ class StatuspageWebComponents {
     }
 
     static get Status() {
-        return class extends HTMLElement {
+        return class extends StatuspageWebComponents.CustomHTMLElement {
             static get observedAttributes() { return [ "data-status", "data-url", "status", "fullscreen" ]; }
 
             /**
@@ -868,6 +880,8 @@ class StatuspageWebComponents {
 
                     if (this.hasAttribute('status')) { this.removeAttribute('status'); }
 
+                    if (!this.hasAttribute('data-status')) { this.setAttribute('data-status', this.dataset.status); }
+
                     StatuspageHTMLElements.SetThemeColor(this.data._status);
 
                     if (this.data._fullScreen == null) {
@@ -940,6 +954,10 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Status.is}`);
 
+                if (this.isInSummary && this.summaryJson != null && ('status' in this.summaryJson && 'indicator' in this.summaryJson.status)) {
+                    this.dataStatus = this.summaryJson.status.indicator;
+                }
+
                 StatuspageHTMLElements.UpdateUrlTags(location.href);
 
                 if (this.baseUrl != null) {
@@ -979,7 +997,6 @@ class StatuspageWebComponents {
 
             fetchStatus() {
                 return new Promise((res, rej) => {
-                    console.log(this.url);
                     if (navigator.onLine && this.url != null) {
                         fetch(this.url)
                             .then(data => data.json())
@@ -1018,8 +1035,13 @@ class StatuspageWebComponents {
 
             static toHTML(status, isFullScreen = false) {
                 var htmlElement = document.createElement(this.is, { is: this.is });
-                htmlElement.dataStatus = status;
-                htmlElement.fullScreen = isFullScreen;
+                
+                htmlElement.setAttribute('data-status', status);
+
+                if (isFullScreen) {
+                    htmlElement.setAttribute('fullScreen', '');
+                }
+                
                 return htmlElement;
             }
 
@@ -1108,7 +1130,7 @@ class StatuspageWebComponents {
     }
 
     static get Incidents() {
-        return class extends HTMLElement {
+        return class extends StatuspageWebComponents.CustomHTMLElement {
             static get observedAttributes() { return [ "data-json", "data-url" ]; }
 
             /**
@@ -1213,6 +1235,10 @@ class StatuspageWebComponents {
             connectedCallback() {
                 console.log(`Starting ${StatuspageWebComponents.Incidents.is}`);
 
+                if (this.isInSummary && this.summaryJson != null) {
+                    this.dataJson = this.summaryJson;
+                }
+
                 if (this.url != null) { this.fetchIncidents(); }
 
                 if (this.incidentElements != null) { this.replaceWith(this.incidentElements); }
@@ -1299,6 +1325,18 @@ class StatuspageWebComponents {
              */
             get url() { return this._url; }
 
+            // set dataJson(val) {
+            //     if (typeof val == "string") {
+            //         this._dataJson = JSON.parse(val);
+            //     }
+
+            //     if (typeof val == "object") {
+            //         this._dataJson = val;
+            //     }
+            // }
+
+            // get dataJson() { return this._dataJson; }
+
             constructor() {
                 super();
 
@@ -1368,7 +1406,11 @@ class StatuspageWebComponents {
                 });
             }
 
-            parseJson(json) {
+            async parseJson(json) {
+                // Compression.CompressAndDownloadJson(json, 'summary.json');
+
+                // this.dataJson = json;
+
                 if (!('status' in json)) {
                     this.firstElementChild.replaceWith(StatuspageWebComponents.Loading.toHTML())
                     return;
