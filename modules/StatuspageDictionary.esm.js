@@ -2,7 +2,7 @@ export default class StatuspageDictionary {
     static SiteNameValue = '{{SiteName}}';
     static AmpIndicatorValue = '{{indicator}}';
     static replaceableStringValue = '{}';
-    
+
     static get HTMLTags() {
         return Object.freeze({
             StatuspageApp: 'statuspage-app',
@@ -17,7 +17,7 @@ export default class StatuspageDictionary {
             StatusElement: 'status-element'
         });
     }
-    
+
     static get StatuspageHTMLTemplates() {
         return Object.freeze({
             template_title_index: `(Unofficial) ${this.replaceableStringValue} Status`,
@@ -81,7 +81,7 @@ export default class StatuspageDictionary {
             get [this.StatusEnums.partial_outage](){ return this.major; }
         });
     }
-    
+
     static get IndicatorVals() {
         return Object.freeze({
             [this.StatusEnums.good]: this.StatusEnums.good,
@@ -103,7 +103,7 @@ export default class StatuspageDictionary {
             get [this.StatusEnums.under_maintenance]() { return this.maintenance; }
         });
     }
-    
+
     static get IndicatorMessages() {
         return Object.freeze({
             [this.StatusEnums.resolved]: this.StatusEnums.good,
@@ -135,5 +135,14 @@ export default class StatuspageDictionary {
             Error: 'Error',
             Description: 'Description'
         });
+    }
+
+    static get toJson() {
+        var classDefaults = Object.getOwnPropertyNames(class tmp {});
+        var statuspageDictionary = Object.getOwnPropertyNames(StatuspageDictionary)
+            .filter(e => !classDefaults.includes(e))
+            .filter(e => e != "toJson")
+            .map(e => [e, StatuspageDictionary[e]]);
+        return Object.fromEntries(statuspageDictionary);
     }
 }

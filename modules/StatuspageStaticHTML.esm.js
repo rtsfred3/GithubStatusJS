@@ -50,8 +50,7 @@ export default class StatuspageStaticHTML {
     }
 
     static GenerateAttributes(attr) {
-        var attributes = Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`);
-        return attributes.join(' ');
+        return Object.entries(attr).map((attr) => attr[1] != null ? `${attr[0]}="${attr[1]}"` : `${attr[0]}`).join(' ');
     }
 
     static TagStringAndAttributes(tag, attr = null, child = null) {
@@ -79,7 +78,7 @@ export default class StatuspageStaticHTML {
             "og:type": "website",
             "og:url": canonicalUrl,
             "og:image": imgUrl,
-            
+
             "twitter:card": "summary",
             "twitter:title": title,
             "twitter:description": description,
@@ -92,6 +91,20 @@ export default class StatuspageStaticHTML {
             "viewport": "width=device-width, initial-scale=1.0, user-scalable=0.0",
             "HandheldFriendly": "true",
         };
+    }
+
+    static MetaTagsList(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
+        var metaTagDictionary = this.MetaTagDictionary(imgUrl, themeColor, canonicalUrl, author, keywords, title, description);
+
+        var metaTagElements = [];
+
+        for(const [k, v] of Object.entries(metaTagDictionary)){
+            if (v != null) {
+                metaTagElements.push(this.MetaTag(k, v, k.includes('og:') ? "property" : "name"));
+            }
+        }
+
+        return metaTagElements;   
     }
 
     static MetaTagsStrList(imgUrl, themeColor, canonicalUrl = null, author = null, keywords=[], title = null, description = null) {
@@ -201,7 +214,7 @@ export default class StatuspageStaticHTML {
 
         headTagsList.push(...metaTagsList);
         headTagsList.push(...linkTagsList);
-        
+
         headTagsList.push(this.TagStringAndAttributes('title', null, siteName));
 
         if (styling != null && !isBot) {
@@ -219,16 +232,16 @@ export default class StatuspageStaticHTML {
 
         var head = this.StaticHeadHTMLStr(headTagsList);
         var body = this.StaticBodyHTMLStr(bodyTag);
-        
+
         return this.StaticBaseHTML(head, body);
     }
-    
+
     static ErrorHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
         if (title == null) { title = `${siteName} | Error`; }
 
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.error, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
-    
+
     static LoadingHTML(iconUrl, imgUrl, siteName, canonicalUrl = null, author = null, keywords=[], title = null, description = null, styling = null, isBot = false, useCustomTag = false) {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.loading, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
@@ -237,27 +250,13 @@ export default class StatuspageStaticHTML {
         return this.StaticHTMLString(StatuspageDictionary.StatusEnums.maintenance, iconUrl, imgUrl, siteName, canonicalUrl, author, keywords, title, description, styling, isBot, useCustomTag);
     }
 
-    static Error = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.error, true);
-    static Loading = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.loading, true);
+    static Error = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageError, null);
+    static Loading = this.TagStringAndAttributes(StatuspageDictionary.HTMLTags.StatuspageLoading, null);
     static Maintenance = StatuspageStaticHTML.StatusHTML(StatuspageDictionary.StatusEnums.maintenance, true);
 
     static get StaticHTML() {
         return class {
-            /**
-             * 
-             * @param {string} iconUrl 
-             * @param {string} imgUrl 
-             * @param {string} siteName 
-             * @param {string} pathName 
-             * @param {string|undefined} canonicalUrl 
-             * @param {string|undefined} statuspageUrl 
-             * @param {string|undefined} author 
-             * @param {string[]} keywords 
-             * @param {string|undefined} additionalDescription 
-             * @param {string|undefined} title 
-             * @param {string|undefined} description 
-             * @returns 
-             */
+
             constructor(iconUrl, imgUrl, siteName, pathName = StatuspageDictionary.PathNames.Index, canonicalUrl = null, statuspageUrl = null, author = null, keywords=[], additionalDescription = null, title = null, description = null){
                 this._status = StatuspageDictionary.StatusEnums.loading;
 
@@ -284,7 +283,7 @@ export default class StatuspageStaticHTML {
             get prefetchStatuspageUrl() { return this.statuspageUrl != null ? this.statuspageUrl.replace('https:', '') : null; }
 
             get title() { return this._title != null ? this._title : StatuspageDictionary.StatuspageHTMLTemplates[this.statusPathName].replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
-            
+
             get description() {
                 if (this._description != null) {
                     return this._description;
@@ -324,7 +323,7 @@ export default class StatuspageStaticHTML {
             }
 
             get isBot() { return this._isBot; }
-            
+
             get LinkTagValues() {
                 return StatuspageStaticHTML.LinkTagDictionary(this.canonicalUrl, this.iconUrl, this.imgUrl, this.prefetchStatuspageUrl);
             }
@@ -340,7 +339,7 @@ export default class StatuspageStaticHTML {
             get MetaTagValues() {
                 return StatuspageStaticHTML.MetaTagDictionary(this.imgUrl, this.themeColor, this.canonicalUrl, this.author, this.keywords, this.title, this.description)
             }
-            
+
             get LinkTags() {
                 var linkTagElements = [];
 
@@ -403,7 +402,7 @@ export default class StatuspageStaticHTML {
 
                 if (this.pathName == StatuspageDictionary.PathNames.Status) {
                     var attr = {};
-                    
+
                     if (this.statuspageUrl != null) {
                         attr['data-url'] = this.statuspageUrl;
                     } else if (this.status != null) {
@@ -464,7 +463,7 @@ export default class StatuspageStaticHTML {
                 this.status = status;
 
                 var html = `<html>\n\t${this.Head}\n\t${this.StatusBody}\n</html>`;
-                
+
                 if (this.trimWhitespace) { html = html.replaceAll('\n', '').replaceAll('\t', ''); }
 
                 return html;

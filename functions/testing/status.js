@@ -1,23 +1,42 @@
-import { StatuspageDictionary, StatuspageHTMLElements } from '../../modules/Statuspage.esm.js';
+import GetFileFromAssets from '../lib/GetFileFromAssets.js';
 
-function StatuspageHTML() {
-    var htmlElement = new StatuspageHTMLElements.HTMLStringMetadata('https://spstat.us/', 'https://www.cloudflarestatus.com', 'https://spstat.us/favicon.ico', 'https://spstat.us/img/maskable/144px.png', 'Cloudflare', StatuspageDictionary.PathNames.Status);
-    
-    var headers = new Headers();
-    headers.append("Content-Type", "text/html");
+import CustomHeaders from '../lib/CustomHeaders.js';
 
-    htmlElement.statuspageUrl = null;
-    htmlElement.status = StatuspageDictionary.StatusEnums.good;
-    htmlElement.pathName = StatuspageDictionary.PathNames.Status;
+import Compression from '../../modules/Compression.esm.js';
 
-    return new Response(htmlElement.HTML, { headers: headers });
-}
+import StatuspageDetails from '../../modules/StatuspageDetails.esm.js';
+import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
+import StatuspageStaticHTML from '../../modules/StatuspageStaticHTML.esm.js';
 
 export async function onRequestGet(context) {
-    console.log(context.request.url);
-    return StatuspageHTML();
-}
+    console.log(context);
+    console.log(context.data);
 
-export async function onRequestHead(context) {
-    return StatuspageHTML();
+    var headers = CustomHeaders("text/html; charset=utf-8", 300);
+
+    var data = {
+        baseUrl: context.env.StatuspageBaseUrl,
+        imgUrl: 'https://githubstat.us/img/maskable/144px.png',
+        iconUrl: 'https://githubstat.us/favicon.ico',
+        canonicalUrl: context.request.url,
+        author: 'rtsfred3',
+        isMinified: true,
+        cssStyling: await GetFileFromAssets(context, "/styling/github.static.min.css")
+    };
+
+    var statuspageDetails = new StatuspageDetails(data);
+    await statuspageDetails.fetchStatus();
+
+    console.log(StatuspageStaticHTML.TagStringAndAttributes('div', { 'data-status': statuspageDetails.status, 'fullScreen': null }));
+
+    var compressedFile = await Compression.CompressFileAsync(statuspageDetails.statusFile);
+
+    console.log(statuspageDetails.statusFile);
+    console.log(compressedFile);
+
+    console.log(new Date(compressedFile.lastModified));
+
+    return new Response(statuspageDetails.fullHTML, { headers: headers });
+
+    // return await ModifyHTML(context, Path.Amp);
 }

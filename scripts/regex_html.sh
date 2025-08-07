@@ -6,20 +6,17 @@ CURRDATE="$(date +%F)"
 echo "Version $1";
 echo "Version $REGEXVERSION";
 
+FOLDERS_LIST=("amp" "preact" "static" "status");
+
 if [ ! -d autogen/ ]; then mkdir autogen/; fi;
-if [ ! -d autogen/amp/ ]; then mkdir autogen/amp/; fi;
-if [ ! -d autogen/preact/ ]; then mkdir autogen/preact/; fi;
-if [ ! -d autogen/static/ ]; then mkdir autogen/static/; fi;
-
 if [ ! -d StatuspageHTML/tmp/ ]; then mkdir StatuspageHTML/tmp/; fi;
-if [ ! -d StatuspageHTML/tmp/amp/ ]; then mkdir StatuspageHTML/tmp/amp/; fi;
-if [ ! -d StatuspageHTML/tmp/preact/ ]; then mkdir StatuspageHTML/tmp/preact/; fi;
-if [ ! -d StatuspageHTML/tmp/static/ ]; then mkdir StatuspageHTML/tmp/static/; fi;
-
 if [ ! -d StatuspageHTML/output/ ]; then mkdir StatuspageHTML/output/; fi;
-if [ ! -d StatuspageHTML/output/amp/ ]; then mkdir StatuspageHTML/output/amp/; fi;
-if [ ! -d StatuspageHTML/output/preact/ ]; then mkdir StatuspageHTML/output/preact/; fi;
-if [ ! -d StatuspageHTML/output/static/ ]; then mkdir StatuspageHTML/output/static/; fi;
+
+for f in ${FOLDERS_LIST[@]}; do
+    if [ ! -d autogen/$f/ ]; then mkdir autogen/$f/; fi;
+    if [ ! -d StatuspageHTML/tmp/$f/ ]; then mkdir StatuspageHTML/tmp/$f/; fi;
+    if [ ! -d StatuspageHTML/output/$f/ ]; then mkdir StatuspageHTML/output/$f/; fi;
+done
 
 setSiteName() {
     sed -i '' -re "s/{{siteName}}/$2/g" $1
@@ -75,6 +72,11 @@ cat StatuspageHTML/index.html > StatuspageHTML/tmp/index.tmp.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/index.tmp.html
 sed -f scripts/dedup.sed < StatuspageHTML/tmp/index.tmp.html > StatuspageHTML/tmp/index.html
 
+echo "StatuspageHTML/status/index.html";
+cat StatuspageHTML/status/index.html > StatuspageHTML/tmp/status/index.tmp.html
+setVersionAndRemoveCommentsInline StatuspageHTML/tmp/status/index.tmp.html
+sed -f scripts/dedup.sed < StatuspageHTML/tmp/status/index.tmp.html > StatuspageHTML/tmp/status/index.html
+
 cat StatuspageHTML/static/index.template.html > StatuspageHTML/tmp/static/index.template.html
 setVersionAndRemoveCommentsInline StatuspageHTML/tmp/static/index.template.html
 sed -i '' -f scripts/dedup.sed StatuspageHTML/tmp/static/index.template.html
@@ -110,6 +112,7 @@ echo "sites/reddit/sitemap.xml";
 sed -i '' -re "s/[0-9]{4}(-[0-9]{2}){2}/$CURRDATE/g" sites/reddit/sitemap.xml
 
 if [ -f StatuspageHTML/tmp/index.html ]; then cat StatuspageHTML/tmp/index.html > StatuspageHTML/output/index.html; fi;
+if [ -f StatuspageHTML/tmp/status/index.html ]; then cat StatuspageHTML/tmp/status/index.html > StatuspageHTML/output/status/index.html; fi;
 
 if [ -f StatuspageHTML/tmp/static/index.shell.html ]; then cat StatuspageHTML/tmp/static/index.shell.html > StatuspageHTML/output/static/index.shell.html; fi;
 if [ -f StatuspageHTML/tmp/static/status.shell.html ]; then cat StatuspageHTML/tmp/static/status.shell.html > StatuspageHTML/output/static/status.shell.html; fi;

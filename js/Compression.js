@@ -21,9 +21,9 @@ class Compression {
      * @param {string} encoding 
      * @returns {Promise<Uint8Array>}
      */
-    static async Compress(str, encoding = "gzip") {
+    static async CompressAsync(str, encoding = 'gzip') {
         const byteArray = (new TextEncoder()).encode(str);
-        return this.CompressChunk(byteArray, encoding);
+        return this.CompressChunkAsync(byteArray, encoding);
     }
 
     /**
@@ -32,8 +32,8 @@ class Compression {
      * @param {string} encoding 
      * @returns {Promise<Uint8Array>}
      */
-    static async CompressJson(jsonObject, encoding = "gzip") {
-        return await this.Compress(JSON.stringify(jsonObject), encoding);
+    static async CompressJsonAsync(jsonObject, encoding = 'gzip') {
+        return await this.CompressAsync(JSON.stringify(jsonObject), encoding);
     }
 
     /**
@@ -44,7 +44,7 @@ class Compression {
      * @param {string} encoding 
      * @returns {Promise<File>}
      */
-    static async CompressFile(file, encoding = "gzip") {
+    static async CompressFileAsync(file, encoding = 'gzip') {
         var uncompressedArrayBuffer = await file.arrayBuffer();
         var uint8Array = new Uint8Array(uncompressedArrayBuffer);
 
@@ -55,7 +55,7 @@ class Compression {
             type = 'application/gzip';
         }
 
-        const compressedChunk = await this.CompressChunk(uint8Array, encoding);
+        const compressedChunk = await this.CompressChunkAsync(uint8Array, encoding);
         
         return new File([compressedChunk], `${file.name}${extension}`, { 'type': type })
     }
@@ -70,7 +70,7 @@ class Compression {
      */
     static CompressAndDownloadJson(jsonObject, fileName = 'compressed.json') {
         const jsonFile = this.JsonFile(jsonObject, fileName);
-        this.CompressFile(jsonFile, 'gzip').then(f => this.DownloadFile(f));
+        this.CompressFileAsync(jsonFile, 'gzip').then(f => this.DownloadFile(f));
     }
 
     /**
@@ -81,13 +81,9 @@ class Compression {
      * @param {string} encoding 
      * @returns {Promise<Uint8Array>}
      */
-    static async CompressChunk(chunk, encoding = "gzip") {
+    static async CompressChunkAsync(chunk, encoding = 'gzip') {
         const cs = new CompressionStream(encoding);
-        const writer = cs.writable.getWriter();
-        writer.write(chunk);
-        writer.close();
-
-        const arrayBuffer = await new Response(cs.readable).arrayBuffer();
+        const arrayBuffer = await this.toArrayBuffer(cs, chunk);
         return new Uint8Array(arrayBuffer);
     }
 
@@ -99,12 +95,12 @@ class Compression {
      * @param {string} encoding 
      * @returns {Promise<string>}
      */
-    static async Decompress(compressedData, encoding = "gzip") {
+    static async DecompressAsync(compressedData, encoding = 'gzip') {
         if (compressedData instanceof Uint8Array) {
             compressedData = compressedData.buffer;
         }
 
-        var arrayBuffer = await this.DecompressChunk(compressedData, encoding);
+        var arrayBuffer = await this.DecompressChunkAsync(compressedData, encoding);
         
         return new TextDecoder().decode(arrayBuffer);
     }
@@ -115,8 +111,8 @@ class Compression {
      * @param {string} encoding 
      * @returns {Object}
      */
-    static async DecompressJson(compressedData, encoding = "gzip") {
-        const jsonStr = await this.Decompress(compressedData, encoding);
+    static async DecompressJsonAsync(compressedData, encoding = 'gzip') {
+        const jsonStr = await this.DecompressAsync(compressedData, encoding);
         return JSON.parse(jsonStr);
     }
 
@@ -125,16 +121,18 @@ class Compression {
      * @static
      * @async
      * @param {File} file 
+     * @param {string} fileName 
+     * @param {string} mimeType 
      * @param {string} encoding 
      * @returns {Promise<File>}
      */
-    static async DecompressFile(file, fileName = undefined, mimeType = 'text/plain', encoding = "gzip") {
-        const readableStream = await this.ReadCompressedReadableStream(file.stream());
+    static async DecompressFileAsync(file, mimeType = 'text/plain', fileName = undefined, encoding = 'gzip') {
+        const readableStream = await this.ReadCompressedReadableStreamAsync(file.stream());
 
-        const arrayBuffer = await this.DecompressChunk(readableStream, encoding);
+        const arrayBuffer = await this.DecompressChunkAsync(readableStream, encoding);
 
         if (fileName == undefined) {
-            if (fileName.endsWith('.gz')) {
+            if (file.name.endsWith('.gz')) {
                 fileName = file.name.replace('.gz', '');
             } else {
                 fileName = 'output';
@@ -152,10 +150,26 @@ class Compression {
      * 
      * @static
      * @async
+     * @param {File} file 
+     * @param {string} fileName 
+     * @param {string} mimeType 
+     * @param {string} encoding 
+     * @returns {Promise<Object>}
+     */
+    static async DecompressJsonFileAsync(file, encoding = 'gzip') {
+        const jsonFile = await this.DecompressFileAsync(file, 'application/json', 'output.json', encoding);
+
+        return JSON.parse(await jsonFile.text());
+    }
+
+    /**
+     * 
+     * @static
+     * @async
      * @param {ReadableStream} readableStream 
      * @returns {Promise<ReadableStream>}
      */
-    static async ReadCompressedReadableStream(readableStream) {
+    static async ReadCompressedReadableStreamAsync(readableStream) {
         let uint8Array = new Uint8Array(0);
 
         const reader = readableStream.getReader();
@@ -177,12 +191,17 @@ class Compression {
      * @param {string} encoding 
      * @returns {Promise<ArrayBuffer>}
      */
-    static async DecompressChunk(chunk, encoding = "gzip") {
+    static async DecompressChunkAsync(chunk, encoding = 'gzip') {
         const cs = new DecompressionStream(encoding);
+        return await this.toArrayBuffer(cs, chunk);
+    }
+
+    static async toArrayBuffer(cs, chunk) {
         const writer = cs.writable.getWriter();
+        
         writer.write(chunk);
         writer.close();
-        
+
         return await new Response(cs.readable).arrayBuffer();
     }
 
