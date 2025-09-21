@@ -8,29 +8,46 @@ class StatuspageDetails {
     baseUrl;
     isBot = false;
     siteName = 'Statuspage';
-    _status = StatuspageDictionary.StatusEnums.loading;
     cssStyling;
     isMinified = true;
+    _status = StatuspageDictionary.StatusEnums.loading;
+    _dataJson = {
+        status: { indicator: StatuspageDictionary.StatusEnums.loading },
+        page: { id: null, name: null, url: null, updated_at: Date.now() }
+    };
 
     get noIndent() { return this.isMinified ? '' : '\n'; }
     get singleIndent() { return this.isMinified ? '' : '\n\t'; }
     get doubleIndent() { return this.isMinified ? '' : '\n\t\t'; }
 
-    set status(val) {
-        if (val in StatuspageDictionary.StatusEnums) {
-            if (val == StatuspageDictionary.StatusEnums.none) {
-                this._status = StatuspageDictionary.StatusEnums.good;
-            } else {
-                this._status = val;
+    // set status(val) {
+    //     if (val in StatuspageDictionary.StatusEnums) {
+    //         if (val == StatuspageDictionary.StatusEnums.none) {
+    //             this._status = StatuspageDictionary.StatusEnums.good;
+    //         } else {
+    //             this._status = val;
+    //         }
+    //     } else {
+    //         this._status = StatuspageDictionary.StatusEnums.error;
+    //     }
+    // }
+
+    // get status() { return this._status }
+    get status() { return this._dataJson.status.indicator }
+
+    set dataJson(val) {
+        if (val.status && val.status.indicator) {
+            if (val.status.indicator in StatuspageDictionary.StatusEnums && val.status.indicator === StatuspageDictionary.StatusEnums.none) {
+                val.status.indicator = StatuspageDictionary.StatusEnums.good;
             }
-        } else {
-            this._status = StatuspageDictionary.StatusEnums.error;
         }
+
+        this._dataJson = val;
     }
 
-    get status() { return this._status }
+    get dataJson() { return this._dataJson; }
 
-    get themeColor() { return this._status != null ? StatuspageDictionary.MetaColors[this._status] : StatuspageDictionary.MetaColors.loading; }
+    get themeColor() { return this.status != null ? StatuspageDictionary.MetaColors[this.status] : StatuspageDictionary.MetaColors.loading; }
     
     get title() {  return StatuspageDictionary.StatuspageHTMLTemplates.template_title_index.replace(StatuspageDictionary.replaceableStringValue, this.siteName); }
     
@@ -89,7 +106,7 @@ class StatuspageDetails {
 
     get LinkTagsStr() {
         return Object.entries(this.LinkTagsDict)
-            .filter(([k, v]) => v != null && v != undefined)
+            .filter(([k, v]) => v != null && v !== undefined)
             .map(([id, content]) => {
                 var a = { rel: id, href: content };
 
@@ -112,7 +129,7 @@ class StatuspageDetails {
 
     get bodyStr() {
         var tag = StatuspageDictionary.HTMLTags.StatuspageStatus;
-        return `<${tag} data-status="${this._status}" fullScreen></${tag}>`;
+        return `<${tag} data-status="${this.status}" fullScreen></${tag}>`;
     }
 
     get bodyHTML() { return `${this.singleIndent}<body id="body">${this.doubleIndent}${this.bodyStr}${this.singleIndent}</body>`; }
@@ -140,6 +157,8 @@ class StatuspageDetails {
 
         const resp = await fetch(this.statusUrl);
         const json = await resp.json();
+
+        this.dataJson = json;
 
         if (json.status && json.status.indicator) {
             this.status = json.status.indicator;

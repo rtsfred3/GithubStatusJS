@@ -9,14 +9,14 @@ import StatuspageDictionary from '../../modules/StatuspageDictionary.esm.js';
 import StatuspageStaticHTML from '../../modules/StatuspageStaticHTML.esm.js';
 
 export async function onRequestGet(context) {
-    console.log(context);
-    console.log(context.data);
+    // console.log(context);
+    // console.log(context.data);
 
     var headers = CustomHeaders("text/html; charset=utf-8", 300);
 
     var data = {
         baseUrl: context.env.StatuspageBaseUrl,
-        imgUrl: 'https://githubstat.us/img/maskable/144px.png',
+        imgUrl: 'https://githubstat.us/img/status/lowres/min/status-min-good.png',
         iconUrl: 'https://githubstat.us/favicon.ico',
         canonicalUrl: context.request.url,
         author: 'rtsfred3',
@@ -29,12 +29,11 @@ export async function onRequestGet(context) {
 
     console.log(StatuspageStaticHTML.TagStringAndAttributes('div', { 'data-status': statuspageDetails.status, 'fullScreen': null }));
 
-    var compressedFile = await Compression.CompressFileAsync(statuspageDetails.statusFile);
+    // var compressedFile = await Compression.CompressFileAsync(statuspageDetails.statusFile);
 
-    console.log(statuspageDetails.statusFile);
-    console.log(compressedFile);
-
-    console.log(new Date(compressedFile.lastModified));
+    // console.log(statuspageDetails.statusFile);
+    // console.log(compressedFile);
+    // console.log(new Date(compressedFile.lastModified));
 
     return new Response(statuspageDetails.fullHTML, { headers: headers });
 
