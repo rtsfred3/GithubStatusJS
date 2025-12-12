@@ -19,60 +19,20 @@
         <meta property="og:image" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
-        <meta property="og:url" content="https://spstat.us/amp/">
+        <meta property="og:url" content="https://amp-spstat-us.b-cdn.net/">
 
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="(Unofficial) Cloudflare Status - AMP">
         <meta name="twitter:description" content="A minified AMP website to monitor Cloudflare status updates.">
         <meta name="twitter:image:src" content="https://spstat.us/img/status/lowres/min/status-min-good.png">
 
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="(Unofficial) Cloudflare Status - AMP">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#339966">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta name="HandheldFriendly" content="true" />
 
-        <link rel="canonical" href="https://spstat.us/amp/" />
+        <link rel="canonical" href="https://amp-spstat-us.b-cdn.net/" />
 
         <link rel="dns-prefetch" href="//www.cloudflarestatus.com/" />
         <link rel="preconnect" href="//www.cloudflarestatus.com/">
-
-        <script type="application/ld+json">
-            {
-                "@context": "http://schema.org/",
-                "@type": "WebApplication",
-                "name": "(Unofficial) Cloudflare Status",
-                "alternateName": "CloudflareStatus",
-                "description": "An unofficial website to monitor Cloudflare status updates.",
-                "softwareVersion": "{{_version}}",
-                "applicationCategory": "DeveloperApplication, BrowserApplication",
-                "browserRequirements": "Required HTML5 Support",
-                "operatingSystem": "Android, iOS, MacOS, Windows, Linux",
-                "softwareRequirements": "Modern Web Browser",
-                "url": "https://spstat.us/amp/",
-                "screenshot": "https://img.spstat.us/img/screenshots/screenshot1.webp",
-                "image": "https://img.spstat.us/img/status/highres/min/status-min-good.png",
-                "thumbnailUrl": "https://img.spstat.us/img/status/lowres/min/status-min-good.png",
-                "author": [{
-                    "@type": "Person",
-                    "name": "Ryan Fredrickson",
-                    "jobTitle": "Software Developer",
-                    "url": "https://github.com/rtsfred3"
-                }],
-                "maintainer": {
-                    "@type": "Person",
-                    "name": "Ryan Fredrickson",
-                    "jobTitle": "Software Developer",
-                    "url": "https://github.com/rtsfred3"
-                },
-                "offers": {
-                    "@type": "Offer",
-                    "price": "0.00",
-                    "priceCurrency": "USD"
-                }
-            }
-        </script>
 
         <style amp-boilerplate>
             body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
@@ -86,7 +46,7 @@
         <script async custom-element="amp-render" src="https://cdn.ampproject.org/v0/amp-render-1.0.js"></script>
 
         <style amp-custom>
-            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:var(--error);--good-text:"good";--none-text:var(--good-text);--minor-text:"minor";--major-text:"major";--critical-text:"critical";--maintenance-text:"maintenance";--loading-text:"loading";--unavailable-text:"unavailable";--error-text:"error"}body{margin:0;padding:0;font-family:arial}.fullScreen,.statuspage-status:has(.fullScreen),:has(.fullScreen),[fullScreen],statuspage-error{height:100vh}.statuspage-status:not(.fullScreen),statuspage-status{height:240px}.statuspage-status,statuspage-error,statuspage-status{width:100vw;text-align:center;justify-content:center;align-items:center;display:block;display:flex;font-size:48pt}statuspage-error::before{content:var(--error-text);text-transform:uppercase;font-weight:700;color:#fff}.statuspage-status[data-status]::before,statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}.statuspage-status[data-status=good]::before,.statuspage-status[data-status=none]::before,statuspage-status[data-status=good]::before,statuspage-status[data-status=none]::before{content:var(--good-text)}@media only screen and (min-width:2048px) and (min-height:1080px){.statuspage-status,statuspage-status{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.statuspage-status,statuspage-status{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.statuspage-status,statuspage-status{font-size:16em}}[data-status=good],[data-status=none]{background-color:var(--none)}[data-status=minor]{background-color:var(--minor)}[data-status=major]{background-color:var(--major)}[data-status=critical]{background-color:var(--critical)}[data-status=maintenance]{background-color:var(--maintenance);font-weight:500}[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}[data-status=error],statuspage-error{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){[data-status=maintenance]{font-size:36pt}}@media only screen and (min-width:251px) and (max-width:350px){[data-status=maintenance]{font-size:30pt}}@media only screen and (min-width:151px) and (max-width:250px){[data-status=maintenance]{font-size:20pt}}
+            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:var(--error)}body{margin:0;padding:0;font-family:arial}.fullScreen,.statuspage-status:has(.fullScreen),:has(.fullScreen),[fullScreen]{height:100vh}.statuspage-status:not(.fullScreen){height:240px}.statuspage-status{width:100vw;text-align:center;justify-content:center;align-items:center;display:block;display:flex;font-size:48pt}.statuspage-status[data-status]::before{content:attr(data-status);text-transform:uppercase;font-weight:700;color:#fff}.statuspage-status[data-status=good]::before,.statuspage-status[data-status=none]::before{content:"good"}@media only screen and (min-width:2048px) and (min-height:1080px){.statuspage-status{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.statuspage-status{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.statuspage-status{font-size:16em}}[data-status=good],[data-status=none]{background-color:var(--none)}[data-status=minor]{background-color:var(--minor)}[data-status=major]{background-color:var(--major)}[data-status=critical]{background-color:var(--critical)}[data-status=maintenance]{background-color:var(--maintenance);font-weight:500}[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}[data-status=error]{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){[data-status=maintenance]{font-size:36pt}}@media only screen and (min-width:251px) and (max-width:350px){[data-status=maintenance]{font-size:30pt}}@media only screen and (min-width:151px) and (max-width:250px){[data-status=maintenance]{font-size:20pt}}
         </style>
 
         <title>(Unofficial) Cloudflare Status - AMP</title>

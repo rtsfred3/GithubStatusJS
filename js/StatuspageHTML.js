@@ -140,9 +140,12 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} body 
-     * @param {string} date 
+     *
+     * @param {string} body
+     * @param {string} date
+     * @param {string|null} name
+     * @param {string|null} status
+     * @param {string|null} shortlink
      * @returns {HTMLDivElement}
      */
     static MessageBodyElement(body, date, name = null, status = null, shortlink = null){
@@ -175,8 +178,9 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} impact 
+     *
+     * @param {string} impact
+     * @param {string|null} status
      * @returns {HTMLDivElement}
      */
     static MessageStatusElement(impact, status = null){
@@ -333,8 +337,9 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
-     * 
-     * @param {string} id 
+     *
+     * @param {string} id
+     * @param {string} attr
      * @returns {HTMLMetaElement}
      */
     static GetMetaTag(id, attr = "name") {
@@ -347,9 +352,10 @@ class StatuspageHTMLElements {
     /**
      * @static
      * @memberof StatuspageHTMLElements
-     * 
-     * @param {string|Array} id 
-     * @param {string} value 
+     *
+     * @param {string|Array} id
+     * @param {string} value
+     * @param {string} attr
      */
     static SetMetaTag(id, value, attr = "name") {
         if (typeof id == 'string') {
