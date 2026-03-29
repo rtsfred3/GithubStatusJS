@@ -1,4 +1,6 @@
 class Utils {
+    static bucketSize = 256;
+
     static kbString = '0'.repeat(1000);
     static mbString = this.kbString.repeat(1000);
 
@@ -55,12 +57,16 @@ class Utils {
      * @param {string} fileName 
      * @returns {File}
      */
-    static TextFile(text, fileName) {
+    static TextFile(text, fileName) {        
         return new File([text], fileName, { 'type': 'text/plain' });
     }
 
     static StringOfMbSize(sizeInMB) {
         return Array(sizeInMB).fill(Utils.mbRandomAlphanumericString).join('');
+    }
+
+    static RepeatingStringOfMbSize(sizeInMB) {
+        return Array(sizeInMB).fill(Utils.mbString).join('');
     }
 
     /**
@@ -71,18 +77,18 @@ class Utils {
      * @returns {File}
      */
     static SampleTextFile(sizeInMB, fileName = undefined) {
-        const bucketSize = 256;
+        // const bucketSize = 256;
 
         if (fileName == undefined) {
-            fileName = `${sizeInMB}MB.txt`;
+            fileName = `${sizeInMB}MB.bin`;
         }
 
-        if (sizeInMB > bucketSize) {
-            var fullBuckets = Math.floor(sizeInMB / bucketSize);
-            var lastBucket = (sizeInMB / bucketSize) - Math.floor(sizeInMB / bucketSize);
+        if (sizeInMB > Utils.bucketSize) {
+            var fullBuckets = Math.floor(sizeInMB / Utils.bucketSize);
+            var lastBucket = (sizeInMB / Utils.bucketSize) - Math.floor(sizeInMB / Utils.bucketSize);
 
-            var bulk = Array(fullBuckets).fill(this.StringOfMbSize(bucketSize));
-            bulk.push(this.StringOfMbSize(bucketSize * lastBucket));
+            var bulk = Array(fullBuckets).fill(this.StringOfMbSize(Utils.bucketSize));
+            bulk.push(this.StringOfMbSize(Utils.bucketSize * lastBucket));
 
             var uint8Array = new Uint8Array(0);
 
@@ -106,8 +112,28 @@ class Utils {
      * @returns {File}
      */
     static SampleTextFileRepeating(sizeInMB, fileName = undefined) {
+        // const bucketSize = 256;
+
         if (fileName == undefined) {
-            fileName = `${sizeInMB}MB_Repeat.txt`
+            fileName = `${sizeInMB}MB_Repeat.bin`
+        }
+
+        if (sizeInMB > Utils.bucketSize) {
+            var fullBuckets = Math.floor(sizeInMB / Utils.bucketSize);
+            var lastBucket = (sizeInMB / Utils.bucketSize) - Math.floor(sizeInMB / Utils.bucketSize);
+
+            var bulk = Array(fullBuckets).fill(this.RepeatingStringOfMbSize(Utils.bucketSize));
+            bulk.push(this.RepeatingStringOfMbSize(Utils.bucketSize * lastBucket));
+
+            var uint8Array = new Uint8Array(0);
+
+            var uint8ArrayBulk = bulk.map(e => (new TextEncoder()).encode(e));
+
+            for(let arr of uint8ArrayBulk) {
+                uint8Array = Compression.concatUint8Arrays(uint8Array, arr);
+            }
+
+            return this.TextFile(uint8Array, fileName);
         }
 
         return this.TextFile(this.mbString.repeat(parseInt(sizeInMB)), fileName);
