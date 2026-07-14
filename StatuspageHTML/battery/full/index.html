@@ -60,21 +60,21 @@
                     document.querySelector('meta[name="theme-color"]').content = this.StatusElementBackgroundColor;
                 }
 
-                UpdateDetailedHtml() {
-                    this.StatusDetailsElement.innerHTML = `<div>`;
-                    this.StatusDetailsElement.innerHTML += `${this.getObject.dateString}`;
-                    this.StatusDetailsElement.innerHTML += `<br /> ${this.percentageString}`;
-                    this.StatusDetailsElement.innerHTML += `<br /> ${this.isChargingString}`;
+                // UpdateDetailedHtml() {
+                //     this.StatusDetailsElement.innerHTML = `<div>`;
+                //     this.StatusDetailsElement.innerHTML += `${this.getObject.dateString}`;
+                //     this.StatusDetailsElement.innerHTML += `<br /> ${this.percentageString}`;
+                //     this.StatusDetailsElement.innerHTML += `<br /> ${this.isChargingString}`;
                     
-                    if (this.isCharging) {
-                        this.StatusDetailsElement.innerHTML += `<br /> ${this.chargeTimeString}`;
-                    }
-                    else {
-                        this.StatusDetailsElement.innerHTML += `<br /> ${this.dischargeTimeString}`;
-                    }
+                //     if (this.isCharging) {
+                //         this.StatusDetailsElement.innerHTML += `<br /> ${this.chargeTimeString}`;
+                //     }
+                //     else {
+                //         this.StatusDetailsElement.innerHTML += `<br /> ${this.dischargeTimeString}`;
+                //     }
 
-                    this.StatusDetailsElement.innerHTML += `</div>`;
-                }
+                //     this.StatusDetailsElement.innerHTML += `</div>`;
+                // }
 
                 LogToConsole() {                    
                     console.log(this.getObject.dateString);
@@ -200,7 +200,7 @@
 
                     function updateHtml() {
                         batteryDetails.UpdateHtml();
-                        batteryDetails.UpdateDetailedHtml();
+                        // batteryDetails.UpdateDetailedHtml();
                     }
 
                     updateConsole();
@@ -209,7 +209,7 @@
                     battery.addEventListener("levelchange", updateHtml);
                     battery.addEventListener("chargingchange", updateHtml);
 
-                    // setInterval(updateConsole, 1000);
+                    setInterval(updateConsole, 1000);
                 });
             }
         </script>
