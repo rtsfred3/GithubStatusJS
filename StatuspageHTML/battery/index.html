@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html amp lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <meta name="author" content="rtsfred3">
+        <meta name="application-name" content="Battery Percentage">
+        <meta name="theme-color" content="#339966">
+        <meta name="description" content="A website to show the battery percentage of user's device.">
+        <meta name="keywords" content="Battery, BatteryPercentage">
+
+        <meta itemprop="name" content="Battery Percentage">
+        <meta itemprop="description" content="A website to show the battery percentage of user's device.">
+        <meta itemprop="image" content="https://rtsf-battery.b-cdn.net/img/icon.full.1024px.png">
+
+        <meta property="og:site_name" content="Battery Percentage">
+        <meta property="og:title" content="Battery Percentage">
+        <meta property="og:description" content="A website to show the battery percentage of user's device.">
+        <meta property="og:image" content="https://rtsf-battery.b-cdn.net/img/icon.full.1024px.png">
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://rtsf-battery.b-cdn.net/">
+
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Battery Percentage">
+        <meta name="twitter:description" content="A website to show the battery percentage of user's device.">
+        <meta name="twitter:image:src" content="https://rtsf-battery.b-cdn.net/img/icon.full.1024px.png">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+
+        <link rel="canonical" href="https://rtsf-battery.b-cdn.net/" />
+
+        <style amp-custom>
+            :root{--good:#339966;--none:var(--good);--minor:#DBAB09;--major:#E25D10;--critical:#DC3545;--maintenance:#0366D6;--loading:#4F93BD;--unavailable:var(--loading);--error:#646464;--font:var(--error)}body{margin:0;padding:0;font-family:arial}.fullScreen,.statuspage-status:has(.fullScreen),:has(.fullScreen),[fullScreen]{height:100vh}.statuspage-status:not(.fullScreen){height:240px}.statuspage-status{width:100vw;text-align:center;justify-content:center;align-items:center;display:block;display:flex;font-size:48pt}.statuspage-status[data-status]::before{text-transform:uppercase;font-weight:700;color:#fff}.statuspage-status[data-status]{text-transform:uppercase;font-weight:700;color:#fff}@media only screen and (min-width:2048px) and (min-height:1080px){.statuspage-status{font-size:12em}}@media only screen and (min-width:2100px) and (min-height:1100px){.statuspage-status{font-size:16em}}@media only screen and (min-width:3000px) and (min-height:2000px){.statuspage-status{font-size:16em}}[data-status=good],[data-status=none]{background-color:var(--none)}[data-status=minor]{background-color:var(--minor)}[data-status=major]{background-color:var(--major)}[data-status=critical]{background-color:var(--critical)}[data-status=maintenance]{background-color:var(--maintenance);font-weight:500}[data-status=loading],[data-status=unavailable]{background-color:var(--loading)}[data-status=error]{background-color:var(--error)}@media only screen and (min-width:351px) and (max-width:450px){[data-status=maintenance]{font-size:36pt}}@media only screen and (min-width:251px) and (max-width:350px){[data-status=maintenance]{font-size:30pt}}@media only screen and (min-width:151px) and (max-width:250px){[data-status=maintenance]{font-size:20pt}}
+        </style>
+
+        <script>
+            const parseRgbString=t=>{const e=t.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);if(!e)return null;const[i,r,s,n]=e.map(Number);return("#"+[r,s,n].map(t=>t.toString(16).padStart(2,"0")).join("")).toUpperCase()};class BatteryDetails{#t;showMilliseconds=!0;constructor(t){this.#t=t}UpdateHtml(){this.StatusElement.innerText=`${this.percentage}%`,this.StatusElement.dataset.status=this.status,document.querySelector('meta[name="theme-color"]').content=this.StatusElementBackgroundColor}UpdateDetailedHtml(){this.StatusDetailsElement.innerHTML="<div>",this.StatusDetailsElement.innerHTML+=`${this.getObject.dateString}`,this.StatusDetailsElement.innerHTML+=`<br /> ${this.percentageString}`,this.StatusDetailsElement.innerHTML+=`<br /> ${this.isChargingString}`,this.isCharging?this.StatusDetailsElement.innerHTML+=`<br /> ${this.chargeTimeString}`:this.StatusDetailsElement.innerHTML+=`<br /> ${this.dischargeTimeString}`,this.StatusDetailsElement.innerHTML+="</div>"}LogToConsole(){console.log(this.getObject.dateString),console.log(this.getObject.percentageString),console.log(this.getObject.isChargingString),this.isCharging?console.log(this.chargeTimeString):console.log(this.dischargeTimeString)}FullLogToConsole(){console.clear(),this.LogToConsole()}get chargeTimeString(){var t=`${this.getObject.chargingHours} hours`,e=`${this.getObject.chargeMinutes} minutes`,i=`Charge Time:\t${t}`;return NaN!=this.getObject.chargeMinutes&&this.getObject.chargeMinutes!=1/0&&(i+=`, ${e}`),i}get dischargeTimeString(){var t=`${this.getObject.dischargeHours} hours`,e=`${this.getObject.dischargeMinutes} minutes`,i=`Discharge Time:\t${t}`;return NaN!=this.getObject.dischargeMinutes&&this.getObject.dischargeMinutes!=1/0&&(i+=`, ${e}`),i}get getObject(){var t=(new Date).toISOString().replace("T"," ").replace("Z","");this.showMilliseconds||(t=t.split(".")[0]);var e={dateString:t,percentageString:`Percentage:\t\t${this.percentageString}`,isChargingString:`Is Charging?\t${this.isChargingString}`,chargingHours:this.#t.chargingTime!=1/0?Math.floor(this.#t.chargingTime/3600):0,chargeMinutes:NaN,dischargeHours:this.#t.dischargingTime!=1/0?Math.floor(this.#t.dischargingTime/3600):0,dischargeMinutes:NaN};if(NaN!=e.chargingHours&&e.chargingHours!=1/0){var i=this.#t.chargingTime/60,r=60*e.chargingHours;e.chargeMinutes=i-r}if(NaN!=e.dischargeHours&&e.dischargeHours!=1/0){var s=this.#t.dischargingTime/60,n=60*e.dischargeHours;e.dischargeMinutes=s-n}return e}get isCharging(){return this.#t.charging}get isChargingString(){return this.isCharging?"Yes":"No"}get percentage(){return 100*this.#t.level}get percentageString(){return`${this.percentage}%`}get status(){return this.isCharging||this.percentage>80?"good":this.percentage>40?"minor":this.percentage>20?"major":"critical"}get StatusElement(){return document.getElementById("status")}get StatusDetailsElement(){return document.getElementById("statusDetails")}get StatusElementBackgroundColor(){var t=window.getComputedStyle(this.StatusElement);return parseRgbString(t.backgroundColor)}}"getBattery"in navigator&&navigator.getBattery().then(t=>{var e=new BatteryDetails(t);function i(){e.UpdateHtml(),e.UpdateDetailedHtml()}e.showMilliseconds=!1,e.FullLogToConsole(),i(),t.addEventListener("levelchange",i),t.addEventListener("chargingchange",i)});
+        </script>
+
+        <title>Battery Percentage</title>
+    </head>
+
+    <body>
+        <div id="status" data-status="loading" class="statuspage-status fullScreen"></div>
+
+        <noscript>
+            <div id="status" data-status="error" class="statuspage-status fullScreen"></div>
+        </noscript>
+    </body>
+</html>
