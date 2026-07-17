@@ -141,7 +141,7 @@
                 get isCharging() { return this.#battery.charging; }
                 get isChargingString() { return this.isCharging ? "Yes" : "No"; }
 
-                get percentage() { return (int)(Math.Floor(this.#battery.level * 100)); }
+                get percentage() { return Math.floor(this.#battery.level * 100); }
                 get percentageString() { return `${this.percentage}%`; }
 
                 get status() {
