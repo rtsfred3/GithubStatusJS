@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html amp lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="author" content="rtsfred3">
+    <meta name="application-name" content="Battery Percentage">
+    <meta name="theme-color" content="#339966">
+    <meta name="description" content="A website to show the battery percentage of user's device.">
+    <meta name="keywords" content="Battery, BatteryPercentage">
+
+    <meta itemprop="name" content="Battery Percentage">
+    <meta itemprop="description" content="A website to show the battery percentage of user's device.">
+    <meta itemprop="image" content="https://rtsf-battery.b-cdn.net/img/icon.full.1024px.png">
+
+    <meta property="og:site_name" content="Battery Percentage">
+    <meta property="og:title" content="Battery Percentage">
+    <meta property="og:description" content="A website to show the battery percentage of user's device.">
+    <meta property="og:image" content="https://rtsf-battery.b-cdn.net/img/icon.full.1024px.png">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:url" content="https://rtsf-battery.b-cdn.net/">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Battery Percentage">
+    <meta name="twitter:description" content="A website to show the battery percentage of user's device.">
+    <meta name="twitter:image:src" content="https://rtsf-battery.b-cdn.net/img/icon.full.1024px.png">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+
+    <link rel="canonical" href="https://rtsf-battery.b-cdn.net/" />
+
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 2px solid rgb(140 140 140);
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            width: 25vw;
+        }
+
+        caption {
+            caption-side: bottom;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        thead,
+        tfoot {
+            background-color: rgb(228 240 245);
+        }
+
+        th,
+        td {
+            border: 1px solid rgb(160 160 160);
+            padding: 8px 10px;
+        }
+
+        td:last-of-type {
+            text-align: center;
+        }
+
+        tbody>tr:nth-of-type(even) {
+            background-color: rgb(237 238 242);
+        }
+
+        tfoot th {
+            text-align: right;
+        }
+
+        tfoot td {
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        const parseRgbString = (rgbString) => {
+            const match = rgbString.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+            if (!match) return null;
+
+            const [_, r, g, b] = match.map(Number);
+            return ("#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("")).toUpperCase();
+        };
+
+        class BatteryDetails {
+            #battery;
+
+            showMilliseconds = true;
+
+            constructor(battery) {
+                this.#battery = battery;
+            }
+
+            UpdateHtml() {
+                this.StatusElement.innerText = `${this.percentage}%`;
+                this.StatusElement.dataset.status = this.status;
+
+                document.querySelector('meta[name="theme-color"]').content = this.StatusElementBackgroundColor;
+            }
+
+            LogToConsole() {
+                console.log(this.getObject.dateString);
+                console.log(this.getObject.percentageString);
+                console.log(this.getObject.isChargingString);
+
+                if (this.isCharging) {
+                    console.log(this.chargeTimeString);
+                }
+                else {
+                    console.log(this.dischargeTimeString);
+                }
+            }
+
+            FullLogToConsole() {
+                console.clear();
+                this.LogToConsole();
+            }
+
+            get chargeTimeString() {
+                var hours = `${this.getObject.chargingHours} hours`;
+                var minutes = `${this.getObject.chargeMinutes} minutes`;
+
+                var str = `${hours}`;
+
+                if (this.getObject.chargeMinutes != NaN && this.getObject.chargeMinutes != Infinity) {
+                    str += `, ${minutes}`;
+                }
+
+                return str;
+            }
+
+            get dischargeTimeString() {
+                var hours = `${this.getObject.dischargeHours} hours`;
+                var minutes = `${this.getObject.dischargeMinutes} minutes`;
+
+                var str = `${hours}`;
+
+                if (this.getObject.dischargeMinutes != NaN && this.getObject.dischargeMinutes != Infinity) {
+                    str += `, ${minutes}`;
+                }
+
+                return str;
+            }
+
+            get getObject() {
+                var dateStr = (new Date).toISOString().replace("T", " ").replace("Z", "");
+
+                if (!this.showMilliseconds) {
+                    dateStr = dateStr.split(".")[0];
+                }
+
+                var obj = {
+                    dateString: dateStr,
+                    percentageString: `Percentage:\t\t${this.percentageString}`,
+                    isChargingString: `Is Charging?\t${this.isChargingString}`,
+                    chargingHours: this.#battery.chargingTime != Infinity ? Math.floor(this.#battery.chargingTime / 3600) : 0,
+                    chargeMinutes: NaN,
+                    dischargeHours: this.#battery.dischargingTime != Infinity ? Math.floor(this.#battery.dischargingTime / 3600) : 0,
+                    dischargeMinutes: NaN
+                };
+
+                if (obj.chargingHours != NaN && obj.chargingHours != Infinity) {
+                    var chargingMinutes = this.#battery.chargingTime / 60;
+                    var chargingHoursInMinutes = obj.chargingHours * 60;
+
+                    obj.chargeMinutes = Math.floor(chargingMinutes - chargingHoursInMinutes);
+                }
+
+                if (obj.dischargeHours != NaN && obj.dischargeHours != Infinity) {
+                    var dischargingMinutes = this.#battery.dischargingTime / 60;
+                    var dischargingHoursInMinutes = obj.dischargeHours * 60;
+
+                    obj.dischargeMinutes = Math.floor(dischargingMinutes - dischargingHoursInMinutes);
+                }
+
+                return obj;
+            }
+
+            get dateString() { return this.getObject.dateString; }
+            get isCharging() { return this.#battery.charging; }
+            get isChargingString() { return this.isCharging ? "Yes" : "No"; }
+
+            get percentage() { return this.#battery.level * 100; }
+            get percentageString() { return `${this.percentage}%`; }
+
+            get status() {
+                if (this.isCharging) {
+                    return "good";
+                }
+
+                if (this.percentage > 80) {
+                    return "good";
+                }
+                else if (this.percentage > 40) {
+                    return "minor";
+                }
+                else if (this.percentage > 20) {
+                    return "major";
+                }
+
+                return "critical";
+            }
+
+            get StatusElement() { return document.getElementById("status"); }
+
+            get StatusElementBackgroundColor() {
+                var css = window.getComputedStyle(this.StatusElement);
+
+                return parseRgbString(css.backgroundColor);
+            }
+        }
+
+        if ("getBattery" in navigator) {
+            navigator.getBattery().then((battery) => {
+                var batteryDetails = new BatteryDetails(battery);
+
+                batteryDetails.showMilliseconds = false;
+
+                function updateConsole() {
+                    batteryDetails.FullLogToConsole();
+                }
+
+                function updateHtml() {
+                    document.getElementById("dateStr").innerText = batteryDetails.dateString;
+                    document.getElementById("percentage").innerText = batteryDetails.percentageString;
+                    document.getElementById("isCharging").innerText = batteryDetails.isChargingString;
+
+                    document.getElementById("row3Question").innerText = batteryDetails.isCharging ? "Charge Time" : "Discharge Time";
+
+                    if (batteryDetails.isCharging) {
+                        if (batteryDetails.percentageString < 100) {
+                            document.getElementById("row3Answer").innerText = batteryDetails.chargeTimeString;
+                        }
+                        else if (batteryDetails.percentageString == 100) {
+                            document.getElementById("row3Answer").innerText = "-";
+                        }
+                    }
+                    else {
+                        document.getElementById("row3Answer").innerText = batteryDetails.dischargeTimeString;
+                    }
+                }
+
+                updateConsole();
+                updateHtml();
+
+                battery.addEventListener("levelchange", updateHtml);
+                battery.addEventListener("chargingchange", updateHtml);
+                battery.addEventListener("dischargingtimechange", updateHtml);
+            });
+        }
+    </script>
+
+    <title>Battery Percentage</title>
+</head>
+
+<body>
+    <table>
+        <caption>
+            Last Updated: <span id="dateStr"></span>
+        </caption>
+        <tbody>
+            <tr>
+                <th scope="row">Percentage</th>
+                <td id="percentage"></td>
+            </tr>
+            <tr>
+                <th scope="row">Charging</th>
+                <td id="isCharging"></td>
+            </tr>
+            <tr>
+                <th scope="row" id="row3Question">Charging Time</th>
+                <td id="row3Answer"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- <div id="status" data-status="loading" class="statuspage-status fullScreen"></div> -->
+
+    <noscript>
+        <div id="status" data-status="error" class="statuspage-status fullScreen"></div>
+    </noscript>
+</body>
+
+</html>
